@@ -1,0 +1,1 @@
+<p>The user has now been deleted.</p>
