@@ -33,6 +33,7 @@ class Apps extends Application
 		{
 			$delete = anchor("admin/apps/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/apps/edit/".$key['id']."/", "Edit"); // Build actions links
+			$add = anchor("admin/apps/add/".$key['merchant_id']."/", "Add"); // Build actions links
 			$this->table->add_row(
 				$this->get_merchant($key['merchant_id']),		 	 	
 				$key['application_name'],		 	 	 	 	 	 	 
@@ -40,7 +41,7 @@ class Apps extends Application
 				$key['key'],					 	 	 	 	 	 	 
 				$key['callback_url'],		 	 	 	 	 	 	 
 				$key['application_description'],		 	 	 	 	 	 	 
-				$edit.' '.$delete
+				$add.' '.$edit.' '.$delete
 			); // Adding row to table
 		}
 		$page['page_title'] = 'Application Keys';
@@ -64,8 +65,8 @@ class Apps extends Application
 		
 		foreach($result as $value => $key)
 		{
-			$delete = anchor("admin/apps/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/apps/edit/".$key['id']."/", "Edit"); // Build actions links
+			$delete = anchor("admin/members/merchantdelete/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/members/merchantedit/".$key['id']."/", "Edit"); // Build actions links
 			$this->table->add_row(
 				$this->get_merchant($key['merchant_id']),		 	 	
 				$key['application_name'],		 	 	 	 	 	 	 
@@ -113,14 +114,20 @@ class Apps extends Application
 		$this->form_validation->set_rules('application_description','Application Description','required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('logo_url','Logo URL','required|trim|xss_clean');						 	 	 	 	 	 	 
 		$this->form_validation->set_rules('signature','Signature','required|trim|xss_clean');
-				
+						
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['merchant_id'] = $merchant_id;
 			$data['merchant_name'] = $this->get_merchant($merchant_id);
 			//$data['page_title'] = 'Application Keys';
-			$data['page_title'] = 'Add Application Keys - '.$merchant_id.' - '.$this->get_merchant($merchant_id);
-			$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+			$data['page_title'] = 'Add Application Keys <br />'.$merchant_id.' - '.$this->get_merchant($merchant_id);
+			if(in_array('members',$this->uri->segment_array())){
+				$data['act_url'] = 'admin/members/merchantadd/'.$merchant_id;
+				$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+			}else{
+				$data['act_url'] = 'admin/apps/add/'.$merchant_id;
+				$data['back_url'] = anchor('admin/apps/manage','Back to list');
+			}
 			$this->ag_auth->view('apps/add',$data);
 		}
 		else
@@ -134,13 +141,18 @@ class Apps extends Application
 			$dataset['application_description'] = set_value('application_description');		 	 	 	 	 	 	 
 			$dataset['logo_url'] = set_value('logo_url');						 	 	 	 	 	 	 
 			$dataset['signature'] = set_value('signature');
-
 			
 			if($this->db->insert($this->config->item('applications_table'),$dataset) === TRUE)
 			{
 				$data['message'] = "The application has now been created.";
 				$data['page_title'] = 'Add Application';
-				$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+				if(in_array('members',$this->uri->segment_array())){
+					$data['act_url'] = 'admin/members/merchantadd/'.$merchant_id;
+					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+				}else{
+					$data['act_url'] = 'admin/apps/add/'.$merchant_id;
+					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+				}
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -148,7 +160,14 @@ class Apps extends Application
 			{
 				$data['message'] = "The application has not been created.";
 				$data['page_title'] = 'Add Application Error';
-				$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+				
+				if(in_array('members',$this->uri->segment_array())){
+					$data['act_url'] = 'admin/members/merchantadd/'.$merchant_id;
+					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+				}else{
+					$data['act_url'] = 'admin/apps/add/'.$merchant_id;
+					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+				}
 				$this->ag_auth->view('message', $data);
 			}
 
@@ -174,8 +193,14 @@ class Apps extends Application
 			$data['merchant_id'] = $merchant_id;
 			$data['merchant_name'] = $this->get_merchant($merchant_id);
 			//$data['page_title'] = 'Application Keys';
-			$data['page_title'] = 'Edit Application Keys - '.$user['application_name'].' - '.$this->get_merchant($merchant_id);
-			$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+			$data['page_title'] = 'Edit Application Keys <br />'.$user['application_name'].' - '.$this->get_merchant($merchant_id);
+			if(in_array('members',$this->uri->segment_array())){
+				$data['act_url'] = 'admin/members/merchantedit/'.$id;
+				$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+			}else{
+				$data['act_url'] = 'admin/apps/edit/'.$id;
+				$data['back_url'] = anchor('admin/apps/manage','Back to list');
+			}
 			$this->ag_auth->view('apps/edit',$data);
 		}
 		else
@@ -194,7 +219,13 @@ class Apps extends Application
 			{
 				$data['message'] = "The application has now been updated.";
 				$data['page_title'] = 'Edit Application';
-				$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+				if(in_array('members',$this->uri->segment_array())){
+					$data['act_url'] = 'admin/members/merchantedit/'.$id;
+					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+				}else{
+					$data['act_url'] = 'admin/apps/edit/'.$id;
+					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+				}
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -202,7 +233,13 @@ class Apps extends Application
 			{
 				$data['message'] = "The application has not been updated.";
 				$data['page_title'] = 'Edit Application Error';
-				$data['back_url'] = anchor('admin/apps/merchantmanage/'.$merchant_id,'Back to list');
+				if(in_array('members',$this->uri->segment_array())){
+					$data['act_url'] = 'admin/members/merchantedit/'.$id;
+					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+				}else{
+					$data['act_url'] = 'admin/apps/edit/'.$id;
+					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+				}
 				$this->ag_auth->view('message', $data);
 			}
 

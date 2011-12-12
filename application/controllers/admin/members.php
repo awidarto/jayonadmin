@@ -27,7 +27,7 @@ class Members extends Application
 			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
 			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Change Password"); // Build actions links
 			if($key['group_id'] === group_id('merchant')){
-				$addapp = anchor("admin/apps/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
+				$addapp = anchor("admin/members/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
 			}else{
 				$addapp = '&nbsp'; // Build actions links
 			}

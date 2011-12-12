@@ -1,6 +1,6 @@
 <div id="form">
 	<div id="form_box">
-			<form method="post" action="<?php echo site_url('admin/apps/add/'.$merchant_id)?>">
+			<form method="post" action="<?php echo site_url($act_url)?>">
 			<input type="hidden" name="merchant_id" value="<?php echo $merchant_id ?>" />
 			<!--
 			Merchant:<br />
@@ -24,7 +24,7 @@
 			Signature:<br />
 			<textarea name="signature" cols="60" rows="10"><?php echo set_value('signature'); ?></textarea><br />
 
-			<input type="submit" value="Add" name="register" />
+			<input type="submit" value="Add" name="add" />
 				<?php
 					print $back_url;
 				?>

@@ -1,6 +1,6 @@
 <div id="form">
 	<div id="form_box">
-			<form method="post" action="<?php echo site_url('admin/apps/edit/'.$user['id'])?>">
+			<form method="post" action="<?php echo site_url($act_url)?>">
 			<input type="hidden" name="merchant_id" value="<?php echo $merchant_id ?>" />
 			Application Name:<br />
 			<input type="text" name="application_name" size="50" class="form" value="<?php echo set_value('application_name',$user['application_name']); ?>" /><br /><?php echo form_error('application_name'); ?><br />
@@ -20,7 +20,7 @@
 			Signature:<br />
 			<textarea name="signature" cols="60" rows="10"><?php echo set_value('signature',$user['signature']); ?></textarea><br />
 
-			<input type="submit" value="Add" name="register" />
+			<input type="submit" value="Edit" name="edit" />
 				<?php
 					print $back_url;
 				?>

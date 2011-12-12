@@ -51,5 +51,11 @@ $route['register'] = "admin/admin/register";
 $route['admin/dashboard'] = "admin/admin/index";
 // END AUTHENTICATION LIBRARY ROUTES
 
+//JAYON SPECIFIC ROUTES
+$route['admin/members/merchantmanage/(:num)'] = "admin/apps/merchantmanage/$1";
+$route['admin/members/merchantadd/(:num)'] = "admin/apps/add/$1";
+$route['admin/members/merchantedit/(:num)'] = "admin/apps/edit/$1";
+$route['admin/members/merchantdelete/(:num)'] = "admin/apps/delete/$1";
+
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
