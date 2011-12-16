@@ -177,7 +177,9 @@ table.display td.center {
 	background: url('../../images/sort_desc_disabled.png') no-repeat center right;
 }
 
-
+th.sorting {
+	padding-right:25px;
+}
 
 
 

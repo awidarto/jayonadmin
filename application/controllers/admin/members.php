@@ -20,7 +20,7 @@ class Members extends Application
 			
 		$data = $this->db->get($this->config->item('jayon_members_table'));
 		$result = $data->result_array();
-		$this->table->set_heading('Username', 'Email','Full Name','Merchant Name','Mobile','Phone','Group','Actions'); // Setting headings for the table
+		$this->table->set_heading('Username', 'Email','Full Name','Merchant Name','Bank Account','Mobile','Phone','Group','Actions'); // Setting headings for the table
 		
 		foreach($result as $value => $key)
 		{
@@ -33,7 +33,7 @@ class Members extends Application
 			}
 			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
-			$this->table->add_row($detail, $key['email'],$key['fullname'],$key['merchantname'],$key['mobile'],$key['phone'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$addapp.' '.$delete); // Adding row to table
+			$this->table->add_row($detail, $key['email'],$key['fullname'],$key['merchantname'],$key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],$key['mobile'],$key['phone'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$addapp.' '.$delete); // Adding row to table
 		}
 		$page['page_title'] = 'Manage Members';
 		$this->ag_auth->view('members/manage',$page); // Load the view
@@ -101,6 +101,9 @@ class Members extends Application
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');	
 		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');	
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');	
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');	
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');	
 		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
 		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
 		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
@@ -125,8 +128,12 @@ class Members extends Application
 			$password = $this->ag_auth->salt(set_value('password'));
 			$fullname = set_value('fullname');
 			$merchantname = set_value('merchantname');
+			$bank = set_value('bank');
+			$account_number = set_value('account_number');
+			$account_name = set_value('account_name');
 			$street = set_value('street'); 
 			$district = set_value('district');
+			$province = set_value('province');
 			$city = set_value('city');
 			$country = set_value('country');
 			$zip = set_value('zip');
@@ -140,8 +147,12 @@ class Members extends Application
 				'password'=>$password,
 				'fullname'=>$fullname,
 				'merchantname'=>$merchantname,
+				'bank'=>$bank,
+				'account_number'=>$account_number,
+				'account_name'=>$account_name,
 				'street'=>$street,
 				'district'=>$district,
+				'province'=>$province,
 				'city'=>$city,
 				'country'=>$country, 
 				'zip'=>$zip,
@@ -176,6 +187,9 @@ class Members extends Application
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');	
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');	
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');	
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');	
 		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
 		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
 		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
@@ -202,8 +216,12 @@ class Members extends Application
 
 			$dataset['fullname'] = set_value('fullname');
 			$dataset['merchantname'] = set_value('merchantname');
+			$dataset['bank'] = set_value('bank');
+			$dataset['account_name'] = set_value('account_name');
+			$dataset['account_number'] = set_value('account_number');
 			$dataset['street'] = set_value('street'); 
 			$dataset['district'] = set_value('district');
+			$dataset['province'] = set_value('province');
 			$dataset['city'] = set_value('city');
 			$dataset['country'] = set_value('country');
 			$dataset['zip'] = set_value('zip');

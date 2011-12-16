@@ -19,8 +19,9 @@ $config['site_title']	= 'Jayon Express Admin';
 
 /*table names*/
 $config['incoming_delivery_table'] = 'delivery_order_incoming';
-$config['assigned_delivery_table'] = 'delivery_order_assigned';
-$config['delivered_delivery_table'] = 'delivery_order_delivered';
+$config['assigned_delivery_table'] = 'delivery_order_active';
+$config['delivered_delivery_table'] = 'delivery_order_active';
+$config['archived_delivery_table'] = 'delivery_order_archive';
 
 $config['delivery_details_table'] = 'delivery_order_details';
 
@@ -28,9 +29,15 @@ $config['applications_table'] = 'applications';
 $config['delivery_log_table'] = 'delivery_log';
 $config['location_log_table'] = 'location_log';
 $config['sequence_table'] = 'applications';
+$config['device_assignment_table'] = 'device_assignment';
 
 
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_devices_table'] = 'devices';
+
+$config['fetch_method'] = array(
+	'GET'=>'GET',
+	'URL'=>'URL Segment'
+);
 ?>

@@ -111,6 +111,8 @@ class Apps extends Application
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');				 	 	 	 	 	 	 
 		$this->form_validation->set_rules('application_name','Application Name','requiredtrim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('callback_url','Callback URL','required|trim|xss_clean');		 	 	 	 	 	 	 
+		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','required|trim|xss_clean');		 	 	 	 	 	 	 
+		$this->form_validation->set_rules('fetch_method','Fetch Method','required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('application_description','Application Description','required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('logo_url','Logo URL','required|trim|xss_clean');						 	 	 	 	 	 	 
 		$this->form_validation->set_rules('signature','Signature','required|trim|xss_clean');
@@ -138,6 +140,8 @@ class Apps extends Application
 			$dataset['application_name'] = set_value('application_name');		 	 	 	 	 	 	 
 			$dataset['key'] = random_string('sha1',40);					 	 	 	 	 	 	 
 			$dataset['callback_url'] = set_value('callback_url');		 	 	 	 	 	 	 
+			$dataset['fetch_detail_url'] = set_value('fetch_detail_url');		 	 	 	 	 	 	 
+			$dataset['fetch_method'] = set_value('fetch_method');		 	 	 	 	 	 	 
 			$dataset['application_description'] = set_value('application_description');		 	 	 	 	 	 	 
 			$dataset['logo_url'] = set_value('logo_url');						 	 	 	 	 	 	 
 			$dataset['signature'] = set_value('signature');
@@ -180,6 +184,8 @@ class Apps extends Application
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');				 	 	 	 	 	 	 
 		$this->form_validation->set_rules('application_name','Application Name','requiredtrim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('callback_url','Callback URL','required|trim|xss_clean');		 	 	 	 	 	 	 
+		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','required|trim|xss_clean');		 	 	 	 	 	 	 
+		$this->form_validation->set_rules('fetch_method','Fetch Method','required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('application_description','Application Description','required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('logo_url','Logo URL','required|trim|xss_clean');						 	 	 	 	 	 	 
 		$this->form_validation->set_rules('signature','Signature','required|trim|xss_clean');
@@ -211,6 +217,8 @@ class Apps extends Application
 			$dataset['application_name'] = set_value('application_name');
 			$dataset['callback_url'] = set_value('callback_url');		 	 	 	 	 	 	 
 			$dataset['application_description'] = set_value('application_description');		 	 	 	 	 	 	 
+			$dataset['fetch_detail_url'] = set_value('fetch_detail_url');		 	 	 	 	 	 	 
+			$dataset['fetch_method'] = set_value('fetch_method');
 			$dataset['logo_url'] = set_value('logo_url');						 	 	 	 	 	 	 
 			$dataset['signature'] = set_value('signature');
 

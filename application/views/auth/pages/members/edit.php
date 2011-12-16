@@ -14,6 +14,15 @@
 			Merchant Name:<br />
 			<input type="text" name="merchantname" size="50" class="form" value="<?php echo set_value('merchantname',$user['merchantname']); ?>" /><?php echo form_error('merchantname'); ?><br /><br />
 
+			Bank:<br />
+			<input type="text" name="bank" size="50" class="form" value="<?php echo set_value('bank',$user['bank']); ?>" /><?php echo form_error('bank'); ?><br /><br />
+
+			Account Name:<br />
+			<input type="text" name="account_name" size="50" class="form" value="<?php echo set_value('account_name',$user['account_name']); ?>" /><?php echo form_error('account_name'); ?><br /><br />
+
+			Account Number:<br />
+			<input type="text" name="account_number" size="50" class="form" value="<?php echo set_value('account_number',$user['account_number']); ?>" /><?php echo form_error('account_number'); ?><br /><br />
+
 			Street:<br />
 			<input type="text" name="street" size="50" class="form" value="<?php echo set_value('mobile',$user['street']); ?>" /><?php echo form_error('mobile'); ?><br /><br />
 
@@ -22,6 +31,9 @@
 
 			City:<br />
 			<input type="text" name="city" size="50" class="form" value="<?php echo set_value('city',$user['city']); ?>" /><?php echo form_error('city'); ?><br /><br />
+
+			Province:<br />
+			<input type="text" name="province" size="50" class="form" value="<?php echo set_value('province',$user['province']); ?>" /><?php echo form_error('province'); ?><br /><br />
 
 			Country:<br />
 			<input type="text" name="country" size="50" class="form" value="<?php echo set_value('country',$user['country']); ?>" /><?php echo form_error('country'); ?><br /><br />

@@ -14,6 +14,12 @@
 			Callback URL:<br />
 			<input type="text" name="callback_url" size="50" class="form" value="<?php echo set_value('callback_url',$user['callback_url']); ?>" /><br /><?php echo form_error('callback_url'); ?><br />
 
+			Fetch Detail URL:<br />
+			<input type="text" name="fetch_detail_url" size="50" class="form" value="<?php echo set_value('fetch_detail_url',$user['fetch_detail_url']); ?>" /><br /><?php echo form_error('fetch_detail_url'); ?><br />
+
+			Fetch Method:<br />
+			<?php echo form_dropdown('fetch_method',$this->config->item('fetch_method'),set_value('fetch_method',$user['fetch_method']))?><br />
+
 			Application Description:<br />
 			<textarea name="application_description" cols="60" rows="10"><?php echo set_value('application_description',$user['application_description']); ?></textarea><br />
 

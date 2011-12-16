@@ -16,7 +16,7 @@ class Location extends Application
 	
 	public function tracker()
 	{
-		$data = $this->db->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->get($this->config->item('location_log_table'));
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
