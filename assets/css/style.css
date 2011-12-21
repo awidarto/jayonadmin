@@ -35,9 +35,11 @@ ul#navigation li a.selected{color:#231e18;background:white;font-size:18px;float:
 
 p{margin-left:40px;}
 
-input.clean{padding:4px;border:1px solid #231e18;}
+input.clean{padding:4px;border:1px solid #231e18;width:200px;}
 
-table{width:100%;text-align:left;margin:20px 0;}
+#login input.form{width:250px;}
+
+table{width:100%;text-align:left;margin:20px 0;clear:both;}
 /*
 table tr.alt{background:#ECECEC;}
 table thead tr{background:#EEE;}
