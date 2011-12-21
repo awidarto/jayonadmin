@@ -11,11 +11,16 @@ class Members extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
+
+		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 		
 	}
 	
 	public function manage()
 	{
+
+		$this->breadcrumb->add_crumb('Members','admin/members/manage');
+		
 	    $this->load->library('table');		
 			
 		$data = $this->db->get($this->config->item('jayon_members_table'));

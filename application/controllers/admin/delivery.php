@@ -11,11 +11,15 @@ class Delivery extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
+
+		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 	    
 	}
 	
 	public function incoming()
 	{
+		$this->breadcrumb->add_crumb('Incoming Delivery Orders','admin/delivery/incoming');
+
 		$data = $this->db->where('status !=','assigned')->get($this->config->item('incoming_delivery_table'));
 		
 		$result = $data->result_array();
@@ -69,6 +73,8 @@ class Delivery extends Application
 
 	public function assigned()
 	{
+		$this->breadcrumb->add_crumb('Assigned Delivery Orders','admin/delivery/assigned');
+		
 		$data = $this->db->get($this->config->item('assigned_delivery_table'));
 		$result = $data->result_array();
 		
@@ -123,6 +129,8 @@ class Delivery extends Application
 	
 	public function delivered()
 	{
+		$this->breadcrumb->add_crumb('Delivered Orders','admin/delivery/delivered');
+		
 		$data = $this->db->where('status','delivered')->get($this->config->item('delivered_delivery_table'));
 		$result = $data->result_array();
 		
@@ -167,6 +175,8 @@ class Delivery extends Application
 
 	public function log()
 	{
+		$this->breadcrumb->add_crumb('Delivery Log','admin/delivery/log');
+		
 		$data = $this->db->get($this->config->item('delivery_log_table'));
 		$result = $data->result_array();
 		

@@ -11,11 +11,15 @@ class Location extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
+
+		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 	    
 	}
 	
 	public function tracker()
 	{
+		$this->breadcrumb->add_crumb('Location Tracker','admin/location/tracker');
+		
 		$data = $this->db->get($this->config->item('location_log_table'));
 		$result = $data->result_array();
 		
@@ -59,6 +63,8 @@ class Location extends Application
 
 	public function log()
 	{
+		$this->breadcrumb->add_crumb('Location Log','admin/location/log');
+		
 		$data = $this->db->get($this->config->item('location_log_table'));
 		$result = $data->result_array();
 		

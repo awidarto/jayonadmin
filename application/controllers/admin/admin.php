@@ -11,6 +11,8 @@ class Admin extends Application
 	{
 		if(logged_in())
 		{
+			$this->breadcrumb->add_crumb('Home','admin/dashboard');
+			
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}

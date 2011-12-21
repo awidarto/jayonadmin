@@ -11,11 +11,14 @@ class Apps extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
+
+		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 		
 	}
 	
 	public function manage()
 	{
+		$this->breadcrumb->add_crumb('Application Keys','admin/apps/manage');
 			
 		$data = $this->db->get($this->config->item('applications_table'));
 		$result = $data->result_array();
@@ -106,6 +109,9 @@ class Apps extends Application
 	
 	public function add($merchant_id)
 	{
+		$this->breadcrumb->add_crumb('Application Keys','admin/apps/manage');
+		$this->breadcrumb->add_crumb('Add Application Keys','admin/apps/add');
+
 		$this->form_validation->set_rules('owner_id','Owner ID','trim');	 	 	
 		$this->form_validation->set_rules('merchant_id','Merchant ID','trim');
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');				 	 	 	 	 	 	 
@@ -181,6 +187,9 @@ class Apps extends Application
 
 	public function edit($id)
 	{
+		$this->breadcrumb->add_crumb('Application Keys','admin/apps/manage');
+		$this->breadcrumb->add_crumb('Edit Application Keys','admin/apps/edit');
+		
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');				 	 	 	 	 	 	 
 		$this->form_validation->set_rules('application_name','Application Name','requiredtrim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('callback_url','Callback URL','required|trim|xss_clean');		 	 	 	 	 	 	 

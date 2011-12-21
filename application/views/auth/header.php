@@ -43,6 +43,7 @@
 				<?php $this->load->view($this->config->item('auth_views_root') . 'nav'); ?>
 			</div>
 		<?php endif;?>
+		<?php print $this->breadcrumb->output();?>
 		<div id="container">
 		<?php if(logged_in() === TRUE):?>
 			<div id="identity" style="clear:both;display:block;height:35px;">

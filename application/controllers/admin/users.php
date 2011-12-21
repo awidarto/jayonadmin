@@ -12,11 +12,16 @@ class Users extends Application
 		);
 		$this->table->set_template($this->table_tpl);
 		
+		$this->breadcrumb->add_crumb('Home','admin/dashboard');
+		
+		
 	}
 	
 	public function manage()
 	{
 	    $this->load->library('table');		
+			
+		$this->breadcrumb->add_crumb('Administrators','admin/users/manage');
 			
 		$data = $this->db->get($this->ag_auth->config['auth_user_table']);
 		$result = $data->result_array();

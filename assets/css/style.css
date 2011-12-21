@@ -79,3 +79,9 @@ a{color:#231e18;margin-right:10px;}
 .clear{
 	clear:both;
 }
+
+#breadcrumb{
+	padding:8px;
+	padding-left:20px;
+	margin-top:15px;
+}
