@@ -40,9 +40,63 @@ class Members extends Application
 			$detail = anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
 			$this->table->add_row($detail, $key['email'],$key['fullname'],$key['merchantname'],$key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],$key['mobile'],$key['phone'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$addapp.' '.$delete); // Adding row to table
 		}
+		
+		$page['sortdisable'] = '8';
+		$page['ajaxurl'] = 'admin/members/ajaxmanage';
+		$page['add_button'] = array('link'=>'admin/members/add','label'=>'Add New Member');
 		$page['page_title'] = 'Manage Members';
-		$this->ag_auth->view('members/manage',$page); // Load the view
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
+	
+	public function ajaxmanage(){
+
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+		
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+
+		$columns = array('username', 'email','fullname','merchantname','account_number','mobile','phone','group_id');
+
+		// get total count result
+		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
+
+		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
+		
+		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_members_table'));
+		
+		//print $this->db->last_query();
+		
+		$result = $data->result_array();
+			
+		$aadata = array();
+		
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
+			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Change Password"); // Build actions links
+			if($key['group_id'] === group_id('merchant')){
+				$addapp = anchor("admin/members/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
+			}else{
+				$addapp = '&nbsp'; // Build actions links
+			}
+			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
+			$detail = anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
+			$aadata[] = array($detail, $key['email'],$key['fullname'],$key['merchantname'],$key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],$key['mobile'],$key['phone'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$addapp.' '.$delete); // Adding row to table
+			
+		}
+		
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+		
+		print json_encode($result);
+	}
+	
 	
 	function details($id){
 		$this->load->library('table');		

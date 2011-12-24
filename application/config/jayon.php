@@ -16,6 +16,7 @@
 */
 $config['site_title']	= 'Jayon Express Admin';
 
+$config['infinite_scroll'] = false;
 
 /*table names*/
 $config['incoming_delivery_table'] = 'delivery_order_incoming';

@@ -21,15 +21,6 @@
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
-		<script>
-			$(document).ready(function() {
-			    $('.dataTable').dataTable(
-					{
-						
-					}
-				);
-			} );
-		</script>
 	
 	</head>
 	<body>

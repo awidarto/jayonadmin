@@ -35,8 +35,9 @@ class Users extends Application
 			$detail = anchor("admin/users/details/".$key['id']."/", $key['username']); // Build detail links
 			$this->table->add_row($detail, $key['email'],$key['fullname'],$key['mobile'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$delete); // Adding row to table
 		}
-		$page['page_title'] = 'Manage Users';
-		$this->ag_auth->view('users/manage',$page); // Load the view
+		$page['add_button'] = array('link'=>'admin/users/add','label'=>'Add New Admin');
+		$page['page_title'] = 'Manage Admin';
+		$this->ag_auth->view('listview',$page); // Load the view
 	}
 
 	function details($id){
@@ -87,6 +88,18 @@ class Users extends Application
 		return $row->description;
 	}
 	
+	public function get_admin_zone($id){
+		$q = $this->db->where('user_id',$id)->get('admin_zones');
+		if($q->num_rows() > 0){
+			foreach($q->result_array() as $val){
+				$result[] = $val['district'];
+			}
+			return $result;
+		}else{
+			return false;
+		}
+	}
+	
 	public function update_user($id,$data){
 		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
 		return $result;
@@ -100,6 +113,7 @@ class Users extends Application
 		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district[]', 'Administration Area', 'xss_clean');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
 				
@@ -111,15 +125,31 @@ class Users extends Application
 		}
 		else
 		{
-			$username = set_value('username');
-			$password = $this->ag_auth->salt(set_value('password'));
-			$email = set_value('email');
-			$fullname = set_value('fullname');
-			$mobile = set_value('mobile');
-			$group_id = set_value('group_id');
+			$dataset['username'] = set_value('username');
+			$dataset['password'] = $this->ag_auth->salt(set_value('password'));
+			$dataset['email'] = set_value('email');
+			$dataset['fullname'] = set_value('fullname');
+			$dataset['mobile'] = set_value('mobile');
+			$dataset['group_id'] = set_value('group_id');
 			
-			if($this->ag_auth->register($username, $password, $email, $group_id) === TRUE)
+			$districts = $this->input->post('district');
+			
+
+			if($this->db->insert($this->config->item('auth_user_table'),$dataset) === TRUE)
+			//if($this->ag_auth->register($username, $password, $email, $group_id) === TRUE)
 			{
+				$new_id = $this->db->insert_id();
+				
+				if($districts != null && is_array($districts)){
+					$idx = 0;
+					foreach($districts as $d){
+						$district[$idx]['user_id'] = $new_id;
+						$district[$idx]['district'] = $d;
+						$idx++;
+					}
+					$this->db->insert_batch('admin_zones',$district);
+				}
+				
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add User';
 				$this->ag_auth->view('message', $data);
@@ -141,6 +171,7 @@ class Users extends Application
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district[]', 'Administration Area', 'xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		
 		$user = $this->get_user($id);
@@ -149,6 +180,7 @@ class Users extends Application
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = $this->get_group();
+			$data['district'] = $this->get_admin_zone($id);
 			$data['page_title'] = 'Edit User';
 			$this->ag_auth->view('users/edit',$data);
 		}
@@ -158,10 +190,23 @@ class Users extends Application
 			$dataset['group_id'] = set_value('group_id');
 			$dataset['fullname'] = set_value('fullname');
 			$dataset['mobile'] = set_value('mobile');
+
+			$districts = $this->input->post('district');
 			
 			
 			if($this->update_user($id,$dataset) === TRUE)
 			{
+				if($districts != null && is_array($districts)){
+					$this->db->where('user_id',$id)->delete('admin_zones');
+					$idx = 0;
+					foreach($districts as $d){
+						$district[$idx]['user_id'] = $id;
+						$district[$idx]['district'] = $d;
+						$idx++;
+					}
+					$this->db->insert_batch('admin_zones',$district);
+				}
+				
 				$data['message'] = "The user account has now updated.";
 				$data['page_title'] = 'Edit User';
 				$this->ag_auth->view('message', $data);

@@ -15,6 +15,63 @@ class Apps extends Application
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 		
 	}
+
+	public function ajaxmanage()
+	{
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+		
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+
+		$columns = array(
+			'merchant_id',		 	 	
+			'application_name',		 	 	 	 	 	 	 
+			'domain',				 	 	 	 	 	 	 
+			'key',					 	 	 	 	 	 	 
+			'callback_url',		 	 	 	 	 	 	 
+			'application_description'		 	 	 	 	 	 	 
+			);
+
+		// get total count result
+		$count_all = $this->db->count_all($this->config->item('applications_table'));
+
+		$count_display_all = $this->db->count_all_results($this->config->item('applications_table'));
+		
+		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('applications_table'));
+		
+		//print $this->db->last_query();
+		
+		$result = $data->result_array();
+			
+		$aadata = array();
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/apps/delete/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/apps/edit/".$key['id']."/", "Edit"); // Build actions links
+			$add = anchor("admin/apps/add/".$key['merchant_id']."/", "Add"); // Build actions links
+			$aadata[] = array(
+				$this->get_merchant($key['merchant_id']),		 	 	
+				$key['application_name'],		 	 	 	 	 	 	 
+				$key['domain'],				 	 	 	 	 	 	 
+				$key['key'],					 	 	 	 	 	 	 
+				$key['callback_url'],		 	 	 	 	 	 	 
+				$key['application_description'],		 	 	 	 	 	 	 
+				$add.' '.$edit.' '.$delete
+			); // Adding row to table
+		}
+		
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+		
+		print json_encode($result); // Load the view
+	}
+
 	
 	public function manage()
 	{
@@ -47,8 +104,11 @@ class Apps extends Application
 				$add.' '.$edit.' '.$delete
 			); // Adding row to table
 		}
+
+		$page['sortdisable'] = '6';
+		$page['ajaxurl'] = 'admin/apps/ajaxmanage';
 		$page['page_title'] = 'Application Keys';
-		$this->ag_auth->view('apps/manage',$page); // Load the view
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
 
 	public function merchantmanage($id)

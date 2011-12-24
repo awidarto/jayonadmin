@@ -34,8 +34,10 @@ class Couriers extends Application
 			$detail = anchor("admin/couriers/details/".$key['id']."/", $key['username']); // Build detail links
 			$this->table->add_row($detail, $key['email'],$key['fullname'],$key['mobile'],$key['phone'],$this->get_group_description($key['group_id']),$edit.' '.$editpass.' '.$delete); // Adding row to table
 		}
+
+		$page['add_button'] = array('link'=>'admin/couriers/add','label'=>'Add New Courier');
 		$page['page_title'] = 'Manage Couriers';
-		$this->ag_auth->view('couriers/manage',$page); // Load the view
+		$this->ag_auth->view('listview',$page); // Load the view
 	}
 	
 	function details($id){

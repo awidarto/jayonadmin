@@ -21,7 +21,10 @@
 
 			Mobile:<br />
 			<input type="text" name="mobile" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />
-				
+			
+			Administration Area:<br />
+			<?php print form_multiselect('district[]',get_zone_options(),$this->input->post('district'));?><br />
+
 			<input type="submit" value="Add" name="register" />
 			
 			<?php

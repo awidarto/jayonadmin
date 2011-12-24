@@ -33,8 +33,10 @@ class Devices extends Application
 			$edit = anchor("admin/devices/edit/".$key['id']."/", "Edit"); // Build actions links
 			$this->table->add_row($key['identifier'], $key['descriptor'],$key['devname'],$key['mobile'],$edit.' '.$assign.' '.$delete); // Adding row to table
 		}
+
+		$page['add_button'] = array('link'=>'admin/devices/add','label'=>'Add New Device');
 		$page['page_title'] = 'Manage Devices';
-		$this->ag_auth->view('devices/manage',$page); // Load the view
+		$this->ag_auth->view('listview',$page); // Load the view
 	}
 	
 	public function delete($id)
