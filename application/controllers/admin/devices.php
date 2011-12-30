@@ -29,7 +29,7 @@ class Devices extends Application
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/devices/delete/".$key['id']."/", "Delete"); // Build actions links
-			$assign = anchor("admin/devices/assign/".$key['id']."/", "Assignment"); // Build actions links
+			$assign = anchor("admin/devices/assignment/".$key['id']."/", "Assignment"); // Build actions links
 			$edit = anchor("admin/devices/edit/".$key['id']."/", "Edit"); // Build actions links
 			$this->table->add_row($key['identifier'], $key['descriptor'],$key['devname'],$key['mobile'],$edit.' '.$assign.' '.$delete); // Adding row to table
 		}
@@ -38,6 +38,137 @@ class Devices extends Application
 		$page['page_title'] = 'Manage Devices';
 		$this->ag_auth->view('listview',$page); // Load the view
 	}
+
+	public function ajaxassignment($id)
+	{
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+		
+		$columns = array(
+			'assignment_date',		 	 	 	 	 	 	 
+			'delivery_id',			 	 	 	 	 	 	 
+			'application_name',		 	 	
+			'buyer_id',			 	 	
+			'merchant_id',			 	 	
+			'merchant_trans_id',
+			'device_id',			 	 	
+			'courier_id',			 	 	
+			'shipping_address',	 	 				 
+			'phone',				 	 	 	 	 	 	 
+			'status',				 	 	 	 	 	 	 
+			'reschedule_ref',		 	 	 	 	 	 	 
+			'revoke_ref'
+		);
+
+		// get total count result
+		$count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
+
+		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
+				
+		$data = $this->db->where('device_id',$id)->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('assigned_delivery_table'));
+		
+		$result = $data->result_array();
+		
+		$aadata = array();
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+			
+			$app = $this->get_app_info($key['application_key']);
+			
+			$aadata[] = array(
+				$key['assignment_date'],		 	 	 	 	 	 	 
+				$key['delivery_id'],			 	 	 	 	 	 	 
+				$app['application_name'],		 	 	
+				$key['buyer_id'],			 	 	
+				$key['merchant_id'],			 	 	
+				$key['merchant_trans_id'],
+				$key['device_id'],			 	 	
+				$key['courier_id'],			 	 	
+				$key['shipping_address'],	 	 				 
+				$key['phone'],				 	 	 	 	 	 	 
+				$key['status'],				 	 	 	 	 	 	 
+				$key['reschedule_ref'],		 	 	 	 	 	 	 
+				$key['revoke_ref'],
+				$printslip.' '.$edit.' '.$delete
+			);
+		}
+		
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+		
+		print json_encode($result);
+	}
+
+
+	public function assignment($id)
+	{
+		$this->breadcrumb->add_crumb('Devices','admin/devices/manage');
+		$this->breadcrumb->add_crumb('Assigned Delivery Orders','admin/devices/assignment/'.$id);
+		
+		$data = $this->db->where('device_id',$id)->order_by('assignment_date','desc')->get($this->config->item('assigned_delivery_table'));
+		$result = $data->result_array();
+		
+		$this->table->set_heading(
+			'Assignment Date',			 	 	
+			'Delivery ID',			 	 	 	 	 	 	 
+			'App Name',	 	 	
+			//'App Domain',	 	 	
+			'Buyer',			 	 	
+			'Merchant',			 	 	
+			'Merchant Trans ID',		 	 	 	 	 	 	 
+			'Device',			 	 	
+			'Courier',			 	 	
+			'Shipping Address',	 	 				 
+			'Phone',				 	 	 	 	 	 	 
+			'Status',				 	 	 	 	 	 	 
+			'Reschedule Ref',		 	 	 	 	 	 	 
+			'Revoke Ref',
+			'Actions'
+			); // Setting headings for the table
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+			
+			$app = $this->get_app_info($key['application_key']);
+			
+			$this->table->add_row(
+				$key['assignment_date'],		 	 	 	 	 	 	 
+				$key['delivery_id'],			 	 	 	 	 	 	 
+				$app['application_name'],		 	 	
+				//$app['domain'],		 	 	
+				$key['buyer_id'],			 	 	
+				$key['merchant_id'],			 	 	
+				$key['merchant_trans_id'],
+				$key['device_id'],			 	 	
+				$key['courier_id'],			 	 	
+				$key['shipping_address'],	 	 				 
+				$key['phone'],				 	 	 	 	 	 	 
+				$key['status'],				 	 	 	 	 	 	 
+				$key['reschedule_ref'],		 	 	 	 	 	 	 
+				$key['revoke_ref'],
+				$printslip.' '.$edit.' '.$delete
+			);
+		}
+		$page['sortdisable'] = '13';
+		$page['ajaxurl'] = 'admin/devices/ajaxassignment/'.$id;
+		$page['page_title'] = 'Assigned Delivery Orders';
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+	}
+
 	
 	public function delete($id)
 	{
@@ -204,8 +335,12 @@ class Devices extends Application
 
 		} // if($this->form_validation->run() == FALSE)
 		
-	} // public function register()
-	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
+	} 
+	
+	public function get_app_info($app_key){
+		$result = $this->db->where('key',$app_key)->get($this->config->item('applications_table'));
+		return $result->row_array();
+	}
 }
 
 ?>

@@ -84,6 +84,7 @@ class Application extends CI_Controller
 	
 	public function login($redirect = NULL)
 	{
+		//$redirect = $this->uri->uri_string();
 		
 		if($redirect === NULL)
 		{

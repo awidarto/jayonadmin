@@ -25,10 +25,10 @@ class Delivery extends Application
 		$sort_dir = $this->input->post('sSortDir_0');
 
 		$columns = array(
+			'buyerdeliverytime',			 	 	
+			'buyerdeliveryzone',			 	 	
 			'delivery_id',			 	 	 	 	 	 	 
 			null,
-			'buyerdeliveryzone',			 	 	
-			'buyerdeliverytime',			 	 	
 			'buyer_id',			 	 	
 			'merchant_id',			 	 	
 			'merchant_trans_id',		 	 	 	 	 	 	 
@@ -46,7 +46,7 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->where('status !=','assigned')->count_all_results($this->config->item('incoming_delivery_table'));
 		
-		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->group_by(array('buyerdeliverytime','buyerdeliveryzone'))->get($this->config->item('incoming_delivery_table'));
 		
 		$result = $data->result_array();
 			
@@ -61,11 +61,11 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$aadata[] = array(
+				$key['buyerdeliveryzone'],			 	 	
+				$key['buyerdeliverytime'],			 	 	
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
-				$key['buyerdeliveryzone'],			 	 	
-				$key['buyerdeliverytime'],			 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
@@ -97,11 +97,11 @@ class Delivery extends Application
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
+			'Zone',
+			'Delivery Time',
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
 			//'App Domain',	 	 	
-			'Zone',
-			'Delivery Time',
 			'Buyer',			 	 	
 			'Merchant',			 	 	
 			'Merchant Trans ID',		 	 	 	 	 	 	 
@@ -122,11 +122,11 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$this->table->add_row(
+				$key['buyerdeliveryzone'],			 	 	
+				$key['buyerdeliverytime'],			 	 	
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
-				$key['buyerdeliveryzone'],			 	 	
-				$key['buyerdeliverytime'],			 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
@@ -191,7 +191,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
-				$app['domain'],		 	 	
+				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],
@@ -228,7 +228,7 @@ class Delivery extends Application
 		$this->table->set_heading(
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
-			'App Domain',	 	 	
+			//'App Domain',	 	 	
 			'Buyer',			 	 	
 			'Merchant',			 	 	
 			'Merchant Trans ID',		 	 	 	 	 	 	 
@@ -254,7 +254,7 @@ class Delivery extends Application
 			$this->table->add_row(
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
-				$app['domain'],		 	 	
+				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],
@@ -269,7 +269,7 @@ class Delivery extends Application
 				$printslip.' '.$edit.' '.$delete
 			);
 		}
-		
+		$page['sortdisable'] = '13';
 		$page['ajaxurl'] = 'admin/delivery/ajaxassigned';
 		$page['page_title'] = 'Assigned Delivery Orders';
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view

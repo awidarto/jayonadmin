@@ -125,6 +125,11 @@ table.display {
 	 */
 }
 
+table.dataTable thead tr{
+	background-color:#5E5E5E;
+	color:white;
+}
+
 table.display thead th {
 	padding: 3px 18px 3px 10px;
 	border-bottom: 1px solid black;
