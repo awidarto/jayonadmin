@@ -38,13 +38,34 @@ class Delivery extends Application
 			'reschedule_ref',		 	 	 	 	 	 	 
 			'revoke_ref',
 			);
-			
+		
 		
 
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
 
 		$count_display_all = $this->db->where('status !=','assigned')->count_all_results($this->config->item('incoming_delivery_table'));
+		
+		//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+		}
+		
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_0'));
+		}
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_1'));
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+		}
+		
 		
 		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->group_by(array('buyerdeliverytime','buyerdeliveryzone'))->get($this->config->item('incoming_delivery_table'));
 		
@@ -63,7 +84,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$key['buyerdeliveryzone'],			 	 	
 				$key['buyerdeliverytime'],			 	 	
-				$key['delivery_id'],			 	 	 	 	 	 	 
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
@@ -113,6 +134,13 @@ class Delivery extends Application
 			'Actions'
 			); // Setting headings for the table
 		
+		$this->table->set_footing(
+			'<input type="text" name="search_zone" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			form_button('do_assign','Assign selection to device','id="doAssign"')
+			);
+		
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
@@ -141,7 +169,7 @@ class Delivery extends Application
 		$page['sortdisable'] = '1,12';
 		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
 		$page['page_title'] = 'Incoming Delivery Orders';
-		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+		$this->ag_auth->view('colajaxlistview',$page); // Load the view
 	}
 
 	public function ajaxassigned(){

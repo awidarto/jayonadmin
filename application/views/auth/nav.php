@@ -7,6 +7,7 @@
 ?>
 <ul id="navigation">
 <?php
+	//print_r($this->session->userdata);
 	if(logged_in())
 	{
 	?>
