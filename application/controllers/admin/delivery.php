@@ -82,8 +82,8 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$aadata[] = array(
-				$key['buyerdeliveryzone'],			 	 	
 				$key['buyerdeliverytime'],			 	 	
+				$key['buyerdeliveryzone'],			 	 	
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
@@ -118,8 +118,8 @@ class Delivery extends Application
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
-			'Zone',
 			'Delivery Time',
+			'Zone',
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
 			//'App Domain',	 	 	
@@ -135,7 +135,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
-			'<input type="text" name="search_zone" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			form_button('do_assign','Assign selection to device','id="doAssign"')
@@ -549,6 +549,20 @@ class Delivery extends Application
 		} // if($this->form_validation->run() == FALSE)
 		
 	} // public function register()
+	
+	public function ajaxdevicecap(){
+		
+	}
+	
+	public function ajaxassign(){
+		
+	}
+	
+	public function getzone(){
+		$q = $this->input->get('term');
+		$zones = ajax_find_zones($q,'district');
+		print json_encode($zones);
+	}	
 	
 	public function assign($delivery_id){
 		
