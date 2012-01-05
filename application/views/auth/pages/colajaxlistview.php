@@ -71,16 +71,17 @@
 		
 		$('#doAssign').click(function(){
 			var test = '';
-			alert('length '+('.assign_check:checked').length);
-			if($('.assign_check:checked').length  == 0){
-				alert('Please select one or more delivery order');
-			}else{
-				$('.assign_check:checked').each(function(){
-					test += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
-				});
+			var count = 0;
+			$('.assign_check:checked').each(function(){
+				test += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
+				count++;
+			});
+			
+			if(count > 0){
 				$('#trans_list').html(test);
 				$('#assign_dialog').dialog('open');
-				//alert(test);
+			}else{
+				alert('Please select one or more delivery orders');
 			}
 		});
 		
