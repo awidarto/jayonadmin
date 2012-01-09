@@ -55,11 +55,11 @@ class Delivery extends Application
 		}
 		
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_0'));
+			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_0'));
 		}
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_1'));
+			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
 		}
 
 		if($this->input->post('sSearch_2') != ''){

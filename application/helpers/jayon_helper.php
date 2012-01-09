@@ -62,7 +62,7 @@ function user_group_id($group)
 	return $row->id;
 }
 
-function send_notification($subject,$to,$template,$data){
+function xsend_notification($subject,$to,$template,$data){
 	$CI =& get_instance();
 	
 	$config = array(
