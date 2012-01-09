@@ -22,6 +22,14 @@ class Admin extends Application
 		}
 	}
 	
+	public function testmail(){
+		$subject = 'Processed order';
+		$to = 'andy.awidarto@gmail.com';
+		$template = '';
+		$data = '';
+		send_notification($subject,$to,$template,$data);
+	}
+	
 }
 
 /* End of file: dashboard.php */

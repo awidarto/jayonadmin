@@ -70,15 +70,15 @@
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
 		$('#doAssign').click(function(){
-			var test = '';
+			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
-				test += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
 				count++;
 			});
 			
 			if(count > 0){
-				$('#trans_list').html(test);
+				$('#trans_list').html(assigns);
 				$('#assign_dialog').dialog('open');
 			}else{
 				alert('Please select one or more delivery orders');
@@ -89,7 +89,10 @@
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
 			}else{
-				alert($('#assign_deliverytime').val());
+				//alert($('#assign_deliverytime').val());
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val() }, function(data) {
+					$('#dev_list').html(data.html);
+				},'json');
 			}
 		});
 		
@@ -111,8 +114,17 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-		
+		/*
+		function refresh(){
+			oTable.fnDraw();
+			setTimeout(refresh, 10000);
+		}
+
+		refresh();
+		*/
 	} );
+	
+	
 </script>
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
@@ -125,20 +137,20 @@
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:50%;border:0;margin:0;">
-				Delivery Time :<br />
-				<input id="assign_deliverytime" type="text" value="">
+				Delivery Orders :
 			</td>
 			<td style="width:50%;border:0;margin:0;">
+				Delivery Time :<br />
+				<input id="assign_deliverytime" type="text" value="">
 				<?php print form_button('getdevices','Get Devices','id="getDevices"');?>
 			</td>
 		</tr>
 		<tr>
 			<td style="overflow:auto;">
-				Delivery Orders :<br />
 				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
 			<td>
-			
+				<ul id="dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
 		</tr>
 	</table>

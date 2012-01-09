@@ -552,6 +552,17 @@ class Delivery extends Application
 	
 	public function ajaxdevicecap(){
 		
+		$assignment_date = $this->input->post('assignment_date');
+		
+		$dev = $this->db->select('id,identifier,descriptor,devname')->get($this->config->item('jayon_devices_table'));
+		$result = array();
+		foreach($dev->result_array() as $device){
+			$count_dev = $this->db->where('assignment_date',$assignment_date)->where('device_id',$device['id'])->count_all_results($this->config->item('assigned_delivery_table'));
+			//$result[] = array('id'=>$device['id'],'device'=>$device['identifier'],'assignment'=>$count_dev);
+			$result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><input type="radio" name="dev_id" value="%s">%s [%s]</li>',$device['id'],$device['identifier'].' - '.$device['devname'],$count_dev);
+		}
+		print json_encode(array('html'=>implode('',$result)));
+		
 	}
 	
 	public function ajaxassign(){

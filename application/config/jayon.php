@@ -41,4 +41,16 @@ $config['fetch_method'] = array(
 	'GET'=>'GET',
 	'URL'=>'URL Segment'
 );
+
+$config['smtp_host'] = 'ssl://smtp.googlemail.com';
+$config['smtp_port'] = '465';
+
+$config['notify_username'] = 'notification@jayonexpress.com';
+$config['notify_password'] = 'NotiFier987';
+
+$config['admin_username'] = 'admin@jayonexpress.com';
+$config['admin_password'] = 'JayonAdmin234';
+
+
+
 ?>

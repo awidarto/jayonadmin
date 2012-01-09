@@ -62,5 +62,30 @@ function user_group_id($group)
 	return $row->id;
 }
 
+function send_notification($subject,$to,$template,$data){
+	$CI =& get_instance();
+	
+	$config = Array(
+	    'protocol' => 'smtp',
+	    'smtp_host' => $CI->config->item('smtp_host'),
+	    'smtp_port' => $CI->config->item('smtp_port'),
+	    'smtp_user' => $CI->config->item('notify_username'),
+	    'smtp_pass' => $CI->config->item('notify_password'),
+	    'charset'   => 'iso-8859-1'
+	);
+	
+	$CI->load->library('email',$config);
+
+	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Notification');
+	$CI->email->to($to); 
+	$CI->email->cc('admin@jayonexpress.com'); 
+	$CI->email->subject($subject);
+	$CI->email->message('Testing notification email.');	
+
+	$result = $CI->email->send();
+	
+	return $result;
+}
+
 
 ?>
