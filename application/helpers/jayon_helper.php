@@ -65,7 +65,7 @@ function user_group_id($group)
 function send_notification($subject,$to,$template,$data){
 	$CI =& get_instance();
 	
-	$config = Array(
+	$config = array(
 	    'protocol' => 'smtp',
 	    'smtp_host' => $CI->config->item('smtp_host'),
 	    'smtp_port' => $CI->config->item('smtp_port'),

@@ -27,7 +27,11 @@ class Admin extends Application
 		$to = 'andy.awidarto@gmail.com';
 		$template = '';
 		$data = '';
-		send_notification($subject,$to,$template,$data);
+		if(send_notification($subject,$to,$template,$data)){
+			print "notification sent";
+		}else{
+			print "failed to send notification";
+		}
 	}
 	
 }
