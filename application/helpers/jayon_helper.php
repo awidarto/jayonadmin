@@ -62,7 +62,7 @@ function user_group_id($group)
 	return $row->id;
 }
 
-function xsend_notification($subject,$to,$template,$data){
+function send_notification($subject,$to,$template = 'default',$data = null,$attachment = null){
 	$CI =& get_instance();
 	
 	$config = array(
@@ -76,11 +76,90 @@ function xsend_notification($subject,$to,$template,$data){
 	
 	$CI->load->library('email',$config);
 
+	$CI->email->set_newline("\r\n");
+
 	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Notification');
-	$CI->email->to($to); 
+	
+	if(is_null($data)){
+		$data['type'] = 'notification';
+	}
+
+	if(is_array($to)){
+		foreach($to as $em){
+			$CI->email->to($em); 
+		}
+	}else{
+		$CI->email->to($to); 
+	}
+	
+	if(!is_null($attachment)){
+		if(is_array($attachment)){
+			foreach($attachment as $att){
+				$CI->email->attach($att); 
+			}
+		}else{
+			$CI->email->attach($attachment); 
+		}
+	}
+
 	$CI->email->cc('admin@jayonexpress.com'); 
 	$CI->email->subject($subject);
-	$CI->email->message('Testing notification email.');	
+
+	$body = $CI->load->view('email/'.$template,$data,TRUE);
+	
+	$CI->email->message($body);	
+
+	$result = $CI->email->send();
+	
+	return $result;
+}
+
+function send_admin($subject,$to,$template = 'default',$data = '',$attachment = null){
+	$CI =& get_instance();
+	
+	$config = array(
+	    'protocol' => 'smtp',
+	    'smtp_host' => $CI->config->item('smtp_host'),
+	    'smtp_port' => $CI->config->item('smtp_port'),
+	    'smtp_user' => $CI->config->item('admin_username'),
+	    'smtp_pass' => $CI->config->item('admin_password'),
+	    'charset'   => 'iso-8859-1'
+	);
+	
+	$CI->load->library('email',$config);
+
+	$CI->email->set_newline("\r\n");
+
+	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Admin');
+
+	if(is_null($data)){
+		$data['type'] = 'notification';
+	}
+
+	if(is_array($to)){
+		foreach($to as $em){
+			$CI->email->to($em); 
+		}
+	}else{
+		$CI->email->to($to); 
+	}
+	
+	if(!is_null($attachment)){
+		if(is_array($attachment)){
+			foreach($attachment as $att){
+				$CI->email->attach($att); 
+			}
+		}else{
+			$CI->email->attach($attachment); 
+		}
+	}
+
+	$CI->email->cc('admin@jayonexpress.com'); 
+	$CI->email->subject($subject);
+	
+	$body = $CI->load->view('email/'.$template,$data,TRUE);
+	
+	$CI->email->message($body);	
 
 	$result = $CI->email->send();
 	

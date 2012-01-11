@@ -26,7 +26,7 @@ class Delivery extends Application
 
 		$columns = array(
 			'buyerdeliverytime',			 	 	
-			'buyerdeliveryzone',			 	 	
+			//'buyerdeliveryzone',			 	 	
 			'delivery_id',			 	 	 	 	 	 	 
 			null,
 			'buyer_id',			 	 	
@@ -49,7 +49,7 @@ class Delivery extends Application
 		//search column
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
-			$this->db->like('buyerdeliveryzone',$srch);
+			//$this->db->like('buyerdeliveryzone',$srch);
 			$this->db->or_like('buyerdeliverytime',$srch);
 			$this->db->or_like('delivery_id',$srch);
 		}
@@ -57,13 +57,15 @@ class Delivery extends Application
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_0'));
 		}
-
+		
+		/*
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
 		}
-
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+		*/
+		
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_1'));
 		}
 		
 		
@@ -82,8 +84,8 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$aadata[] = array(
-				$key['buyerdeliverytime'],			 	 	
-				$key['buyerdeliveryzone'],			 	 	
+				$key['buyerdeliverytime'],
+				//$key['buyerdeliveryzone'],
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
@@ -93,9 +95,9 @@ class Delivery extends Application
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
 				$key['status'],				 	 	 	 	 	 	 
-				$key['reschedule_ref'],		 	 	 	 	 	 	 
-				$key['revoke_ref'],
-				($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
+				//$key['reschedule_ref'],		 	 	 	 	 	 	 
+				//$key['revoke_ref'],
+				($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
 		
@@ -118,8 +120,8 @@ class Delivery extends Application
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
-			'Delivery Time',
-			'Zone',
+			'Requested Date',
+			//'Zone',
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
 			//'App Domain',	 	 	
@@ -129,16 +131,177 @@ class Delivery extends Application
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
 			'Status',				 	 	 	 	 	 	 
-			'Reschedule Ref',		 	 	 	 	 	 	 
-			'Revoke Ref',
+			//'Reschedule Ref',		 	 	 	 	 	 	 
+			//'Revoke Ref',
 			'Actions'
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			//'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			form_button('do_assign','Assign selection to device','id="doAssign"')
+			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
+			);
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			
+			$app = $this->get_app_info($key['application_key']);
+			
+			$this->table->add_row(
+				$key['buyerdeliverytime'],			 	 	
+				$key['buyerdeliveryzone'],			 	 	
+				$key['delivery_id'],			 	 	 	 	 	 	 
+				$app['application_name'],		 	 	
+				//$app['domain'],		 	 	
+				$key['buyer_id'],			 	 	
+				$key['merchant_id'],			 	 	
+				$key['merchant_trans_id'],		 	 	 	 	 	 	 
+				$key['shipping_address'],	 	 				 
+				$key['phone'],				 	 	 	 	 	 	 
+				$key['status'],				 	 	 	 	 	 	 
+				//$key['reschedule_ref'],		 	 	 	 	 	 	 
+				//$key['revoke_ref'],
+				($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
+			);
+		}
+		$page['sortdisable'] = '1';
+		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
+		$page['page_title'] = 'Incoming Delivery Orders';
+		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
+	}
+
+	/* zoning */
+	
+	
+	public function ajaxzoning(){
+
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+
+		$columns = array(
+			'buyerdeliveryzone',			 	 	
+			'buyerdeliverytime',			 	 	
+			'delivery_id',			 	 	 	 	 	 	 
+			null,
+			'buyer_id',			 	 	
+			'merchant_id',			 	 	
+			'merchant_trans_id',		 	 	 	 	 	 	 
+			'shipping_address',	 	 				 
+			'phone',				 	 	 	 	 	 	 
+			'status',				 	 	 	 	 	 	 
+			'reschedule_ref',		 	 	 	 	 	 	 
+			'revoke_ref',
+			);
+		
+		
+
+		// get total count result
+		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
+
+		$count_display_all = $this->db->where('status !=','assigned')->count_all_results($this->config->item('incoming_delivery_table'));
+		
+		//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			//$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+		}
+		
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_0'));
+		}
+		
+		
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_1'));
+		}
+		
+		
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+		}
+		
+		
+		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->group_by(array('buyerdeliverytime','buyerdeliveryzone'))->get($this->config->item('incoming_delivery_table'));
+		
+		$result = $data->result_array();
+			
+		$aadata = array();
+		
+		foreach($result as $value => $key)
+		{
+			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			
+			$app = $this->get_app_info($key['application_key']);
+			
+			$aadata[] = array(
+				$key['buyerdeliveryzone'],
+				$key['buyerdeliverytime'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
+				//$app['application_name'],		 	 	
+				//$app['domain'],		 	 	
+				$key['buyer_id'],			 	 	
+				$key['merchant_id'],			 	 	
+				$key['merchant_trans_id'],		 	 	 	 	 	 	 
+				$key['shipping_address'],	 	 				 
+				$key['phone'],				 	 	 	 	 	 	 
+				$key['status'],				 	 	 	 	 	 	 
+				//$key['reschedule_ref'],		 	 	 	 	 	 	 
+				//$key['revoke_ref'],
+				($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
+			);
+		}
+		
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+		
+		print json_encode($result);
+	}
+	
+	public function zoning()
+	{
+		$this->breadcrumb->add_crumb('Zone Assignment','admin/delivery/zoning');
+
+		$data = $this->db->where('status !=','assigned')->get($this->config->item('incoming_delivery_table'));
+		
+		$result = $data->result_array();
+		
+		$this->table->set_heading(
+			'Zone',
+			'Delivery Time',
+			'Delivery ID',			 	 	 	 	 	 	 
+			//'App Name',	 	 	
+			//'App Domain',	 	 	
+			'Buyer',			 	 	
+			'Merchant',			 	 	
+			'Merchant Trans ID',		 	 	 	 	 	 	 
+			'Shipping Address',	 	 				 
+			'Phone',				 	 	 	 	 	 	 
+			'Status',				 	 	 	 	 	 	 
+			//'Reschedule Ref',		 	 	 	 	 	 	 
+			//'Revoke Ref',
+			'Actions'
+			); // Setting headings for the table
+		
+		$this->table->set_footing(
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
 			);
 		
 		foreach($result as $value => $key)
@@ -153,7 +316,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'],			 	 	
 				$key['buyerdeliverytime'],			 	 	
 				$key['delivery_id'],			 	 	 	 	 	 	 
-				$app['application_name'],		 	 	
+				//$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
@@ -161,16 +324,20 @@ class Delivery extends Application
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
 				$key['status'],				 	 	 	 	 	 	 
-				$key['reschedule_ref'],		 	 	 	 	 	 	 
-				$key['revoke_ref'],
+				//$key['reschedule_ref'],		 	 	 	 	 	 	 
+				//$key['revoke_ref'],
 				($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
-		$page['sortdisable'] = '1,12';
-		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
-		$page['page_title'] = 'Incoming Delivery Orders';
-		$this->ag_auth->view('colajaxlistview',$page); // Load the view
+		$page['sortdisable'] = '';
+		$page['ajaxurl'] = 'admin/delivery/ajaxzoning';
+		$page['page_title'] = 'Zone Assignment';
+		$this->ag_auth->view('zoneajaxlistview',$page); // Load the view
 	}
+
+
+
+
 
 	public function ajaxassigned(){
 
@@ -217,13 +384,13 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$aadata[] = array(
+				$key['assignment_date'],		 	 	 	 	 	 	 
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],
-				$key['assignment_date'],		 	 	 	 	 	 	 
 				$key['device_id'],			 	 	
 				$key['courier_id'],			 	 	
 				$key['shipping_address'],	 	 				 
@@ -254,13 +421,13 @@ class Delivery extends Application
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
+			'Delivery Date',			 	 	
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
 			//'App Domain',	 	 	
 			'Buyer',			 	 	
 			'Merchant',			 	 	
 			'Merchant Trans ID',		 	 	 	 	 	 	 
-			'Assignment Date',			 	 	
 			'Device',			 	 	
 			'Courier',			 	 	
 			'Shipping Address',	 	 				 
@@ -270,6 +437,13 @@ class Delivery extends Application
 			'Revoke Ref',
 			'Actions'
 			); // Setting headings for the table
+
+		$this->table->set_footing(
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />'
+			);
+
 		
 		foreach($result as $value => $key)
 		{
@@ -280,13 +454,13 @@ class Delivery extends Application
 			$app = $this->get_app_info($key['application_key']);
 			
 			$this->table->add_row(
+				$key['assignment_date'],		 	 	 	 	 	 	 
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
 				$key['buyer_id'],			 	 	
 				$key['merchant_id'],			 	 	
 				$key['merchant_trans_id'],
-				$key['assignment_date'],		 	 	 	 	 	 	 
 				$key['device_id'],			 	 	
 				$key['courier_id'],			 	 	
 				$key['shipping_address'],	 	 				 

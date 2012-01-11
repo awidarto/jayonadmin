@@ -17,39 +17,40 @@ class Test extends CI_Controller
 		$template = '';
 		$data = '';
 		
-		$result = $this->send_notification($subject,$to,$template,$data);
+		$result = send_notification($subject,$to,$template,$data);
 		if($result){
 			print "notification sent";
 		}else{
 			print "failed to send notification";
 		}
 	}
-	
-	private function send_notification($subject,$to,$template,$data){
 
-		$config = array(
-		    'protocol' => 'smtp',
-		    'smtp_host' => $this->config->item('smtp_host'),
-		    'smtp_port' => $this->config->item('smtp_port'),
-		    'smtp_user' => $this->config->item('notify_username'),
-		    'smtp_pass' => $this->config->item('notify_password'),
-		    'charset'   => 'iso-8859-1'
-		);
+	public function testmail(){
 		
-		print_r($config);
+		$subject = "test notification";
+		$to = "andy.awidarto@kickstartlab.com";
 
-		$this->load->library('email');
+		print "test notify<br />";
+		$result = send_notification($subject,$to);
+
+		if($result){
+			print "notification sent<br />";
+		}else{
+			print "failed to send notification<br />";
+		}
+
+		$subject = "test report";
+		$template = 'default';
 		
-		$this->email->initialize($config);
+		print "test admin<br />";
+		$result = send_admin($subject,$to);
 
-		$this->email->from($this->config->item('notify_username'), 'Jayon Express Notification');
-		$this->email->to($to); 
-		$this->email->cc('admin@jayonexpress.com'); 
-		$this->email->subject($subject);
-		$this->email->message('Testing notification email.');	
+		if($result){
+			print "admin message sent<br />";
+		}else{
+			print "failed to send admin message<br />";
+		}
 
-		$result = $this->email->send();
+	}	
 
-		return $result;
-	}
 }
