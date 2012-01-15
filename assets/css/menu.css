@@ -1,0 +1,108 @@
+/* remove the list style */
+	#nav {
+	    margin:0; 
+	    padding:0; 
+	    list-style:none;
+		float:right;
+		margin-right:50px;
+	}
+	
+	.parent{
+		cursor:pointer;
+		display:block;
+	}   
+   
+	.nav_current>a, ul#nav li.nav_current>a{
+		background:#eaeaea;
+		color:black;
+	}
+  
+    /* make the LI display inline */
+    /* it's position relative so that position absolute */
+    /* can be used in submenu */
+    #nav li {
+        float:left; 
+        display:block; 
+        width:150px; 
+        background:transparent; 
+        position:relative;
+        z-index:500; 
+        margin:0 1px;
+    }
+         
+    /* this is the parent menu */
+    #nav li a, #nav li .parent  {
+        display:block; 
+        padding:8px 5px 0 5px; 
+        font-weight:700;  
+        height:23px; 
+        text-decoration:none; 
+        color:#fff; 
+        text-align:center; 
+        /*color:#333;*/
+		margin-right:0px;
+    }
+ 
+    #nav li a:hover {
+        color:black;
+		background:#eee;
+		border-left:2px solid #eaeaea;
+		border-right:2px solid #eaeaea;
+    }
+
+    .parent:hover {
+        color:#fff;
+    }
+     
+    /* you can make a different style for default selected value */
+    #nav a.selected {
+        color:#f00;
+    }
+
+	.nav_current .parent{
+		background-color:white;
+		color:black;
+	}
+     
+        /* submenu, it's hidden by default */
+        #nav ul {
+            position:absolute; 
+            left:0; 
+            display:none; 
+            margin:0 0 0 -1px; 
+            padding:0; 
+            list-style:none;
+			-webkit-box-shadow: 3px 3px 6px rgba(50, 50, 50, 0.46);
+			-moz-box-shadow:    3px 3px 6px rgba(50, 50, 50, 0.46);
+			box-shadow:         3px 3px 6px rgba(50, 50, 50, 0.46);
+        }
+         
+        #nav ul li {
+            width:150px; 
+            float:left; 
+            border-top:1px solid #fff;
+	        background:#ccc; 
+            border-bottom:1px solid #fff;
+        }
+         
+        /* display block will make the link fill the whole area of LI */
+        #nav ul a {
+            display:block;  
+            height:15px;
+            padding: 8px 5px; 
+            color:#666;
+			margin-right:0px;
+        }
+         
+        #nav ul a:hover {
+			background:#eee;
+			border-left:2px solid #eaeaea;
+			border-right:2px solid #eaeaea;
+        }
+ 
+/* fix ie6 small issue */
+/* we should always avoid using hack like this */
+/* should put it into separate file : ) */
+*html #nav ul {
+    margin:0 0 0 -2px;
+}

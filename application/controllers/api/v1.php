@@ -160,7 +160,7 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			print $api_key;
+			//print $api_key;
 			//echo json_encode(array('status'=>'ERR:KEYEXISTS','timestamp'=>now()));
 			$app = $this->get_key_info(trim($api_key));
 			//print json_encode($app);
@@ -232,6 +232,19 @@ class V1 extends Application
 		
 	} // public function add() transaction
 
+	public function timeslot($api_key = null,$date = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
 	
 	public function add($api_key = null,$transaction_id = null)
 	{

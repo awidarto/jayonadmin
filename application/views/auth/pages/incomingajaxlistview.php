@@ -99,11 +99,21 @@
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
-			width: 600,
+			width: 400,
 			modal: true,
 			buttons: {
-				"Assign to Device": function() {
-
+				"Assign Delivery Date": function() {
+					if($('#assign_deliverytime').val() == ''){
+						alert('Please specify date.');
+					}else{
+						$.post('<?php print site_url('admin/delivery/ajaxassigndate');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id':$('.assign_check:checked').val() }, function(data) {
+							if(data.result == 'ok'){
+								//redraw table
+								oTable.fnDraw();
+								$('#assign_dialog').dialog( "close" );
+							}
+						},'json');
+					}
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -133,24 +143,18 @@
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
 
-<div id="assign_dialog" title="Assign Selection to Device">
+<div id="assign_dialog" title="Assign Delivery Date to Selection">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:50%;border:0;margin:0;">
+				Delivery Date :<br />
+				<input id="assign_deliverytime" type="text" value=""><br />
 				Delivery Orders :
-			</td>
-			<td style="width:50%;border:0;margin:0;">
-				Delivery Time :<br />
-				<input id="assign_deliverytime" type="text" value="">
-				<?php print form_button('getdevices','Get Devices','id="getDevices"');?>
 			</td>
 		</tr>
 		<tr>
 			<td style="overflow:auto;">
 				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-			<td>
-				<ul id="dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
 		</tr>
 	</table>

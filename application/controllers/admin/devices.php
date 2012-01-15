@@ -24,20 +24,21 @@ class Devices extends Application
 			
 		$data = $this->db->get($this->config->item('jayon_devices_table'));
 		$result = $data->result_array();
-		$this->table->set_heading('Identifier', 'Description','Device Name','Mobile Number','Actions'); // Setting headings for the table
+		$this->table->set_heading('Identifier', 'Description','Device Name','Device Key','Mobile Number','District','City','Actions'); // Setting headings for the table
 		
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/devices/delete/".$key['id']."/", "Delete"); // Build actions links
 			$assign = anchor("admin/devices/assignment/".$key['id']."/", "Assignment"); // Build actions links
 			$edit = anchor("admin/devices/edit/".$key['id']."/", "Edit"); // Build actions links
-			$this->table->add_row($key['identifier'], $key['descriptor'],$key['devname'],$key['mobile'],$edit.' '.$assign.' '.$delete); // Adding row to table
+			$this->table->add_row($key['identifier'], $key['descriptor'],$key['devname'],$key['key'],$key['mobile'],$key['district'],$key['city'],$edit.' '.$assign.' '.$delete); // Adding row to table
 		}
 
 		$page['add_button'] = array('link'=>'admin/devices/add','label'=>'Add New Device');
 		$page['page_title'] = 'Manage Devices';
 		$this->ag_auth->view('listview',$page); // Load the view
 	}
+
 
 	public function ajaxassignment($id)
 	{
@@ -109,7 +110,6 @@ class Devices extends Application
 		
 		print json_encode($result);
 	}
-
 
 	public function assignment($id)
 	{
@@ -231,6 +231,7 @@ class Devices extends Application
 			$dataset['descriptor'] = set_value('descriptor');
 			$dataset['devname'] = set_value('devname');
 			$dataset['mobile'] = set_value('mobile'); 
+			$dataset['key'] = random_string('sha1',40);			
 			
 			if($this->db->insert($this->config->item('jayon_devices_table'),$dataset) === TRUE)
 			{
@@ -258,6 +259,8 @@ class Devices extends Application
 		$this->form_validation->set_rules('descriptor', 'Description', 'required|trim|xss_clean');			 	 	 	 	 	 	 
 		$this->form_validation->set_rules('devname', 'Device Name', 'required|trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'District / Zone', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
 		
 		$user = $this->get_user($id);
 		$data['user'] = $user;
