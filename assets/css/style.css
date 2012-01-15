@@ -4,7 +4,7 @@ body,ul,ol,li{
 }
 
 body{padding:0px;background: url('../images/long_logo.png') no-repeat right top;background-color:white;color:#231e18;background-repeat:no-repeat;margin:0;font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;font-size:12px;}
-#container{width:98%;margin:0px auto;padding:10px 20px;}
+#container{margin:0px auto;padding:10px 20px;}
 #header{width:100%;margin:0;padding:0;border-botton:thin solid #efefef;}
 #logo{width:1000px;margin:0 auto;color:#231e18;height:150px;}
 #nav_bg{background:brown;width:100%;padding-top:4px;}
