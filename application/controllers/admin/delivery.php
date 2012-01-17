@@ -84,7 +84,7 @@ class Delivery extends Application
 		
 		foreach($result as $value => $key)
 		{
-			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
+			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
 			
@@ -176,7 +176,7 @@ class Delivery extends Application
 				($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
-		$page['sortdisable'] = '1';
+		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
 		$page['page_title'] = 'Incoming Delivery Orders';
 		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
@@ -1082,7 +1082,7 @@ class Delivery extends Application
 
 	public function delete($id)
 	{
-		$this->db->where('id', $id)->delete($this->config->item('incoming_delivery_table'));
+		$this->db->where('delivery_id', $id)->delete($this->config->item('incoming_delivery_table'));
 
 		$data['page_title'] = 'Delete';
 		$data['message'] = "Delivery order is now assigned to device.";
