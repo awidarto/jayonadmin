@@ -58,6 +58,24 @@
 				this.value = asInitVals[$('tfoot input').index(this)];
 			}
 		} );
+
+		$( '#assign_courier' ).autocomplete({
+			source: '<?php print site_url('ajax/getcourier')?>',
+			method: 'post',
+			minLength: 2,
+			select:function(event,ui){
+				$('#assign_courier_id').val(ui.item.id);
+				$('#assign_courier_id_txt').html(ui.item.id);
+				
+			}
+		});
+
+		$( '#device_id' ).autocomplete({
+			source: '<?php print site_url('ajax/getdevice')?>',
+			method: 'post',
+			minLength: 2
+		});
+
 		
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
@@ -69,50 +87,39 @@
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
-		$('#doAssign').click(function(){
-			var assigns = '';
-			var count = 0;
-			$('.assign_check:checked').each(function(){
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
-				count++;
-			});
-			
-			if(count > 0){
-				$('#trans_list').html(assigns);
+		$('#doDispatch').click(function(){
+			if($('.device_id:checked').val() == undefined || $(".assign_date:checked").val() == undefined ){
+				alert('Please specify Date AND Device.');
+			}else{
+				var device_id = $('.device_id:checked').val();
+				var device_name = $('.device_id:checked').attr('title');
+				var assignment_date = $(".assign_date:checked").val();
+
+				$('#assign_device').val(device_id);
+				$('#assign_date').val(assignment_date);
+
+				$('#delivery_date').html(assignment_date);
+				$('#device_identifier').html(device_name);
+
 				$('#assign_dialog').dialog('open');
-			}else{
-				alert('Please select one or more delivery orders');
-			}
-		});
-		
-		$('#getDevices').click(function(){
-			if($('#assign_deliverytime').val() == ''){
-				alert('Please specify intended delivery time');
-			}else{
-				//alert($('#assign_deliverytime').val());
-				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val() }, function(data) {
-					$('#dev_list').html(data.html);
-				},'json');
 			}
 		});
 		
 		$('#assign_dialog').dialog({
 			autoOpen: false,
-			height: 300,
-			width: 400,
+			height: 200,
+			width: 300,
 			modal: true,
 			buttons: {
-				"Assign Delivery Date": function() {
-					if($('#assign_deliverytime').val() == ''){
-						alert('Please specify date.');
+				"Dispatch Device": function() {
+					if($("#assign_date").val() == ''){
+						alert('Please specify Courier.')
 					}else{
-						var delivery_ids = [];
-						i = 0;
-						$('.assign_check:checked').each(function(){
-							delivery_ids[i] = $(this).val();
-							i++;
-						}); 
-						$.post('<?php print site_url('admin/delivery/ajaxassigndate');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+						var device_id = $("#assign_device").val();
+						var courier_id = $("#assign_courier_id").val();
+						var assignment_date = $("#assign_date").val();
+						//alert(device_id);
+						$.post('<?php print site_url('admin/delivery/ajaxdispatch');?>',{ assignment_device_id: device_id,assignment_courier_id: courier_id,assignment_date: assignment_date }, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
 								oTable.fnDraw();
@@ -122,6 +129,7 @@
 					}
 				},
 				Cancel: function() {
+					$('#assign_courier').val('');
 					$( this ).dialog( "close" );
 				}
 			},
@@ -130,6 +138,7 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
+		
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -149,18 +158,17 @@
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
 
-<div id="assign_dialog" title="Assign Delivery Date to Selection">
+<div id="assign_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:50%;border:0;margin:0;">
-				Delivery Date :<br />
-				<input id="assign_deliverytime" type="text" value=""><br />
-				Delivery Orders :
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;">
-				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+				Date : 
+				<input id="assign_date" type="hidden" value=""><strong><span id="delivery_date"></span></strong><br />
+				Device : 
+				<input id="assign_device" type="hidden" value=""><strong><span id="device_identifier"></span></strong><br />
+				Courier ID: <strong><span id="assign_courier_id_txt"></span></strong><br />
+				<input id="assign_courier" type="text" value=""><br />
+				<input id="assign_courier_id" type="hidden" value=""><br />
 			</td>
 		</tr>
 	</table>

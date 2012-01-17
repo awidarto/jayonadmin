@@ -64,7 +64,7 @@ $autoload['libraries'] = array('ag_asset','table','breadcrumb');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('asset','date','jayon');
+$autoload['helper'] = array('asset','date','jayon','string');
 
 
 /*

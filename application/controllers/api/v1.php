@@ -83,6 +83,13 @@ class V1 extends Application
 		}
 	}
 	
+	/**
+	*	transaction posting function
+	*	required field is buyer email, since this function will try to extract it to check and authenticate
+	*	whether buyer already registered at JEX or not
+	*	if not yet registered, buyer will be automatically registered as new member and notified about new membership via email
+	*/
+	
 	public function post($api_key = null,$transaction_id = null)
 	{
 		if(is_null($api_key)){
@@ -100,10 +107,32 @@ class V1 extends Application
 				
 				//print_r($in);
 				
+				//check if email already registered
+				
+				$buyer_id = 1;
+								
+				if($buyer = $this->check_email($in->email)){
+					$buyer_id = $buyer['id'];
+				}else{
+					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
+					$dataset['username'] = $buyer_username;
+					$dataset['email'] = $in->email;
+					$dataset['fullname'] = $in->buyer_name;
+					$password = random_string('alnum', 8);
+					$dataset['password'] = $this->ag_auth->salt($password);
+					$buyer_id = $this->register_buyer($dataset);
+					
+					$edata['fullname'] = $dataset['fullname'];
+					$edata['username'] = $buyer_username;
+					$edata['password'] = $password;
+					
+					send_notification('New Member Registration - Jayon Express COD Service',$in->email,'new_member',$edata,null);
+				}
+				
 				$order['ordertime'] = date('Y-m-d h:i:s',time());
 				$order['application_id'] = $app->id;
 				$order['application_key'] = $app->key;
-				$order['buyer_id'] = 1; // change this to current buyer after login
+				$order['buyer_id'] = $buyer_id; // change this to current buyer after login
 				$order['merchant_id'] = $app->merchant_id;
 				$order['merchant_trans_id'] = trim($transaction_id);
 				
@@ -145,7 +174,7 @@ class V1 extends Application
 
 						$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 					}
-					print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id));
+					print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
 				}else{
 					print json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
 				}
@@ -260,10 +289,27 @@ class V1 extends Application
 					
 					//print_r($in);
 					
+					//check if email already registered
+					if($buyer = $this->check_email($order['email'])){
+						$buyer_id = $buyer['id'];
+						print 'existing buyer';
+					}else{
+						$buyer_username = substr(strtolower(str_replace(' ','',$order['buyer_name'])),0,6).random_string('num', 4);
+						$dataset['username'] = $buyer_username;
+						$dataset['email'] = $order['email'];
+						$dataset['fullname'] = $order['buyer_name'];
+						$dataset['password'] = $this->ag_auth->salt(random_string('alnum', 8));
+						$buyer_id = $this->register_buyer($dataset);
+						print 'new buyer';
+					}
+					
+					print $buyer_id;
+					
+					
 					$order['ordertime'] = date('Y-m-d h:i:s',time());
 					$order['application_id'] = $app->id;
 					$order['application_key'] = $app->key;
-					$order['buyer_id'] = 1; // change this to current buyer after login
+					$order['buyer_id'] = $buyer_id; // change this to current buyer after login
 					$order['merchant_id'] = $app->merchant_id;
 					$order['merchant_trans_id'] = trim($transaction_id);
 					
@@ -317,6 +363,25 @@ class V1 extends Application
 		}
 		
 	} // public function add() transaction
+	
+	private function check_email($email){
+		$em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));		
+		if($em->num_rows() > 0){
+			return $em->row_array();
+		}else{
+			return false;
+		}
+	}
+	
+	private function register_buyer($dataset){
+		$dataset['group_id'] = 5;
+		
+		if($this->db->insert($this->config->item('jayon_members_table'),$dataset)){
+			return $this->db->insert_id();
+		}else{
+			return 0;
+		}
+	}
 
 	public function edit($username)
 	{

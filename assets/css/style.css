@@ -37,6 +37,7 @@ table{width:100%;text-align:left;margin:20px 0;clear:both;}
 table tr.alt{background:#ECECEC;}
 table thead tr{background:#EEE;}
 */
+
 a{color:#231e18;margin-right:10px;}
 
 .error{
@@ -86,4 +87,13 @@ a{color:#231e18;margin-right:10px;}
 
 #breadcrumb a{
 	margin-left:0px;
+}
+
+.dispatcher{
+	display:block;
+	text-align:center;
+	padding:4px 2px;
+	background-color:#999;
+	color:white;
+	cursor:pointer;
 }

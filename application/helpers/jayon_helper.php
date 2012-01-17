@@ -51,6 +51,18 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function ajax_find_courier($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('couriers');
+	return $q->result_array();
+}
+
+function ajax_find_device($zone,$col = 'descriptor'){
+	$CI =& get_instance();
+	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('devices');
+	return $q->result_array();
+}
+
 function user_group_id($group)
 {
 	$CI =& get_instance();
