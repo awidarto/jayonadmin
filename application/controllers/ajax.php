@@ -31,6 +31,21 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 	
+	public function incomingmonthly(){
+		
+	}
+
+	public function deliveredmonthly(){
+		
+	}
+
+	public function rescheduledmonthly(){
+		
+	}
+
+	public function revokedmonthly(){
+		
+	}
 
 }
 
