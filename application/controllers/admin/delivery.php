@@ -33,8 +33,7 @@ class Delivery extends Application
 			'merchant_trans_id',   
 			'shipping_address',	
 			'phone',			
-			'status',
-			null			
+			'status'
 			);
 		
 		
@@ -56,14 +55,14 @@ class Delivery extends Application
 			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_0'));
 		}
 		
-		/*
+		
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
 		}
-		*/
 		
-		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_1'));
+		
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
 		}
 
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
@@ -92,7 +91,7 @@ class Delivery extends Application
 			
 			$aadata[] = array(
 				$key['buyerdeliverytime'],
-				//$key['buyerdeliveryzone'],
+				$key['buyerdeliveryzone'],
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
@@ -101,10 +100,10 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status'],				 	 	 	 	 	 	 
+				$key['status']			 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
-				($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
+				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
 		
@@ -129,7 +128,7 @@ class Delivery extends Application
 		
 		$this->table->set_heading(
 			'Requested Date',
-			//'Zone',
+			'Zone',
 			'Delivery ID',			 	 	 	 	 	 	 
 			'App Name',	 	 	
 			//'App Domain',	 	 	
@@ -138,15 +137,15 @@ class Delivery extends Application
 			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
-			'Status',				 	 	 	 	 	 	 
+			'Status'				 	 	 	 	 	 	 
 			//'Reschedule Ref',		 	 	 	 	 	 	 
 			//'Revoke Ref',
-			'Actions'
+			//'Actions'
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			//'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
 			);
@@ -170,10 +169,10 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status'],				 	 	 	 	 	 	 
+				$key['status']				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
-				($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
+				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
 		$page['sortdisable'] = '';

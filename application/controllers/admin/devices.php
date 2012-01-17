@@ -216,6 +216,8 @@ class Devices extends Application
 		$this->form_validation->set_rules('identifier', 'Identifier', 'required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('descriptor', 'Description', 'required|trim|xss_clean');			 	 	 	 	 	 	 
 		$this->form_validation->set_rules('devname', 'Device Name', 'required|trim|xss_clean');   		 	 	 	 	 	 	 	 
+		$this->form_validation->set_rules('district', 'Zone', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
+		$this->form_validation->set_rules('city', 'City', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 				
 		if($this->form_validation->run() == FALSE)
@@ -231,6 +233,8 @@ class Devices extends Application
 			$dataset['descriptor'] = set_value('descriptor');
 			$dataset['devname'] = set_value('devname');
 			$dataset['mobile'] = set_value('mobile'); 
+			$dataset['district'] = set_value('district'); 
+			$dataset['city'] = set_value('city'); 
 			$dataset['key'] = random_string('sha1',40);			
 			
 			if($this->db->insert($this->config->item('jayon_devices_table'),$dataset) === TRUE)
@@ -259,8 +263,8 @@ class Devices extends Application
 		$this->form_validation->set_rules('descriptor', 'Description', 'required|trim|xss_clean');			 	 	 	 	 	 	 
 		$this->form_validation->set_rules('devname', 'Device Name', 'required|trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('district', 'District / Zone', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'Zone', 'trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'trim|xss_clean');
 		
 		$user = $this->get_user($id);
 		$data['user'] = $user;
@@ -276,6 +280,8 @@ class Devices extends Application
 			$dataset['identifier'] = set_value('identifier');
 			$dataset['descriptor'] = set_value('descriptor');
 			$dataset['devname'] = set_value('devname');
+			$dataset['district'] = set_value('district'); 
+			$dataset['city'] = set_value('city'); 
 			$dataset['mobile'] = set_value('mobile'); 
 			
 			

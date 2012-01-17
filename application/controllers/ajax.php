@@ -13,6 +13,12 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
+	public function getcity(){
+		$q = $this->input->get('term');
+		$zones = ajax_find_cities($q,'city');
+		print json_encode($zones);
+	}
+
 	public function getcourier(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_courier($q,'fullname','id');

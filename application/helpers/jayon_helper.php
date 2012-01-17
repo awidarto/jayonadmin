@@ -51,6 +51,14 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function ajax_find_cities($zone,$col = 'city'){
+	$CI =& get_instance();
+	$CI->db->distinct();
+	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('districts');
+	return $q->result_array();
+}
+
+
 function ajax_find_courier($zone,$col = 'fullname',$idcol = 'id'){
 	$CI =& get_instance();
 	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('couriers');
