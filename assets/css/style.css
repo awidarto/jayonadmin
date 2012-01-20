@@ -97,3 +97,8 @@ a{color:#231e18;margin-right:10px;}
 	color:white;
 	cursor:pointer;
 }
+
+.red{
+	color:red;
+	font-weight:bold;
+}
