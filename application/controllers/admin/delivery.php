@@ -88,9 +88,17 @@ class Delivery extends Application
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
 			
 			$app = $this->get_app_info($key['application_key']);
+
+			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (12*60*60))?true:false;
+			
+			if($lessday){
+				$reqdate = '<span class="red">'.$key['buyerdeliverytime'].'</span>';
+			}else{
+				$reqdate = $key['buyerdeliverytime'];
+			}
 			
 			$aadata[] = array(
-				$key['buyerdeliverytime'],
+				$reqdate,
 				$key['buyerdeliveryzone'],
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	

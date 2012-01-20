@@ -111,8 +111,10 @@ class V1 extends Application
 				
 				$buyer_id = 1;
 								
+				$is_new = false;
 				if($buyer = $this->check_email($in->email)){
 					$buyer_id = $buyer['id'];
+					$is_new = false;
 				}else{
 					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
 					$dataset['username'] = $buyer_username;
@@ -121,12 +123,7 @@ class V1 extends Application
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);
 					$buyer_id = $this->register_buyer($dataset);
-					
-					$edata['fullname'] = $dataset['fullname'];
-					$edata['username'] = $buyer_username;
-					$edata['password'] = $password;
-					
-					send_notification('New Member Registration - Jayon Express COD Service',$in->email,'new_member',$edata,null);
+					$is_new = true;
 				}
 				
 				$order['ordertime'] = date('Y-m-d h:i:s',time());
@@ -177,6 +174,14 @@ class V1 extends Application
 					print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
 				}else{
 					print json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+				}
+				
+				if($is_new == true){
+					$edata['fullname'] = $dataset['fullname'];
+					$edata['username'] = $buyer_username;
+					$edata['password'] = $password;
+					
+					send_notification('New Member Registration - Jayon Express COD Service',$in->email,'new_member',$edata,null);
 				}
 				
 			}

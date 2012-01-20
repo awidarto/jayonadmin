@@ -44,6 +44,15 @@ function get_zone_options(){
 	return $result;
 }
 
+function delivery_log($data){
+	$CI =& get_instance();
+	
+	if($this->db->insert($this->config->item('delivery_log_table'),$data)){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 function ajax_find_zones($zone,$col = 'district'){
 	$CI =& get_instance();
