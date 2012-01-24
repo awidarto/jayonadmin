@@ -102,3 +102,7 @@ a{color:#231e18;margin-right:10px;}
 	color:red;
 	font-weight:bold;
 }
+
+td .cancel_link{
+	text-decoration:underline;
+}

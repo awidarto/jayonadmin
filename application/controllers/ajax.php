@@ -13,11 +13,24 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
-	public function getcity(){
+	public function getcities(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_cities($q,'city');
 		print json_encode($zones);
 	}
+
+	public function getprovinces(){
+		$q = $this->input->get('term');
+		$zones = ajax_find_provinces($q,'province');
+		print json_encode($zones);
+	}
+
+	public function getcountries(){
+		$q = $this->input->get('term');
+		$zones = ajax_find_countries($q,'country');
+		print json_encode($zones);
+	}
+
 
 	public function getcourier(){
 		$q = $this->input->get('term');
@@ -30,6 +43,10 @@ class Ajax extends Application
 		$zones = ajax_find_device($q,'identifier');
 		print json_encode($zones);
 	}
+
+	public function getdateblock($month = null){
+		print getdateblock($month);
+	}	
 	
 	public function incomingmonthly(){
 		

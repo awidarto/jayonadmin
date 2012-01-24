@@ -60,9 +60,11 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'System'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
-					<li class="<?php print set_hilite('admin\/devices')?>" ><?php if(user_group('admin')) { echo anchor('admin/devices/manage', 'Devices '); } ?></li>
-					<li class="<?php print set_hilite('admin\/holidays')?>" ><?php if(user_group('admin')) { echo anchor('admin/holidays/manage', 'Holidays'); } ?></li>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li><?php endif;?>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/devices')?>" ><?php if(user_group('admin')) { echo anchor('admin/devices/manage', 'Devices '); } ?></li><?php endif;?>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/holidays')?>" ><?php if(user_group('admin')) { echo anchor('admin/holidays/manage', 'Holidays'); } ?></li><?php endif;?>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/zones')?>" ><?php if(user_group('admin')) { echo anchor('admin/zones/manage', 'Zones'); } ?></li><?php endif;?>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/options')?>" ><?php if(user_group('admin')) { echo anchor('admin/options/manage', 'Options'); } ?></li><?php endif;?>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>

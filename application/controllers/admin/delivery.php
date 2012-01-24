@@ -41,7 +41,7 @@ class Delivery extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
 
-		$count_display_all = $this->db->where('status !=','assigned')->where('status !=','dated')->count_all_results($this->config->item('incoming_delivery_table'));
+		$count_display_all = $this->db->where('status !=','assigned')->count_all_results($this->config->item('incoming_delivery_table'));
 		
 		//search column
 		if($this->input->post('sSearch') != ''){
@@ -71,7 +71,7 @@ class Delivery extends Application
 		$this->db->join('applications as a','delivery_order_incoming.application_id=b.id','left');
 		
 		
-		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 		
 		//print $this->db->last_query();
 		
@@ -86,10 +86,12 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="cursor:pointer;">Cancel</span>';
 			
 			$app = $this->get_app_info($key['application_key']);
 
-			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (12*60*60))?true:false;
+			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (18*60*60))?true:false;
+			$lessday = ($key['buyerdeliverytime'] === '0000-00-00 00:00:00')?false:$lessday;
 			
 			if($lessday){
 				$reqdate = '<span class="red">'.$key['buyerdeliverytime'].'</span>';
@@ -108,7 +110,8 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']			 	 	 	 	 	 	 
+				($key['status'] == 'canceled')?'<span class="red">'.$key['status'].'</span>':$key['status'],
+				($key['status'] == 'canceled')?'':$cancel				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -145,10 +148,10 @@ class Delivery extends Application
 			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
-			'Status'				 	 	 	 	 	 	 
+			'Status',				 	 	 	 	 	 	 
 			//'Reschedule Ref',		 	 	 	 	 	 	 
 			//'Revoke Ref',
-			//'Actions'
+			'Actions'
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
@@ -163,6 +166,7 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="cursor:pointer;">Cancel</span>';
 			
 			$app = $this->get_app_info($key['application_key']);
 			
@@ -177,7 +181,8 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']				 	 	 	 	 	 	 
+				($key['status'] == 'canceled')?'<span class="red">'.$key['status'].'</span>':$key['status'],
+				($key['status'] == 'canceled')?'':$cancel				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -271,8 +276,8 @@ class Delivery extends Application
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				//$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
-				$key['buyer_id'],			 	 	
-				$key['merchant_id'],			 	 	
+				$key['buyer'],			 	 	
+				$key['merchant'],			 	 	
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
@@ -355,6 +360,16 @@ class Delivery extends Application
 		$page['ajaxurl'] = 'admin/delivery/ajaxzoning';
 		$page['page_title'] = 'Zone Assignment';
 		$this->ag_auth->view('zoneajaxlistview',$page); // Load the view
+	}
+
+	public function ajaxcancel(){
+		$delivery_id = $this->input->post('delivery_id');
+		
+		$actor = 'M:'.$this->session->userdata('userid');
+		
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'canceled','change_actor'=>$actor));
+		
+		print json_encode(array('result'=>'ok'));
 	}
 
 	public function ajaxassigndate(){

@@ -1,5 +1,6 @@
 <script>
 	var asInitVals = new Array();
+	var dateBlock = <?php print getdateblock();?>;
 	
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
@@ -66,8 +67,63 @@
 		});
 
 		/*Delivery process mandatory*/
-		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+		/*Delivery process mandatory*/
+		$('#date_display').datepicker({
+			numberOfMonths: 2,
+			showButtonPanel: true,
+			dateFormat:'yy-mm-dd',
+			onSelect:function(dateText, inst){
+				
+				//console.log(dateBlock);
+				if(dateBlock[dateText] == 'weekend'){
+					alert('no delivery on weekend');
+				}else{
+					$('#assign_deliverytime').val(dateText);
+				}
+			},
+			beforeShowDay:getBlocking
+		});
+		
+		function getBlocking(d){
+			/*
+				$.datepicker.formatDate('yy-mm-dd', d);
+			*/
+			var curr_date = d.getDate();
+			var curr_month = d.getMonth() + 1; //months are zero based
+			var curr_year = d.getFullYear();
+		
+			curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+			curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+			var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+			var select = 1;
+			var css = 'open';
+			var popup = 'working day';
+			
+			//console.log(indate);
+			console.log(window.dateBlock);
+			if(window.dateBlock[indate] == 'weekend'){
+				select = 0;
+				css = 'weekend';
+				popup = 'weekend';
+			}else if(window.dateBlock[indate] == 'holiday'){
+				select = 0;
+				css = 'weekend';
+				popup = 'holiday';
+			}else if(window.dateBlock[indate] == 'blocked'){
+				select = 0;
+				css = 'blocked';
+				popup = 'zero time slot';
+			}else{
+				select = 1;
+				css = '';
+				popup = 'working day';
+			}
+			return [select,css,popup];
+		}
+		
+		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
@@ -84,6 +140,24 @@
 				alert('Please select one or more delivery orders');
 			}
 		});
+
+		$('table.dataTable').click(function(e){
+			if ($(e.target).is('.cancel_link')) {
+				var delivery_id = e.target.id;
+				var answer = confirm("Are you sure you want to cancel this order ?");
+				if (answer){
+					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',{'delivery_id':delivery_id}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							alert(delivery_id + " canceled");
+						}
+					},'json');
+				}else{
+					alert(delivery_id + " not canceled");
+				}
+		   	}
+		});
 		
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
@@ -98,8 +172,8 @@
 		
 		$('#assign_dialog').dialog({
 			autoOpen: false,
-			height: 300,
-			width: 400,
+			height: 400,
+			width: 800,
 			modal: true,
 			buttons: {
 				"Assign Delivery Date": function() {
@@ -152,15 +226,20 @@
 <div id="assign_dialog" title="Assign Delivery Date to Selection">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
-			<td style="width:50%;border:0;margin:0;">
-				Delivery Date :<br />
-				<input id="assign_deliverytime" type="text" value=""><br />
+			<td style="width:250px;vertical-align:top">
 				Delivery Orders :
+			</td>
+			<td>
+				Delivery Date :<br />
 			</td>
 		</tr>
 		<tr>
-			<td style="overflow:auto;">
+			<td style="overflow:auto;width:250px;vertical-align:top">
 				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+			</td>
+			<td style="border:0;margin:0;">
+				<input id="assign_deliverytime" type="text" value=""><br />
+				<div id="date_display"></div>
 			</td>
 		</tr>
 	</table>

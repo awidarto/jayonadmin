@@ -136,6 +136,7 @@ class V1 extends Application
 				$order['buyer_name'] = $in->buyer_name;
 				$order['recipient_name'] = $in->recipient_name;
 				$order['email'] = $in->email;
+				$order['directions'] = $in->directions;
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;		 	 	 	 	 	 	
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 				$order['currency'] = $in->currency;
