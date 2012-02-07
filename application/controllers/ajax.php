@@ -17,8 +17,8 @@ class Ajax extends Application
 		$q = $this->input->get('term');
 		$zones = ajax_find_cities($q,'city');
 		print json_encode($zones);
-	}
-
+	}                       
+	
 	public function getprovinces(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_provinces($q,'province');

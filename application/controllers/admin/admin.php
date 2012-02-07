@@ -22,6 +22,7 @@ class Admin extends Application
 		}
 	}
 	
+
 	public function testmail(){
 		$subject = 'Processed order';
 		$to = 'andy.awidarto@gmail.com';

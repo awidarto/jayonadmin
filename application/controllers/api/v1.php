@@ -139,6 +139,7 @@ class V1 extends Application
 				$order['directions'] = $in->directions;
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;		 	 	 	 	 	 	
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
+				$order['buyerdeliverycity'] = $in->buyerdeliverycity;
 				$order['currency'] = $in->currency;
 				$order['cod_cost'] = $in->cod_cost;
 				
@@ -182,12 +183,14 @@ class V1 extends Application
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
 					
-					send_notification('New Member Registration - Jayon Express COD Service',$in->email,'new_member',$edata,null);
+					send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,'new_member',$edata,null);
 				}
 				
 			}
 		}
 	}
+
+	/*
 
 	public function posts($api_key = null,$transaction_id = null)
 	{
@@ -267,7 +270,12 @@ class V1 extends Application
 		
 	} // public function add() transaction
 
-	public function timeslot($api_key = null,$date = null){
+	*/
+
+	/* Check & get particular timeslot for current date  */
+
+
+	public function tsget($api_key = null,$month = null){
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
@@ -280,7 +288,102 @@ class V1 extends Application
 			}
 		}
 	}
+
+	/* Check & get particular timeslot for current date  */
+
+	public function tscheck($api_key = null,$date = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
+	/* Update current location */
 	
+	public function locpost($api_key = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
+	/* Update delivery status from mobile */
+
+	public function statpost($api_key = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
+	/* Synchronize mobile device */
+	public function sync($api_key = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
+	/* Lists JEX zones of coverage */
+
+	public function zonelist($api_key = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
+	/* Lists JEX zones of coverage, as results of <query string> matches */
+
+	public function zoneget($api_key = null, $query = null){
+		if(is_null($api_key)){
+			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		}else{
+			if(is_null($date)){
+				//get slot for specified date
+				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}else{
+				//full calendar time series for current month
+				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+			}
+		}
+	}
+
 	public function add($api_key = null,$transaction_id = null)
 	{
 		
@@ -388,43 +491,6 @@ class V1 extends Application
 			return 0;
 		}
 	}
-
-	public function edit($username)
-	{
-		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
-		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
-		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
-		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
-		$this->form_validation->set_rules('group_id', 'Group', 'trim');
-				
-		if($this->form_validation->run() == FALSE)
-		{
-			$data['groups'] = $this->get_group();
-			$this->ag_auth->view('users/add',$data);
-		}
-		else
-		{
-			$username = set_value('username');
-			$password = $this->ag_auth->salt(set_value('password'));
-			$email = set_value('email');
-			$group_id = set_value('group_id');
-			
-			if($this->ag_auth->register($username, $password, $email, $group_id) === TRUE)
-			{
-				$data['message'] = "The user account has now been created.";
-				$this->ag_auth->view('message', $data);
-				
-			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
-			else
-			{
-				$data['message'] = "The user account has not been created.";
-				$this->ag_auth->view('message', $data);
-			}
-
-		} // if($this->form_validation->run() == FALSE)
-		
-	} // public function register()
-
 	
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
 }

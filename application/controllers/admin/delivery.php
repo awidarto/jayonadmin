@@ -26,11 +26,12 @@ class Delivery extends Application
 
 		$columns = array(
 			'buyerdeliverytime',
+			'buyerdeliverycity',
 			'delivery_id',		
-			'app_name',               
-			'buyer_id',			
-			'merchant',		
 			'merchant_trans_id',   
+			'app_name',               
+			'merchant',		
+			'buyer',			
 			'shipping_address',	
 			'phone',			
 			'status'
@@ -63,6 +64,10 @@ class Delivery extends Application
 		
 		if($this->input->post('sSearch_2') != ''){
 			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like('merchant_trans_id',$this->input->post('sSearch_3'));
 		}
 
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
@@ -100,14 +105,15 @@ class Delivery extends Application
 			}
 			
 			$aadata[] = array(
-				$reqdate,
+				'<span id="'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				$key['buyerdeliveryzone'],
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
+				$key['buyerdeliverycity'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
+				$key['merchant'],			 	 	
 				//$app['domain'],		 	 	
 				$key['buyer'],			 	 	
-				$key['merchant'],			 	 	
-				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
 				($key['status'] == 'canceled')?'<span class="red">'.$key['status'].'</span>':$key['status'],
@@ -140,12 +146,13 @@ class Delivery extends Application
 		$this->table->set_heading(
 			'Requested Date',
 			'Zone',
+			'City',
 			'Delivery ID',			 	 	 	 	 	 	 
+			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'App Name',	 	 	
+			'Merchant',			 	 	
 			//'App Domain',	 	 	
 			'Buyer',			 	 	
-			'Merchant',			 	 	
-			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
 			'Status',				 	 	 	 	 	 	 
@@ -157,8 +164,12 @@ class Delivery extends Application
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
+			'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
+			form_button('do_confirm','Confirm Selection','id="doConfirm"'),
+			form_button('do_cancel','Cancel Selection','id="doCancel"')
 			);
 		
 		foreach($result as $value => $key)
@@ -207,6 +218,7 @@ class Delivery extends Application
 
 		$columns = array(
 			'buyerdeliveryzone',			 	 	
+			'buyerdeliverycity',			 	 	
 			'buyerdeliverytime',			 	 	
 			'delivery_id',			 	 	 	 	 	 	 
 			'app_name',
@@ -272,7 +284,8 @@ class Delivery extends Application
 			
 			$aadata[] = array(
 				$key['assignment_date'],
-				$key['buyerdeliveryzone'],
+				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
+				'<span id="c_'.$key['delivery_id'].'">'.$key['buyerdeliverycity'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				//$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
@@ -310,6 +323,7 @@ class Delivery extends Application
 		$this->table->set_heading(
 			'Delivery Time',
 			'Zone',
+			'City',
 			'Delivery ID',			 	 	 	 	 	 	 
 			//'App Name',	 	 	
 			//'App Domain',	 	 	
@@ -327,6 +341,7 @@ class Delivery extends Application
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
 			);
@@ -342,6 +357,7 @@ class Delivery extends Application
 			$this->table->add_row(
 				$key['assignment_date'],			 	 	
 				$key['buyerdeliveryzone'],			 	 	
+				$key['buyerdeliverycity'],			 	 	
 				$key['delivery_id'],			 	 	 	 	 	 	 
 				//$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
@@ -366,8 +382,30 @@ class Delivery extends Application
 		$delivery_id = $this->input->post('delivery_id');
 		
 		$actor = 'M:'.$this->session->userdata('userid');
+
+		if(is_array($delivery_id)){
+			foreach ($delivery_id as $d) {
+				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>'canceled','change_actor'=>$actor));
+			}		
+		}else{
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'canceled','change_actor'=>$actor));
+		}
 		
-		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'canceled','change_actor'=>$actor));
+		print json_encode(array('result'=>'ok'));
+	}
+
+	public function ajaxconfirm(){
+		$delivery_id = $this->input->post('delivery_id');
+		
+		$actor = 'M:'.$this->session->userdata('userid');
+		
+		if(is_array($delivery_id)){
+			foreach ($delivery_id as $d) {
+				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>'confirmed','change_actor'=>$actor));
+			}		
+		}else{
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'confirmed','change_actor'=>$actor));
+		}
 		
 		print json_encode(array('result'=>'ok'));
 	}

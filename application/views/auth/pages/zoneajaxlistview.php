@@ -80,7 +80,9 @@
 			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
+
+				var zone = $('#'+this.value).html() + ',' + $('#c_'+this.value).html();
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong> <br /> '+ zone +'</li>';
 				count++;
 			});
 			

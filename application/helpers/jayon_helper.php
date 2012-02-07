@@ -141,7 +141,7 @@ function getdateblock($month = null){
 	return json_encode($blocking);
 }
 
-function send_notification($subject,$to,$template = 'default',$data = null,$attachment = null){
+function send_notification($subject,$to,$cc = null,$template = 'default',$data = null,$attachment = null){
 	$CI =& get_instance();
 	
 	$config = array(
@@ -170,6 +170,16 @@ function send_notification($subject,$to,$template = 'default',$data = null,$atta
 	}else{
 		$CI->email->to($to); 
 	}
+
+	if(!is_null($cc)){
+		if(is_array($cc)){
+			foreach ($cc as $cm) {
+				$CI->email->cc($cm);
+			}
+		}else{
+			$CI->email->cc($cc);
+		}	
+	}
 	
 	if(!is_null($attachment)){
 		if(is_array($attachment)){
@@ -193,7 +203,7 @@ function send_notification($subject,$to,$template = 'default',$data = null,$atta
 	return $result;
 }
 
-function send_admin($subject,$to,$template = 'default',$data = '',$attachment = null){
+function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$attachment = null){
 	$CI =& get_instance();
 	
 	$config = array(
@@ -221,6 +231,16 @@ function send_admin($subject,$to,$template = 'default',$data = '',$attachment = 
 		}
 	}else{
 		$CI->email->to($to); 
+	}
+
+	if(!is_null($cc)){
+		if(is_array($cc)){
+			foreach ($cc as $cm) {
+				$CI->email->cc($cm);
+			}
+		}else{
+			$CI->email->cc($cc);
+		}	
 	}
 	
 	if(!is_null($attachment)){
