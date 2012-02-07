@@ -294,10 +294,10 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status'],				 	 	 	 	 	 	 
+				$key['status']				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
-				($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
+				//($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
 		
@@ -332,10 +332,10 @@ class Delivery extends Application
 			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
-			'Status',				 	 	 	 	 	 	 
+			'Status'				 	 	 	 	 	 	 
 			//'Reschedule Ref',		 	 	 	 	 	 	 
 			//'Revoke Ref',
-			'Actions'
+			//'Actions'
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
@@ -366,10 +366,10 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status'],				 	 	 	 	 	 	 
+				$key['status']				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
-				($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
+				//($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
 		}
 		$page['sortdisable'] = '';
@@ -1246,7 +1246,8 @@ class Delivery extends Application
 		
 		$assignment_date = $this->input->post('assignment_date');
 		$assignment_zone = $this->input->post('assignment_zone');
-		
+		$assignment_city = $this->input->post('assignment_city');
+
 		$dev = $this->db->select('id,identifier,descriptor,devname')->get($this->config->item('jayon_devices_table'));
 		$result = array();
 		foreach($dev->result_array() as $device){

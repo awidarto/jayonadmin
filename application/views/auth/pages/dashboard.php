@@ -1,3 +1,6 @@
+<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
+
 <script>
 
 	$(document).ready(function() {

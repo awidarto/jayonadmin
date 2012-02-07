@@ -16,8 +16,6 @@
 		
 		<?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
 		<?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
-	    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-		<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
 
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
 

@@ -65,6 +65,12 @@
 			minLength: 2
 		});
 
+		$( '#assign_deliverycity' ).autocomplete({
+			source: '<?php print site_url('ajax/getcities')?>',
+			method: 'post',
+			minLength: 2
+		});
+
 		
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
@@ -99,7 +105,7 @@
 				alert('Please specify intended delivery time');
 			}else{
 				//alert($('#assign_deliverytime').val());
-				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val(),assignment_zone: $('#assign_deliveryzone').val() }, function(data) {
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val(),assignment_zone: $('#assign_deliveryzone').val(),assignment_city: $('#assign_deliverycity').val() }, function(data) {
 					$('#dev_list').html(data.html);
 				},'json');
 			}
@@ -108,14 +114,15 @@
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
-			width: 600,
+			width: 800,
 			modal: true,
 			buttons: {
 				"Assign to Device": function() {
-					if($('#assign_deliverytime').val() == ''){
-						alert('Please specify date.');
+					var device_id = $("input[name='dev_id']:checked").val();
+
+					if($('#assign_deliverytime').val() == '' || device_id == '' || device_id == undefined){
+						alert('Please specify date and or device.');
 					}else{
-						var device_id = $("input[name='dev_id']:checked").val();
 						var delivery_ids = [];
 						i = 0;
 						$('.assign_check:checked').each(function(){
@@ -130,6 +137,7 @@
 							}
 						},'json');
 					}
+					
 				},
 				Cancel: function() {
 					$('#dev_list').html("");
@@ -163,22 +171,32 @@
 <div id="assign_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
-			<td style="width:50%;border:0;margin:0;">
-				Delivery Orders :
-			</td>
-			<td style="width:50%;border:0;margin:0;">
-				Select Zone :<br />
-				<input id="assign_deliveryzone" type="text" value=""><br />
-				Delivery Time :<br />
-				<input id="assign_deliverytime" type="text" value="">
-				<?php print form_button('getdevices','Get Devices','id="getDevices"');?>
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;">
+			<td style="width:50%;border:0;margin:0;vertical-align: top">
+				<h4>Delivery Orders :</h4>
 				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
-			<td>
+			<td style="width:50%;border:0;margin:0;vertical-align: top">
+				<table style="margin: 0px;border: 0px;">
+					<tr>
+						<td>
+							Select Zone :<br />
+							<input id="assign_deliveryzone" type="text" value="">
+						</td>
+						<td>
+							Select City :<br />
+							<input id="assign_deliverycity" type="text" value="">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Delivery Time :<br />
+							<input id="assign_deliverytime" type="text" value="">
+						</td>
+						<td>
+							<?php print form_button('getdevices','Get Devices','id="getDevices"');?><br />
+						</td>
+					</tr>
+				</table>
 				<ul id="dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
 		</tr>

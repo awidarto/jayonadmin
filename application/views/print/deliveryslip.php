@@ -92,6 +92,10 @@ Array
 		<td><?php print $main_info['delivery_id'];?></td>
 	</tr>
 	<tr>
+		<td>Merchant Transaction ID:</td>
+		<td><?php print $main_info['merchant_trans_id'];?></td>
+	</tr>
+	<tr>
 		<td>Shipping Address:</td>
 		<td><?php print $main_info['shipping_address'];?></td>
 	</tr>
