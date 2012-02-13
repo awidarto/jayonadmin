@@ -2,63 +2,63 @@
 
 class V1 extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
 	}
-	
+
 	public function items()
 	{
-	    $this->load->library('table');		
+		$this->load->library('table');
 		$data = $this->db->get($this->config->item('incoming_delivery_table'));
 		$result = $data->result_array();
-		
+
 		$this->table->set_heading(
-			'Delivery ID',			 	 	 	 	 	 	 
-			'Application ID',	 	 	
-			'Buyer',			 	 	
-			'Merchant',			 	 	
-			'Merchant Trans ID',		 	 	 	 	 	 	 
-			'Courier',			 	 	
-			'Shipping Address',	 	 				 
-			'Phone',				 	 	 	 	 	 	 
-			'Status',				 	 	 	 	 	 	 
-			'Reschedule Ref',		 	 	 	 	 	 	 
+			'Delivery ID',
+			'Application ID',
+			'Buyer',
+			'Merchant',
+			'Merchant Trans ID',
+			'Courier',
+			'Shipping Address',
+			'Phone',
+			'Status',
+			'Reschedule Ref',
 			'Revoke Ref',
 			'Actions'
 			); // Setting headings for the table
-		
+
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$this->table->add_row(
-				$key['delivery_id'],			 	 	 	 	 	 	 
-				$key['application_id'],		 	 	
-				$key['buyer_id'],			 	 	
-				$key['merchant_id'],			 	 	
-				$key['merchant_trans_id'],		 	 	 	 	 	 	 
-				$key['courier_id'],			 	 	
-				$key['shipping_address'],	 	 				 
-				$key['phone'],				 	 	 	 	 	 	 
-				$key['status'],				 	 	 	 	 	 	 
-				$key['reschedule_ref'],		 	 	 	 	 	 	 
+				$key['delivery_id'],
+				$key['application_id'],
+				$key['buyer_id'],
+				$key['merchant_id'],
+				$key['merchant_trans_id'],
+				$key['courier_id'],
+				$key['shipping_address'],
+				$key['phone'],
+				$key['status'],
+				$key['reschedule_ref'],
 				$key['revoke_ref'],
 				$edit.' '.$delete
 			);
 		}
-		
+
 		$this->ag_auth->view('delivery/incoming'); // Load the view
 	}
-		
+
 	public function delete($id)
 	{
 		$this->db->where('id', $id)->delete($this->ag_auth->config['auth_user_table']);
 		$this->ag_auth->view('users/delete_success');
 	}
-	
+
 	private function get_group(){
 		$this->db->select('id,description');
 		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
@@ -82,14 +82,14 @@ class V1 extends Application
 			return false;
 		}
 	}
-	
+
 	/**
 	*	transaction posting function
 	*	required field is buyer email, since this function will try to extract it to check and authenticate
 	*	whether buyer already registered at JEX or not
 	*	if not yet registered, buyer will be automatically registered as new member and notified about new membership via email
 	*/
-	
+
 	public function post($api_key = null,$transaction_id = null)
 	{
 		if(is_null($api_key)){
@@ -104,13 +104,13 @@ class V1 extends Application
 				$in = $_POST['transaction_detail'];
 				//print $in;
 				$in = json_decode($in);
-				
+
 				//print_r($in);
-				
+
 				//check if email already registered
-				
+
 				$buyer_id = 1;
-								
+
 				$is_new = false;
 				if($buyer = $this->check_email($in->email)){
 					$buyer_id = $buyer['id'];
@@ -125,46 +125,46 @@ class V1 extends Application
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}
-				
+
 				$order['ordertime'] = date('Y-m-d h:i:s',time());
 				$order['application_id'] = $app->id;
 				$order['application_key'] = $app->key;
 				$order['buyer_id'] = $buyer_id; // change this to current buyer after login
 				$order['merchant_id'] = $app->merchant_id;
 				$order['merchant_trans_id'] = trim($transaction_id);
-				
+
 				$order['buyer_name'] = $in->buyer_name;
 				$order['recipient_name'] = $in->recipient_name;
 				$order['email'] = $in->email;
 				$order['directions'] = $in->directions;
-				$order['buyerdeliverytime'] = $in->buyerdeliverytime;		 	 	 	 	 	 	
+				$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 				$order['buyerdeliverycity'] = $in->buyerdeliverycity;
 				$order['currency'] = $in->currency;
 				$order['cod_cost'] = $in->cod_cost;
-				
+
 				$order['shipping_address'] = $in->shipping_address;
 				$order['phone'] = $in->phone;
 				$order['status'] = $in->status;
-				
-				
+
+
 				$this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();
-				
+
 				$result = $this->db->affected_rows();
-				
+
 				$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
 				$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-				$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;	 	 	 
-				
+				$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
-				
+
 				if($in->trx_detail){
 					$seq = 0;
 					foreach($in->trx_detail as $it){
 						$item['ordertime'] = $order['ordertime'];
-						$item['delivery_id'] = $delivery_id;	 	 	 	 	 	 
-						$item['unit_sequence'] = $seq++; 	 	 	 	
+						$item['delivery_id'] = $delivery_id;
+						$item['unit_sequence'] = $seq++;
 						$item['unit_description'] = $it->unit_description;
 						$item['unit_price'] = $it->unit_price;
 						$item['unit_quantity'] = $it->unit_quantity;
@@ -177,15 +177,15 @@ class V1 extends Application
 				}else{
 					print json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
 				}
-				
+
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
-					
+
 					send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,'new_member',$edata,null);
 				}
-				
+
 			}
 		}
 	}
@@ -194,7 +194,7 @@ class V1 extends Application
 
 	public function posts($api_key = null,$transaction_id = null)
 	{
-		
+
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
@@ -202,52 +202,52 @@ class V1 extends Application
 			//echo json_encode(array('status'=>'ERR:KEYEXISTS','timestamp'=>now()));
 			$app = $this->get_key_info(trim($api_key));
 			//print json_encode($app);
-			
+
 //			if($app){
 //				if($in = $this->input->post('transaction_detail')){
-					
+
 					//$in = $this->input->post('transaction_detail');
 					$in = $_POST['transaction_detail'];
 					//print $in;
-					
+
 					$in = json_decode($in);
-					
+
 					$order['ordertime'] = date('Y-m-d h:i:s',time());
 					$order['application_id'] = $app->id;
 					$order['application_key'] = $app->key;
 					$order['buyer_id'] = 1; // change this to current buyer after login
 					$order['merchant_id'] = $app->merchant_id;
 					$order['merchant_trans_id'] = trim($transaction_id);
-					
+
 					$order['buyer_name'] = $in->buyer_name;
 					$order['recipient_name'] = $in->recipient_name;
 					$order['email'] = $in->email;
-					$order['buyerdeliverytime'] = $in->buyerdeliverytime;		 	 	 	 	 	 	
+					$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 					$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 					$order['currency'] = $in->currency;
 					$order['cod_cost'] = $in->cod_cost;
-					
+
 					$order['shipping_address'] = $in->shipping_address;
 					$order['phone'] = $in->phone;
 					$order['status'] = $in->status;
-					
+
 					$this->db->insert($this->config->item('incoming_delivery_table'),$order);
 					$sequence = $this->db->insert_id();
-					
+
 					$result = $this->db->affected_rows();
-					
+
 					$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
 					$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-					$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;	 	 	 
-					
+					$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
 					$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
-					
+
 					if($in->trx_detail){
 						$seq = 0;
 						foreach($in->trx_detail as $it){
 							$item['ordertime'] = $order['ordertime'];
-							$item['delivery_id'] = $delivery_id;	 	 	 	 	 	 
-							$item['unit_sequence'] = $seq++; 	 	 	 	
+							$item['delivery_id'] = $delivery_id;
+							$item['unit_sequence'] = $seq++;
 							$item['unit_description'] = $it->unit_description;
 							$item['unit_price'] = $it->unit_price;
 							$item['unit_quantity'] = $it->unit_quantity;
@@ -265,9 +265,9 @@ class V1 extends Application
 //			}else{
 //				print json_encode(array('status'=>'ERR:NOAPPFOUND','timestamp'=>now()));
 //			}
-			
+
 		}
-		
+
 	} // public function add() transaction
 
 	*/
@@ -306,7 +306,7 @@ class V1 extends Application
 	}
 
 	/* Update current location */
-	
+
 	public function locpost($api_key = null){
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
@@ -386,18 +386,18 @@ class V1 extends Application
 
 	public function add($api_key = null,$transaction_id = null)
 	{
-		
+
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
 			$app = $this->get_key_info(trim($api_key));
-			
+
 			if($app){
 				if($in = $this->input->post('transaction_detail')){
 					$in = json_decode($in);
-					
+
 					//print_r($in);
-					
+
 					//check if email already registered
 					if($buyer = $this->check_email($order['email'])){
 						$buyer_id = $buyer['id'];
@@ -411,46 +411,46 @@ class V1 extends Application
 						$buyer_id = $this->register_buyer($dataset);
 						print 'new buyer';
 					}
-					
+
 					print $buyer_id;
-					
-					
+
+
 					$order['ordertime'] = date('Y-m-d h:i:s',time());
 					$order['application_id'] = $app->id;
 					$order['application_key'] = $app->key;
 					$order['buyer_id'] = $buyer_id; // change this to current buyer after login
 					$order['merchant_id'] = $app->merchant_id;
 					$order['merchant_trans_id'] = trim($transaction_id);
-					
+
 					$order['buyer_name'] = $in->buyer_name;
 					$order['recipient_name'] = $in->recipient_name;
 					$order['email'] = $in->email;
-					$order['buyerdeliverytime'] = $in->buyerdeliverytime;		 	 	 	 	 	 	
+					$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 					$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 					$order['currency'] = $in->currency;
 					$order['cod_cost'] = $in->cod_cost;
-					
+
 					$order['shipping_address'] = $in->shipping_address;
 					$order['phone'] = $in->phone;
 					$order['status'] = $in->status;
-					
+
 					$this->db->insert($this->config->item('incoming_delivery_table'),$order);
 					$sequence = $this->db->insert_id();
-					
+
 					$result = $this->db->affected_rows();
-					
+
 					$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
 					$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-					$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;	 	 	 
-					
+					$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
 					$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
-					
+
 					if($in->trx_detail){
 						$seq = 0;
 						foreach($in->trx_detail as $it){
 							$item['ordertime'] = $order['ordertime'];
-							$item['delivery_id'] = $delivery_id;	 	 	 	 	 	 
-							$item['unit_sequence'] = $seq++; 	 	 	 	
+							$item['delivery_id'] = $delivery_id;
+							$item['unit_sequence'] = $seq++;
 							$item['unit_description'] = $it->unit_description;
 							$item['unit_price'] = $it->unit_price;
 							$item['unit_quantity'] = $it->unit_quantity;
@@ -468,30 +468,30 @@ class V1 extends Application
 			}else{
 				print json_encode(array('status'=>'ERR:NOKEYFOUND','timestamp'=>now()));
 			}
-			
+
 		}
-		
+
 	} // public function add() transaction
-	
+
 	private function check_email($email){
-		$em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));		
+		$em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));
 		if($em->num_rows() > 0){
 			return $em->row_array();
 		}else{
 			return false;
 		}
 	}
-	
+
 	private function register_buyer($dataset){
 		$dataset['group_id'] = 5;
-		
+
 		if($this->db->insert($this->config->item('jayon_members_table'),$dataset)){
 			return $this->db->insert_id();
 		}else{
 			return 0;
 		}
 	}
-	
+
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
 }
 

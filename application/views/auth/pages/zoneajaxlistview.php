@@ -84,19 +84,38 @@
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
-			var count = 0;
-			$('.assign_check:checked').each(function(){
+			var date_assign = $('.assign_date:checked').val();
+			var city_assign = $('.assign_city:checked').val();
 
-				var zone = $('#'+this.value).html() + ',' + $('#c_'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong> <br /> '+ zone +'</li>';
-				count++;
-			});
 			
-			if(count > 0){
+			if(date_assign == '' || city_assign == '' ){
+
+				alert('Please select one or more delivery orders');
+
+			}else{
+
+				$('#disp_deliverycity').html(city_assign);
+				$('#disp_deliverytime').html(date_assign);
+
+				//$('.assign_check:checked').each(function(){
+
+				var city_assign_class = city_assign.replace(' ','_');
+				$('.' + date_assign +'_'+ city_assign_class).each(function(){
+
+					var zone = date_assign + ' | ' +$('#'+this.value).html() +' | '+ city_assign;
+
+					zone += '<input type="checkbox" name="assign_check_dev[]" value="'+this.value+'" class="id_assign">';
+
+					assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong> <br /> '+ zone +'</li>';
+				});
+
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: date_assign,assignment_zone: $('#assign_deliveryzone').val(),assignment_city: city_assign }, function(data) {
+					$('#dev_list').html(data.html);
+				},'json');
+
 				$('#trans_list').html(assigns);
 				$('#assign_dialog').dialog('open');
-			}else{
-				alert('Please select one or more delivery orders');
+
 			}
 		});
 		
@@ -125,11 +144,11 @@
 					}else{
 						var delivery_ids = [];
 						i = 0;
-						$('.assign_check:checked').each(function(){
+						$('.id_assign:checked').each(function(){
 							delivery_ids[i] = $(this).val();
 							i++;
 						}); 
-						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',{ assignment_device_id: device_id,'delivery_id[]':delivery_ids, assignment_zone: $('#assign_deliveryzone').val() }, function(data) {
+						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',{ assignment_device_id: device_id,'delivery_id[]':delivery_ids, assignment_zone: $('#assign_deliveryzone').val(), assignment_city: $('#disp_deliverycity').html() }, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
 								oTable.fnDraw();
@@ -179,21 +198,10 @@
 				<table style="margin: 0px;border: 0px;">
 					<tr>
 						<td>
-							Select Zone :<br />
-							<input id="assign_deliveryzone" type="text" value="">
+							City : <span id="disp_deliverycity" style="font-weight: bold"></span>
 						</td>
 						<td>
-							Select City :<br />
-							<input id="assign_deliverycity" type="text" value="">
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Delivery Time :<br />
-							<input id="assign_deliverytime" type="text" value="">
-						</td>
-						<td>
-							<?php print form_button('getdevices','Get Devices','id="getDevices"');?><br />
+							Delivery Time : <span id="disp_deliverytime" style="font-weight: bold" ></span>
 						</td>
 					</tr>
 				</table>

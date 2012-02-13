@@ -1,7 +1,7 @@
 <script>
 $(document).ready(function() {
 	$( '#city' ).autocomplete({
-		source: '<?php print site_url('ajax/getcity')?>',
+		source: '<?php print site_url('ajax/getcities')?>',
 		method: 'post',
 		minLength: 2
 	});

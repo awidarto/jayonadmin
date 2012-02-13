@@ -23,7 +23,7 @@
     #nav li {
         float:left; 
         display:block; 
-        width:150px; 
+        width:160px; 
         background:transparent; 
         position:relative;
         z-index:500; 
@@ -78,7 +78,7 @@
         }
          
         #nav ul li {
-            width:150px; 
+            width:160px; 
             float:left; 
             border-top:1px solid #fff;
 	        background:#ccc; 

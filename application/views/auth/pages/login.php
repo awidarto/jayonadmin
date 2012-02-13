@@ -10,4 +10,9 @@
 			<input type="submit" value="Login" name="login" />
 			</form>
 	</div>
+	<?php 
+		if($this->oi->has_messages()){
+			print $this->oi->messages();	
+		}
+	?>
 </div>

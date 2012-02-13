@@ -8,6 +8,7 @@
 
 		<?php echo $this->ag_asset->load_css('style.css');?>
 		<?php echo $this->ag_asset->load_css('menu.css');?>
+		<?php echo $this->ag_asset->load_css('oi.css');?>
 
 		<?php echo $this->ag_asset->load_css('datatables_page.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('datatables_table.css','jquery-datatables');?>
@@ -18,6 +19,7 @@
 		<?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
 
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
+		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
 	

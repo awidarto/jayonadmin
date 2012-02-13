@@ -121,8 +121,11 @@ class Application extends CI_Controller
 			} // if($user_data['password'] === $password)
 			else
 			{
-				$data['message'] = "The username and password did not match.";
-				$this->ag_auth->view('message', $data);
+				//$data['message'] = "The username and password did not match.";
+				//$this->ag_auth->view('message', $data);
+
+				$this->oi->add_error("The username and password did not match.");
+				redirect(base_url());
 			}
 		} // if($this->form_validation->run() == FALSE)
 		

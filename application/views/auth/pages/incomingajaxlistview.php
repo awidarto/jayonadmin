@@ -1,6 +1,7 @@
 <script>
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
+	var rescheduled_id = 0;
 	
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
@@ -16,7 +17,7 @@
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
 				"aoColumnDefs": [ 
-				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
+				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -82,6 +83,24 @@
 			},
 			beforeShowDay:getBlocking
 		});
+
+
+		$('#rescheduled_deliverytime').datetimepicker({
+			numberOfMonths: 2,
+			showButtonPanel: true,
+			dateFormat:'yy-mm-dd',
+			timeFormat: 'hh:mm:ss',
+			onSelect:function(dateText, inst){
+				
+				//console.log(dateBlock);
+				if(dateBlock[dateText] == 'weekend'){
+					alert('no delivery on weekend');
+				}else{
+					$('#rescheduled_deliverytime').val(dateText);
+				}
+			},
+			beforeShowDay:getBlocking
+		});
 		
 		function getBlocking(d){
 			/*
@@ -124,6 +143,7 @@
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
+		
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -142,7 +162,7 @@
 			}
 		});
 
-		$('#doCancel').click(function(){
+		$('#doArchive').click(function(){
 			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
@@ -153,8 +173,8 @@
 			});
 			
 			if(count > 0){
-				$('#cancel_list').html(assigns);
-				$('#cancel_dialog').dialog('open');
+				$('#archive_list').html(assigns);
+				$('#archive_dialog').dialog('open');
 			}else{
 				alert('Please select one or more delivery orders');
 			}
@@ -178,6 +198,7 @@
 			}
 		});
 
+		//put all action link functions here
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
@@ -194,6 +215,49 @@
 					alert(delivery_id + " not canceled");
 				}
 		   	}
+
+			if ($(e.target).is('.reschedule_link')) {
+				var delivery_id = e.target.id;
+				rescheduled_id = delivery_id;
+				var current_date = $('#cd_'+rescheduled_id).val();
+
+				var assigns = '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+ rescheduled_id + '</strong><br />'+ current_date +'</li>';
+				$('#rescheduled_trans_list').html(assigns);
+				$('#reschedule_dialog').dialog('open');
+		   	}
+
+			if ($(e.target).is('.revoke_link')) {
+				var delivery_id = e.target.id;
+				var answer = confirm("Are you sure you want to revoke this order ?");
+				if (answer){
+					$.post('<?php print site_url('admin/delivery/ajaxrevoke');?>',{'delivery_id':delivery_id}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							alert(delivery_id + " revoked");
+						}
+					},'json');
+				}else{
+					alert(delivery_id + " not revoked");
+				}
+		   	}
+
+			if ($(e.target).is('.purge_link')) {
+				var delivery_id = e.target.id;
+				var answer = confirm("Are you sure you want to purge this order ?");
+				if (answer){
+					$.post('<?php print site_url('admin/delivery/ajaxpurge');?>',{'delivery_id':delivery_id}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							alert(delivery_id + " purged");
+						}
+					},'json');
+				}else{
+					alert(delivery_id + " not purged");
+				}
+		   	}
+
 		});
 		
 		$('#getDevices').click(function(){
@@ -304,6 +368,30 @@
 			}
 		});
 
+		$('#reschedule_dialog').dialog({
+			autoOpen: false,
+			height: 300,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Reschedule Delivery Orders": function() {
+					$.post('<?php print site_url('admin/delivery/ajaxreschedule/incoming');?>',{'delivery_id':rescheduled_id,'buyerdeliverytime':$('#rescheduled_deliverytime').val()}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							$('#reschedule_dialog').dialog( "close" );
+						}
+					},'json');
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//allFields.val( "" ).removeClass( "ui-state-error" );
+				$('#cancel_list').html('');
+			}
+		});
 
 		/*
 		function refresh(){
@@ -341,6 +429,28 @@
 			<td style="border:0;margin:0;">
 				<input id="assign_deliverytime" type="text" value=""><br />
 				<div id="date_display"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div id="reschedule_dialog" title="Reschedule Order">
+	<table style="width:100%;border:0;margin:0;">
+		<tr>
+			<td style="width:250px;vertical-align:top">
+				Delivery Orders :
+			</td>
+			<td>
+				Reschedule Delivery Date to :<br />
+			</td>
+		</tr>
+		<tr>
+			<td style="overflow:auto;width:250px;vertical-align:top">
+				<ul id="rescheduled_trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+			</td>
+			<td style="border:0;margin:0;">
+				<input id="rescheduled_deliverytime" type="text" value=""><br />
+				<div id="date_time_display"></div>
 			</td>
 		</tr>
 	</table>
