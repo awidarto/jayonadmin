@@ -39,6 +39,9 @@ $config['jayon_holidays_table'] = 'holidays';
 $config['jayon_devices_table'] = 'devices';
 $config['jayon_options_table'] = 'options';
 $config['jayon_zones_table'] = 'districts';
+$config['jayon_timeslots_table'] = 'slots';
+
+$config['jayon_mobile_table'] = 'mobile_orders';
 
 
 /* Delivery status strings */
@@ -50,9 +53,11 @@ $config['trans_status_confirmed'] = 'confirmed';
 $config['trans_status_canceled'] = 'canceled';
 $config['trans_status_rescheduled'] = 'rescheduled';
 
+$config['trans_status_mobile_dispatched'] = 'dispatched';
+$config['trans_status_mobile_departure'] = 'departure';
 $config['trans_status_mobile_pickedup'] = 'pickedup';
 $config['trans_status_mobile_enroute'] = 'enroute';
-$config['trans_status_mobile_location'] = 'checkin';
+$config['trans_status_mobile_location'] = 'loc_update';
 $config['trans_status_mobile_rescheduled'] = 'rescheduled';
 $config['trans_status_mobile_delivered'] = 'delivered';
 $config['trans_status_mobile_revoked'] = 'revoked';
@@ -121,6 +126,9 @@ $config['notify_password'] = 'NotiFier987';
 $config['admin_username'] = 'admin@jayonexpress.com';
 $config['admin_password'] = 'JayonAdmin234';
 
+//for test only 
+
+$config['api_url'] = 'http://localhost/jayonadmin/api/v1/';
 
 
 ?>

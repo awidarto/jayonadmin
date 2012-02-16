@@ -198,6 +198,24 @@
 			}
 		});
 
+
+		$('#doCancel').click(function(){
+			var assigns = '';
+			var count = 0;
+			$('.assign_check:checked').each(function(){
+
+				var deliverydate = $('#'+this.value).html();
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
+				count++;
+			});
+			
+			if(count > 0){
+				$('#cancel_list').html(assigns);
+				$('#cancel_dialog').dialog('open');
+			}else{
+				alert('Please select one or more delivery orders');
+			}
+		});
 		//put all action link functions here
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.cancel_link')) {

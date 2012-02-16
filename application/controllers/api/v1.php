@@ -311,12 +311,37 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			if(is_null($date)){
-				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+			file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/locreport.json', $_POST['loc']);
+
+			if(isset($_POST['loc'])){
+				$in = json_decode($_POST['loc']);
+
+			//	if($dev = $this->getDevices($in->key)){
+					$dev = $this->getDevice($in->key);
+					file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/dev.json', json_encode($dev));
+
+
+					$dataset['timestamp'] = date('Y-m-d h:i:s',time());
+					//$dataset['device_id'] = $dev->id;
+					//$dataset['identifier'] = $dev->identifier;
+					//$dataset['courier_id'] = '';
+					$dataset['latitude'] = $in->lat;
+					$dataset['longitude'] = $in->lon;
+					$dataset['status'] = $this->config->item('trans_status_mobile_location');
+					$dataset['notes'] = '';
+
+
+					$this->db->insert($this->config->item('location_log_table'),$dataset);
+
+					//get slot for specified date
+					print json_encode(array('status'=>'OK:LOCPOSTED','timestamp'=>now()));
+			/*	}else{
+					print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+				}
+			*/
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print json_encode(array('status'=>'NOK:LOCFAILED','timestamp'=>now()));
 			}
 		}
 	}
@@ -490,6 +515,11 @@ class V1 extends Application
 		}else{
 			return 0;
 		}
+	}
+
+	private function getDevice($key){
+		$dev = $this->db->where('key',$key)->get($this->config->item('jayon_mobile_table'));
+		return $dev->row();
 	}
 
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS

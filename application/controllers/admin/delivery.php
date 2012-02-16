@@ -378,9 +378,42 @@ class Delivery extends Application
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_canceled'),'change_actor'=>$actor));
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_canceled'),
+						'notes'=>''
+						);
+
+				delivery_log($data);
 			}
 		}else{
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_canceled'),'change_actor'=>$actor));
+
+			$data = array(
+					'timestamp'=>date('Y-m-d h:i:s',time()),
+					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'delivery_id'=>$delivery_id,
+					'device_id'=>'',
+					'courier_id'=>'',
+					'actor_type'=>'AD',
+					'actor_id'=>$this->session->userdata('userid'),
+					'latitude'=>'',
+					'longitude'=>'',
+					'status'=>$this->config->item('trans_status_canceled'),
+					'notes'=>''
+					);
+
+			delivery_log($data);
+
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -397,10 +430,42 @@ class Delivery extends Application
 
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
-				$buyeremail[] = $this->do_revoke_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+				$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_rescheduled'),
+						'notes'=>''
+						);
+
+				delivery_log($data);
 			}
 		}else{
-			$buyeremail = $this->do_revoke_reschedule($delivery_id,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+			$buyeremail = $this->do_reschedule($delivery_id,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$delivery_id,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_rescheduled'),
+						'notes'=>''
+						);
+
+				delivery_log($data);
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -419,11 +484,42 @@ class Delivery extends Application
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>'revoked','change_actor'=>$actor));
-				$buyeremail[] = $this->do_revoke_reschedule($d,null,$this->config->item('trans_status_revoked'),'incoming');
+				$buyeremail[] = $this->do_revoke($d,null,$this->config->item('trans_status_revoked'),'incoming');
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_revoked'),
+						'notes'=>''
+						);
+
+				delivery_log($data);
 			}
 		}else{
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'revoked','change_actor'=>$actor));
-			$buyeremail = $this->do_revoke_reschedule($delivery_id,null,$this->config->item('trans_status_revoked'),'incoming');
+			$buyeremail = $this->do_revoke($delivery_id,null,$this->config->item('trans_status_revoked'),'incoming');
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$delivery_id,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_revoked'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -439,9 +535,41 @@ class Delivery extends Application
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
+
+					$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_purged'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 			}
 		}else{
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$delivery_id,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_purged'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -456,10 +584,42 @@ class Delivery extends Application
 
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
-				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
+				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_archived'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 			}
 		}else{
-			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
+
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$delivery_id,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_archived'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -473,9 +633,40 @@ class Delivery extends Application
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_confirmed'),'change_actor'=>$actor));
+					$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_confirmed'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 			}
 		}else{
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_confirmed'),'change_actor'=>$actor));
+
+			$data = array(
+					'timestamp'=>date('Y-m-d h:i:s',time()),
+					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'delivery_id'=>$delivery_id,
+					'device_id'=>'',
+					'courier_id'=>'',
+					'actor_type'=>'AD',
+					'actor_id'=>$this->session->userdata('userid'),
+					'latitude'=>'',
+					'longitude'=>'',
+					'status'=>$this->config->item('trans_status_archived'),
+					'notes'=>''
+				);
+
+			delivery_log($data);
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -509,6 +700,22 @@ class Delivery extends Application
 				array('status'=>$this->config->item('trans_status_admin_courierassigned'),
 						'courier_id'=>$assignment_courier_id));
 
+					$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>'',
+						'device_id'=>$assignment_device_id,
+						'courier_id'=>$assignment_courier_id,
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_admin_courierassigned'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
+
 		print json_encode(array('result'=>'ok'));
 	}
 
@@ -516,11 +723,28 @@ class Delivery extends Application
 
 		$assignment_zone = $this->input->post('assignment_zone');
 		$assignment_city = $this->input->post('assignment_city');
+		$assignment_timeslot = $this->input->post('assignment_timeslot');
 		$assignment_device_id = $this->input->post('assignment_device_id');
 		$delivery_ids = $this->input->post('delivery_id');
 
 		foreach($delivery_ids as $did){
-			$this->do_zone_assignment($did,$assignment_device_id,$assignment_zone,$assignment_city);
+			$this->do_zone_assignment($did,$assignment_device_id,$assignment_zone,$assignment_city,$assignment_timeslot);
+			$data = array(
+				'timestamp'=>date('Y-m-d h:i:s',time()),
+				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'delivery_id'=>$did,
+				'device_id'=>'',
+				'courier_id'=>'',
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_admin_zoned'),
+				'notes'=>''
+			);
+
+			delivery_log($data);
+
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -537,6 +761,7 @@ class Delivery extends Application
 		$columns = array(
 			'assignment_date',
 			'device',
+			'assignment_timeslot',
 			'delivery_id',
 			'buyerdeliverycity',
 			'buyerdeliveryzone',
@@ -621,6 +846,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$datefield,
 				$devicefield,
+				$key['assignment_timeslot'],
 				$key['delivery_id'],
 				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
@@ -660,6 +886,7 @@ class Delivery extends Application
 		$this->table->set_heading(
 			'Delivery Date',
 			'Device',
+			'Time Slot',
 			'Delivery ID',
 			'Delivery City',
 			'Delivery Zone',
@@ -1412,6 +1639,62 @@ class Delivery extends Application
 		$this->ag_auth->view('archivedajaxlistview',$page); // Load the view
 	}
 
+	public function ajaxlog()
+	{
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+
+		// get total count result
+		$count_all = $this->db
+			->count_all($this->config->item('delivery_log_table'));
+
+		$count_display_all = $this->db->count_all_results($this->config->item('delivery_log_table'));
+
+/*
+		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+*/
+
+		$data = $this->db
+			->limit($limit_count, $limit_offset)
+			->get($this->config->item('delivery_log_table'));
+
+		$result = $data->result_array();
+
+		$aadata = array();
+
+
+		foreach($result as $value => $key)
+		{
+			$aadata[] = array(
+				$key['timestamp'],
+				$key['report_timestamp'],
+				$key['delivery_id'],
+				$key['device_id'],
+				$key['courier_id'],
+				$key['actor_type'],
+				$key['actor_id'],
+				$key['latitude'],
+				$key['longitude'],
+				$key['status'],
+				$key['notes']
+			);
+		}
+
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+
+		print json_encode($result);
+	}
+
 	public function log()
 	{
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
@@ -1426,34 +1709,25 @@ class Delivery extends Application
 			'Delivery ID',
 			'Device ID',
 			'Courier',
+			'Actor',
+			'Actor ID',
 			'Latitude',
 			'Longitude',
 			'Status',
 			'Note'
 			); // Setting headings for the table
 
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-
-			$app = $this->get_app_info($key['application_key']);
-
-			$this->table->add_row(
-				$key['timestamp'],
-				$key['report_timestamp'],
-				$key['delivery_id'],
-				$key['device_id'],
-				$key['courier_id'],
-				$key['latitude'],
-				$key['longitude'],
-				$key['status'],
-				$key['note']
+		$this->table->set_footing(
+			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />'
 			);
-		}
 
+
+		$page['ajaxurl'] = 'admin/delivery/ajaxlog';
 		$page['page_title'] = 'Delivery Log';
-		$this->ag_auth->view('listview',$page); // Load the view
+		$this->ag_auth->view('archivedajaxlistview',$page); // Load the view
 	}
 
 	public function deleteassigned($id)
@@ -1576,10 +1850,27 @@ class Delivery extends Application
 
 		$dev = $this->db->select('id,identifier,descriptor,devname')->where('city',$assignment_city)->get($this->config->item('jayon_devices_table'));
 		$result = array();
+
+		$slots = get_option('daily_shifts');
+
+		$slotradio = '<input type="radio" name="timeslot[]" value="%s" class="timeslot" > %s [ %s ]';
+
 		foreach($dev->result_array() as $device){
-			$count_dev = $this->db->where('assignment_date',$assignment_date)->where('device_id',$device['id'])->count_all_results($this->config->item('assigned_delivery_table'));
-			//$result[] = array('id'=>$device['id'],'device'=>$device['identifier'],'assignment'=>$count_dev);
-			$result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><input type="radio" name="dev_id" value="%s">%s [%s]</li>',$device['id'],$device['identifier'].' - '.$device['devname'],$count_dev);
+
+			$slotform = '';
+			for($sl = 1;$sl <= $slots;$sl++){
+				$count_dev = $this->db
+					->where('assignment_date',$assignment_date)
+					->where('assignment_timeslot',$sl)
+					->where('device_id',$device['id'])
+					->count_all_results($this->config->item('assigned_delivery_table'));
+				//$result[] = array('id'=>$device['id'],'device'=>$device['identifier'],'assignment'=>$count_dev);
+				$slotform .= sprintf($slotradio,$sl, $sl,$count_dev);
+			}
+			$result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><input type="radio" name="dev_id" value="%s">%s <br />Delivery Slot : %s</li>',
+				$device['id'],
+				$device['identifier'].' - '.$device['devname'],
+				$slotform );
 		}
 		print json_encode(array('html'=>implode('',$result)));
 
@@ -1606,6 +1897,22 @@ class Delivery extends Application
 		{
 			$order_exist = 'ORDER_FAILED_ASSIGNMENT';
 		}
+
+				$data = array(
+					'timestamp'=>date('Y-m-d h:i:s',time()),
+					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'delivery_id'=>$delivery_id,
+					'device_id'=>'',
+					'courier_id'=>'',
+					'actor_type'=>$this->input->post('actor'),
+					'actor_id'=>$this->session->userdata('userid'),
+					'latitude'=>'',
+					'longitude'=>'',
+					'status'=>$this->input->post('new_status'),
+					'notes'=>''
+				);
+
+			delivery_log($data);
 
 		print json_encode(array('result'=>$order_exist));
 	}
@@ -1676,10 +1983,26 @@ class Delivery extends Application
 			$order_exist = 'ORDER_FAILED_ASSIGNMENT';
 		}
 
+			$data = array(
+				'timestamp'=>date('Y-m-d h:i:s',time()),
+				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'delivery_id'=>$delivery_id,
+				'device_id'=>'',
+				'courier_id'=>'',
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_admin_dated'),
+				'notes'=>''
+			);
+
+		delivery_log($data);
+
 		return $order_exist;
 	}
 
-	private function do_zone_assignment($delivery_id,$device_id,$assignment_zone,$assignment_city){
+	private function do_zone_assignment($delivery_id,$device_id,$assignment_zone,$assignment_city,$assignment_timeslot){
 		//$incoming = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
 		//$dataset = $incoming->row_array();
 		//unset($dataset['id']);
@@ -1688,6 +2011,7 @@ class Delivery extends Application
 		//$dataset['assigntime'] = date('Y-m-d h:i:s',time());
 		$dataset['assignment_zone'] = $assignment_zone;
 		$dataset['assignment_city'] = $assignment_city;
+		$dataset['assignment_timeslot'] = $assignment_timeslot;
 
 		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE)
 		{
@@ -1698,12 +2022,69 @@ class Delivery extends Application
 			$order_exist = 'ORDER_FAILED_ASSIGNMENT';
 		}
 
+			$data = array(
+				'timestamp'=>date('Y-m-d h:i:s',time()),
+				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'delivery_id'=>$delivery_id,
+				'device_id'=>'',
+				'courier_id'=>'',
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_admin_zoned'),
+				'notes'=>''
+			);
+
+		delivery_log($data);
+
 		return $order_exist;
 	}
 
-	private function do_revoke_reschedule($delivery_id,$buyerdeliverytime,$status,$table){
+	private function do_reschedule($delivery_id,$buyerdeliverytime,$status,$stage){
 
-		if($table == 'inprocess'){
+		if($stage == 'dispatched'){
+
+			$this->db->select('*,b.email as buyeremail');
+			$this->db->join('members as b','delivery_order_incoming.buyer_id=b.id','left');
+
+			$incomingcomplete = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$datasetcomplete = $incomingcomplete->row_array();
+			$buyeremail = $datasetcomplete['buyeremail'];
+
+			//generate new delivery id
+			full_reschedule($delivery_id, $datachanged);
+
+		}else if($stage == 'incoming'){
+			$actor = $this->session->userdata('userid');
+			$change_actor = 'A:'.$actor;
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
+			$order_exist = 'ORDER_UPDATED';
+
+			$data = array(
+				'timestamp'=>date('Y-m-d h:i:s',time()),
+				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'delivery_id'=>$delivery_id,
+				'device_id'=>'',
+				'courier_id'=>'',
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_rescheduled'),
+				'notes'=>''
+			);
+
+			delivery_log($data);
+
+		}
+
+		return $order_exist;
+	}
+
+	private function do_revoke($delivery_id,$buyerdeliverytime,$status,$table){
+
+		if($table == 'dispatched'){
 
 			$this->db->select('*,b.email as buyeremail');
 			$this->db->join('members as b','delivery_order_incoming.buyer_id=b.id','left');
@@ -1746,16 +2127,31 @@ class Delivery extends Application
 			}
 
 		}else if($table == 'incoming'){
-				$actor = $this->session->userdata('userid');
-				$change_actor = 'A:'.$actor;
-				$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
-				$order_exist = 'ORDER_UPDATED';
+			$actor = $this->session->userdata('userid');
+			$change_actor = 'A:'.$actor;
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
+			$order_exist = 'ORDER_UPDATED';
+
+			$data = array(
+				'timestamp'=>date('Y-m-d h:i:s',time()),
+				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'delivery_id'=>$delivery_id,
+				'device_id'=>'',
+				'courier_id'=>'',
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_rescheduled'),
+				'notes'=>''
+			);
+
+			delivery_log($data);
 
 		}
 
 		return $order_exist;
 	}
-
 
 }
 

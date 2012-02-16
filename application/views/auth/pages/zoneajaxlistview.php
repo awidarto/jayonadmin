@@ -148,12 +148,19 @@
 							delivery_ids[i] = $(this).val();
 							i++;
 						}); 
-						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',{ assignment_device_id: device_id,'delivery_id[]':delivery_ids, assignment_zone: $('#assign_deliveryzone').val(), assignment_city: $('#disp_deliverycity').html() }, function(data) {
-							if(data.result == 'ok'){
-								//redraw table
-								oTable.fnDraw();
-								$('#assign_dialog').dialog( "close" );
-							}
+						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',
+							{ 
+								assignment_device_id: device_id,
+								'delivery_id[]':delivery_ids,
+								assignment_timeslot: $('.timeslot:checked').val(),
+								assignment_zone: $('#assign_deliveryzone').val(), 
+								assignment_city: $('#disp_deliverycity').html() }, 
+								function(data) {
+								if(data.result == 'ok'){
+									//redraw table
+									oTable.fnDraw();
+									$('#assign_dialog').dialog( "close" );
+								}
 						},'json');
 					}
 					

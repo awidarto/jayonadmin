@@ -44,16 +44,6 @@ function get_zone_options(){
 	return $result;
 }
 
-function delivery_log($data){
-	$CI =& get_instance();
-	
-	if($this->db->insert($this->config->item('delivery_log_table'),$data)){
-		return true;
-	}else{
-		return false;
-	}
-}
-
 function ajax_find_zones($zone,$col = 'district'){
 	$CI =& get_instance();
 	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('districts');
@@ -139,6 +129,46 @@ function getdateblock($month = null){
 		}
 	}
 	return json_encode($blocking);
+}
+
+function delivery_log($data){
+	$CI =& get_instance();
+	$CI->db->insert($CI->config->item('delivery_log_table'),$data);
+	return true;
+}
+
+function full_reschedule($delivery_id, $datachanged){
+	$CI =& get_instance();
+	$old_order = $CI->db->where('delivery_id',$delivery_id)->get($CI->config->item('assigned_delivery_table'));
+	$old_order = $old_order->row_array();
+
+	$new_order = array_replace($old_order,$datachanged);
+	$new_order['status'] = $CI->config->item('trans_status_new');
+	$new_order['reschedule_ref'] = $delivery_id;
+	$new_order['reattemp'] = (int) $new_order['reattemp'] + 1;
+	unset($new_order['delivery_id']);
+	unset($new_order['id']);
+	
+	$old_delivery_id = $delivery_id;
+
+	$CI->db->insert($CI->config->item('assigned_delivery_table'),$new_order);
+
+	$sequence = $this->db->insert_id();
+
+	$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
+	$merchant_id = str_pad($new_order['merchant_id'], 8, '0', STR_PAD_LEFT);
+	$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
+	$this->db->where('id',$sequence)->update($this->config->item('assigned_delivery_table'),array('delivery_id'=>$delivery_id));
+
+	$old_details = $CI->db->where('delivery_id',$old_delivery_id)->get($CI->config->item('delivery_details_table'));
+
+	foreach ($old_details->result_array() as $detail){
+		$detail['delivery_id'] = $delivery_id;
+		$CI->db->insert($CI->config->item('delivery_details_table'),$detail);
+	}
+
+	return true;
 }
 
 function send_notification($subject,$to,$cc = null,$template = 'default',$data = null,$attachment = null){

@@ -36,7 +36,7 @@
 	<ul id="nav">
 	<?php
 		//print_r($this->session->userdata);
-		if(logged_in())
+		if(logged_in() && set_hilite('mobile') == '')
 		{
 		?>
 			<li class="<?php print set_hilite('admin\/dashboard')?>" ><?php echo anchor('admin/dashboard', 'Dashboard'); ?></li>
@@ -83,6 +83,13 @@
 				</ul>
 			</li>
 		<?php
+		}else if(set_hilite('mobile') != '') {
+			?>
+			<li class="<?php print set_hilite('mobile\/device$')?>" ><?php if(user_group('admin')) { echo anchor('mobile/device', 'Orders'); } ?></li>
+			<li class="<?php print set_hilite('mobile\/device\/location')?>" ><?php if(user_group('admin')) { echo anchor('mobile/device/location', 'Location'); } ?></li>
+			<li class="<?php print set_hilite('mobile\/device\/options')?>" ><?php if(user_group('admin')) { echo anchor('mobile/device/options', 'Options'); } ?></li>
+
+			<?php
 		}
 		else
 		{

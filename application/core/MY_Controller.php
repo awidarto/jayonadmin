@@ -110,6 +110,7 @@ class Application extends CI_Controller
 			if(array_key_exists('password', $user_data) AND $user_data['password'] === $password)
 			{
 				
+				$user_data['userid'] = $user_data['id'];
 				unset($user_data['password']);
 				unset($user_data['id']);
 
