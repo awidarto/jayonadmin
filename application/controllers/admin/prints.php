@@ -59,7 +59,7 @@ class Prints extends Application
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
 
-			$qr_data = $delivery_id."\r\n".$data['main_info']['merchant_trans_id'];
+			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
 			$this->gc_qrcode->size(100)
                 ->data($qr_data)
