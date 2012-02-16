@@ -365,6 +365,9 @@ class V1 extends Application
 	/* Synchronize mobile device */
 	public function sync($api_key = null){
 		if(is_null($api_key)){
+			
+			
+			
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
 			if(is_null($date)){

@@ -38,7 +38,7 @@ class Prints extends Application
 			{
 
 				$this->table->add_row(
-					$key['unit_sequence'],		 	 	
+					(int)$key['unit_sequence'] + 1,		 	 	
 					$key['unit_description'],	 	 	 	 	 	 	 
 					$key['unit_quantity'],		
 					$key['unit_total']			
@@ -59,6 +59,17 @@ class Prints extends Application
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
 
+			$qr_data = $delivery_id."\r\n".$data['main_info']['merchant_trans_id'];
+
+			$this->gc_qrcode->size(100)
+                ->data($qr_data)
+                ->output_encoding('UTF-8')
+                ->error_correction_level('L')
+                ->margin(0);
+
+            $data['qr'] = $this->gc_qrcode->img();
+
+            $this->gc_qrcode->clear();
 
 			$data['page_title'] = 'Delivery Orders';
 			$this->load->view('print/deliveryslip',$data); // Load the view

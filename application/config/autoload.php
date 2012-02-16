@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('ag_asset','table','breadcrumb','oi');
+$autoload['libraries'] = array('ag_asset','table','breadcrumb','oi','gc_qrcode');
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('asset','date','jayon','string');
 |
 */
 
-$autoload['config'] = array('jayon','oi');
+$autoload['config'] = array('jayon','oi','gc_qrcode');
 
 
 /*

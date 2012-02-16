@@ -35,16 +35,21 @@ Array
 			width:500px;
 		}
 
+		#mainLogo{
+			width:100%;
+		}
+
 		.dataTable{
 			width:100%;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
-			font-size:12px;
 
 		}
 
 		#mainInfo td{
 			border:thin solid #eee;
 		}
+
+
 
 		h1{
 			border-bottom:thin solid #eee;
@@ -64,7 +69,6 @@ Array
 			border:thin solid #eee;
 			width:100%;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
-			font-size:12px;
 			margin-bottom:35px;
 		}
 
@@ -72,16 +76,28 @@ Array
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
 			background-color:black;
 			color:white;
+			vertical-align:top;
+			font-size:14px;
+		}
+
+		td{
+			font-size:13px;
 		}
 
 		#signBox{
 			float:right;
 		}
 
+		#signBox thead th{
+			width:120px;
+		}
+
 		#wrapper{
 			width:1000px;
 			display:block;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-size:14px;
+
 		}
 
 	</style>
@@ -91,7 +107,15 @@ Array
 	<table>
 		<tr>
 			<td>
-				LOGO
+				<table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
+					<tbody>
+						<tr>
+							<td><?php print $this->ag_asset->load_image('plogo.png', 'assets/images');?></td>
+							<td style="align:right"><?php print $qr;?></td>
+						</tr>
+					</tbody>
+				</table>
+
 			</td>
 			<td>
 				<table border="0" cellpadding="4" cellspacing="0" id="mainInfo">
