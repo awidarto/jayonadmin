@@ -56,7 +56,6 @@
 			<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Locations'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Location Log'); } ?></li>
-					<li class="<?php print set_hilite('admin\/location\/tracker')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/tracker', 'Location Tracker'); } ?></li>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'System'); } ?>

@@ -54,7 +54,8 @@ $config['trans_status_canceled'] = 'canceled';
 $config['trans_status_rescheduled'] = 'rescheduled';
 
 $config['trans_status_mobile_dispatched'] = 'dispatched';
-$config['trans_status_mobile_departure'] = 'departure';
+$config['trans_status_mobile_departure'] = 'departed';
+$config['trans_status_mobile_return'] = 'returned';
 $config['trans_status_mobile_pickedup'] = 'pickedup';
 $config['trans_status_mobile_enroute'] = 'enroute';
 $config['trans_status_mobile_location'] = 'loc_update';

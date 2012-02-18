@@ -100,6 +100,16 @@ Array
 
 		}
 
+		#doPrint{
+			text-align:center;
+			text-decoration: underline;
+			background-color: red;
+			color: white;
+			padding:4px;
+			cursor: pointer;
+			margin:auto;
+		}
+
 	</style>
 <div id="wrapper">
 
@@ -218,3 +228,4 @@ Array
 		</tbody>
 	</table>
 </div>
+

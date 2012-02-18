@@ -94,22 +94,18 @@ class Location extends Application
 		}
 
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('timestamp',$this->input->post('sSearch_0'));
+			$this->db->like($this->config->item('location_log_table').'.timestamp',$this->input->post('sSearch_0'));
 		}
 
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('identifier',$this->input->post('sSearch_1'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_1'));
 		}
-
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('courier_id',$this->input->post('sSearch_2'));
+			$this->db->like('c.courier',$this->input->post('sSearch_2'));
 		}
 
-		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('status',$this->input->post('sSearch_3'));
-		}
 
 		$this->db->select('*,d.identifier as identifier,c.fullname as courier');
 		$this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
@@ -134,7 +130,6 @@ class Location extends Application
 
 			$aadata[] = array(
 				$key['timestamp'],
-				$key['device_id'],
 				$key['identifier'],
 				$key['courier'],
 				$key['latitude'],
@@ -161,7 +156,6 @@ class Location extends Application
 
 		$this->table->set_heading(
 			'Timestamp',
-			'Device ID',
 			'Device Identifier',
 			'Courier',
 			'Latitude',
@@ -171,10 +165,8 @@ class Location extends Application
 
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />'
+			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '';

@@ -14,7 +14,7 @@ class Prints extends Application
 	    
 	}
 	
-		public function deliveryslip($delivery_id)
+		public function deliveryslip($delivery_id, $print = null)
 		{
 			$main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
 
@@ -68,6 +68,8 @@ class Prints extends Application
                 ->margin(0);
 
             $data['qr'] = $this->gc_qrcode->img();
+
+            $data['doprint'] = (is_null($print))?false:true;
 
             $this->gc_qrcode->clear();
 

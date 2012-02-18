@@ -98,6 +98,15 @@
 				$('#change_id').html(delivery_id);
 				$('#changestatus_dialog').dialog('open');
 			}
+
+			if ($(e.target).is('.printslip')) {
+				var delivery_id = e.target.id;
+				$('#print_id').val(delivery_id);
+				var src = '<?php print base_url() ?>/admin/prints/deliveryslip/' + delivery_id;
+
+				$('#print_frame').attr('src',src);
+				$('#print_dialog').dialog('open');
+			}
 		});
 		
 		$('#getDevices').click(function(){
@@ -179,6 +188,26 @@
 			}
 		});
 
+		$('#print_dialog').dialog({
+			autoOpen: false,
+			height: 400,
+			width: 1050,
+			modal: true,
+			buttons: {
+				Print: function(){
+					var pframe = document.getElementById('print_frame');
+					var pframeWindow = pframe.contentWindow;
+					pframeWindow.print();
+				}, 
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -249,4 +278,11 @@
 			</td>
 		</tr>
 	</table>
+</div>
+
+<div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">
+	<input type="hidden" value="" id="print_id" />
+	<iframe id="print_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
 </div>

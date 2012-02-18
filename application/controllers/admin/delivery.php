@@ -1168,7 +1168,8 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+			//$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -1215,7 +1216,7 @@ class Delivery extends Application
 	public function dispatched()
 	{
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Dispatched Orders','admin/delivery/assigned');
+		$this->breadcrumb->add_crumb('In Progress Orders','admin/delivery/assigned');
 
 		$this->table->set_heading(
 			'Delivery Date',

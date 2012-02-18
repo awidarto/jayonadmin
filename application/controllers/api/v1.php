@@ -83,6 +83,21 @@ class V1 extends Application
 		}
 	}
 
+	private function get_dev_info($key){
+		if(!is_null($key)){
+			$this->db->where('key',$key);
+			$result = $this->db->get($this->config->item('jayon_devices_table'));
+			if($result->num_rows() > 0){
+				$row = $result->row();
+				return $row;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
 	/**
 	*	transaction posting function
 	*	required field is buyer email, since this function will try to extract it to check and authenticate
@@ -190,90 +205,7 @@ class V1 extends Application
 		}
 	}
 
-	/*
-
-	public function posts($api_key = null,$transaction_id = null)
-	{
-
-		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
-		}else{
-			//print $api_key;
-			//echo json_encode(array('status'=>'ERR:KEYEXISTS','timestamp'=>now()));
-			$app = $this->get_key_info(trim($api_key));
-			//print json_encode($app);
-
-//			if($app){
-//				if($in = $this->input->post('transaction_detail')){
-
-					//$in = $this->input->post('transaction_detail');
-					$in = $_POST['transaction_detail'];
-					//print $in;
-
-					$in = json_decode($in);
-
-					$order['ordertime'] = date('Y-m-d h:i:s',time());
-					$order['application_id'] = $app->id;
-					$order['application_key'] = $app->key;
-					$order['buyer_id'] = 1; // change this to current buyer after login
-					$order['merchant_id'] = $app->merchant_id;
-					$order['merchant_trans_id'] = trim($transaction_id);
-
-					$order['buyer_name'] = $in->buyer_name;
-					$order['recipient_name'] = $in->recipient_name;
-					$order['email'] = $in->email;
-					$order['buyerdeliverytime'] = $in->buyerdeliverytime;
-					$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
-					$order['currency'] = $in->currency;
-					$order['cod_cost'] = $in->cod_cost;
-
-					$order['shipping_address'] = $in->shipping_address;
-					$order['phone'] = $in->phone;
-					$order['status'] = $in->status;
-
-					$this->db->insert($this->config->item('incoming_delivery_table'),$order);
-					$sequence = $this->db->insert_id();
-
-					$result = $this->db->affected_rows();
-
-					$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
-					$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-					$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
-
-					$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
-
-					if($in->trx_detail){
-						$seq = 0;
-						foreach($in->trx_detail as $it){
-							$item['ordertime'] = $order['ordertime'];
-							$item['delivery_id'] = $delivery_id;
-							$item['unit_sequence'] = $seq++;
-							$item['unit_description'] = $it->unit_description;
-							$item['unit_price'] = $it->unit_price;
-							$item['unit_quantity'] = $it->unit_quantity;
-							$item['unit_total']	= $it->unit_total;
-							$item['unit_discount'] = $it->unit_discount;
-
-							$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
-						}
-
-					}
-					//print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id));
-//				}else{
-//					print json_encode(array('status'=>'ERR:NODETAIL','timestamp'=>now()));
-//				}
-//			}else{
-//				print json_encode(array('status'=>'ERR:NOAPPFOUND','timestamp'=>now()));
-//			}
-
-		}
-
-	} // public function add() transaction
-
-	*/
-
 	/* Check & get particular timeslot for current date  */
-
 
 	public function tsget($api_key = null,$month = null){
 		if(is_null($api_key)){
@@ -311,20 +243,17 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/locreport.json', $_POST['loc']);
 
 			if(isset($_POST['loc'])){
 				$in = json_decode($_POST['loc']);
+				file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/locreportval.txt', $in->key);
 
-			//	if($dev = $this->getDevices($in->key)){
-					$dev = $this->getDevice($in->key);
-					file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/dev.json', json_encode($dev));
-
+				if($dev = $this->get_dev_info($in->key)){
 
 					$dataset['timestamp'] = date('Y-m-d h:i:s',time());
-					//$dataset['device_id'] = $dev->id;
-					//$dataset['identifier'] = $dev->identifier;
-					//$dataset['courier_id'] = '';
+					$dataset['device_id'] = $dev->id;
+					$dataset['identifier'] = $dev->identifier;
+					$dataset['courier_id'] = '';
 					$dataset['latitude'] = $in->lat;
 					$dataset['longitude'] = $in->lon;
 					$dataset['status'] = $this->config->item('trans_status_mobile_location');
@@ -335,10 +264,10 @@ class V1 extends Application
 
 					//get slot for specified date
 					print json_encode(array('status'=>'OK:LOCPOSTED','timestamp'=>now()));
-			/*	}else{
+				}else{
 					print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
 				}
-			*/
+			
 			}else{
 				//full calendar time series for current month
 				print json_encode(array('status'=>'NOK:LOCFAILED','timestamp'=>now()));
@@ -352,12 +281,41 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			if(is_null($date)){
-				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+
+			if(isset($_POST['loc'])){
+				$in = json_decode($_POST['trx']);
+
+				if($dev = $this->get_dev_info($in->key)){
+
+					$dataset['status'] = $in->status;
+
+					//other action for different status migh be needed
+
+					$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
+
+					$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$in->delivery_id,
+						'device_id'=>$dev->id,
+						'courier_id'=>'',
+						'actor_type'=>'MB',
+						'actor_id'=>'',
+						'latitude'=>$in->lat,
+						'longitude'=>$in->lon,
+						'status'=>$in->status,
+						'notes'=>$in->notes
+					);
+
+					delivery_log($data);
+					print json_encode(array('status'=>'OK:STATPOSTED','timestamp'=>now()));
+				}else{
+					print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+				}
+			
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
 			}
 		}
 	}
@@ -365,17 +323,50 @@ class V1 extends Application
 	/* Synchronize mobile device */
 	public function sync($api_key = null){
 		if(is_null($api_key)){
-			
-			
-			
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			if(is_null($date)){
+
+			//sync steps :
+			//post stored data from device local db
+			//retrieve relevant data for next delivery assignment		
+			if(isset($_POST['trx'])){
+				$in = json_decode($_POST['trx']);
+			}
+
+			if($dev = $this->get_dev_info($in->key)){
+
+				$data = array(
+					'timestamp'=>date('Y-m-d h:i:s',time()),
+					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'delivery_id'=>$in->delivery_id,
+					'device_id'=>$dev->id,
+					'courier_id'=>'',
+					'actor_type'=>'MB',
+					'actor_id'=>'',
+					'latitude'=>$in->lat,
+					'longitude'=>$in->lon,
+					'status'=>$in->status,
+					'notes'=>$in->notes
+				);
+
+				delivery_log($data);
+
+
+				$dataset['timestamp'] = date('Y-m-d h:i:s',time());
+				$dataset['device_id'] = $dev->id;
+				$dataset['identifier'] = $dev->identifier;
+				$dataset['courier_id'] = '';
+				$dataset['latitude'] = $in->lat;
+				$dataset['longitude'] = $in->lon;
+				$dataset['status'] = $this->config->item('trans_status_mobile_location');
+				$dataset['notes'] = '';
+
+				$this->db->insert($this->config->item('location_log_table'),$dataset);
+
 				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print json_encode(array('status'=>'OK:DEVSYNCD','timestamp'=>now()));
 			}else{
-				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
 			}
 		}
 	}
@@ -386,13 +377,9 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			if(is_null($date)){
-				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
-			}else{
-				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
-			}
+			$z = $this->db->get($this->config->item('jayon_zones_table'));
+			$zones = $z->result_array();
+			print json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
 		}
 	}
 
@@ -402,13 +389,12 @@ class V1 extends Application
 		if(is_null($api_key)){
 			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 		}else{
-			if(is_null($date)){
-				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
-			}else{
-				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
-			}
+			$z = $this->db
+				->like('district',$query)
+				->or_like('city',$query)
+				->get($this->config->item('jayon_zones_table'));
+			$zones = $z->result_array();
+			print json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
 		}
 	}
 
@@ -440,7 +426,7 @@ class V1 extends Application
 						print 'new buyer';
 					}
 
-					print $buyer_id;
+					//print $buyer_id;
 
 
 					$order['ordertime'] = date('Y-m-d h:i:s',time());
@@ -520,9 +506,11 @@ class V1 extends Application
 		}
 	}
 
-	private function getDevice($key){
+	private function get_device($key){
 		$dev = $this->db->where('key',$key)->get($this->config->item('jayon_mobile_table'));
-		return $dev->row();
+		print_r($dev);
+		print $this->db->last_query();
+		return $dev->row_array();
 	}
 
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
