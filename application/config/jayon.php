@@ -29,6 +29,7 @@ $config['delivery_details_table'] = 'delivery_order_details';
 $config['applications_table'] = 'applications';
 $config['delivery_log_table'] = 'delivery_log';
 $config['location_log_table'] = 'location_log';
+$config['access_log_table'] = 'api_access_log';
 $config['sequence_table'] = 'applications';
 $config['device_assignment_table'] = 'device_assignment';
 
@@ -40,7 +41,9 @@ $config['jayon_devices_table'] = 'devices';
 $config['jayon_options_table'] = 'options';
 $config['jayon_zones_table'] = 'districts';
 $config['jayon_timeslots_table'] = 'slots';
+$config['jayon_email_outbox_table'] = 'email_outbox';
 
+//test only
 $config['jayon_mobile_table'] = 'mobile_orders';
 
 

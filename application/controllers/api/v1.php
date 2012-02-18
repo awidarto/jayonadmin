@@ -7,95 +7,9 @@ class V1 extends Application
 	{
 		parent::__construct();
 		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
-	}
 
-	public function items()
-	{
-		$this->load->library('table');
-		$data = $this->db->get($this->config->item('incoming_delivery_table'));
-		$result = $data->result_array();
+		$this->accessor_ip = $_SERVER['REMOTE_ADDR'];
 
-		$this->table->set_heading(
-			'Delivery ID',
-			'Application ID',
-			'Buyer',
-			'Merchant',
-			'Merchant Trans ID',
-			'Courier',
-			'Shipping Address',
-			'Phone',
-			'Status',
-			'Reschedule Ref',
-			'Revoke Ref',
-			'Actions'
-			); // Setting headings for the table
-
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-			$this->table->add_row(
-				$key['delivery_id'],
-				$key['application_id'],
-				$key['buyer_id'],
-				$key['merchant_id'],
-				$key['merchant_trans_id'],
-				$key['courier_id'],
-				$key['shipping_address'],
-				$key['phone'],
-				$key['status'],
-				$key['reschedule_ref'],
-				$key['revoke_ref'],
-				$edit.' '.$delete
-			);
-		}
-
-		$this->ag_auth->view('delivery/incoming'); // Load the view
-	}
-
-	public function delete($id)
-	{
-		$this->db->where('id', $id)->delete($this->ag_auth->config['auth_user_table']);
-		$this->ag_auth->view('users/delete_success');
-	}
-
-	private function get_group(){
-		$this->db->select('id,description');
-		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
-		foreach($result->result_array() as $row){
-			$res[$row['id']] = $row['description'];
-		}
-		return $res;
-	}
-
-	private function get_key_info($key){
-		if(!is_null($key)){
-			$this->db->where('key',$key);
-			$result = $this->db->get($this->config->item('applications_table'));
-			if($result->num_rows() > 0){
-				$row = $result->row();
-				return $row;
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
-
-	private function get_dev_info($key){
-		if(!is_null($key)){
-			$this->db->where('key',$key);
-			$result = $this->db->get($this->config->item('jayon_devices_table'));
-			if($result->num_rows() > 0){
-				$row = $result->row();
-				return $row;
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
 	}
 
 	/**
@@ -107,16 +21,20 @@ class V1 extends Application
 
 	public function post($api_key = null,$transaction_id = null)
 	{
-		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+		if(is_null($api_key)){			 
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			$app = $this->get_key_info(trim($api_key));
 			if($app == false){
-				print json_encode(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()));
+				$result = json_encode(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()));
+				print $result;
 			}else{
 				//print_r($app);
 				//$in = $this->input->post('transaction_detail');
 				$in = $_POST['transaction_detail'];
+
+				$args = 'p='.$in;
 				//print $in;
 				$in = json_decode($in);
 
@@ -188,9 +106,13 @@ class V1 extends Application
 
 						$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 					}
-					print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+
+					$result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+					print $result;
+
 				}else{
-					print json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+					$result = json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+					print $result;
 				}
 
 				if($is_new == true){
@@ -203,45 +125,59 @@ class V1 extends Application
 
 			}
 		}
+
+		$this->log_access($api_key, __METHOD__ ,$result,$args);
 	}
 
 	/* Check & get particular timeslot for current date  */
 
 	public function tsget($api_key = null,$month = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			if(is_null($date)){
 				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print $result;
+
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print $result;
 			}
 		}
+		$args = 'q='.$month;
+		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
 	/* Check & get particular timeslot for current date  */
 
 	public function tscheck($api_key = null,$date = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			if(is_null($date)){
 				//get slot for specified date
-				print json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print $result;
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				print $result;
 			}
 		}
+		$args = 'q='.$date;
+		$this->log_access($api_key, __METHOD__ ,$result,$args);
 	}
 
 	/* Update current location */
 
 	public function locpost($api_key = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 
 			if(isset($_POST['loc'])){
@@ -263,23 +199,31 @@ class V1 extends Application
 					$this->db->insert($this->config->item('location_log_table'),$dataset);
 
 					//get slot for specified date
-					print json_encode(array('status'=>'OK:LOCPOSTED','timestamp'=>now()));
+					$result = json_encode(array('status'=>'OK:LOCPOSTED','timestamp'=>now()));
+					print $result;
 				}else{
-					print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+					$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+					print $result;
+
 				}
 			
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'NOK:LOCFAILED','timestamp'=>now()));
+				$result = json_encode(array('status'=>'NOK:LOCFAILED','timestamp'=>now()));
+				print $result;
 			}
 		}
+
+		$this->log_access($api_key, __METHOD__ ,$result);
+
 	}
 
 	/* Update delivery status from mobile */
 
 	public function statpost($api_key = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 
 			if(isset($_POST['loc'])){
@@ -308,32 +252,42 @@ class V1 extends Application
 					);
 
 					delivery_log($data);
-					print json_encode(array('status'=>'OK:STATPOSTED','timestamp'=>now()));
+					$result = json_encode(array('status'=>'OK:STATPOSTED','timestamp'=>now()));
+					print $result;
 				}else{
-					print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+					$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+					print $result;
 				}
 			
 			}else{
 				//full calendar time series for current month
 				print json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
+				print $result;
 			}
 		}
+
+		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
 	/* Synchronize mobile device */
 	public function sync($api_key = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 
 			//sync steps :
 			//post stored data from device local db
 			//retrieve relevant data for next delivery assignment		
+
+			//sync in
 			if(isset($_POST['trx'])){
 				$in = json_decode($_POST['trx']);
 			}
 
+			//sync out
 			if($dev = $this->get_dev_info($in->key)){
+				$in = json_decode($_POST['trx']);
 
 				$data = array(
 					'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -364,9 +318,11 @@ class V1 extends Application
 				$this->db->insert($this->config->item('location_log_table'),$dataset);
 
 				//get slot for specified date
-				print json_encode(array('status'=>'OK:DEVSYNCD','timestamp'=>now()));
+				$result = json_encode(array('status'=>'OK:DEVSYNCD','timestamp'=>now()));
+				print $result;
 			}else{
-				print json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+				$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+				print $result;
 			}
 		}
 	}
@@ -375,34 +331,45 @@ class V1 extends Application
 
 	public function zonelist($api_key = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			$z = $this->db->get($this->config->item('jayon_zones_table'));
 			$zones = $z->result_array();
-			print json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
+			$result = json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
+			print $result;
 		}
+
+		$this->log_access($api_key, __METHOD__ ,$result);
+
 	}
 
 	/* Lists JEX zones of coverage, as results of <query string> matches */
 
 	public function zoneget($api_key = null, $query = null){
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			$z = $this->db
 				->like('district',$query)
 				->or_like('city',$query)
 				->get($this->config->item('jayon_zones_table'));
 			$zones = $z->result_array();
-			print json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
+			$result = json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
+			print $result;
 		}
+		$args = 'q='.$query;
+		$this->log_access($api_key, __METHOD__ ,$result,$args);
+
 	}
 
 	public function add($api_key = null,$transaction_id = null)
 	{
 
 		if(is_null($api_key)){
-			print json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
 		}else{
 			$app = $this->get_key_info(trim($api_key));
 
@@ -475,17 +442,55 @@ class V1 extends Application
 						}
 
 					}
-					print json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id));
+					$result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id));
+					print $result;
 				}else{
-					print json_encode(array('status'=>'ERR:NODETAIL','timestamp'=>now()));
+					$result = json_encode(array('status'=>'ERR:NODETAIL','timestamp'=>now()));
+					print $result;
 				}
 			}else{
-				print json_encode(array('status'=>'ERR:NOKEYFOUND','timestamp'=>now()));
+				$result = json_encode(array('status'=>'ERR:NOKEYFOUND','timestamp'=>now()));
+				print $result;
 			}
 
 		}
 
+		$this->log_access($api_key, __METHOD__ ,$result);
 	} // public function add() transaction
+
+
+	//private supporting functions
+
+	private function get_key_info($key){
+		if(!is_null($key)){
+			$this->db->where('key',$key);
+			$result = $this->db->get($this->config->item('applications_table'));
+			if($result->num_rows() > 0){
+				$row = $result->row();
+				return $row;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
+	private function get_dev_info($key){
+		if(!is_null($key)){
+			$this->db->where('key',$key);
+			$result = $this->db->get($this->config->item('jayon_devices_table'));
+			if($result->num_rows() > 0){
+				$row = $result->row();
+				return $row;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
 
 	private function check_email($email){
 		$em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));
@@ -513,7 +518,25 @@ class V1 extends Application
 		return $dev->row_array();
 	}
 
-	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
+	private function get_group(){
+		$this->db->select('id,description');
+		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
+		foreach($result->result_array() as $row){
+			$res[$row['id']] = $row['description'];
+		}
+		return $res;
+	}
+
+	private function log_access($api_key,$query,$result,$args = null){
+		$data['timestamp'] = date('Y-m-d h:i:s',time());
+		$data['accessor_ip'] = $this->accessor_ip;
+		$data['api_key'] = (is_null($api_key))?'':$api_key;
+		$data['query'] = $query;
+		$data['result'] = $result;
+		$data['args'] = (is_null($args))?'':$args;
+
+		access_log($data);
+	}
 }
 
 ?>

@@ -13,6 +13,7 @@ class Zones extends Application
 		$this->table->set_template($this->table_tpl);
 		
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
+		$this->breadcrumb->add_crumb('System','admin/apps/manage');
 		
 	}
 
@@ -72,7 +73,7 @@ class Zones extends Application
 	{
 	    $this->load->library('table');		
 
-		$this->breadcrumb->add_crumb('Holidays','admin/zones/manage');
+		$this->breadcrumb->add_crumb('Zones','admin/zones/manage');
 			
 		$data = $this->db->get($this->config->item('jayon_zones_table'));
 		$result = $data->result_array();

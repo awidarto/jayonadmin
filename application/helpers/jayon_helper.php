@@ -137,6 +137,11 @@ function delivery_log($data){
 	return true;
 }
 
+function access_log($data){
+	$CI =& get_instance();
+	$CI->db->insert($CI->config->item('access_log_table'),$data);
+	return true;
+}
 function full_reschedule($delivery_id, $datachanged){
 	$CI =& get_instance();
 	$old_order = $CI->db->where('delivery_id',$delivery_id)->get($CI->config->item('assigned_delivery_table'));

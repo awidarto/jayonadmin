@@ -13,6 +13,7 @@ class Couriers extends Application
 		$this->table->set_template($this->table_tpl);
 		
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
+		$this->breadcrumb->add_crumb('System','admin/apps/manage');
 		
 	}
 
