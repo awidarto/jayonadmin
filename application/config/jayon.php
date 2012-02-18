@@ -76,7 +76,7 @@ $config['trans_status_admin_dispatched'] = 'dispatched';
 /* status colors */
 
 $config['status_colors'] = array(
-	$config['trans_status_new'] => 'yellow',
+	$config['trans_status_new'] => 'orange',
 	$config['trans_status_purged'] => 'red',
 	$config['trans_status_archived'] => 'brown',
 	$config['trans_status_confirmed'] => 'green',

@@ -156,13 +156,6 @@ class Device extends Application
 		$this->ag_auth->view('mobile/options',$page); // Load the view
 	}
 
-
-	public function ajaxstatus($status){
-
-
-		
-	}
-
 	public function ajaxlocation(){
 		
 		$loc['lat'] = $this->input->post('lat');
