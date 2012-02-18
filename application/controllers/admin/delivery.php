@@ -1651,14 +1651,49 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivery_log_table'));
 
-/*
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
-		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
-		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
-		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
-*/
+
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			//$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+		}
+
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like('timestamp',$this->input->post('sSearch_0'));
+		}
+
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like('report_timestamp',$this->input->post('sSearch_1'));
+		}
+
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
+		}
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like('c.fullname',$this->input->post('sSearch_4'));
+		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
+			$this->db->or_like('m.fullname',$this->input->post('sSearch_5'));
+			$this->db->or_like('u.fullname',$this->input->post('sSearch_5'));
+		}
+
+		$this->db->select('*,u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
+		$this->db->join('users as u',$this->config->item('delivery_log_table').'.actor_id=u.id','left');
+		$this->db->join('members as m',$this->config->item('delivery_log_table').'.actor_id=m.id','left');
+		//$this->db->join('applications as a',$this->config->item('delivery_log_table').'.key=b.key','left');
+		$this->db->join('devices as d',$this->config->item('delivery_log_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('delivery_log_table').'.courier_id=c.id','left');
+
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
@@ -1671,14 +1706,23 @@ class Delivery extends Application
 
 		foreach($result as $value => $key)
 		{
+			if($key['actor_type'] == 'AD'){
+				$actor_name = $key['admin_name'];
+			}else if($key['actor_type'] == 'MC'){
+				$actor_name = $key['merchant_username'];
+			}else if($key['actor_type'] == 'MB'){
+				$actor_name = $key['courier'];
+			}
+
 			$aadata[] = array(
 				$key['timestamp'],
 				$key['report_timestamp'],
 				$key['delivery_id'],
-				$key['device_id'],
-				$key['courier_id'],
+				$key['device'],
+				$key['courier'],
 				$key['actor_type'],
 				$key['actor_id'],
+				$actor_name,
 				$key['latitude'],
 				$key['longitude'],
 				$key['status'],
@@ -1706,12 +1750,13 @@ class Delivery extends Application
 
 		$this->table->set_heading(
 			'Captured',
-			'Reported',
+			'Reported / Synced',
 			'Delivery ID',
-			'Device ID',
+			'Device',
 			'Courier',
 			'Actor',
 			'Actor ID',
+			'Actor Username',
 			'Latitude',
 			'Longitude',
 			'Status',
@@ -1719,10 +1764,15 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
-			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_timestamp" id="search_timestamp" value="Search capture time" class="search_init" />',
+			'<input type="text" name="search_reporttime" id="search_reporttime" value="Search sync time" class="search_init" />',
+			'<input type="text" name="search_deliveryid" id="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
-			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />'
+			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+			'',
+			'',
+			'<input type="text" name="search_actorname" id="search_actorname" value="Search actorname" class="search_init" />'
+
 			);
 
 

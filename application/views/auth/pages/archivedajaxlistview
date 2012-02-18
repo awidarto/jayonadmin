@@ -60,6 +60,10 @@
 			}
 		} );
 
+		$('#search_reporttime').datepicker({ dateFormat: 'yy-mm-dd' });
+		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
+
+
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;

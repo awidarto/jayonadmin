@@ -21,7 +21,7 @@ class Device extends Application
 		
 		$this->api_url = $this->config->item('api_url');
 
-		$this->api_key = 'c0d84e51e1090a3bcd947706cc916a5a0f3083b3';
+		$this->api_key = 'efba0bc986a8bd56d735d1ec59a5d3e74c6bf36c';
 
 
 	}
@@ -147,11 +147,6 @@ class Device extends Application
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
 		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
 
-		$order = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('jayon_mobile_table'));
-
-		$page['order'] = $order->result_array();
-
-		$page['sortdisable'] = '';
 		$page['page_title'] = 'Mobile Orders Detail';
 		$this->ag_auth->view('mobile/options',$page); // Load the view
 	}
@@ -169,6 +164,30 @@ class Device extends Application
 		print $result;
 
 	}
+
+	public function ajaxsync(){
+		
+		$loc['lat'] = $this->input->post('lat');
+		$loc['lon'] = $this->input->post('lon');
+		$loc['key'] = $this->api_key;
+
+		$url = $this->api_url.'syncdata/'.$this->api_key;
+				
+		$result = $this->curl->simple_post($url,array('loc'=>json_encode($loc)));
+
+		$rsdata = json_decode($result);
+
+		$rsdata = $rsdata->data;
+
+		foreach ($rsdata as $rs) {
+			$data = get_object_vars($rs);
+			$this->db->insert($this->config->item('jayon_mobile_table'),$data);
+		}
+
+		print $result;
+
+	}
+
 
 	/* zoning */
 
