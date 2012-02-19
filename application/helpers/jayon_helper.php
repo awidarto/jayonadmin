@@ -105,10 +105,21 @@ function get_option($key){
 	return $row->val;
 }
 
-function getdateblock($month = null){
+function getdateblock($month = null, $city = null){
+	$CI =& get_instance();
 	$blocking = array();
 	$month = (is_null($month))?date('m',time()):$month;
 	$year = date('Y',time());
+
+	if(!is_null($city)){
+		$devnum = $CI->db
+			->where('city',$city)
+			->count_all_results($CI->config->item('jayon_devices_table'));
+	}else{
+		$devnum = 1;
+	}
+
+	$maxcap = get_option('daily_shifts') * get_option('quota_per_shift') * $devnum;
 
 	for($m = $month; $m < ($month + 2);$m++){
 		for($i = 1;$i < 32;$i++){
@@ -121,14 +132,54 @@ function getdateblock($month = null){
 				$day = getdate(strtotime($date));
 				//print_r($day)."\r\n";
 				if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
+					//print $date." : ".$slot."\r\n";
 					$blocking[$date] = 'weekend';
 				}else{
-					$blocking[$date] = 'open';
+					$slot = $CI->db
+						->where('assignment_date',$date)
+						->count_all_results($CI->config->item('assigned_delivery_table'));
+					$slot = ($slot < $maxcap)?'open':'full';
+					$blocking[$date] = $slot;
 				}
 			}
 		}
 	}
 	return json_encode($blocking);
+}
+
+function checkdateblock($date = null, $city = null){
+	$CI =& get_instance();
+	if(is_null($date)){
+		return false;
+	}else{
+
+		if(!is_null($city)){
+			$devnum = $CI->db
+				->where('city',$city)
+				->count_all_results($CI->config->item('jayon_devices_table'));
+		}else{
+			$devnum = 1;
+		}
+
+		$maxcap = get_option('daily_shifts') * get_option('quota_per_shift') * $devnum;
+
+		$dat = explode('-',$date);
+		if(checkdate($dat[2], $dat[1], $dat[0])){
+			$day = getdate($date);
+			print_r($day);
+			if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
+				return 'weekend';
+			}else{
+				$slot = $CI->db
+					->where('assignment_date',$date)
+					->count_all_results($CI->config->item('assigned_delivery_table'));
+				$slot = ($slot < $maxcap)?'open':'full';
+				return $slot;
+			}
+		}else{
+			return 'blocked';
+		}
+	}
 }
 
 function delivery_log($data){

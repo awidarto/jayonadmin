@@ -136,14 +136,17 @@ class V1 extends Application
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
-			if(is_null($date)){
+			if(is_null($month)){
 				//get slot for specified date
-				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$month = date('m',time());
+				$dateblock = getdateblock($month);
+				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 
 			}else{
 				//full calendar time series for current month
-				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$dateblock = getdateblock($month);
+				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 			}
 		}
@@ -153,18 +156,20 @@ class V1 extends Application
 
 	/* Check & get particular timeslot for current date  */
 
-	public function tscheck($api_key = null,$date = null){
+	public function tscheck($api_key = null,$date = null,$city = null){
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
 			if(is_null($date)){
 				//get slot for specified date
-				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$dateblock = checkdateblock($date, $city);
+				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 			}else{
 				//full calendar time series for current month
-				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$delivery_id));
+				$dateblock = checkdateblock($date, $city);
+				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 			}
 		}

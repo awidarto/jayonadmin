@@ -81,18 +81,12 @@ class Device extends Application
 
 		foreach($result as $value => $key)
 		{
-			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
-			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
-			$reschedule = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reschedule</span>';
-			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
-			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
-
-			$app = $this->get_app_info($key['application_key']);
-
 			$aadata[] = array(
-				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>'
+				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['by_time'].'" id="cd_'.$key['delivery_id'].'">'.$key['delivery_id'].'</span><br />'.
+				'<span>From : '.$key['mc_name'].'</span><br />'.
+				'<span>To : '.$key['by_name'].'</span><br />'.
+				'<span>Addr : '.$key['ship_addr'].'</span>'
+
 			);
 		}
 
