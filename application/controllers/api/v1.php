@@ -9,7 +9,6 @@ class V1 extends Application
 		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
 
 		$this->accessor_ip = $_SERVER['REMOTE_ADDR'];
-
 	}
 
 	/**
@@ -286,87 +285,40 @@ class V1 extends Application
 			//retrieve relevant data for next delivery assignment
 
 			//sync in
-			if(isset($_POST['trx'])){
-				$in = json_decode($_POST['trx']);
-			}
 
 			//sync out
 			if($dev = $this->get_dev_info($api_key)){
 
-			//json out
-				$orders = $this->db
-					->select('d.delivery_id as delivery_id,
-							d.assignment_date as as_date,
-							d.assignment_timeslot as as_timeslot,
-							d.assignment_zone as as_zone,
-							d.assignment_city as as_city,
-							m.merchantname as mc_name,
-							m.street as mc_street,
-							m.district as mc_district,
-							m.province as mc_province,
-							m.city as mc_city,
-							d.merchant_trans_id as mc_trans_id,
-							d.buyerdeliverytime as by_time,
-							d.buyerdeliveryzone as by_zone,
-							d.buyerdeliverycity as by_city,
-							d.buyer_name as by_name,
-							d.email as by_email,
-							d.phone as by_phone,
-							d.recipient_name as rec_name,
-							d.undersign as rec_sign,
-							d.cod_cost as cod_cost,
-							d.currency as cod_curr,
-							d.shipping_address as ship_addr,
-							d.directions as ship_dir,
-							d.dir_lat as ship_lat,
-							d.dir_lon as ship_lon,
-							d.deliverytime as dl_time,
-							d.status as dl_status,
-							d.delivery_note as dl_note,
-							d.latitude as dl_lat,
-							d.longitude as dl_lon,
-							d.reschedule_ref as res_ref,
-							d.revoke_ref as rev_ref')
-					->from($this->config->item('assigned_delivery_table').' as d')
-					->join('members as m','d.merchant_id=m.id','left')
-					->where('assignment_date',date('Y-m-d',time()))
-					//->where('assignment_date','2012-02-20')
-					->where('device_id',$dev->id)
-					->get();
+				if(isset($_POST['trx'])){
+					$in = json_decode($_POST['trx']);
 
-				$out = $orders->result_array();
-/*
-				$data = array(
-					'timestamp'=>date('Y-m-d h:i:s',time()),
-					'report_timestamp'=>date('Y-m-d h:i:s',time()),
-					'delivery_id'=>$in->delivery_id,
-					'device_id'=>$dev->id,
-					'courier_id'=>'',
-					'actor_type'=>'MB',
-					'actor_id'=>'',
-					'latitude'=>$in->lat,
-					'longitude'=>$in->lon,
-					'status'=>$in->status,
-					'notes'=>$in->notes
-				);
+					//set status based on reported
 
-				delivery_log($data);
+					$out = $orders->result_array();
 
+					$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>'',
+						'device_id'=>$dev->id,
+						'courier_id'=>'',
+						'actor_type'=>'MB',
+						'actor_id'=>$dev->id,
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>'sync_report',
+						'notes'=>''
+					);
 
-				$dataset['timestamp'] = date('Y-m-d h:i:s',time());
-				$dataset['device_id'] = $dev->id;
-				$dataset['identifier'] = $dev->identifier;
-				$dataset['courier_id'] = '';
-				$dataset['latitude'] = $in->lat;
-				$dataset['longitude'] = $in->lon;
-				$dataset['status'] = $this->config->item('trans_status_mobile_location');
-				$dataset['notes'] = '';
+					delivery_log($data);
 
-				$this->db->insert($this->config->item('location_log_table'),$dataset);
-*/
-				//get slot for specified date
-				$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$out ,'timestamp'=>now()));
-				print $result;
+					//get slot for specified date
+					$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$out ,'timestamp'=>now()));
+					print $result;
+				}else{
+					$result = json_encode(array('status'=>'ERR:NODATA','timestamp'=>now()));
+					print $result;
+				}
 			}else{
 				$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
 				print $result;
@@ -448,8 +400,6 @@ class V1 extends Application
 
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
-
-
 
 	/* Lists JEX zones of coverage */
 

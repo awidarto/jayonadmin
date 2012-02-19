@@ -71,7 +71,6 @@ function ajax_find_countries($zone,$col = 'country'){
 	return $q->result_array();
 }
 
-
 function ajax_find_courier($zone,$col = 'fullname',$idcol = 'id'){
 	$CI =& get_instance();
 	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('couriers');
