@@ -162,13 +162,14 @@ class V1 extends Application
 		}else{
 			if(is_null($date)){
 				//get slot for specified date
-				$dateblock = checkdateblock($date, $city);
-				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$dateblock));
+				$month = date('m',time());
+				$dateblock = getdateblock($month);
+				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 			}else{
 				//full calendar time series for current month
 				$dateblock = checkdateblock($date, $city);
-				$result = json_encode(array('status'=>'OK:CURRENTMONTH','timestamp'=>now(),'timeslot'=>$dateblock));
+				$result = json_encode(array('status'=>'OK:CURRENTDATE','timestamp'=>now(),'timeslot'=>$dateblock));
 				print $result;
 			}
 		}

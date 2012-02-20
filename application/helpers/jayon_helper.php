@@ -110,6 +110,7 @@ function getdateblock($month = null, $city = null){
 	$month = (is_null($month))?date('m',time()):$month;
 	$year = date('Y',time());
 
+	//determine max daily capacity by city ( as devices are assigned by city )
 	if(!is_null($city)){
 		$devnum = $CI->db
 			->where('city',$city)
@@ -119,6 +120,17 @@ function getdateblock($month = null, $city = null){
 	}
 
 	$maxcap = get_option('daily_shifts') * get_option('quota_per_shift') * $devnum;
+
+	//get holidays
+
+	$hdays = $CI->db->select('holiday')
+		->like('holiday',$year,'after')
+		->get($CI->config->item('jayon_holidays_table'));
+	
+	$holidays = array();
+	foreach ($hdays->result_array() as $key => $val) {
+		$holidays[] = $val['holiday'];
+	}
 
 	for($m = $month; $m < ($month + 2);$m++){
 		for($i = 1;$i < 32;$i++){
@@ -133,6 +145,8 @@ function getdateblock($month = null, $city = null){
 				if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
 					//print $date." : ".$slot."\r\n";
 					$blocking[$date] = 'weekend';
+				}else if(in_array($date, $holidays)){
+					$blocking[$date] = 'holiday';
 				}else{
 					$slot = $CI->db
 						->where('assignment_date',$date)
@@ -162,21 +176,32 @@ function checkdateblock($date = null, $city = null){
 
 		$maxcap = get_option('daily_shifts') * get_option('quota_per_shift') * $devnum;
 
-		$dat = explode('-',$date);
-		if(checkdate($dat[2], $dat[1], $dat[0])){
-			$day = getdate($date);
-			print_r($day);
-			if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
-				return 'weekend';
-			}else{
-				$slot = $CI->db
-					->where('assignment_date',$date)
-					->count_all_results($CI->config->item('assigned_delivery_table'));
-				$slot = ($slot < $maxcap)?'open':'full';
-				return $slot;
-			}
+		//get holidays
+
+		$hdays = $CI->db->select('holiday')
+			->where('holiday',$date)
+			->get($CI->config->item('jayon_holidays_table'));		
+
+		if($hdays->num_rows() > 0){
+			$isholiday = true;
 		}else{
-			return 'blocked';
+			$isholiday = false;
+		}
+
+		$dat = explode('-',$date);
+
+		$day = getdate(strtotime($date));
+
+		if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
+			return 'weekend';
+		}else if($isholiday){
+			return 'holiday';
+		}else{
+			$slot = $CI->db
+				->where('assignment_date',$date)
+				->count_all_results($CI->config->item('assigned_delivery_table'));
+			$slot = ($slot < $maxcap)?'open':'full';
+			return $slot;
 		}
 	}
 }

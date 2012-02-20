@@ -95,6 +95,8 @@
 				//console.log(dateBlock);
 				if(dateBlock[dateText] == 'weekend'){
 					alert('no delivery on weekend');
+				}else if(dateBlock[dateText] == 'full'){
+					alert('time slot is full');
 				}else{
 					$('#rescheduled_deliverytime').val(dateText);
 				}
@@ -129,6 +131,10 @@
 				css = 'weekend';
 				popup = 'holiday';
 			}else if(window.dateBlock[indate] == 'blocked'){
+				select = 0;
+				css = 'blocked';
+				popup = 'zero time slot';
+			}else if(window.dateBlock[indate] == 'full'){
 				select = 0;
 				css = 'blocked';
 				popup = 'zero time slot';
