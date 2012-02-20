@@ -69,6 +69,8 @@ class V1 extends Application
 				$order['recipient_name'] = $in->recipient_name;
 				$order['email'] = $in->email;
 				$order['directions'] = $in->directions;
+				$order['dir_lat'] = $in->dir_lat;
+				$order['dir_lon'] = $in->dir_lon;
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 				$order['buyerdeliverycity'] = $in->buyerdeliverycity;
@@ -130,7 +132,7 @@ class V1 extends Application
 
 	/* Check & get particular timeslot for current date  */
 
-	public function tsget($api_key = null,$month = null){
+	public function tsget($api_key = null,$month = null,$city = null){
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
