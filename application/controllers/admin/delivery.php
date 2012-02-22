@@ -1656,7 +1656,7 @@ class Delivery extends Application
 		}
 
 		$this->db->group_start()
-			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
+			->where('status',$this->config->item('trans_status_archived'))
 			->group_end();
 
 		$data =	$this->db->limit($limit_count, $limit_offset)
