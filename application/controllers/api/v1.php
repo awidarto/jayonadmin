@@ -28,7 +28,7 @@ class V1 extends Application
 		}else{
 			$app = $this->get_key_info(trim($api_key));
 
-			file_put_contents('how_was_it', json_encode($app));
+			//file_put_contents('how_was_it', json_encode($app));
 
 			if($app == false){
 				$result = json_encode(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()));
@@ -44,7 +44,7 @@ class V1 extends Application
 				//print $in;
 				$in = json_decode($in);
 
-				file_put_contents('input_data.json', json_encode($in));
+				//file_put_contents('input_data.json', json_encode($in));
 
 				//print_r($in);
 
@@ -91,12 +91,12 @@ class V1 extends Application
 				$order['phone'] = $in->phone;
 				$order['status'] = $in->status;
 
-				file_put_contents('insert_data.json', json_encode($order));
+				//file_put_contents('insert_data.json', json_encode($order));
 				
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();
 
-				file_put_contents('in_result.json', $inres);
+				//file_put_contents('in_result.json', $inres);
 
 
 				$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
@@ -107,7 +107,7 @@ class V1 extends Application
 
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
-				file_put_contents('update_result.json', $this->db->affected_rows());
+				//file_put_contents('update_result.json', $this->db->affected_rows());
 
 				if($in->trx_detail){
 					$seq = 0;
