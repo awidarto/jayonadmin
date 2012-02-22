@@ -380,6 +380,7 @@ function colorizestatus($status){
 	$colors = config_item('status_colors');
 	if($status == ''){
 		$class = 'brown';
+		$status = '&nbsp;&nbsp;';
 	}else{
 		$class = $colors[$status];
 	}
