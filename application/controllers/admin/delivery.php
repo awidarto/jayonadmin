@@ -637,7 +637,7 @@ class Delivery extends Application
 				delivery_log($data);
 			}
 		}else{
-			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
+			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'laststatus'=>$laststatus,'change_actor'=>$actor));
 
 				$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -1733,6 +1733,7 @@ class Delivery extends Application
 
 
 		$page['ajaxurl'] = 'admin/delivery/ajaxarchived';
+		$page['laststatus'] = $this->config->item('trans_status_archived');
 		$page['page_title'] = 'Order Archive';
 		$this->ag_auth->view('archivedajaxlistview',$page); // Load the view
 	}
