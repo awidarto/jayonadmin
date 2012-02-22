@@ -1912,7 +1912,7 @@ class Delivery extends Application
 				$actor_name,
 				$key['latitude'],
 				$key['longitude'],
-				$key['status'],
+				colorizestatus($key['status']),
 				$key['notes']
 			);
 		}
