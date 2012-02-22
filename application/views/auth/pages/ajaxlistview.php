@@ -103,7 +103,7 @@
 			width: 400,
 			modal: true,
 			buttons: {
-				"Cancel Delivery Orders": function() {
+				"Archive Delivery Orders": function() {
 					var delivery_ids = [];
 					i = 0;
 					$('.assign_check:checked').each(function(){
