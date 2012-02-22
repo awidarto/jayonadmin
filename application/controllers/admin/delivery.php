@@ -611,14 +611,16 @@ class Delivery extends Application
 
 	public function ajaxarchive($laststatus = 'delivered'){
 		$delivery_id = $this->input->post('delivery_id');
+		$laststatus = $this->input->post('laststatus');
 
 		$actor = $this->config->item('actors_code');
 
 		$actor = $actor['admin'].':'.$this->session->userdata('userid');
 
 		if(is_array($delivery_id)){
+			$i = 0;
 			foreach ($delivery_id as $d) {
-				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'laststatus'=>$laststatus,'change_actor'=>$actor));
+				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'laststatus'=>$laststatus[$i],'change_actor'=>$actor));
 
 				$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -635,6 +637,7 @@ class Delivery extends Application
 					);
 
 				delivery_log($data);
+				$i++;
 			}
 		}else{
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'laststatus'=>$laststatus,'change_actor'=>$actor));
@@ -1360,7 +1363,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1466,7 +1469,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1573,7 +1576,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1654,6 +1657,68 @@ class Delivery extends Application
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
 		$search = false;
+
+		//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			$this->db->like('deliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+			$this->db->or_like('buyer',$srch);
+			$this->db->or_like('merchant',$srch);
+			$this->db->or_like('merchant_trans_id',$srch);
+			$this->db->or_like('device',$srch);
+			$this->db->or_like('courier',$srch);
+			$this->db->or_like('shipping_address',$srch);
+			$this->db->or_like('phone',$srch);
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.deliverytime',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like('d.identifier',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
+			$this->db->like('c.fullname',$this->input->post('sSearch_6'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_7') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_7'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_8') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.phone',$this->input->post('sSearch_8'));
+			$search = true;
+		}
 		if($search){
 			$this->db->and_();
 		}
@@ -1664,6 +1729,8 @@ class Delivery extends Application
 
 		$data =	$this->db->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
+
+		//print $this->db->last_query();
 
 		$result = $data->result_array();
 
@@ -1677,11 +1744,13 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				$key['delivery_id'],
+				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
+				$key['device'],
 				$key['courier'],
 				$key['shipping_address'],
 				$key['phone'],
@@ -1714,6 +1783,7 @@ class Delivery extends Application
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
+			'Device',
 			'Courier',
 			'Shipping Address',
 			'Phone',
@@ -1725,10 +1795,15 @@ class Delivery extends Application
 
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			form_button('do_archive','Archive Selection','id="doArchive"')
+			'<input type="text" name="search_buyer" id="search_buyer" value="Search buyer" class="search_init" />',
+			'<input type="text" name="search_merchant" id="search_merchant" value="Search merchant" class="search_init" />',
+			'<input type="text" name="search_transid" id="search_transid" value="Search merchant trx id" class="search_init" />',
+			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+			'<input type="text" name="search_shipping" id="search_shipping" value="Search shipping address" class="search_init" />',
+			'<input type="text" name="search_phone" id="search_phone" value="Search phone" class="search_init" />'
+			//form_button('do_archive','Archive Selection','id="doArchive"')
 			);
 
 

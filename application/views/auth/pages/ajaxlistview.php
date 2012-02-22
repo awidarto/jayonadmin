@@ -105,12 +105,14 @@
 			buttons: {
 				"Archive Delivery Orders": function() {
 					var delivery_ids = [];
+					var laststatus = [];
 					i = 0;
 					$('.assign_check:checked').each(function(){
 						delivery_ids[i] = $(this).val();
+						laststatus[i] = $(this).attr('title');
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxarchive/'.$laststatus);?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
