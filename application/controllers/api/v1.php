@@ -103,7 +103,7 @@ class V1 extends Application
 				$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
 				$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
 
-				file_put_contents('delivery_id.json', $delivery_id);
+				//file_put_contents('delivery_id.json', $delivery_id);
 
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
