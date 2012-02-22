@@ -609,7 +609,7 @@ class Delivery extends Application
 		print json_encode(array('result'=>'ok'));
 	}
 
-	public function ajaxarchive(){
+	public function ajaxarchive($laststatus = 'delivered'){
 		$delivery_id = $this->input->post('delivery_id');
 
 		$actor = $this->config->item('actors_code');
@@ -618,7 +618,7 @@ class Delivery extends Application
 
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
-				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
+				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'laststatus'=>$laststatus,'change_actor'=>$actor));
 
 				$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -1417,6 +1417,7 @@ class Delivery extends Application
 
 
 		$page['ajaxurl'] = 'admin/delivery/ajaxdelivered';
+		$page['laststatus'] = $this->config->item('trans_status_mobile_delivered');
 		$page['page_title'] = 'Delivered Orders';
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
@@ -1522,6 +1523,7 @@ class Delivery extends Application
 
 
 		$page['ajaxurl'] = 'admin/delivery/ajaxrevoked';
+		$page['laststatus'] = $this->config->item('trans_status_mobile_revoked');
 		$page['page_title'] = 'Revoked Orders';
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
@@ -1625,6 +1627,7 @@ class Delivery extends Application
 
 
 		$page['ajaxurl'] = 'admin/delivery/ajaxrescheduled';
+		$page['laststatus'] = $this->config->item('trans_status_rescheduled');
 		$page['page_title'] = 'Rescheduled Orders';
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
@@ -1683,6 +1686,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
+				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],
 				$key['revoke_ref']
 			);
@@ -1714,6 +1718,7 @@ class Delivery extends Application
 			'Shipping Address',
 			'Phone',
 			'Status',
+			'Last Status',
 			'Reschedule Ref',
 			'Revoke Ref'
 			); // Setting headings for the table

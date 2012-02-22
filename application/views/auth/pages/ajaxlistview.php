@@ -110,7 +110,7 @@
 						delivery_ids[i] = $(this).val();
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxarchive/'.$laststatus);?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
