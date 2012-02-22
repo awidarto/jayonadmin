@@ -28,6 +28,7 @@ class Delivery extends Application
 			'buyerdeliverytime',
 			'buyerdeliveryzone',
 			'buyerdeliverycity',
+			'zip',
 			'delivery_id',
 			'merchant_trans_id',
 			'app_name',
@@ -48,44 +49,59 @@ class Delivery extends Application
 			->not_like('status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		//search column
-		if($this->input->post('sSearch') != ''){
-			$srch = $this->input->post('sSearch');
-			//$this->db->like('buyerdeliveryzone',$srch);
-			$this->db->or_like('buyerdeliverytime',$srch);
-			$this->db->or_like('delivery_id',$srch);
-		}
-
-		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_0'));
-		}
-
-
-		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
-		}
-
-
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
-		}
-
-		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('merchant_trans_id',$this->input->post('sSearch_3'));
-		}
-
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
 
+		$search = false;
+				//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			//$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+			$search = true;
+		}
 
-		$data = $this->db
-			->where('status',$this->config->item('trans_status_new'))
-			->or_where('status',$this->config->item('trans_status_confirmed'))
-			->or_where('status',$this->config->item('trans_status_canceled'))
-			->not_like('status','assigned','before')
-			->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverytime',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($search){
+			$this->db->and_();
+		}		
+
+		$this->db->group_start()
+			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
+			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
+			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
+			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
+			->group_end();
+		
+		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 
 		//print $this->db->last_query();
 
@@ -129,6 +145,7 @@ class Delivery extends Application
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
+				$key['shipping_zip'],
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
 				$key['merchant_trans_id'],
 				$app['application_name'],
@@ -165,6 +182,7 @@ class Delivery extends Application
 			'Requested Date',
 			'Zone',
 			'City',
+			'ZIP',
 			'Delivery ID',
 			'Merchant Trans ID',
 			'App Name',
@@ -184,6 +202,7 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'',
+			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
 			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
@@ -233,6 +252,8 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_admin_dated'))
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
+		$search = false;
+
 		//search column
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
@@ -240,31 +261,44 @@ class Delivery extends Application
 			$this->db->like('buyerdeliverycity',$srch);
 			$this->db->or_like('assignment_date',$srch);
 			$this->db->or_like('delivery_id',$srch);
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('assignment_date',$this->input->post('sSearch_0'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
+			$this->db->like('buyerdeliverycity',$this->input->post('sSearch_1'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
+			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_2'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
 			$this->db->like('delivery_id',$this->input->post('sSearch_3'));
+			$search = true;
 		}
+
 
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
 
-		$data = $this->db
+
+		if($search){
+			$this->db->and_();
+		}	
+
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_dated'))
+			->group_end();
+		$data = $this->db
 			->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
 			->order_by('buyerdeliverycity','asc')
@@ -781,6 +815,8 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
 
+		$search = false;
+
 		//search column
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
@@ -788,18 +824,22 @@ class Delivery extends Application
 			$this->db->or_like('assignment_date',$srch);
 			$this->db->or_like('buyerdeliverytime',$srch);
 			$this->db->or_like('delivery_id',$srch);
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('d.identifier',$this->input->post('sSearch_0'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('assignment_date',$this->input->post('sSearch_1'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_2') != ''){
 			$this->db->like('assignment_zone',$this->input->post('sSearch_2'));
+			$search = true;
 		}
 
 
@@ -809,8 +849,15 @@ class Delivery extends Application
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 
-		$data = $this->db
+
+		if($search){
+			$this->db->and_();
+		}	
+
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_devassigned'))
+			->group_end();
+		$data = $this->db
 			->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
 			->order_by('device_id','asc')
@@ -942,6 +989,8 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
 
+		$search = false;
+
 		//search column
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
@@ -949,18 +998,22 @@ class Delivery extends Application
 			$this->db->or_like('assignment_date',$srch);
 			$this->db->or_like('buyerdeliverytime',$srch);
 			$this->db->or_like('delivery_id',$srch);
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('d.identifier',$this->input->post('sSearch_0'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('assignment_date',$this->input->post('sSearch_1'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_2') != ''){
 			$this->db->like('assignment_zone',$this->input->post('sSearch_2'));
+			$search = true;
 		}
 
 
@@ -970,9 +1023,14 @@ class Delivery extends Application
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 
-		$data = $this->db
+		if($search){
+			$this->db->and_();
+		}
+
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_zoned'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
 			->order_by('device_id','asc')
 			->order_by($columns[$sort_col],$sort_dir)
@@ -1109,6 +1167,8 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
 
+		$search = false;
+
 		//search column
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
@@ -1116,20 +1176,24 @@ class Delivery extends Application
 			$this->db->or_like('assignment_date',$srch);
 			$this->db->or_like('buyerdeliverytime',$srch);
 			$this->db->or_like('delivery_id',$srch);
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('assignment_date',$this->input->post('sSearch_0'));
+			$search = true;
 		}
 
 
 		if($this->input->post('sSearch_2') != ''){
 			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+			$search = true;
 		}
 
 
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('assignment_zone',$this->input->post('sSearch_1'));
+			$search = true;
 		}
 
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -1139,11 +1203,16 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
-		$data = $this->db
+		if($search){
+			$this->db->and_();
+		}
+
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
 			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
 			->order_by('device','asc')
 			->order_by('courier','asc')
@@ -1266,10 +1335,17 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+		$search = false;
 
-		$data = $this->db
+		if($search){
+			$this->db->and_();
+		}
+
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+
+		$data = $this->db->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1366,17 +1442,21 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+		$search = false;
+		if($search){
+			$this->db->and_();
+		}
 
-		$data = $this->db
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_mobile_revoked'))
 			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+		$data = $this->db->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
 
 		$aadata = array();
-
 
 		foreach($result as $value => $key)
 		{
@@ -1467,10 +1547,16 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+		$search = false;
+		if($search){
+			$this->db->and_();
+		}
 
-		$data = $this->db
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+
+		$data = $this->db->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1564,10 +1650,16 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+		$search = false;
+		if($search){
+			$this->db->and_();
+		}
 
-		$data = $this->db
+		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
-			->limit($limit_count, $limit_offset)
+			->group_end();
+
+		$data =	$this->db->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1651,40 +1743,53 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivery_log_table'));
 
+		$search = false;
 
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
 			//$this->db->like('buyerdeliveryzone',$srch);
 			$this->db->or_like('buyerdeliverytime',$srch);
 			$this->db->or_like('delivery_id',$srch);
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_0') != ''){
 			$this->db->like('timestamp',$this->input->post('sSearch_0'));
+			$search = true;
 		}
 
 
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like('report_timestamp',$this->input->post('sSearch_1'));
+			$search = true;
 		}
 
 
 		if($this->input->post('sSearch_2') != ''){
 			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
 			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like('c.fullname',$this->input->post('sSearch_4'));
+			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
+			if($search){
+				$this->db->and_();
+			}
+			$this->db->group_start();
 			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
 			$this->db->or_like('m.fullname',$this->input->post('sSearch_5'));
 			$this->db->or_like('u.fullname',$this->input->post('sSearch_5'));
+			$this->db->group_end();
+			$search = true;
 		}
 
 		$this->db->select('*,u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
@@ -1694,10 +1799,11 @@ class Delivery extends Application
 		$this->db->join('devices as d',$this->config->item('delivery_log_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('delivery_log_table').'.courier_id=c.id','left');
 
-
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivery_log_table'));
+
+		//print $this->db->last_query();
 
 		$result = $data->result_array();
 

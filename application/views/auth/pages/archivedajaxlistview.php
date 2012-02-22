@@ -60,6 +60,18 @@
 			}
 		} );
 
+
+		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
+		$('#search_reporttime').datepicker({ dateFormat: 'yy-mm-dd' });
+
+		$('#search_timestamp').change(function(){
+			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+		});
+
+		$('#search_reporttime').change(function(){
+			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+		});
+
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
