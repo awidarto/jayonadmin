@@ -37,8 +37,8 @@ class V1 extends Application
 				//print_r($app);
 				$in = $this->input->post('transaction_detail');
 				//$in = $_POST['transaction_detail'];
-				file_put_contents('posted_json.json', $in);
-				file_put_contents('app_info.json', json_encode($app));
+				//file_put_contents('posted_json.json', $in);
+				//file_put_contents('app_info.json', json_encode($app));
 
 				$args = 'p='.$in;
 				//print $in;
@@ -205,7 +205,7 @@ class V1 extends Application
 
 			if(isset($_POST['loc'])){
 				$in = json_decode($_POST['loc']);
-				file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/locreportval.txt', $in->key);
+				//file_put_contents('/Applications/XAMPP/htdocs/jayonadmin/public/locreportval.txt', $in->key);
 
 				if($dev = $this->get_dev_info($in->key)){
 
