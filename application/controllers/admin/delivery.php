@@ -1686,7 +1686,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				colorizestatus($key['laststatus']),
+				$key['laststatus'],
 				$key['reschedule_ref'],
 				$key['revoke_ref']
 			);
