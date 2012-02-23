@@ -378,7 +378,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 function colorizestatus($status){
 
 	$colors = config_item('status_colors');
-	if($status == '' || in_array($status, array_keys($colors))){
+	if($status == '' || !in_array($status, array_keys($colors))){
 		$class = 'brown';
 		$status = 'N/A';
 	}else{

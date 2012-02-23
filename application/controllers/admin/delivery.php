@@ -156,7 +156,7 @@ class Delivery extends Application
 				$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
-				($key['status'] == 'canceled')?$purge:$reschedule.' '.$cancel
+				($key['status'] == 'canceled')?$purge:$reschedule
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -406,6 +406,10 @@ class Delivery extends Application
 
 	public function ajaxcancel(){
 		$delivery_id = $this->input->post('delivery_id');
+		$req_by = $this->input->post('req_by');
+		$req_name = $this->input->post('req_name');
+		$req_note = $this->input->post('req_note');
+
 
 		$actor = 'M:'.$this->session->userdata('userid');
 
@@ -424,6 +428,9 @@ class Delivery extends Application
 						'latitude'=>'',
 						'longitude'=>'',
 						'status'=>$this->config->item('trans_status_canceled'),
+						'req_by' => $req_by,
+						'req_name' => $req_name,
+						'req_note' => $req_note,
 						'notes'=>''
 						);
 
@@ -443,6 +450,9 @@ class Delivery extends Application
 					'latitude'=>'',
 					'longitude'=>'',
 					'status'=>$this->config->item('trans_status_canceled'),
+					'req_by' => $req_by,
+					'req_name' => $req_name,
+					'req_note' => $req_note,
 					'notes'=>''
 					);
 
@@ -462,6 +472,10 @@ class Delivery extends Application
 		$delivery_id = $this->input->post('delivery_id');
 		$buyerdeliverytime = $this->input->post('buyerdeliverytime');
 
+		$req_by = $this->input->post('req_by');
+		$req_name = $this->input->post('req_name');
+		$req_note = $this->input->post('req_note');
+
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
@@ -477,6 +491,9 @@ class Delivery extends Application
 						'latitude'=>'',
 						'longitude'=>'',
 						'status'=>$this->config->item('trans_status_rescheduled'),
+						'req_by' => $req_by,
+						'req_name' => $req_name,
+						'req_note' => $req_note,
 						'notes'=>''
 						);
 
@@ -496,6 +513,9 @@ class Delivery extends Application
 						'latitude'=>'',
 						'longitude'=>'',
 						'status'=>$this->config->item('trans_status_rescheduled'),
+						'req_by' => $req_by,
+						'req_name' => $req_name,
+						'req_note' => $req_note,
 						'notes'=>''
 						);
 
@@ -667,6 +687,10 @@ class Delivery extends Application
 
 		$actor = 'M:'.$this->session->userdata('userid');
 
+		$req_by = $this->input->post('req_by');
+		$req_name = $this->input->post('req_name');
+		$req_note = $this->input->post('req_note');
+
 		if(is_array($delivery_id)){
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_confirmed'),'change_actor'=>$actor));
@@ -681,6 +705,9 @@ class Delivery extends Application
 						'latitude'=>'',
 						'longitude'=>'',
 						'status'=>$this->config->item('trans_status_confirmed'),
+						'req_by' => $req_by,
+						'req_name' => $req_name,
+						'req_note' => $req_note,
 						'notes'=>''
 					);
 
@@ -700,6 +727,9 @@ class Delivery extends Application
 					'latitude'=>'',
 					'longitude'=>'',
 					'status'=>$this->config->item('trans_status_archived'),
+					'req_by' => $req_by,
+					'req_name' => $req_name,
+					'req_note' => $req_note,
 					'notes'=>''
 				);
 
@@ -1910,6 +1940,9 @@ class Delivery extends Application
 				$key['actor_type'],
 				$key['actor_id'],
 				$actor_name,
+				$key['req_by'],
+				$key['req_name'],
+				$key['req_note'],
 				$key['latitude'],
 				$key['longitude'],
 				colorizestatus($key['status']),
@@ -1944,6 +1977,9 @@ class Delivery extends Application
 			'Actor',
 			'Actor ID',
 			'Actor Username',
+			'Request From',
+			'Request By',
+			'Request Note',
 			'Latitude',
 			'Longitude',
 			'Status',

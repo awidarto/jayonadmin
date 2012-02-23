@@ -332,8 +332,8 @@
 
 		$('#confirm_dialog').dialog({
 			autoOpen: false,
-			height: 300,
-			width: 400,
+			height: 400,
+			width: 600,
 			modal: true,
 			buttons: {
 				"Confirm Delivery Orders": function() {
@@ -343,7 +343,13 @@
 						delivery_ids[i] = $(this).val();
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxconfirm');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxconfirm');?>',
+						{ assignment_date: $('#assign_deliverytime').val(),
+							'delivery_id[]':delivery_ids,
+							req_by : $('#cf_req_by').val(),
+							req_name : $('#cf_req_name').val(),
+							req_note : $('#cf_req_note').val()
+						}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
@@ -363,8 +369,8 @@
 
 		$('#cancel_dialog').dialog({
 			autoOpen: false,
-			height: 300,
-			width: 400,
+			height: 400,
+			width: 600,
 			modal: true,
 			buttons: {
 				"Cancel Delivery Orders": function() {
@@ -374,7 +380,13 @@
 						delivery_ids[i] = $(this).val();
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',
+						{ assignment_date: $('#assign_deliverytime').val(),
+							'delivery_id[]':delivery_ids,
+							req_by : $('#cl_req_by').val(),
+							req_name :$('#cl_req_name').val(),
+							req_note :$('#cl_req_note').val()
+						}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
@@ -394,12 +406,19 @@
 
 		$('#reschedule_dialog').dialog({
 			autoOpen: false,
-			height: 300,
-			width: 550,
+			height: 420,
+			width: 600,
 			modal: true,
 			buttons: {
 				"Reschedule Delivery Orders": function() {
-					$.post('<?php print site_url('admin/delivery/ajaxreschedule/incoming');?>',{'delivery_id':rescheduled_id,'buyerdeliverytime':$('#rescheduled_deliverytime').val()}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxreschedule/incoming');?>',
+						{'delivery_id':rescheduled_id,
+							'buyerdeliverytime':$('#rescheduled_deliverytime').val(),
+							req_by : $('#rs_req_by').val(),
+							req_name : $('#rs_req_name').val(),
+							req_note : $('#rs_req_note').val()
+						},
+						function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
@@ -475,6 +494,12 @@
 			<td style="border:0;margin:0;">
 				<input id="rescheduled_deliverytime" type="text" value=""><br />
 				<div id="date_time_display"></div>
+				Requested by :<br />
+				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="rs_req_by"');?><br />
+				Requester name :<br />
+				<?php print form_input('req_name','','id="rs_req_name"');?><br />
+				Request Note :<br />
+				<?php print form_textarea('req_note','','id="rs_req_note"');?><br />
 			</td>
 		</tr>
 	</table>
@@ -486,24 +511,45 @@
 			<td style="width:250px;vertical-align:top">
 				Delivery Orders :
 			</td>
+			<td style="width:250px;vertical-align:top">
+				Requested by :
+			</td>
 		</tr>
 		<tr>
 			<td style="overflow:auto;width:250px;vertical-align:top">
 				<ul id="confirm_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
+			<td style="width:250px;vertical-align:top">
+				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="cf_req_by"');?><br />
+				Requester name :<br />
+				<?php print form_input('req_name','','id="cf_req_name"');?><br />
+				Request Note :<br />
+				<?php print form_textarea('req_note','','id="cf_req_note"');?><br />
+			</td>
 		</tr>
 	</table>
 </div>
+
 <div id="cancel_dialog" title="Cancel Delivery Orders">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:250px;vertical-align:top">
 				Delivery Orders :
 			</td>
+			<td style="width:250px;vertical-align:top">
+				Requested by :
+			</td>
 		</tr>
 		<tr>
 			<td style="overflow:auto;width:250px;vertical-align:top">
 				<ul id="cancel_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+			</td>
+			<td style="width:250px;vertical-align:top">
+				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="cl_req_by"');?><br />
+				Requester name :<br />
+				<?php print form_input('req_name','','id="cl_req_name"');?><br />
+				Request Note :<br />
+				<?php print form_textarea('req_note','','id="cl_req_note"');?><br />
 			</td>
 		</tr>
 	</table>
