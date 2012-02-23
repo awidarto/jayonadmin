@@ -174,3 +174,19 @@ div.oi.error{
 	margin:0px;
 	width:100%;
 }
+
+fieldset {
+	display: block;
+	background-color: #EEE;
+	border: 0px;
+	margin-top:10px;
+}
+
+fieldset legend {
+	font-weight: bold;
+	font-size: 120%;
+	background-color: #fff;
+	display: block;
+	padding: 3px 6px;
+}
+
