@@ -63,6 +63,7 @@ class V1 extends Application
 					$dataset['fullname'] = $in->buyer_name;
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);
+					$dataset['created'] = date('Y-m-d h:i:s',time());
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}

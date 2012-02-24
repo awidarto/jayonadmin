@@ -71,15 +71,16 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Reports'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/reports\/weekly')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/daily', 'Daily'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/daily')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/weekly', 'Weekly'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/daily')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/daily', 'Daily'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/weekly')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/weekly', 'Weekly'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/mothly')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/monthly', 'Monthly'); } ?></li>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Administrators'); } ?></li>
-					<li class="<?php print set_hilite('admin\/members')?>" ><?php if(user_group('admin')) { echo anchor('admin/members/manage', 'Members'); } ?></li>
+					<li class="<?php print set_hilite('admin\/members\/merchant')?>" ><?php if(user_group('admin')) { echo anchor('admin/members/merchant', 'Merchants'); } ?></li>
+					<li class="<?php print set_hilite('admin\/members\/buyer')?>" ><?php if(user_group('admin')) { echo anchor('admin/members/buyer', 'Buyers'); } ?></li>
 					<li class="<?php print set_hilite('admin\/couriers')?>" ><?php if(user_group('admin')) { echo anchor('admin/couriers/manage', 'Couriers'); } ?></li>
 				</ul>
 			</li>
