@@ -85,45 +85,44 @@
 		});
 
 
-		$('#doArchive').click(function(){
+		$('#doSetGroup').click(function(){
 			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
 
-				var deliverydate = $('#dt_'+this.value).html();
-				var status = $('#st_'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
+				var uname = $('#un_'+this.value).html();
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value +' - '+ uname+'</strong></li>';
 				count++;
 			});
 			
 			if(count > 0){
 				$('#archive_list').html(assigns);
-				$('#archive_dialog').dialog('open');
+				$('#setgroup_dialog').dialog('open');
 			}else{
-				alert('Please select one or more delivery orders');
+				alert('Please select one or more user');
 			}
 		});
 
-		$('#archive_dialog').dialog({
+		$('#setgroup_dialog').dialog({
 			autoOpen: false,
 			height: 300,
-			width: 400,
+			width: 500,
 			modal: true,
 			buttons: {
-				"Archive Delivery Orders": function() {
-					var delivery_ids = [];
-					var laststatus = [];
+				"Set Member Group": function() {
+					var user_ids = [];
 					i = 0;
 					$('.assign_check:checked').each(function(){
-						delivery_ids[i] = $(this).val();
-						laststatus[i] = $(this).attr('title');
+						user_ids[i] = $(this).val();
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
+					$.post('<?php print site_url('admin/members/ajaxsetgroup');?>',
+						{ set_group: $('#set_group').val(),'users[]':user_ids}, 
+						function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
-							$('#archive_dialog').dialog( "close" );
+							$('#setgroup_dialog').dialog( "close" );
 						}
 					},'json');
 				},
@@ -145,16 +144,29 @@
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
 
-<div id="archive_dialog" title="Archive Delivery Orders">
+<?php 
+	$group_array = array(
+		user_group_id('merchant')=>'merchant',
+		user_group_id('buyer')=>'buyer'
+		);
+?>
+
+<div id="setgroup_dialog" title="Set Member Group">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
+				Members :
+			</td>
+			<td>
+				Set Group to :
 			</td>
 		</tr>
 		<tr>
 			<td style="overflow:auto;width:250px;vertical-align:top">
 				<ul id="archive_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+			</td>
+			<td style="overflow:auto;width:250px;vertical-align:top">
+				<?php print form_dropdown('set_groups',$group_array,'','id="set_group"');?>
 			</td>
 		</tr>
 	</table>

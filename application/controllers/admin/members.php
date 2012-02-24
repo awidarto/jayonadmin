@@ -427,7 +427,7 @@ class Members extends Application
 				$addapp = '&nbsp'; // Build actions links
 			}
 			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
-			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
+			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 			
 			$aadata[] = array(
 				$detail,
@@ -648,7 +648,7 @@ class Members extends Application
 				$addapp = '&nbsp'; // Build actions links
 			}
 			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
-			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
+			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 			
 			$aadata[] = array(
 				$detail,
@@ -691,6 +691,67 @@ class Members extends Application
 
 		$page['page_title'] = 'Member Info';
 		$this->ag_auth->view('members/details',$page);
+	}
+
+	public function ajaxsetgroup(){
+		$users = $this->input->post('users');
+		$setgroup = $this->input->post('set_group');
+
+		if(is_array($users)){
+			foreach ($users as $u) {
+				$this->db->where('id',$u)->update($this->config->item('jayon_members_table'),array('group_id'=>$setgroup));
+				/*
+				$data = array(
+						'timestamp'=>date('Y-m-d h:i:s',time()),
+						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_canceled'),
+						'req_by' => $req_by,
+						'req_name' => $req_name,
+						'req_note' => $req_note,
+						'notes'=>''
+						);
+
+				delivery_log($data);
+				*/
+			}
+		}else{
+
+			$this->db->where('id',$users)->update($this->config->item('jayon_members_table'),array('group_id'=>$setgroup));
+
+			/*
+			$data = array(
+					'timestamp'=>date('Y-m-d h:i:s',time()),
+					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'delivery_id'=>$delivery_id,
+					'device_id'=>'',
+					'courier_id'=>'',
+					'actor_type'=>'AD',
+					'actor_id'=>$this->session->userdata('userid'),
+					'latitude'=>'',
+					'longitude'=>'',
+					'status'=>'change_group',
+					'req_by' => $req_by,
+					'req_name' => $req_name,
+					'req_note' => $req_note,
+					'notes'=>''
+					);
+
+			delivery_log($data);
+			*/
+
+		}
+
+		print json_encode(array('result'=>'ok'));
+
+		//send_notification('Cancelled Orders',$buyeremail,null,'rescheduled_order_buyer',$edata,null);
+
 	}
 
 	public function delete($id)

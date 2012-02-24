@@ -87,9 +87,9 @@ function user_group_id($group)
 {
 	$CI =& get_instance();
 	
-	$this->db->select('id');
-	$this->db->where('title',$group);
-	$result = $this->db->get($this->ag_auth->config['auth_group_table']);
+	$CI->db->select('id');
+	$CI->db->where('title',$group);
+	$result = $CI->db->get($CI->ag_auth->config['auth_group_table']);
 	$row = $result->row();
 	return $row->id;
 }
