@@ -422,7 +422,7 @@ class Members extends Application
 			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
 			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
 			if($key['group_id'] === group_id('merchant')){
-				$addapp = anchor("admin/members/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
+				$addapp = anchor("admin/apps/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
 			}else{
 				$addapp = '&nbsp'; // Build actions links
 			}
@@ -444,7 +444,7 @@ class Members extends Application
 			 	$key['mobile'],
 			 	$key['phone'],
 			 	$key['created'],
-			 	$edit.' '.$editpass.' '.$delete
+			 	$addapp.' '.$edit.' '.$editpass.' '.$delete
 			); // Adding row to table
 
 		}
@@ -809,11 +809,23 @@ class Members extends Application
 		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
+
+
+		$this->form_validation->set_rules('same_as_personal_address', 'Same As Personal Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_street', 'Street', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_district', 'District', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_city', 'City', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_country', 'Country', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_province', 'Province', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_zip', 'ZIP', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
 		if($this->form_validation->run() == FALSE)
 		{
@@ -842,6 +854,18 @@ class Members extends Application
 			$phone= set_value('phone');
 			$mobile= set_value('mobile');
 			$email = set_value('email');
+
+			$same_as_personal_address = set_value('same_as_personal_address');
+
+			$mc_street = set_value('mc_street');
+			$mc_district = set_value('mc_district');
+			$mc_province = set_value('mc_province');
+			$mc_city = set_value('mc_city');
+			$mc_country = set_value('mc_country');
+			$mc_zip = set_value('mc_zip');
+			$mc_phone= set_value('mc_phone');
+			$mc_mobile= set_value('mc_mobile');
+
 			$group_id = set_value('group_id');
 
 			$dataset = array(
@@ -861,6 +885,17 @@ class Members extends Application
 				'phone'=>$phone,
 				'mobile'=>$mobile,
 				'email'=>$email,
+
+				'same_as_personal_address' =>$same_as_personal_address,
+				'mc_street' =>$mc_street,
+				'mc_district' =>$mc_district,
+				'mc_province' =>$mc_province,
+				'mc_city' =>$mc_city,
+				'mc_country' =>$mc_country,
+				'mc_zip' =>$mc_zip,
+				'mc_phone'=>$mc_phone,
+				'mc_mobile'=>$mc_mobile,
+
 				'group_id'=>$group_id,
 				'created'=> date('Y-m-d h:i:s',time())
 
@@ -897,11 +932,22 @@ class Members extends Application
 		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
+
+		$this->form_validation->set_rules('same_as_personal_address', 'Same As Personal Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_street', 'Street', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_district', 'District', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_city', 'City', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_province', 'Province', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_country', 'Country', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_zip', 'ZIP', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
 		$user = $this->get_user($id);
 		$data['user'] = $user;
@@ -933,6 +979,17 @@ class Members extends Application
 			$dataset['mobile'] = set_value('mobile');
 			$dataset['email'] = set_value('email');
 			$dataset['group_id'] = set_value('group_id');
+
+			$dataset['same_as_personal_address'] = set_value('same_as_personal_address');
+			$dataset['mc_street'] = set_value('mc_street');
+			$dataset['mc_district'] = set_value('mc_district');
+			$dataset['mc_province'] = set_value('mc_province');
+			$dataset['mc_city'] = set_value('mc_city');
+			$dataset['mc_country'] = set_value('mc_country');
+			$dataset['mc_zip'] = set_value('mc_zip');
+			$dataset['mc_phone'] = set_value('mc_phone');
+			$dataset['mc_mobile'] = set_value('mc_mobile');
+
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
