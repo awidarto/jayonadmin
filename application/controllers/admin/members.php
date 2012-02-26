@@ -281,7 +281,7 @@ class Members extends Application
 
 		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/members/ajaxmerchant';
-		$page['add_button'] = array('link'=>'admin/members/add','label'=>'Add New Member');
+		$page['add_button'] = array('link'=>'admin/members/merchant/add','label'=>'Add New Member');
 		$page['page_title'] = 'Manage Merchants';
 		$this->ag_auth->view('memberajaxlistview',$page); // Load the view
 	}
@@ -293,6 +293,8 @@ class Members extends Application
 
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
+
+		$group_id = user_group_id('merchant');
 
 		$columns = array(
 			'username',
@@ -405,7 +407,7 @@ class Members extends Application
 
 
 		$data = $this->db
-			->where('group_id',group_id('merchant'))
+			->where('group_id',$group_id)
 			->limit($limit_count, $limit_offset)
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('jayon_members_table'));
@@ -422,11 +424,11 @@ class Members extends Application
 			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
 			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
 			if($key['group_id'] === group_id('merchant')){
-				$addapp = anchor("admin/apps/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
+				$addapp = anchor("admin/members/merchant/apps/manage/".$key['id']."/", "Applications"); // Build actions links
 			}else{
 				$addapp = '&nbsp'; // Build actions links
 			}
-			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
+			$edit = anchor("admin/members/merchant/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 			
 			$aadata[] = array(
@@ -502,7 +504,7 @@ class Members extends Application
 
 		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/members/ajaxbuyer';
-		$page['add_button'] = array('link'=>'admin/members/add','label'=>'Add New Member');
+		$page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
 		$page['page_title'] = 'Manage Buyers';
 		$this->ag_auth->view('memberajaxlistview',$page); // Load the view
 	}
@@ -514,6 +516,8 @@ class Members extends Application
 
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
+
+		$group_id = user_group_id('buyer');
 
 		$columns = array(
 			'username',
@@ -624,9 +628,8 @@ class Members extends Application
 			//$this->db->and_();
 		}		
 
-
 		$data = $this->db
-			->where('group_id',group_id('buyer'))
+			->where('group_id',$group_id)
 			->limit($limit_count, $limit_offset)
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('jayon_members_table'));
@@ -647,7 +650,7 @@ class Members extends Application
 			}else{
 				$addapp = '&nbsp'; // Build actions links
 			}
-			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
+			$edit = anchor("admin/members/buyer/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 			
 			$aadata[] = array(
@@ -797,6 +800,28 @@ class Members extends Application
 
 	public function add()
 	{
+		if(in_array('merchant',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Merchants','admin/members/merchant');
+			$this->breadcrumb->add_crumb('Add Merchant','admin/members/merchant/add');
+			$data['page_title'] = 'Add Merchant';
+
+			$back_url = 'admin/members/merchant';
+			$success_url = 'admin/members/merchant';
+			$error_url = 'admin/members/merchant/add';
+
+			$utype = 'Merchant';
+		}else if(in_array('buyer',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
+			$this->breadcrumb->add_crumb('Add Buyer','admin/members/buyer/add');
+			$data['page_title'] = 'Add Buyer';
+
+			$back_url = 'admin/members/buyer';
+			$success_url = 'admin/members/buyer';
+			$error_url = 'admin/members/buyer/add';
+
+			$utype = 'Buyer';			
+		}
+
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
 		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
@@ -833,7 +858,7 @@ class Members extends Application
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
-			$data['page_title'] = 'Add User';
+			$data['back_url'] = anchor($back_url,'Cancel');
 			$this->ag_auth->view('members/add',$data);
 		}
 		else
@@ -923,6 +948,29 @@ class Members extends Application
 
 	public function edit($id)
 	{
+		if(in_array('merchant',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Merchants','admin/members/merchant');
+			$this->breadcrumb->add_crumb('Edit Merchant','admin/members/merchant/edit/'.$id);
+			$data['page_title'] = 'Edit Merchant';
+
+			$back_url = 'admin/members/merchant';
+			$success_url = 'admin/members/merchant';
+			$error_url = 'admin/members/merchant/edit/'.$id;
+
+			$utype = 'Merchant';
+
+		}else if(in_array('buyer',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
+			$this->breadcrumb->add_crumb('Edit Buyer','admin/members/buyer/edit/'.$id);
+			$data['page_title'] = 'Edit Buyer';
+
+			$back_url = 'admin/members/buyer';
+			$success_url = 'admin/members/buyer';
+			$error_url = 'admin/members/buyer/edit/'.$id;
+
+			$utype = 'Buyer';
+		}
+
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
@@ -958,7 +1006,7 @@ class Members extends Application
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
-			$data['page_title'] = 'Edit Member';
+			$data['back_url'] = anchor($back_url,'Cancel');
 			$this->ag_auth->view('members/edit',$data);
 		}
 		else
@@ -994,18 +1042,14 @@ class Members extends Application
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
-				$data['message'] = "The member account has now updated.";
-				$data['page_title'] = 'Edit Member';
-				$data['back_url'] = anchor('admin/members/manage','Back to list');
-				$this->ag_auth->view('message', $data);
+				$this->oi->add_success($utype.' updated & saved');
+				redirect($success_url);
 
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$data['message'] = "The member account has not been created.";
-				$data['page_title'] = 'Edit Member';
-				$data['back_url'] = anchor('admin/members/manage','Back to list');
-				$this->ag_auth->view('message', $data);
+				$this->oi->add_success('Failed to update '.$utype);
+				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)

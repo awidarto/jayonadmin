@@ -1,6 +1,6 @@
 <div id="form">
 	<div id="form_box">
-			<form method="post" action="<?php echo site_url($act_url)?>">
+			<form method="post">
 			<input type="hidden" name="merchant_id" value="<?php echo $merchant_id ?>" />
 
 			<?php print form_fieldset('Application Info'); ?>
@@ -75,9 +75,11 @@
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Edit" name="edit" />
-				<?php
+			<?php
+				if(isset($back_url)){
 					print $back_url;
-				?>
+				}
+			?>
 			</form>
 	</div>
 </div>

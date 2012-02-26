@@ -1,6 +1,6 @@
 <div id="form">
 	<div id="form_box">
-			<form method="post" action="<?php echo site_url($act_url)?>">
+			<form method="post">
 			<input type="hidden" name="merchant_id" value="<?php echo $merchant_id ?>" />
 			<!--
 			Merchant:<br />
@@ -67,21 +67,23 @@
 			City:<br />
 			<input type="text" name="city" size="50" class="form" value="<?php echo set_value('city'); ?>" /><?php echo form_error('city'); ?><br /><br />
 
+			ZIP:<br />
+			<input type="text" name="zip" size="50" class="form" value="<?php echo set_value('zip'); ?>" /><?php echo form_error('zip'); ?><br /><br />
+
 			Province:<br />
 			<input type="text" name="province" size="50" class="form" value="<?php echo set_value('province'); ?>" /><?php echo form_error('province'); ?><br /><br />
 
 			Country:<br />
 			<input type="text" name="country" size="50" class="form" value="<?php echo set_value('country'); ?>" /><?php echo form_error('country'); ?><br /><br />
 
-			ZIP:<br />
-			<input type="text" name="zip" size="50" class="form" value="<?php echo set_value('zip'); ?>" /><?php echo form_error('zip'); ?><br /><br />
-
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Add" name="add" />
-				<?php
+			<?php
+				if(isset($back_url)){
 					print $back_url;
-				?>
+				}
+			?>
 			</form>
 	</div>
 </div>

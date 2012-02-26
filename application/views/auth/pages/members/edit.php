@@ -1,6 +1,6 @@
 <div id="form">
 	<div class="form_box">
-			<form method="post" action="<?php echo site_url('admin/members/edit/'.$user['id'])?>">
+			<form method="post">
 
 			<?php print form_fieldset('Personal Info'); ?>
 
@@ -67,14 +67,14 @@
 			City:<br />
 			<input type="text" name="mc_city" size="50" class="form" value="<?php echo set_value('mc_city',$user['mc_city']); ?>" /><?php echo form_error('mc_city'); ?><br /><br />
 
+			ZIP:<br />
+			<input type="text" name="mc_zip" size="50" class="form" value="<?php echo set_value('mc_zip',$user['mc_zip']); ?>" /><?php echo form_error('mc_zip'); ?><br /><br />
+
 			Province:<br />
 			<input type="text" name="mc_province" size="50" class="form" value="<?php echo set_value('mc_province',$user['mc_province']); ?>" /><?php echo form_error('mc_province'); ?><br /><br />
 
 			Country:<br />
 			<input type="text" name="mc_country" size="50" class="form" value="<?php echo set_value('mc_country',$user['mc_country']); ?>" /><?php echo form_error('mc_country'); ?><br /><br />
-
-			ZIP:<br />
-			<input type="text" name="mc_zip" size="50" class="form" value="<?php echo set_value('mc_zip',$user['mc_zip']); ?>" /><?php echo form_error('mc_zip'); ?><br /><br />
 
 			Phone Number:<br />
 			<input type="text" name="mc_phone" size="50" class="form" value="<?php echo set_value('mc_phone',$user['mc_phone']); ?>" /><?php echo form_error('mc_phone'); ?><br /><br />
@@ -85,9 +85,9 @@
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Update" name="register" />
-			<?php
-				print anchor('admin/members/manage','Cancel');
-			?>
+				<?php
+					print $back_url;
+				?>
 			</form>
 	</div>
 </div>

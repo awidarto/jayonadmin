@@ -1,6 +1,6 @@
 <div id="form">
 	<div class="form_box">
-			<form method="post" action="<?php echo site_url('admin/members/add')?>">
+			<form method="post" >
 
 			<?php print form_fieldset('Personal Info'); ?>
 
@@ -93,7 +93,9 @@
 
 			<input type="submit" value="Add" name="register" />
 			<?php
-				print anchor('admin/members/manage','Cancel');
+				if(isset($back_url)){
+					print $back_url;
+				}
 			?>
 			</form>
 	</div>

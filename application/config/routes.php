@@ -53,10 +53,17 @@ $route['admin/dashboard'] = "admin/admin/index";
 // END AUTHENTICATION LIBRARY ROUTES
 
 //JAYON SPECIFIC ROUTES
-$route['admin/members/merchantmanage/(:num)'] = "admin/apps/merchantmanage/$1";
-$route['admin/members/merchantadd/(:num)'] = "admin/apps/add/$1";
-$route['admin/members/merchantedit/(:num)'] = "admin/apps/edit/$1";
+$route['admin/members/merchant/apps/manage/(:num)'] = "admin/apps/merchantmanage/$1";
+$route['admin/members/merchant/apps/add/(:num)'] = "admin/apps/add/$1";
+$route['admin/members/merchant/apps/edit/(:num)'] = "admin/apps/edit/$1";
 $route['admin/members/merchantdelete/(:num)'] = "admin/apps/delete/$1";
+
+$route['admin/members/merchant/add'] = "admin/members/add";
+$route['admin/members/merchant/edit/(:num)'] = "admin/members/edit/$1";
+
+$route['admin/members/buyer/add'] = "admin/members/add";
+$route['admin/members/buyer/edit/(:num)'] = "admin/members/edit/$1";
+
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
