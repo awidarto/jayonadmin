@@ -50,7 +50,14 @@ class Admin extends Application
 			if($buyer = $this->check_email($email)){
 				$password = random_string('alnum', 8);
 				$dataset['password'] = $this->ag_auth->salt($password);
+				$this->db->where('email',$email)->update($this->config->item('auth_user_table'),$dataset);
+
+				$edata['fullname'] = $buyer->fullname;
+				$edata['password'] = $password;
+				$subject = 'Password reset request at Jayon Express.';
+				send_notification($subject,$email,null,'resetpassd',$edata);
 				$this->oi->add_success('New password has been sent to your email.');
+
 			}else{
 				$this->oi->add_error('Your email can not be found, please consider registering as new member.');
 			}

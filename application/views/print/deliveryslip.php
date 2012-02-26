@@ -58,24 +58,18 @@ Array
 		}
 
 		.dataTable td{
-			border:thin solid #eee;
-		}
-
-		#signBox td{
-			border:thin solid #eee;
+			border:thin solid black;
 		}
 
 		table#signBox {
-			border:thin solid #eee;
 			width:100%;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
 			margin-bottom:35px;
+			border:thin solid black;
 		}
 
 		th{
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
-			background-color:black;
-			color:white;
 			vertical-align:top;
 			font-size:14px;
 		}
@@ -84,16 +78,16 @@ Array
 			font-size:13px;
 		}
 
-		#signBox{
-			float:right;
-		}
-
-		#signBox thead th{
+		#signBox thead th , #signBox tr td{
 			width:120px;
+			border-right: thin solid black;
+			border-bottom: thin solid black;
+			margin:2px;
 		}
 
 		#wrapper{
-			width:1000px;
+			width:98%;
+			margin:5px;
 			display:block;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
 			font-size:14px;
@@ -205,7 +199,7 @@ Array
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="height:150px;">
+			<tr style="height:40px;">
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
