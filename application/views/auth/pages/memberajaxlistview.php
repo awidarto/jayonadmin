@@ -76,6 +76,23 @@
 					alert(delivery_id + " not archived");
 				}
 		   	}
+
+			if ($(e.target).is('.delete_link')) {
+				var user_id = e.target.id;
+				var answer = confirm("Are you sure you want to delete this user ?");
+				if (answer){
+					$.post('<?php print site_url('admin/members/ajaxdelete');?>',{'id':user_id}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							alert(user_id + " deleted");
+						}
+					},'json');
+				}else{
+					alert(user_id + " not deleted");
+				}
+		   	}
+
 		});
 
 		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });

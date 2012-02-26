@@ -421,7 +421,7 @@ class Members extends Application
 
 		foreach($result as $value => $key)
 		{
-			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
+			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
 			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
 			if($key['group_id'] === group_id('merchant')){
 				$addapp = anchor("admin/members/merchant/apps/manage/".$key['id']."/", "Applications"); // Build actions links
@@ -643,7 +643,7 @@ class Members extends Application
 
 		foreach($result as $value => $key)
 		{
-			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
+			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
 			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
 			if($key['group_id'] === group_id('merchant')){
 				$addapp = anchor("admin/members/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
@@ -757,11 +757,15 @@ class Members extends Application
 
 	}
 
-	public function delete($id)
+	public function ajaxdelete()
 	{
-		$this->db->where('id', $id)->delete($this->config->item('jayon_members_table'));
-		$page['page_title'] = 'Delete Member';
-		$this->ag_auth->view('members/delete_success',$page);
+		$id = $this->input->post('id');
+		
+		if($this->db->where('id', $id)->delete($this->config->item('jayon_members_table'))){
+			print json_encode(array('result'=>'ok'));
+		}else{
+			print json_encode(array('result'=>'failed'));
+		}
 	}
 
 	public function get_user($id){
