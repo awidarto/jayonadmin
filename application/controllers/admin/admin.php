@@ -52,7 +52,7 @@ class Admin extends Application
 				$dataset['password'] = $this->ag_auth->salt($password);
 				$this->oi->add_success('New password has been sent to your email.');
 			}else{
-				$this->oi->add_success('Your email can not be found, please consider registering as new member.');
+				$this->oi->add_error('Your email can not be found, please consider registering as new member.');
 			}
 
 			redirect('resetpass');

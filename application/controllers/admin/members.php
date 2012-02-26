@@ -265,7 +265,7 @@ class Members extends Application
 
 		$this->table->set_footing(
 			'<input type="text" name="search_username" id="search_username" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_email" id="search_email" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_email" id="search_email" value="Search email" class="search_init" />',
 			'<input type="text" name="search_fullname" value="Search full name" class="search_init" />',
 			'<input type="text" name="search_street" value="Search street" class="search_init" />',
 			'<input type="text" name="search_district" value="Search district" class="search_init" />',
@@ -488,7 +488,7 @@ class Members extends Application
 
 		$this->table->set_footing(
 			'<input type="text" name="search_username" id="search_username" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_email" id="search_email" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_email" id="search_email" value="Search email" class="search_init" />',
 			'<input type="text" name="search_fullname" value="Search full name" class="search_init" />',
 			'<input type="text" name="search_street" value="Search street" class="search_init" />',
 			'<input type="text" name="search_district" value="Search district" class="search_init" />',
