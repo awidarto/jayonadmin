@@ -22,9 +22,20 @@
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
+
+		<script>
+			$(document).ready(function() {
+
+				$('#flash_message').delay(1500).slideUp('slow');
+
+			});
+		</script>
 	
 	</head>
 	<body>
+		<? if($this->oi->has_messages('')):?>  
+	        <div id="flash_message" ><? echo $this->oi->messages(NULL)?></div>
+		<? endif?>
 		<div id="header">
 			<div id="logo">
 				&nbsp;

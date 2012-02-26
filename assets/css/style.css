@@ -191,3 +191,30 @@ fieldset legend {
 	padding: 3px 6px;
 }
 
+#registration {
+	background-color: maroon;
+	padding:10px;
+	color: #fff;
+	margin-top:10px;
+}
+
+#registration a {
+	color: orange;
+}
+
+#flash_message{
+	display: block;
+	position: absolute;
+	top:0;
+	text-align:center;
+	width:100%;
+}
+
+.oi{
+	display: block;
+	padding:10px;
+	width:100%;
+	background-color: #efefef;
+	margin: auto;
+}
+
