@@ -138,7 +138,7 @@ class V1 extends Application
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
 
-					send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,'new_member',$edata,null);
+					send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
 				}
 
 			}

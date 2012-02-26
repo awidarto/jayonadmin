@@ -251,7 +251,7 @@ function full_reschedule($delivery_id, $datachanged){
 	return true;
 }
 
-function send_notification($subject,$to,$cc = null,$template = 'default',$data = null,$attachment = null){
+function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 'default',$data = null,$attachment = null){
 	$CI =& get_instance();
 
 	$config = array(
@@ -271,6 +271,10 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 
 	if(is_null($data)){
 		$data['type'] = 'notification';
+	}
+
+	if(!is_null($reply_to)){
+		$CI->email->reply_to($reply_to);
 	}
 
 	if(is_array($to)){
@@ -350,6 +354,9 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 	if(is_null($data)){
 		$data['type'] = 'adminmessage';
 	}
+
+	//admin message should reply to admin
+	$CI->email->reply_to($CI->config->item('admin_username'));
 
 	if(is_array($to)){
 		foreach($to as $em){

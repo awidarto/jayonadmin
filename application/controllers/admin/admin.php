@@ -55,7 +55,7 @@ class Admin extends Application
 				$edata['fullname'] = $buyer->fullname;
 				$edata['password'] = $password;
 				$subject = 'Password reset request at Jayon Express.';
-				send_notification($subject,$email,null,'resetpassd',$edata);
+				send_notification($subject,$email,null,null,'resetpassd',$edata);
 				$this->oi->add_success('New password has been sent to your email.');
 
 			}else{

@@ -7,3 +7,5 @@ Zones
 Administrators
 Buyers
 
+PDF print slip
+
