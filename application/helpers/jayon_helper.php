@@ -3,9 +3,9 @@
 function get_yearly_sequence()
 {
 	$CI =& get_instance();
-	
+
 	$year = date('Y',time());
-	
+
 	$q = $CI->db->select('sequence')->where('year',$year)->get($CI->config->item('sequence_table'));
 	if($q->num_rows() > 0){
 
@@ -31,16 +31,16 @@ function get_zones($col = '*',$flatten = true){
 function get_zone_options(){
 	$CI =& get_instance();
 	$q = $CI->db->select('district,city')->get('districts');
-	
+
 	$result = array();
-	
+
 	$city = '';
 	foreach($q->result_array() as $val){
 		$result[$val['city']][$val['district']] = $val['district'];
 	}
-	
+
 	//print_r($result);
-	
+
 	return $result;
 }
 
@@ -86,7 +86,7 @@ function ajax_find_device($zone,$col = 'descriptor'){
 function user_group_id($group)
 {
 	$CI =& get_instance();
-	
+
 	$CI->db->select('id');
 	$CI->db->where('title',$group);
 	$result = $CI->db->get($CI->ag_auth->config['auth_group_table']);
@@ -96,7 +96,7 @@ function user_group_id($group)
 
 function get_option($key){
 	$CI =& get_instance();
-	
+
 	$CI->db->select('val');
 	$CI->db->where('key',$key);
 	$result = $CI->db->get($CI->config->item('jayon_options_table'));
@@ -126,7 +126,7 @@ function getdateblock($month = null, $city = null){
 	$hdays = $CI->db->select('holiday')
 		->like('holiday',$year,'after')
 		->get($CI->config->item('jayon_holidays_table'));
-	
+
 	$holidays = array();
 	foreach ($hdays->result_array() as $key => $val) {
 		$holidays[] = $val['holiday'];
@@ -180,7 +180,7 @@ function checkdateblock($date = null, $city = null){
 
 		$hdays = $CI->db->select('holiday')
 			->where('holiday',$date)
-			->get($CI->config->item('jayon_holidays_table'));		
+			->get($CI->config->item('jayon_holidays_table'));
 
 		if($hdays->num_rows() > 0){
 			$isholiday = true;
@@ -228,7 +228,7 @@ function full_reschedule($delivery_id, $datachanged){
 	$new_order['reattemp'] = (int) $new_order['reattemp'] + 1;
 	unset($new_order['delivery_id']);
 	unset($new_order['id']);
-	
+
 	$old_delivery_id = $delivery_id;
 
 	$CI->db->insert($CI->config->item('assigned_delivery_table'),$new_order);
@@ -253,32 +253,34 @@ function full_reschedule($delivery_id, $datachanged){
 
 function send_notification($subject,$to,$cc = null,$template = 'default',$data = null,$attachment = null){
 	$CI =& get_instance();
-	
+
 	$config = array(
-	    'protocol' => 'smtp',
-	    'smtp_host' => $CI->config->item('smtp_host'),
-	    'smtp_port' => $CI->config->item('smtp_port'),
-	    'smtp_user' => $CI->config->item('notify_username'),
-	    'smtp_pass' => $CI->config->item('notify_password'),
-	    'charset'   => 'iso-8859-1'
+		'protocol' => 'smtp',
+		'smtp_host' => $CI->config->item('smtp_host'),
+		'smtp_port' => $CI->config->item('smtp_port'),
+		'smtp_user' => $CI->config->item('notify_username'),
+		'smtp_pass' => $CI->config->item('notify_password'),
+		'charset'   => 'iso-8859-1'
 	);
-	
+
 	$CI->load->library('email',$config);
 
 	$CI->email->set_newline("\r\n");
 
 	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Notification');
-	
+
 	if(is_null($data)){
 		$data['type'] = 'notification';
 	}
 
 	if(is_array($to)){
 		foreach($to as $em){
-			$CI->email->to($em); 
+			$CI->email->to($em);
 		}
+		$log['to'] = implode(';',$to);
 	}else{
-		$CI->email->to($to); 
+		$CI->email->to($to);
+		$log['to'] = $to;			
 	}
 
 	if(!is_null($cc)){
@@ -286,45 +288,59 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 			foreach ($cc as $cm) {
 				$CI->email->cc($cm);
 			}
+			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-		}	
-	}
-	
-	if(!is_null($attachment)){
-		if(is_array($attachment)){
-			foreach($attachment as $att){
-				$CI->email->attach($att); 
-			}
-		}else{
-			$CI->email->attach($attachment); 
+			$log['cc'] = $cc;			
 		}
 	}
 
-	$CI->email->cc('admin@jayonexpress.com'); 
+	if(!is_null($attachment)){
+		if(is_array($attachment)){
+			foreach($attachment as $att){
+				$CI->email->attach($att);
+			}
+			$log['att'] = implode(';',$attachment);
+		}else{
+			$CI->email->attach($attachment);			
+			$log['att'] = $attachment;			
+		}
+	}
+
+	$CI->email->cc('admin@jayonexpress.com');
 	$CI->email->subject($subject);
 
 	$body = $CI->load->view('email/'.$template,$data,TRUE);
-	
-	$CI->email->message($body);	
+
+	$CI->email->message($body);
 
 	$result = $CI->email->send();
-	
+
+	$log['timestamp'] = date('Y-m-d h:i:s',time());
+	$log['from'] = $CI->config->item('notify_username');
+	$log['subject'] = $subject;
+	$log['body'] = $body;
+	$log['delivery_id'] = (isset($data['delivery_id']))?$data['delivery_id']:'-';
+	$log['status'] = (isset($data['status']))?$data['delivery_id']:'-';
+	$log['msg_status'] = $result;
+
+	$CI->db->insert($CI->config->item('jayon_email_outbox_table'),$log);
+
 	return $result;
 }
 
 function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$attachment = null){
 	$CI =& get_instance();
-	
+
 	$config = array(
-	    'protocol' => 'smtp',
-	    'smtp_host' => $CI->config->item('smtp_host'),
-	    'smtp_port' => $CI->config->item('smtp_port'),
-	    'smtp_user' => $CI->config->item('admin_username'),
-	    'smtp_pass' => $CI->config->item('admin_password'),
-	    'charset'   => 'iso-8859-1'
+		'protocol' => 'smtp',
+		'smtp_host' => $CI->config->item('smtp_host'),
+		'smtp_port' => $CI->config->item('smtp_port'),
+		'smtp_user' => $CI->config->item('admin_username'),
+		'smtp_pass' => $CI->config->item('admin_password'),
+		'charset'   => 'iso-8859-1'
 	);
-	
+
 	$CI->load->library('email',$config);
 
 	$CI->email->set_newline("\r\n");
@@ -332,15 +348,17 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Admin');
 
 	if(is_null($data)){
-		$data['type'] = 'notification';
+		$data['type'] = 'adminmessage';
 	}
 
 	if(is_array($to)){
 		foreach($to as $em){
-			$CI->email->to($em); 
+			$CI->email->to($em);
 		}
+		$log['to'] = implode(';',$to);
 	}else{
-		$CI->email->to($to); 
+		$CI->email->to($to);
+		$log['to'] = $to;			
 	}
 
 	if(!is_null($cc)){
@@ -348,30 +366,44 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 			foreach ($cc as $cm) {
 				$CI->email->cc($cm);
 			}
+			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-		}	
-	}
-	
-	if(!is_null($attachment)){
-		if(is_array($attachment)){
-			foreach($attachment as $att){
-				$CI->email->attach($att); 
-			}
-		}else{
-			$CI->email->attach($attachment); 
+			$log['cc'] = $cc;			
 		}
 	}
 
-	$CI->email->cc('admin@jayonexpress.com'); 
+	if(!is_null($attachment)){
+		if(is_array($attachment)){
+			foreach($attachment as $att){
+				$CI->email->attach($att);
+			}
+			$log['att'] = implode(';',$attachment);
+		}else{
+			$CI->email->attach($attachment);			
+			$log['att'] = $attachment;			
+		}
+	}
+
+	$CI->email->cc('admin@jayonexpress.com');
 	$CI->email->subject($subject);
-	
+
 	$body = $CI->load->view('email/'.$template,$data,TRUE);
-	
-	$CI->email->message($body);	
+
+	$CI->email->message($body);
 
 	$result = $CI->email->send();
-	
+
+	$log['timestamp'] = date('Y-m-d h:i:s',time());
+	$log['from'] = $CI->config->item('admin_username');
+	$log['subject'] = $subject;
+	$log['body'] = $body;
+	$log['delivery_id'] = (isset($data['delivery_id']))?$data['delivery_id']:'-';
+	$log['status'] = (isset($data['status']))?$data['delivery_id']:'-';
+	$log['msg_status'] = $result;
+
+	$CI->db->insert($CI->config->item('jayon_email_outbox_table'),$log);
+
 	return $result;
 }
 

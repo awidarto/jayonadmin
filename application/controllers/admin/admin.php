@@ -67,6 +67,44 @@ class Admin extends Application
 
 	}
 
+	public function changepass()
+	{
+		$this->form_validation->set_rules('password', 'Password', 'min_length[6]|matches[password_conf]');
+		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'min_length[6]|matches[password]');
+
+		$id = $this->session->userdata('userid');
+		$user = $this->get_user($id);
+		$data['user'] = $user;
+				
+		if($this->form_validation->run() == FALSE)
+		{
+			$data['groups'] = $this->get_group();
+			$data['page_title'] = 'Change Password';
+			$this->ag_auth->view('editpass',$data);
+		}
+		else
+		{
+			$result = TRUE;
+			
+			$dataset['password'] = $this->ag_auth->salt(set_value('password'));
+
+			if( $result = $this->update_user($id,$dataset))
+			{
+				$this->oi->add_success('Your password is now updated');
+				redirect('admin/dashboard');
+				
+			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
+			else
+			{
+				$this->oi->add_error('Your password can not be changed.');
+				redirect('admin/dashboard');
+			}
+
+		} // if($this->form_validation->run() == FALSE)
+		
+	} // public function register()
+
+
 	private function check_email($email){
 		$em = $this->db->where('email',$email)->get($this->config->item('auth_user_table'));
 		if($em->num_rows() > 0){
@@ -75,7 +113,29 @@ class Admin extends Application
 			return false;
 		}
 	}
-	
+
+	private function get_user($id){
+		$result = $this->db->where('id', $id)->get($this->ag_auth->config['auth_user_table']);
+		if($result->num_rows() > 0){
+			return $result->row_array();
+		}else{
+			return false;
+		}
+	}	
+
+	private function get_group(){
+		$this->db->select('id,description');
+		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
+		foreach($result->result_array() as $row){
+			$res[$row['id']] = $row['description'];
+		}
+		return $res;
+	}	
+
+	private function update_user($id,$data){
+		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
+		return $result;
+	}	
 }
 
 /* End of file: dashboard.php */

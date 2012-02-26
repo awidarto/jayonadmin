@@ -52,7 +52,8 @@
 			<div id="identity" style="clear:both;display:block;height:35px;">
 				<div id="page_title" style="float:left;width:500px;"><h2 style="margin:0px;text-align:left;"><?php print (isset($data['page_title']))?$data['page_title']:'';?></h2></div>
 				<div id="user_info"  style="float:right;width:400px;padding:0px;">
-					You are currently login as <?php echo username();?><br /><?php echo anchor('logout', 'Logout'); ?>
+					You are currently login as <?php echo username();?><br />
+					<?php echo anchor('admin/admin/changepass', 'Change password'); ?>&nbsp;&nbsp;<?php echo anchor('logout', 'Logout'); ?>
 				</div>
 			</div>
 		<?php endif;?>
