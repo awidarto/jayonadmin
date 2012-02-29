@@ -41,6 +41,7 @@ Array
 
 		h2{
 			margin:0px;
+			padding-top:15px;
 		}
 
 		td{
@@ -92,14 +93,16 @@ Array
 			vertical-align:top;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
 			font-size: 11px;
+			text-align:right;
 		}
 
 		#jayon_logo img{
-			width:250px;
+			width:170px;
 		}
 
-		#order_detail{
+		#order_detail,#merchant_detail{
 			vertical-align:top;
+			padding-top:0px;
 		}
 
 		#merchant_detail td{
@@ -181,7 +184,7 @@ Array
 							<tr>
 								<td id="jayon_logo"><?php 
 										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
-										Alamat Jayon di Bintaro
+										<?php print get_option('jex_hq_address');?>
 								</td>
 								<td style="align:right"><?php print $qr;?></td>
 							</tr>
