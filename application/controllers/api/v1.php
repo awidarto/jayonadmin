@@ -174,7 +174,7 @@ class V1 extends Application
 					print $result;
 				}
 
-				send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
+				send_notification('New Delivery Order - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
 				
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
