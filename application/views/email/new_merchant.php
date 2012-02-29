@@ -1,10 +1,22 @@
-Thank you for your interest in having Jayon Express COD payment option on your online store.
+Subject: Merchant registration is successful. Welcome to Jayon Express!
 
-We have received your application and will be responding to it shortly.
+Hello {full_name},
 
-A copy of your application has also been forwarded automatically to the e-mail address that you provided. Please keep it as record.
+You are now registered as a merchant at Jayon Express. Please verify the details you submitted below.
 
-If you need immediate assistance please call: ______________
+Name: {full_name}
+E-mail address: {email}
+Password: {password}
+Company name: {company}
+Business address 1: {address1}
+Business address 2: {address2}
+Phone: {phone}
+Payment info: {payment}
+
+You may now use Jayon Express COD service on your online store.
+For instructions on how to implement Jayon Express COD payment system, you may refer to this page http://www.jayonexpress.com/merchant/instructions
+
+Kindly keep this e-mail for your record.
 
 Thank you,
-Jayon Express Team
+Jayon Express team

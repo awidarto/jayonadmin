@@ -1,16 +1,18 @@
-Dear <?php print $fullname?>,
-Thank you very much for using our COD courier service.
+Subject: Welcome to Jayon Express!
 
-As this is your first time using our service, we have register you as our new buyer member.
-Here are your credentials :
+Hello {full_name},
 
-Username : <?php print $username?>
-Password : <?php print $password?>
+You are now registered as a buyer and may choose Jayon Express cod payment option at participating online stores. 
+Please verify the details you submitted below.
 
-Please have a visit to our main site at http://www.jayonexpress.com.
+Name: <?php print $fullname?>
+E-mail address: <?php print $email?>
+Password: <?php print $password?>
 
-Thank You,
+If you are an online merchant and would like to have Jayon Express COD payment option on your online store, 
+kindly fill out the ‘merchant membership request form’ available at the top menu tab on your profile page.
 
-Best Regards
+Kindly keep this e-mail for your record.
 
-Jayon Express Admin
+Thank you,
+Jayon Express team
