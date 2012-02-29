@@ -1,6 +1,6 @@
 Subject: Welcome to Jayon Express!
 
-Hello {full_name},
+Hello <?php print $fullname?>,
 
 You are now registered as a buyer and may choose Jayon Express cod payment option at participating online stores. 
 Please verify the details you submitted below.

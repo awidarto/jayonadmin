@@ -92,6 +92,7 @@ class V1 extends Application
 				$order['phone'] = $in->phone;
 				$order['status'] = $in->status;
 
+
 				//file_put_contents('insert_data.json', json_encode($order));
 				
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
@@ -104,11 +105,28 @@ class V1 extends Application
 				$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
 				$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
 
+				$nedata['fullname'] = $in->buyer_name;
+				$nedata['merchant_trx_id'] = trim($transaction_id);
+				$nedata['delivery_id'] = $delivery_id;
+				$nedata['merchantname'] = $app->application_name;
+
+
 				//file_put_contents('delivery_id.json', $delivery_id);
 
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
 				//file_put_contents('update_result.json', $this->db->affected_rows());
+
+					$this->table->set_heading(
+						'No.',		 	 	
+						'Description',	 	 	 	 	 	 	 
+						'Quantity',		
+						'Total'			
+						); // Setting headings for the table
+
+					$d = 0;
+					$gt = 0;
+
 
 				if($in->trx_detail){
 					$seq = 0;
@@ -124,14 +142,39 @@ class V1 extends Application
 						$item['unit_discount'] = $it->unit_discount;
 
 						$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+
+						$this->table->add_row(
+							(int)$item['unit_sequence'] + 1,		 	 	
+							$item['unit_description'],	 	 	 	 	 	 	 
+							$item['unit_quantity'],		
+							$item['unit_total']			
+						);
+
+						$gt += $item['unit_total'];
+						$d += $item['unit_discount'];
+
 					}
+
+					$this->table->add_row(
+						'',		
+						'',		
+						'Total',		
+						$gt
+					);
+
+
+					$nedata['detail'] = $this->table;
 
 					$result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
 					print $result;
 				}else{
+					$nedata['detail'] = false;
+
 					$result = json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
 					print $result;
 				}
+
+				send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
 				
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
