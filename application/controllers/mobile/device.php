@@ -261,6 +261,7 @@ class Device extends Application
 
 		print json_encode(array('result'=>'ok'));
 	}
+	
 	public function ajaxdelivered()
 	{
 		$limit_count = $this->input->post('iDisplayLength');

@@ -328,7 +328,7 @@ class V1 extends Application
 
 			}else{
 				//full calendar time series for current month
-				print json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
+				$result = json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
 				print $result;
 			}
 		}
@@ -391,13 +391,16 @@ class V1 extends Application
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
-	public function syncdata($api_key = null){
+	public function syncdata($api_key = null,$indate = null){
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
 
 			if($dev = $this->get_dev_info($api_key)){
+
+				$indate = (is_null($indate))?date('Y-m-d',time()):$indate;
+
 				$orders = $this->db
 					->select('d.delivery_id as delivery_id,
 							d.assignment_date as as_date,
@@ -433,8 +436,7 @@ class V1 extends Application
 							d.revoke_ref as rev_ref')
 					->from($this->config->item('assigned_delivery_table').' as d')
 					->join('members as m','d.merchant_id=m.id','left')
-					->where('assignment_date',date('Y-m-d',time()))
-					//->where('assignment_date','2012-02-20')
+					->where('assignment_date',$indate)
 					->where('device_id',$dev->id)
 					->get();
 
