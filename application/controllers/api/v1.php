@@ -292,9 +292,8 @@ class V1 extends Application
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
-			file_put_contents('posted_status.txt', var_dump($_SERVER['HTTP_JSON']));
 
-			if(isset($_POST['loc'])){
+			if(isset($_POST['trx'])){
 				$in = json_decode($_POST['trx']);
 
 				if($dev = $this->get_dev_info($in->key)){
