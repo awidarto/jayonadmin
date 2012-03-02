@@ -56,6 +56,21 @@ class Prints extends Application
 				$gt
 			);
 
+			if($data['main_info']['cod_cost'] == 0){
+				$this->table->add_row(
+					'','',
+					'COD','Paid by Merchant'
+				);
+			}else{
+				$this->table->add_row(
+				'&nbsp',		
+				'&nbsp',		
+				'COD',		
+				$data['main_info']['currency'].' '.$data['main_info']['cod_cost']
+			);
+
+			}
+
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
 
