@@ -294,6 +294,9 @@ class V1 extends Application
 		}else{
 
 			if(isset($_POST['trx'])){
+
+				file_put_contents('posted_status.txt', $_POST['trx'] );
+
 				$in = json_decode($_POST['trx']);
 
 				if($dev = $this->get_dev_info($in->key)){
