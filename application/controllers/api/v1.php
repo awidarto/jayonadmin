@@ -318,7 +318,7 @@ class V1 extends Application
 						'latitude'=>$in->lat,
 						'longitude'=>$in->lon,
 						'status'=>$in->status,
-						'notes'=>$in->notes
+						'notes'=>$in->note
 					);
 
 					delivery_log($data);
