@@ -64,7 +64,7 @@ $autoload['libraries'] = array('ag_asset','table','breadcrumb','oi','gc_qrcode')
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('asset','date','jayon','string');
+$autoload['helper'] = array('asset','date','jayon','string','dompdf');
 
 
 /*

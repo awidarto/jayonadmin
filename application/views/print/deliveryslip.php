@@ -1,42 +1,15 @@
-<?php
-//print_r($main_info);
-/*
-Array
-(
-	[id] => 1
-	[ordertime] => 0000-00-00 00:00:00
-	[assigntime] => 2011-12-12 10:02:41
-	[deliverytime] => 0000-00-00 00:00:00
-	[assignment_date] => 2011-12-14
-	[delivery_id] => 00000017-10-122011-0000000001
-	[application_id] => 1
-	[application_key] => 23c33397a9b1ecb579c53fe200e26c12709ee379
-	[buyer_id] => 1
-	[merchant_id] => 17
-	[merchant_trans_id] => 123456789
-	[courier_id] => 0
-	[device_id] => 16
-	[shipping_address] => Kompleks DKI D3 Joglo
-	[phone] => 02112345678
-	[status] => assigned
-	[delivery_note] =>
-	[undersign] =>
-	[latitude] => 0.000000000000
-	[longitude] => 0.000000000000
-	[reschedule_ref] =>
-	[revoke_ref] =>
-)
-
-*/
-?>
+<html>
+<head>
+	<title>Delivery Slip</title>
 	<style>
 
 		#wrapper{
-			width:98%;
+			width:800px;
 			margin:5px;
 			display:block;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			font-size:14px;
+			text-align:left;
 		}
 
 		h2{
@@ -50,7 +23,7 @@ Array
 
 		.dataTable{
 			width:100%;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			margin-top:8px;
 
 		}
@@ -91,7 +64,7 @@ Array
 
 		#jayon_logo{
 			vertical-align:top;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			font-size: 11px;
 			text-align:right;
 		}
@@ -128,7 +101,7 @@ Array
 		}
 
 		table#main_table{
-			width:100%;
+			width:450px;
 		}
 
 		.row_label{
@@ -174,6 +147,8 @@ Array
 		}
 
 	</style>
+</head>
+<body>
 <div id="wrapper">
 	<table id="main_table">
 		<tbody>
@@ -294,4 +269,5 @@ Array
 		</tbody>
 	</table>
 </div>
-
+</body>
+</html>

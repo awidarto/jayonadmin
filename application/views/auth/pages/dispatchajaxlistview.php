@@ -199,6 +199,12 @@
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
 				}, 
+				"Download PDF": function(){
+					var print_id = $('#print_id').val();
+					var src = '<?php print base_url() ?>/admin/prints/deliveryslip/' + print_id + '/pdf';
+					window.location = src;
+					//alert(src);
+				},
 				Close: function() {
 					$( this ).dialog( "close" );
 				}

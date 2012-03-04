@@ -101,7 +101,9 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
 		
-		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by('buyerdeliverytime','desc')
+			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 
 		//print $this->db->last_query();
 
@@ -1379,6 +1381,7 @@ class Delivery extends Application
 			->group_end();
 
 		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1486,6 +1489,7 @@ class Delivery extends Application
 			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
 			->group_end();
 		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1592,6 +1596,7 @@ class Delivery extends Application
 			->group_end();
 
 		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1603,6 +1608,8 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
+			$proceed = '<span class="proceed_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1615,8 +1622,9 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$key['reschedule_ref'],
-				$key['revoke_ref']
+				$proceed.' '.$cancel
+				//$key['reschedule_ref'],
+				//$key['revoke_ref']
 			);
 		}
 
@@ -1646,8 +1654,9 @@ class Delivery extends Application
 			'Shipping Address',
 			'Phone',
 			'Status',
-			'Reschedule Ref',
-			'Revoke Ref'
+			'Action'
+			//'Reschedule Ref',
+			//'Revoke Ref'
 			); // Setting headings for the table
 
 		$this->table->set_footing(
@@ -1662,7 +1671,7 @@ class Delivery extends Application
 		$page['ajaxurl'] = 'admin/delivery/ajaxrescheduled';
 		$page['laststatus'] = $this->config->item('trans_status_rescheduled');
 		$page['page_title'] = 'Rescheduled Orders';
-		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+		$this->ag_auth->view('rescheduledajaxlistview',$page); // Load the view
 	}
 
 	/*rescheduled*/
@@ -1758,6 +1767,7 @@ class Delivery extends Application
 			->group_end();
 
 		$data =	$this->db->limit($limit_count, $limit_offset)
+			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		//print $this->db->last_query();
@@ -1912,6 +1922,7 @@ class Delivery extends Application
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
+			->order_by('timestamp','desc')
 			->get($this->config->item('delivery_log_table'));
 
 		//print $this->db->last_query();
