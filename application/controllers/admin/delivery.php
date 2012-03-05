@@ -204,6 +204,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'',
