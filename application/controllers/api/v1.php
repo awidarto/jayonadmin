@@ -109,6 +109,7 @@ class V1 extends Application
 				$nedata['merchant_trx_id'] = trim($transaction_id);
 				$nedata['delivery_id'] = $delivery_id;
 				$nedata['merchantname'] = $app->application_name;
+				$nedata['app'] = $app;
 
 
 				//file_put_contents('delivery_id.json', $delivery_id);
@@ -174,14 +175,18 @@ class V1 extends Application
 					print $result;
 				}
 
-				send_notification('New Delivery Order - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
+				if($app->notify_on_new_order == 1){
+					send_notification('New Delivery Order - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
+				}
 				
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
+					if($app->notify_on_new_member == 1){
+						send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+					}
 
-					send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
 				}
 
 			}

@@ -433,6 +433,11 @@ class Apps extends Application
 		$this->form_validation->set_rules('phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'trim|xss_clean');
 
+		$this->form_validation->set_rules('notify_on_new_buyer','Send notification on new member', 'trim|xss_clean');
+		$this->form_validation->set_rules('notify_on_new_order','Send notification on new order', 'trim|xss_clean');
+		$this->form_validation->set_rules('notify_on_reschedule,','Send notification on rescheduled order', 'trim|xss_clean');
+		$this->form_validation->set_rules('notify_on_revoked','Send notification on revoked order', 'trim|xss_clean');
+		$this->form_validation->set_rules('notify_on_noshow','Send notification on no show', 'trim|xss_clean');
 
 
 		if($this->form_validation->run() == FALSE)
@@ -470,6 +475,12 @@ class Apps extends Application
 			$dataset['zip'] = set_value('zip');
 			$dataset['phone'] = set_value('phone');
 			$dataset['mobile'] = set_value('mobile');
+
+			$dataset['notify_on_new_buyer'] = set_value('notify_on_new_buyer');
+			$dataset['notify_on_new_order'] = set_value('notify_on_new_order');
+			$dataset['notify_on_reschedule'] = set_value('notify_on_reschedule');
+			$dataset['notify_on_revoked'] = set_value('notify_on_revoked');
+			$dataset['notify_on_noshow'] = set_value('notify_on_noshow');
 
 			if($this->db->where('id',$id)->update($this->config->item('applications_table'),$dataset) === TRUE)
 			{
