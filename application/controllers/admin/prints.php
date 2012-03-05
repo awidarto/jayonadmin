@@ -50,8 +50,8 @@ class Prints extends Application
 			}
 
 			$this->table->add_row(
-				'&nbsp',		
-				'&nbsp',		
+				'&nbsp;',		
+				'&nbsp;',		
 				'Total',		
 				$gt
 			);
@@ -63,8 +63,8 @@ class Prints extends Application
 				);
 			}else{
 				$this->table->add_row(
-				'&nbsp',		
-				'&nbsp',		
+				'&nbsp;',		
+				'&nbsp;',		
 				'COD',		
 				$data['main_info']['currency'].' '.$data['main_info']['cod_cost']
 			);
@@ -91,7 +91,7 @@ class Prints extends Application
 			if($pdf){
 				$html = $this->load->view('print/deliveryslip',$data,true);
 				//print $html; // Load the view
-				pdf_create($html, $delivery_id.'.pdf', true); 
+				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
 			}else{
 				$this->load->view('print/deliveryslip',$data); // Load the view
 			}

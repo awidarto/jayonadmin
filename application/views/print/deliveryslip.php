@@ -3,8 +3,12 @@
 	<title>Delivery Slip</title>
 	<style>
 
+		html{margin:0px;}
+
+		body{margin:5px;}
+
 		#wrapper{
-			width:800px;
+			width:850px;
 			margin:5px;
 			display:block;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
@@ -66,7 +70,7 @@
 			vertical-align:top;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			font-size: 11px;
-			text-align:right;
+			text-align:left;
 		}
 
 		#jayon_logo img{
@@ -76,10 +80,7 @@
 		#order_detail,#merchant_detail{
 			vertical-align:top;
 			padding-top:0px;
-		}
-
-		#merchant_detail td{
-			width:400px;
+			
 		}
 
 		#order_detail h2{
@@ -89,11 +90,6 @@
 		#merchant_detail{
 			margin:0px;
 			padding:8px;
-			width:450px;
-		}
-
-		#mainInfo, #orderInfo{
-			width:100%;
 		}
 
 		#mainInfo tr>td:first-child, #orderInfo tr>td:first-child{
@@ -101,7 +97,9 @@
 		}
 
 		table#main_table{
-			width:450px;
+			width:850px;
+			padding:0px;
+			margin:0px;
 		}
 
 		.row_label{
@@ -109,13 +107,15 @@
 		}
 
 		table#signBox{
-			font-size: 13px;
+			font-size: 12px;
 			margin-top:15px;
+			width:840px;
 		}
 
 		#signBox th{
-			width:150px;
+			width:100px;
 			vertical-align:top;
+			border-top: thin solid #eee;
 			border-bottom: thin solid #eee;
 			border-right:thin solid #eee;
 			margin:2px;
@@ -129,12 +129,6 @@
 
 		tr#sign_name td:first-child{
 			border-left: thin solid #eee;
-		}
-
-		#signBox th{
-			border-top: thin solid #eee;
-			border-bottom: thin solid #eee;
-			border-right:thin solid #eee;
 		}
 
 		#signBox th:first-child{
@@ -153,7 +147,7 @@
 	<table id="main_table">
 		<tbody>
 			<tr>
-				<td  id="merchant_detail">
+				<td id="merchant_detail">
 					<table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
 						<tbody>
 							<tr>
