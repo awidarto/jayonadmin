@@ -16,7 +16,25 @@ class Prints extends Application
 	
 		public function deliveryslip($delivery_id,$pdf = false)
 		{
-			$main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+			$main = $this->db
+					->select('*,b.fullname as buyer,
+						m.merchantname as merchant,
+						a.street as m_street,
+						a.contact_person as m_pic,
+						a.district as m_district,
+						a.city as m_city,
+						a.province as m_province,
+						a.country as m_country,
+						a.zip as m_zip,
+						a.phone as m_phone,
+						a.mobile as m_mobile,
+						a.application_name as app_name')
+					->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
+					->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
+					->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left')
+					->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+
+					//print $this->db->last_query();
 
 			$data['main_info'] = $main->row_array();
 
@@ -28,7 +46,7 @@ class Prints extends Application
 				'No.',		 	 	
 				'Description',	 	 	 	 	 	 	 
 				'Quantity',		
-				'Total'			
+				'Total ('.$data['main_info']['currency'].')'		
 				); // Setting headings for the table
 
 			$d = 0;
@@ -41,7 +59,7 @@ class Prints extends Application
 					(int)$key['unit_sequence'] + 1,		 	 	
 					$key['unit_description'],	 	 	 	 	 	 	 
 					$key['unit_quantity'],		
-					$key['unit_total']			
+					number_format($key['unit_total'],2,',','.')			
 				);
 
 				$gt += $key['unit_total'];
@@ -53,7 +71,7 @@ class Prints extends Application
 				'&nbsp;',		
 				'&nbsp;',		
 				'Total',		
-				$gt
+				number_format($gt,2,',','.')
 			);
 
 			if($data['main_info']['cod_cost'] == 0){
@@ -66,7 +84,7 @@ class Prints extends Application
 				'&nbsp;',		
 				'&nbsp;',		
 				'COD',		
-				$data['main_info']['currency'].' '.$data['main_info']['cod_cost']
+				number_format($data['main_info']['cod_cost'],2,',','.')
 			);
 
 			}
@@ -87,6 +105,8 @@ class Prints extends Application
             $this->gc_qrcode->clear();
 
 			$data['page_title'] = 'Delivery Orders';
+
+			//print_r($data['main_info']);
 
 			if($pdf){
 				$html = $this->load->view('print/deliveryslip',$data,true);

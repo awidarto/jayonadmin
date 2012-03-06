@@ -5,14 +5,16 @@
 
 		html{margin:0px;}
 
-		body{margin:5px;}
+		body{margin:5px;
+			font-size: 12px;
+		}
 
 		#wrapper{
 			width:850px;
 			margin:5px;
 			display:block;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
-			font-size:14px;
+			font-size:13px;
 			text-align:left;
 		}
 
@@ -40,11 +42,11 @@
 		.dataTable th{
 			text-align:left;
 			padding-right:15px;
-			font-size:13px;
+			font-size:12px;
 			font-weight: bold;
 			border-top:thin solid #eee;
 			border-bottom:thin solid #eee;
-			border-left:thin solid #eee;
+			/*border-left:thin solid #eee;*/
 		}
 
 		.dataTable tr>th{
@@ -54,16 +56,17 @@
 
 		.dataTable tr>th:last-child{
 			width:100px;
-			border-right:thin solid #eee;
+			/*border-right:thin solid #eee;*/
 		}
 
 		.dataTable td{
-			border-left:thin solid #eee;
+			/*border-left:thin solid #eee;*/
 			border-bottom:thin solid #eee;
 		}
 
 		.dataTable td:last-child{
-			border-right:thin solid #eee;
+			/*border-right:thin solid #eee;*/
+			text-align:right;
 		}
 
 		#jayon_logo{
@@ -117,27 +120,31 @@
 			vertical-align:top;
 			border-top: thin solid #eee;
 			border-bottom: thin solid #eee;
-			border-right:thin solid #eee;
+			/*border-right:thin solid #eee;*/
 			margin:2px;
 		}
 
 		#sign_name td{
 			border-top: thin solid #eee;
 			border-bottom: thin solid #eee;
-			border-right:thin solid #eee;
+			/*border-right:thin solid #eee;*/
 		}
 
 		tr#sign_name td:first-child{
-			border-left: thin solid #eee;
+			/*border-left: thin solid #eee;*/
 		}
 
 		#signBox th:first-child{
-			border-left: thin solid #eee;
+			/*border-left: thin solid #eee;*/
 		}
 
 		#mainInfo tr td:last-child, #orderInfo tr td:last-child{
 			border-bottom: thin solid #eee;
-			border-left:thin solid #eee;
+			/*border-left:thin solid #eee;*/
+		}
+
+		#mainInfo td{
+			vertical-align:top;
 		}
 
 	</style>
@@ -161,6 +168,54 @@
 					</table>
 					<table border="0" cellpadding="4" cellspacing="0" id="mainInfo">
 						<tbody>
+
+							<tr>
+								<td colspan="2"><strong>Merchant Info</strong></td>
+							</tr>
+
+							<tr>
+								<td>Online Store:</td>
+								<td><?php print $main_info['merchant'];?></td>
+							</tr>
+							<tr>
+								<td>Transaction ID:</td>
+								<td><?php print $main_info['merchant_trans_id'];?></td>
+							</tr>
+<?php 
+/*
+    [mc_email] => ganti@bajuresmi.net.com.id
+    [mc_street] => 2345678
+    [mc_district] => Kebayoran
+    [mc_city] => Jakarta Selatan
+    [mc_province] => DKI
+    [mc_country] => Indonesia
+    [mc_zip] => 1234578
+    [mc_phone] => 08765432
+    [mc_mobile] => 2345678
+    [contact_person]
+*/
+
+$merchant_info = ($main_info['m_pic']=='')?'':$main_info['contact_person'].'<br />';
+$merchant_info .= $main_info['m_street'].'<br />'.
+    $main_info['m_district'].'<br />'.
+    $main_info['m_city'].','.
+    $main_info['m_zip'].'<br />'.
+    //$main_info['mc_province'].'<br />'.
+    $main_info['m_country'].'<br />'.
+    'Phone : '.$main_info['m_phone'];
+
+
+?>							
+							<tr>
+								<td>Store Detail:</td>
+								<td><?php print $merchant_info;?></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td id="order_detail"><h2>DELIVERY NOTE</h2><br />
+					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
+						<tbody>
 							<tr>
 								<td colspan="2"><strong>Delivery Info</strong></td>
 							</tr>
@@ -176,30 +231,6 @@
 								<td>Delivery Slot:</td>
 								<td><?php print $main_info['assignment_timeslot'];?></td>
 							</tr>
-
-							<tr>
-								<td colspan="2"><strong>Merchant Info</strong></td>
-							</tr>
-
-							<tr>
-								<td>Online Store:</td>
-								<td><?php print $main_info['merchant_id'];?></td>
-							</tr>
-							<tr>
-								<td>Transaction ID:</td>
-								<td><?php print $main_info['merchant_trans_id'];?></td>
-							</tr>
-							<tr>
-								<td>Store Detail:</td>
-								<td>&nbsp;</td>
-							</tr>
-
-						</tbody>
-					</table>
-				</td>
-				<td id="order_detail"><h2>DELIVERY NOTE</h2><br />
-					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
-						<tbody>
 
 							<tr>
 								<td colspan="2"><strong>Order Detail</strong></td>
