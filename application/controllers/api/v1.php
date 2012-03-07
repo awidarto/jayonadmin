@@ -99,11 +99,11 @@ class V1 extends Application
 				$sequence = $this->db->insert_id();
 
 				//file_put_contents('in_result.json', $inres);
+				//$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
+				//$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
+				//$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
 
-
-				$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
-				$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-				$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+				$delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
 				$nedata['fullname'] = $in->buyer_name;
 				$nedata['merchant_trx_id'] = trim($transaction_id);

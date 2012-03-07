@@ -1,5 +1,14 @@
 <?php
 
+function get_delivery_id($sequence,$merchant_id){
+	$CI =& get_instance();
+	$year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
+	$merchant_id = str_pad($merchant_id, $CI->config->item('merchant_id_pad'), '0', STR_PAD_LEFT);
+	$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
+	return $delivery_id;
+}
+
 function get_yearly_sequence()
 {
 	$CI =& get_instance();

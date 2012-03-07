@@ -1,5 +1,7 @@
 <script>
 	var asInitVals = new Array();
+	var dateBlock = <?php print getdateblock();?>;
+	var rescheduled_id = 0;
 
 	$(document).ready(function() {
 
@@ -76,7 +78,79 @@
 					alert(delivery_id + " not archived");
 				}
 		   	}
+
+			if ($(e.target).is('.reschedule_link')) {
+				var delivery_id = e.target.id;
+				rescheduled_id = delivery_id;
+				var current_date = $('#cd_'+rescheduled_id).val();
+
+				var assigns = '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+ rescheduled_id + '</strong><br />'+ current_date +'</li>';
+				$('#rescheduled_trans_list').html(assigns);
+				$('#reschedule_dialog').dialog('open');
+		   	}
+
 		});
+
+		$('#rescheduled_deliverytime').datetimepicker({
+			numberOfMonths: 2,
+			showButtonPanel: true,
+			dateFormat:'yy-mm-dd',
+			timeFormat: 'hh:mm:ss',
+			onSelect:function(dateText, inst){
+				
+				//console.log(dateBlock);
+				if(dateBlock[dateText] == 'weekend'){
+					alert('no delivery on weekend');
+				}else if(dateBlock[dateText] == 'full'){
+					alert('time slot is full');
+				}else{
+					$('#rescheduled_deliverytime').val(dateText);
+				}
+			},
+			beforeShowDay:getBlocking
+		});
+
+		function getBlocking(d){
+			/*
+				$.datepicker.formatDate('yy-mm-dd', d);
+			*/
+			var curr_date = d.getDate();
+			var curr_month = d.getMonth() + 1; //months are zero based
+			var curr_year = d.getFullYear();
+		
+			curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+			curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+			var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+			var select = 1;
+			var css = 'open';
+			var popup = 'working day';
+			
+			//console.log(indate);
+			console.log(window.dateBlock);
+			if(window.dateBlock[indate] == 'weekend'){
+				select = 0;
+				css = 'weekend';
+				popup = 'weekend';
+			}else if(window.dateBlock[indate] == 'holiday'){
+				select = 0;
+				css = 'weekend';
+				popup = 'holiday';
+			}else if(window.dateBlock[indate] == 'blocked'){
+				select = 0;
+				css = 'blocked';
+				popup = 'zero time slot';
+			}else if(window.dateBlock[indate] == 'full'){
+				select = 0;
+				css = 'blocked';
+				popup = 'zero time slot';
+			}else{
+				select = 1;
+				css = '';
+				popup = 'working day';
+			}
+			return [select,css,popup];
+		}
 
 		$('#doArchive').click(function(){
 			var assigns = '';
@@ -129,6 +203,42 @@
 				$('#archive_list').html('');
 			}
 		});
+
+		$('#reschedule_dialog').dialog({
+			autoOpen: false,
+			height: 450,
+			width: 650,
+			modal: true,
+			buttons: {
+				"Reschedule Delivery Orders": function() {
+					$.post('<?php print site_url('admin/delivery/ajaxfullreschedule');?>',
+						{'delivery_id':rescheduled_id,
+							'buyerdeliverytime':$('#rescheduled_deliverytime').val(),
+							req_by : $('#rs_req_by').val(),
+							req_name : $('#rs_req_name').val(),
+							req_note : $('#rs_req_note').val(),
+							recipient_name : $('#rs_rec_name').val(),	 	 	 	 	 	 	 
+							shipping_address : $('#rs_ship_addr').val(),
+							shipping_zip : $('#rs_ship_zip').val()
+						},
+						function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							$('#reschedule_dialog').dialog( "close" );
+							alert('Order rescheduled as new delivery order, you may check the Incoming Orders.');
+						}
+					},'json');
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//allFields.val( "" ).removeClass( "ui-state-error" );
+				$('#cancel_list').html('');
+			}
+		});
 	});
 </script>
 <?php if(isset($add_button)):?>
@@ -152,3 +262,40 @@
 		</tr>
 	</table>
 </div>
+
+<div id="reschedule_dialog" title="Reschedule Order">
+	<table style="width:100%;border:0;margin:0;">
+		<tr>
+			<td style="width:250px;vertical-align:top">
+				Delivery Orders :
+			</td>
+			<td>
+				Administrative Info :
+			</td>
+		</tr>
+		<tr>
+			<td style="overflow:auto;width:250px;vertical-align:top">
+				<ul id="rescheduled_trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+				Reschedule Delivery Date to :<br />
+				<input id="rescheduled_deliverytime" type="text" value=""><br />
+				<div id="date_time_display"></div>
+				Change Recipient Name to* :<br />
+				<?php print form_input('rec_name','','id="rs_rec_name"');?><br />
+				Change Shipping Address to* :<br />
+				<?php print form_textarea('ship_addr','','id="rs_ship_addr"');?><br />
+				Change ZIP to* :<br />
+				<?php print form_input('ship_zip','','id="rs_ship_zip"');?><br />
+				* Please leave blank for no changes.
+			</td>
+			<td style="border:0;margin:0;vertical-align:top;padding:2px;">
+				Requested by :<br />
+				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="rs_req_by"');?><br />
+				Requester name :<br />
+				<?php print form_input('req_name','','id="rs_req_name"');?><br />
+				Request Note :<br />
+				<?php print form_textarea('req_note','','id="rs_req_note"');?><br />
+			</td>
+		</tr>
+	</table>
+</div>
+

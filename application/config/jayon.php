@@ -134,5 +134,8 @@ $config['admin_password'] = 'JayonAdmin234';
 
 $config['api_url'] = 'http://localhost/jayonadmin/api/v1/';
 
+$config['year_sequence_pad'] = 8;
+$config['merchant_id_pad'] = 6;
+
 
 ?>

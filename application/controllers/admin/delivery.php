@@ -160,7 +160,7 @@ class Delivery extends Application
 				$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
-				($key['status'] == 'canceled')?$purge:$reschedule
+				($key['status'] == 'canceled')?$purge:$reschedule,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -533,6 +533,100 @@ class Delivery extends Application
 		//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order_buyer',null,null);
 		//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order',$edata,null);
 
+	}
+
+	public function ajaxfullreschedule(){
+
+		$delivery_id = $this->input->post('delivery_id');
+		$buyerdeliverytime = $this->input->post('buyerdeliverytime');
+		$shipping_address = $this->input->post('shipping_address');
+		$shipping_zip = $this->input->post('shipping_zip');
+		$recipient_name = $this->input->post('recipient_name');
+		$req_by = $this->input->post('req_by');
+		$req_name = $this->input->post('req_name');
+		$req_note = $this->input->post('req_note');
+
+		//get order
+
+		$ord = $this->db
+			->where('delivery_id',$delivery_id)
+			->get($this->config->item('assigned_delivery_table'));
+
+		$old = $ord->row_array();
+
+	    unset($old['id']);
+        unset($old['created']);
+        unset($old['assigntime']);
+        unset($old['deliverytime']);
+        unset($old['assignment_date']);
+        unset($old['assignment_timeslot']);
+        unset($old['assignment_zone']);
+        unset($old['assignment_city']);
+        unset($old['laststatus']); 
+        unset($old['change_actor']);
+        unset($old['actor_history']); 
+        unset($old['delivery_note']); 
+        unset($old['undersign']);
+        unset($old['latitude']);
+        unset($old['longitude']);
+        $old['ordertime'] = date('Y-m-d h:i:s',time());
+        $old['buyerdeliverytime'] = ($buyerdeliverytime == '')?$old['buyerdeliverytime']:$buyerdeliverytime;
+        $old['recipient_name'] = ($recipient_name == '')?$old['recipient_name']:$recipient_name;
+        $old['shipping_address'] =($shipping_address == '')?$old['shipping_address']:$shipping_address;
+        $old['shipping_zip'] = ($shipping_zip == '')?$old['shipping_zip']:$shipping_zip;
+        $old['status'] = $this->config->item('trans_status_new');
+        $old['reschedule_ref'] = $old['delivery_id'];
+
+		$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$old);
+		$sequence = $this->db->insert_id();
+
+		$new_delivery_id = get_delivery_id($sequence,$old['merchant_id']);
+
+		$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$new_delivery_id));
+
+		//get details and reinsert with the new delivery id
+
+		$dets = $this->db
+			->where('delivery_id',$delivery_id)
+			->get($this->config->item('delivery_details_table'));
+
+		if($dets->num_rows() > 0){
+			$seq = 0;
+			foreach($dets->result() as $it){
+				$item['ordertime'] = $old['ordertime'];
+				$item['delivery_id'] = $new_delivery_id;
+				$item['unit_sequence'] = $seq++;
+				$item['unit_description'] = $it->unit_description;
+				$item['unit_price'] = $it->unit_price;
+				$item['unit_quantity'] = $it->unit_quantity;
+				$item['unit_total']	= $it->unit_total;
+				$item['unit_discount'] = $it->unit_discount;
+
+				$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+			}			
+		}
+
+		//do log
+
+		$data = array(
+			'timestamp'=>date('Y-m-d h:i:s',time()),
+			'report_timestamp'=>date('Y-m-d h:i:s',time()),
+			'delivery_id'=>$delivery_id,
+			'device_id'=>'',
+			'courier_id'=>'',
+			'actor_type'=>'AD',
+			'actor_id'=>$this->session->userdata('userid'),
+			'latitude'=>'',
+			'longitude'=>'',
+			'status'=>$this->config->item('trans_status_rescheduled'),
+			'req_by' => $req_by,
+			'req_name' => $req_name,
+			'req_note' => $req_note,
+			'notes'=>''
+		);
+
+		delivery_log($data);
+		print json_encode(array('result'=>'ok'));
 	}
 
 	public function ajaxrevoke(){
@@ -1294,7 +1388,7 @@ class Delivery extends Application
 				$zonefield,
 				$key['merchant'],
 				$key['merchant_trans_id'],
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyer'],
 				$key['shipping_address'],
 				$key['phone'],
@@ -1613,10 +1707,11 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
-			$proceed = '<span class="proceed_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
+			$proceed = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
+				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$key['buyerdeliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
@@ -1649,6 +1744,7 @@ class Delivery extends Application
 
 		$this->table->set_heading(
 			'Delivery Time',
+			'Requested Time',
 			'Delivery ID',
 			//'Application ID',
 			'Buyer',
@@ -2017,6 +2113,22 @@ class Delivery extends Application
 		$page['ajaxurl'] = 'admin/delivery/ajaxlog';
 		$page['page_title'] = 'Delivery Log';
 		$this->ag_auth->view('archivedajaxlistview',$page); // Load the view
+	}
+
+
+	public function view($delivery_id){
+		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+		$res = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+		$result = $res->row_array();
+
+		$data['order_details'] = $result;
+		$this->load->view('auth/pages/viewdetails',$data);
 	}
 
 	public function deleteassigned($id)
