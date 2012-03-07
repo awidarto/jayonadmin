@@ -206,7 +206,7 @@
 
 		$('#reschedule_dialog').dialog({
 			autoOpen: false,
-			height: 450,
+			height: 480,
 			width: 650,
 			modal: true,
 			buttons: {
