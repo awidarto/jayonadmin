@@ -276,7 +276,7 @@ class V1 extends Application
 
 			if(isset($_POST['trx'])){
 
-				file_put_contents('posted_status.txt', $_POST['trx'] );
+				//file_put_contents('posted_status.txt', $_POST['trx'] );
 
 				$in = json_decode($_POST['trx']);
 
