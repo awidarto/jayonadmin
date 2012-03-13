@@ -102,7 +102,8 @@ class Delivery extends Application
 			->group_end();
 		
 		$data = $this->db->limit($limit_count, $limit_offset)
-			->order_by($this->config->item('incoming_delivery_table').'.created','desc')
+			->order_by($this->config->item('incoming_delivery_table').'.id','desc')
+			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
 			->order_by('buyerdeliverytime','desc')
 			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 
@@ -145,7 +146,7 @@ class Delivery extends Application
 			}
 
 			$aadata[] = array(
-				date('Y-m-d h:i:s',$key['created']),				
+				$key['ordertime'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
@@ -184,7 +185,7 @@ class Delivery extends Application
 
 		$this->table->set_heading(
 			'Timestamp',
-			'Requested Date',
+			'Requested Delivery Date',
 			'Zone',
 			'City',
 			'ZIP',

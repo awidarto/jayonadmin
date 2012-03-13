@@ -28,27 +28,15 @@ class V1 extends Application
 		}else{
 			$app = $this->get_key_info(trim($api_key));
 
-			//file_put_contents('how_was_it', json_encode($app));
-
 			if($app == false){
 				$result = json_encode(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()));
 				print $result;
 			}else{
-				//print_r($app);
 				$in = $this->input->post('transaction_detail');
-				//$in = $_POST['transaction_detail'];
-				//file_put_contents('posted_json.json', $in);
-				//file_put_contents('app_info.json', json_encode($app));
 
 				$args = 'p='.$in;
-				//print $in;
+
 				$in = json_decode($in);
-
-				//file_put_contents('input_data.json', json_encode($in));
-
-				//print_r($in);
-
-				//check if email already registered
 
 				$buyer_id = 1;
 
@@ -67,11 +55,11 @@ class V1 extends Application
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}
-
+				$order['created'] = date('Y-m-d h:i:s',time());
 				$order['ordertime'] = date('Y-m-d h:i:s',time());
 				$order['application_id'] = $app->id;
 				$order['application_key'] = $app->key;
-				$order['buyer_id'] = $buyer_id; // change this to current buyer after login
+				$order['buyer_id'] = $buyer_id;
 				$order['merchant_id'] = $app->merchant_id;
 				$order['merchant_trans_id'] = trim($transaction_id);
 
@@ -91,17 +79,9 @@ class V1 extends Application
 				$order['shipping_zip'] = $in->zip;
 				$order['phone'] = $in->phone;
 				$order['status'] = $in->status;
-
-
-				//file_put_contents('insert_data.json', json_encode($order));
 				
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();
-
-				//file_put_contents('in_result.json', $inres);
-				//$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
-				//$merchant_id = str_pad($app->merchant_id, 8, '0', STR_PAD_LEFT);
-				//$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
 
 				$delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
@@ -111,12 +91,7 @@ class V1 extends Application
 				$nedata['merchantname'] = $app->application_name;
 				$nedata['app'] = $app;
 
-
-				//file_put_contents('delivery_id.json', $delivery_id);
-
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
-
-				//file_put_contents('update_result.json', $this->db->affected_rows());
 
 					$this->table->set_heading(
 						'No.',		 	 	
@@ -163,15 +138,16 @@ class V1 extends Application
 						$gt
 					);
 
-
 					$nedata['detail'] = $this->table;
 
 					$result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+
 					print $result;
 				}else{
 					$nedata['detail'] = false;
 
 					$result = json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+
 					print $result;
 				}
 
