@@ -68,9 +68,9 @@ class Prints extends Application
 			}
 
 			$gt = ($data['main_info']['total_price'] < $gt)?$gt:$data['main_info']['total_price'];
-			$dsc = $data['main_info']['total_discount'];
-			$tax = $data['main_info']['total_tax'];
-			$cod = $data['main_info']['cod_cost'];
+			$dsc = (int)$data['main_info']['total_discount'];
+			$tax = (int)$data['main_info']['total_tax'];
+			$cod = (int)$data['main_info']['cod_cost'];
 			$chg = ($gt - $dsc) + $tax + $cod;
 
 			$this->table->add_row(
@@ -91,7 +91,7 @@ class Prints extends Application
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Tax',		
-					number_format($data['main_info']['total_tax'],2,',','.')
+					number_format($tax,2,',','.')
 				);
 
 
@@ -113,7 +113,7 @@ class Prints extends Application
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Charges',		
-					number_format($data['main_info']['chargeable_amount'],2,',','.')
+					number_format($chg,2,',','.')
 				);
 
 			$data['grand_total'] = $gt;
