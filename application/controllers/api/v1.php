@@ -135,12 +135,47 @@ class V1 extends Application
 						$d += $item['unit_discount'];
 
 					}
+					
+					$gt = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:$gt;
 
 					$this->table->add_row(
 						'',		
 						'',		
-						'Total',		
+						'Total Price',		
 						$gt
+					);
+
+					$disc = (isset($in->total_discount))?$in->total_discount:0;
+					$tax = (isset($in->total_tax))?$in->total_tax:0;
+					$cod = (isset($in->cod_cost))?$in->cod_cost:'Paid by merchant';
+					$chg = ($gt - $disc) + $tax + $cod;
+
+					$this->table->add_row(
+						'',		
+						'',		
+						'Total Discount',		
+						$disc
+					);
+
+					$this->table->add_row(
+						'',		
+						'',		
+						'Total Tax',		
+						$tax
+					);
+
+					$this->table->add_row(
+						'',		
+						'',		
+						'COD Charges',		
+						$cod
+					);
+
+					$this->table->add_row(
+						'',		
+						'',		
+						'Total Charges',		
+						$chg
 					);
 
 					$nedata['detail'] = $this->table;

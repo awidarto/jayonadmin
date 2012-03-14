@@ -14,8 +14,8 @@ class Prints extends Application
 	    
 	}
 	
-		public function deliveryslip($delivery_id,$pdf = false)
-		{
+	public function deliveryslip($delivery_id,$pdf = false)
+	{
 			$main = $this->db
 					->select('*,b.fullname as buyer,
 						m.merchantname as merchant,
@@ -67,27 +67,54 @@ class Prints extends Application
 
 			}
 
+			$gt = ($data['main_info']['total_price'] < $gt)?$gt:$data['main_info']['total_price'];
+			$dsc = $data['main_info']['total_discount'];
+			$tax = $data['main_info']['total_tax'];
+			$cod = $data['main_info']['cod_cost'];
+			$chg = ($gt - $dsc) + $tax + $cod;
+
 			$this->table->add_row(
 				'&nbsp;',		
 				'&nbsp;',		
-				'Total',		
+				'Total Price',		
 				number_format($gt,2,',','.')
 			);
 
-			if($data['main_info']['cod_cost'] == 0){
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'Total Discount',		
+					number_format($dsc,2,',','.')
+				);
+
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'Total Tax',		
+					number_format($data['main_info']['total_tax'],2,',','.')
+				);
+
+
+			if($cod == 0){
 				$this->table->add_row(
 					'','',
-					'COD','Paid by Merchant'
+					'COD Charges','Paid by Merchant'
 				);
 			}else{
 				$this->table->add_row(
-				'&nbsp;',		
-				'&nbsp;',		
-				'COD',		
-				number_format($data['main_info']['cod_cost'],2,',','.')
-			);
-
+					'&nbsp;',		
+					'&nbsp;',		
+					'COD Charges',		
+					number_format($cod,2,',','.')
+				);
 			}
+
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'Total Charges',		
+					number_format($data['main_info']['chargeable_amount'],2,',','.')
+				);
 
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
