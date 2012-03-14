@@ -72,8 +72,13 @@ class V1 extends Application
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 				$order['buyerdeliverycity'] = $in->buyerdeliverycity;
+
 				$order['currency'] = $in->currency;
+				$order['total_price'] = (isset($in->total_price))?$in->total_price:0;
+				$order['total_discount'] = (isset($in->total_discount))?$in->total_discount:0;
+				$order['total_tax'] = (isset($in->total_tax))?$in->total_tax:0;
 				$order['cod_cost'] = $in->cod_cost;
+				$order['chargeable_amount'] = (isset($in->chargeable_amount))?$in->chargeable_amount:0;
 
 				$order['shipping_address'] = $in->shipping_address;
 				$order['shipping_zip'] = $in->zip;
@@ -241,7 +246,7 @@ class V1 extends Application
 					$dataset['latitude'] = $in->lat;
 					$dataset['longitude'] = $in->lon;
 					$dataset['status'] = $this->config->item('trans_status_mobile_location');
-					$dataset['notes'] = '';
+					$dataset['notes'] = $in->note;
 
 
 					$this->db->insert($this->config->item('location_log_table'),$dataset);
