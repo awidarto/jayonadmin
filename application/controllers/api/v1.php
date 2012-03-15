@@ -281,7 +281,7 @@ class V1 extends Application
 					$dataset['latitude'] = $in->lat;
 					$dataset['longitude'] = $in->lon;
 					$dataset['status'] = $this->config->item('trans_status_mobile_location');
-					$dataset['notes'] = $in->note;
+					//$dataset['notes'] = $in->notes;
 
 
 					$this->db->insert($this->config->item('location_log_table'),$dataset);
@@ -339,7 +339,7 @@ class V1 extends Application
 						'latitude'=>$in->lat,
 						'longitude'=>$in->lon,
 						'status'=>$in->status,
-						'notes'=>$in->note
+						'notes'=>$in->notes
 					);
 
 					delivery_log($data);
