@@ -80,7 +80,7 @@ class Log extends Application
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
-			->order_by('id','desc');
+			->order_by('id','desc')
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('access_log_table'));
 
@@ -228,7 +228,7 @@ class Log extends Application
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
-			->order_by('id','desc');
+			->order_by('timestamp','desc')
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('jayon_email_outbox_table'));
 

@@ -2040,7 +2040,7 @@ class Delivery extends Application
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
-			->order_by('id','desc')
+			->order_by($this->config->item('delivery_log_table').'.id','desc')
 			->order_by('timestamp','desc')
 			->get($this->config->item('delivery_log_table'));
 
