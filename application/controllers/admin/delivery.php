@@ -2268,7 +2268,7 @@ class Delivery extends Application
 		$assignment_zone = $this->input->post('assignment_zone');
 		$assignment_city = $this->input->post('assignment_city');
 
-		$dev = $this->db->select('id,identifier,descriptor,devname')->where('city',$assignment_city)->get($this->config->item('jayon_devices_table'));
+		$dev = $this->db->select('id,identifier,descriptor,devname')->like('city',$assignment_city)->get($this->config->item('jayon_devices_table'));
 		$result = array();
 
 		$slots = get_option('daily_shifts');
