@@ -40,7 +40,7 @@ class V1 extends Application
 
 				$buyer_id = 1;
 
-				if($in->transaction_id != ""){
+				if(isset($in->transaction_id) && $in->transaction_id != ""){
 					$transaction_id = $in->transaction_id;
 				}
 
