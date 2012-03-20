@@ -195,6 +195,8 @@
     [contact_person]
 */
 
+    //print_r($main_info);
+
 $merchant_info = ($main_info['m_pic']=='')?'':$main_info['contact_person'].'<br />';
 $merchant_info .= $main_info['m_street'].'<br />'.
     $main_info['m_district'].'<br />'.
@@ -238,7 +240,7 @@ $merchant_info .= $main_info['m_street'].'<br />'.
 
 							<tr>
 								<td class="row_label">Delivered To:</td>
-								<td><?php print $main_info['recipient_name'];?></td>
+								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
 								<td>Shipping Address:</td>

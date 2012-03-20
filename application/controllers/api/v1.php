@@ -363,55 +363,63 @@ class V1 extends Application
 
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
-/*
-	public function mkey($api_key = null){
+
+	public function mobkey($api_key = null){
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
 			if($api_key == $this->config->item('master_key')){
-			if(isset($_POST['trx'])){
 
-				//file_put_contents('posted_status.txt', $_POST['trx'] );
+				if($this->admin_auth($in->user,$in->pass)){
 
-				$in = json_decode($_POST['req']);
+					if(isset($_POST['trx'])){
 
-				if($dev = $this->get_dev_info($in->identifier)){
+						//file_put_contents('posted_status.txt', $_POST['trx'] );
+
+						$in = json_decode($_POST['req']);
+
+						if($dev = $this->get_dev_info($in->identifier)){
 
 
-					$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
+							$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
 
-					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
-						'delivery_id'=>$in->delivery_id,
-						'device_id'=>$dev->id,
-						'courier_id'=>'',
-						'actor_type'=>'MB',
-						'actor_id'=>'',
-						'latitude'=>$in->lat,
-						'longitude'=>$in->lon,
-						'status'=>$in->status,
-						'notes'=>$in->notes
-					);
+							$data = array(
+								'timestamp'=>date('Y-m-d h:i:s',time()),
+								'report_timestamp'=>date('Y-m-d h:i:s',time()),
+								'delivery_id'=>$in->delivery_id,
+								'device_id'=>$dev->id,
+								'courier_id'=>'',
+								'actor_type'=>'MB',
+								'actor_id'=>'',
+								'latitude'=>$in->lat,
+								'longitude'=>$in->lon,
+								'status'=>$in->status,
+								'notes'=>$in->notes
+							);
 
-					delivery_log($data);
-					$result = json_encode(array('status'=>'OK:NEWKEY',
-						'key' => $dev->key,
-						'identifier'=>$in->identifier,
-						'timestamp'=>now()));
-					print $result;
+							delivery_log($data);
+							$result = json_encode(array('status'=>'OK:NEWKEY',
+								'key' => $dev->key,
+								'identifier'=>$in->identifier,
+								'timestamp'=>now()));
+							print $result;
+						}else{
+							$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+							print $result;
+						}
+
 				}else{
-					$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+					//full calendar time series for current month
+					$result = json_encode(array('status'=>'NOK:AUTHFAILED','timestamp'=>now()));
 					print $result;
 				}
 
-			}else{
-				//full calendar time series for current month
-				$result = json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
-				print $result;
-			}
 
+				}else{
+					$result = json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
+					print $result;
+				}
 
 			}else{
 				$result = json_encode(array('status'=>'NOK:INVALIDKEY','timestamp'=>now()));
@@ -422,7 +430,7 @@ class V1 extends Application
 
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
-*/
+
 	/* Synchronize mobile device */
 	public function syncreport($api_key = null){
 		if(is_null($api_key)){
@@ -762,6 +770,21 @@ class V1 extends Application
 		$data['args'] = (is_null($args))?'':$args;
 
 		access_log($data);
+	}
+
+	private function admin_auth($username = null,$password = null){
+		if(is_null($username) || is_null($password)){
+			return false;
+		}
+
+		$password = $this->ag_auth->salt($password);
+		$result = $this->db->where('username',$username)->where('password',$password)->get($this->ag_auth->config['auth_group_table']);
+
+		if($result->num_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 
