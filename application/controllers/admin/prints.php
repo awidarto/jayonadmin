@@ -17,7 +17,7 @@ class Prints extends Application
 	public function deliveryslip($delivery_id,$pdf = false)
 	{
 			$main = $this->db
-					->select('*,b.fullname as buyer,
+					->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
 						m.merchantname as merchant,
 						a.street as m_street,
 						a.contact_person as m_pic,

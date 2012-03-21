@@ -49,7 +49,7 @@ class Delivery extends Application
 			->not_like('status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
@@ -292,7 +292,7 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
@@ -994,7 +994,7 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1168,7 +1168,7 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1347,7 +1347,7 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1479,7 +1479,7 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1588,7 +1588,7 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1695,7 +1695,7 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -1806,7 +1806,7 @@ class Delivery extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -2031,7 +2031,7 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		$this->db->select('*,u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('delivery_log_table').'.*,u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('users as u',$this->config->item('delivery_log_table').'.actor_id=u.id','left');
 		$this->db->join('members as m',$this->config->item('delivery_log_table').'.actor_id=m.id','left');
 		//$this->db->join('applications as a',$this->config->item('delivery_log_table').'.key=b.key','left');
@@ -2136,7 +2136,7 @@ class Delivery extends Application
 
 
 	public function view($delivery_id){
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -2480,7 +2480,7 @@ class Delivery extends Application
 			$change_actor = 'A:'.$actor;
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
 
-			$this->db->select('*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.* as app');
+			$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.* as app');
 			$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 			$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 			$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
