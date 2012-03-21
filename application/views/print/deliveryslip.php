@@ -209,7 +209,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'':'Phone : '.$main_info['m_phon
 ?>							
 							<tr>
 								<td>Store Detail:</td>
-								<td><?php print $merchant_info;?></td>
+								<td><?php print trim($merchant_info);?></td>
 							</tr>
 						</tbody>
 					</table>
