@@ -195,7 +195,7 @@
     [contact_person]
 */
 
-    print_r($main_info);
+    //print_r($main_info);
 
 $merchant_info = ($main_info['m_pic']=='')?'':$main_info['m_pic'].'<br />';
 $merchant_info .= ($main_info['m_street']=='')?'': $main_info['m_street'].'<br />';
