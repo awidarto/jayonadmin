@@ -197,13 +197,13 @@
 
     //print_r($main_info);
 $merchant_info = '';
-$merchant_info = ($main_info['m_pic']=='')?'':$main_info['m_pic'].'<br />';
-$merchant_info .= ($main_info['m_street']=='')?'': $main_info['m_street'].'<br />';
-$merchant_info .= ($main_info['m_district'] == '')?'':$main_info['m_district'].'<br />'.
-$merchant_info .= ($main_info['m_city'] == '')?'':$main_info['m_city'].','.
-$merchant_info .= ($main_info['m_zip']=='')?'':$main_info['m_zip'].'<br />'.
-$merchant_info .= ($main_info['m_country']=='')?'':$main_info['m_country'].'<br />'.
-$merchant_info .= ($main_info['m_phone'] == '')?'':'Phone : '.$main_info['m_phone'];
+$merchant_info = ($main_info['m_pic']=='')?$main_info['mc_pic'].'<br />':$main_info['m_pic'].'<br />';
+$merchant_info .= ($main_info['m_street']=='')?$main_info['mc_street'].'<br />': $main_info['m_street'].'<br />';
+$merchant_info .= ($main_info['m_district'] == '')?$main_info['mc_district'].'<br />':$main_info['m_district'].'<br />';
+$merchant_info .= ($main_info['m_city'] == '')?$main_info['mc_city'].',':$main_info['m_city'].',';
+$merchant_info .= ($main_info['m_zip']=='')?$main_info['mc_zip'].'<br />':$main_info['m_zip'].'<br />';
+$merchant_info .= ($main_info['m_country']=='')?$main_info['mc_country'].'<br />':$main_info['m_country'].'<br />';
+$merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone']:'Phone : '.$main_info['m_phone'];
 
 
 ?>							
