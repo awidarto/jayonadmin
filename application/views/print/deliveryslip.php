@@ -195,16 +195,15 @@
     [contact_person]
 */
 
-    //print_r($main_info);
+    print_r($main_info);
 
 $merchant_info = ($main_info['m_pic']=='')?'':$main_info['m_pic'].'<br />';
-$merchant_info .= $main_info['m_street'].'<br />'.
-    $main_info['m_district'].'<br />'.
-    $main_info['m_city'].','.
-    $main_info['m_zip'].'<br />'.
-    //$main_info['mc_province'].'<br />'.
-    $main_info['m_country'].'<br />'.
-    'Phone : '.$main_info['m_phone'];
+$merchant_info .= ($main_info['m_street']=='')?'': $main_info['m_street'].'<br />';
+$merchant_info .= ($main_info['m_district'] == '')?'':$main_info['m_district'].'<br />'.
+$merchant_info .= ($main_info['m_city'] == '')?'':$main_info['m_city'].','.
+$merchant_info .= ($main_info['m_zip']=='')?'':$main_info['m_zip'].'<br />'.
+$merchant_info .= ($main_info['m_country']=='')?'':$main_info['m_country'].'<br />'.
+$merchant_info .= ($main_info['m_phone'] == '')?'':'Phone : '.$main_info['m_phone'];
 
 
 ?>							
