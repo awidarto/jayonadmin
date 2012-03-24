@@ -371,18 +371,17 @@ class V1 extends Application
 		}else{
 			if($api_key == $this->config->item('master_key')){
 
-				if($this->admin_auth($in->user,$in->pass)){
+				if(isset($_POST['req'])){
+					
+					$in = json_decode($_POST['req']);
 
-					if(isset($_POST['trx'])){
+					if($this->admin_auth($in->user,$in->pass)){
+
 
 						//file_put_contents('posted_status.txt', $_POST['trx'] );
 
-						$in = json_decode($_POST['req']);
 
 						if($dev = $this->get_dev_info($in->identifier)){
-
-
-							$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
 
 							$data = array(
 								'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -409,15 +408,15 @@ class V1 extends Application
 							print $result;
 						}
 
-				}else{
-					//full calendar time series for current month
-					$result = json_encode(array('status'=>'NOK:AUTHFAILED','timestamp'=>now()));
-					print $result;
-				}
+					}else{
+						//full calendar time series for current month
+						$result = json_encode(array('status'=>'NOK:AUTHFAILED','timestamp'=>now()));
+						print $result;
+					}
 
 
 				}else{
-					$result = json_encode(array('status'=>'NOK:STATFAILED','timestamp'=>now()));
+					$result = json_encode(array('status'=>'NOK:NODATASENT','timestamp'=>now()));
 					print $result;
 				}
 
