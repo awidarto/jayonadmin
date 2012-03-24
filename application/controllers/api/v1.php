@@ -403,7 +403,7 @@ class V1 extends Application
 
 							delivery_log($data);
 							$result = json_encode(array('status'=>'OK:NEWKEY',
-								'key' => $dev->key,
+								'keydata' => $dev->key,
 								'identifier'=>$in->identifier,
 								'timestamp'=>now()));
 							print $result;
