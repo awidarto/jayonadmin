@@ -375,26 +375,30 @@ class V1 extends Application
 					
 					$in = json_decode($_POST['req']);
 
+					//$in->user = 'administrator';
+					//$in->pass = 'pisangkeju';
+					//$in->identifier = 'Jy-005';
+
 					if($this->admin_auth($in->user,$in->pass)){
 
 
 						//file_put_contents('posted_status.txt', $_POST['trx'] );
 
 
-						if($dev = $this->get_dev_info($in->identifier)){
+						if($dev = $this->get_dev_info_by_id($in->identifier)){
 
 							$data = array(
 								'timestamp'=>date('Y-m-d h:i:s',time()),
 								'report_timestamp'=>date('Y-m-d h:i:s',time()),
-								'delivery_id'=>$in->delivery_id,
+								'delivery_id'=>'',
 								'device_id'=>$dev->id,
 								'courier_id'=>'',
 								'actor_type'=>'MB',
-								'actor_id'=>'',
-								'latitude'=>$in->lat,
-								'longitude'=>$in->lon,
-								'status'=>$in->status,
-								'notes'=>$in->notes
+								'actor_id'=>''
+								//'latitude'=>$in->lat,
+								//'longitude'=>$in->lon,
+								//'status'=>$in->status,
+								//'notes'=>$in->notes
 							);
 
 							delivery_log($data);
@@ -414,12 +418,12 @@ class V1 extends Application
 						print $result;
 					}
 
-
+				
 				}else{
 					$result = json_encode(array('status'=>'NOK:NODATASENT','timestamp'=>now()));
 					print $result;
 				}
-
+				
 			}else{
 				$result = json_encode(array('status'=>'NOK:INVALIDKEY','timestamp'=>now()));
 				print $result;
@@ -724,6 +728,21 @@ class V1 extends Application
 		}
 	}
 
+	private function get_dev_info_by_id($identifier){
+		if(!is_null($identifier)){
+			$this->db->where('identifier',$identifier);
+			$result = $this->db->get($this->config->item('jayon_devices_table'));
+			if($result->num_rows() > 0){
+				$row = $result->row();
+				return $row;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
 
 	private function check_email($email){
 		$em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));
@@ -777,7 +796,7 @@ class V1 extends Application
 		}
 
 		$password = $this->ag_auth->salt($password);
-		$result = $this->db->where('username',$username)->where('password',$password)->get($this->ag_auth->config['auth_group_table']);
+		$result = $this->db->where('username',$username)->where('password',$password)->get($this->ag_auth->config['auth_user_table']);
 
 		if($result->num_rows() > 0){
 			return true;
