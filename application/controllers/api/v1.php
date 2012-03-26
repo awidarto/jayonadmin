@@ -402,7 +402,7 @@ class V1 extends Application
 								'actor_id'=>''
 								//'latitude'=>$in->lat,
 								//'longitude'=>$in->lon,
-								//'status'=>$in->status,
+								'status'=>$this->config->item('trans_status_mobile_keyrequest'),
 								//'notes'=>$in->notes
 							);
 
