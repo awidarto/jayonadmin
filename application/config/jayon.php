@@ -66,6 +66,7 @@ $config['trans_status_mobile_rescheduled'] = 'rescheduled';
 $config['trans_status_mobile_delivered'] = 'delivered';
 $config['trans_status_mobile_revoked'] = 'revoked';
 $config['trans_status_mobile_noshow'] = 'noshow';
+$config['trans_status_mobile_keyrequest'] => 'keyrequest';
 
 $config['trans_status_admin_zoned'] = 'zone_assigned';
 $config['trans_status_admin_dated'] = 'date_assigned';
@@ -92,6 +93,7 @@ $config['status_colors'] = array(
 	$config['trans_status_mobile_delivered'] => 'green',
 	$config['trans_status_mobile_revoked'] => 'red',
 	$config['trans_status_mobile_noshow'] => 'orange',
+	$config['trans_status_mobile_keyrequest'] => 'black',
 
 	$config['trans_status_admin_zoned'] => 'brown',
 	$config['trans_status_admin_dated'] => 'blue',
