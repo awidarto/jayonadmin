@@ -331,13 +331,16 @@ class V1 extends Application
 					//other action for different status migh be needed
 
 					if(isset($in->delivery_id) && $in->delivery_id != ""){
+						$delivery_id = $in->delivery_id;
 						$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
+					}else{
+						$delivery_id = "N/A";
 					}
 
 					$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
 						'report_timestamp'=>date('Y-m-d h:i:s',time()),
-						'delivery_id'=>,
+						'delivery_id'=>$delivery_id,
 						'device_id'=>$dev->id,
 						'courier_id'=>'',
 						'actor_type'=>'MB',
