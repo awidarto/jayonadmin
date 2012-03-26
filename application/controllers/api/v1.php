@@ -399,7 +399,7 @@ class V1 extends Application
 								'device_id'=>$dev->id,
 								'courier_id'=>'',
 								'actor_type'=>'MB',
-								'actor_id'=>''
+								'actor_id'=>'',
 								//'latitude'=>$in->lat,
 								//'longitude'=>$in->lon,
 								'status'=>$this->config->item('trans_status_mobile_keyrequest'),
