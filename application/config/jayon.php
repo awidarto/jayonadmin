@@ -83,6 +83,8 @@ $config['status_colors'] = array(
 	$config['trans_status_canceled'] => 'red',
 	$config['trans_status_rescheduled'] => 'green',
 
+	$config['trans_status_mobile_departure'] => 'green',
+	$config['trans_status_mobile_return'] => 'red',
 	$config['trans_status_mobile_pickedup'] => 'green',
 	$config['trans_status_mobile_enroute'] => 'orange',
 	$config['trans_status_mobile_location'] => 'black',
