@@ -524,6 +524,10 @@ class V1 extends Application
 							d.phone as by_phone,
 							d.recipient_name as rec_name,
 							d.undersign as rec_sign,
+							d.total_price as tot_price,
+							d.total_discount as tot_disc,	
+							d.total_tax	as tot_tax,
+							d.chargeable_amount as chg_amt,
 							d.cod_cost as cod_cost,
 							d.currency as cod_curr,
 							d.shipping_address as ship_addr,
@@ -543,7 +547,41 @@ class V1 extends Application
 					->where('device_id',$dev->id)
 					->get();
 
+					//print $this->db->last_query();
+
 				$out = $orders->result_array();
+
+				//print_r($out);
+
+				$output = array();
+
+				foreach($out as $o){
+					$details = $this->db->where('delivery_id',$o['delivery_id'])->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+
+					$details = $details->result_array();
+
+					$d = 0;
+					$gt = 0;
+
+					foreach($details as $value => $key)
+					{
+						$gt += $key['unit_total'];
+						$d += $key['unit_discount'];
+					}
+
+					$gt = ($o['tot_price'] < $gt)?$gt:$o['tot_price'];
+					$dsc = (int)$o['tot_disc'];
+					$tax = (int)$o['tot_tax'];
+					$cod = (int)$o['cod_cost'];
+					$chg = ($gt - $dsc) + $tax + $cod;
+
+		            //$o['tot_price'] => 
+		            //$o['tot_disc'] => 
+		            //$o['tot_tax'] => 
+		            //$o['chg_amt'] => 
+					$o['cod_cost'] = number_format($chg,2,',','.');
+					$output[] = $o;
+				}
 
 				$data = array(
 					'timestamp'=>date('Y-m-d h:i:s',time()),
@@ -558,7 +596,7 @@ class V1 extends Application
 				delivery_log($data);
 
 				//get slot for specified date
-				$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$out ,'timestamp'=>now()));
+				$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$output ,'timestamp'=>now()));
 				print $result;
 			}else{
 				$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
