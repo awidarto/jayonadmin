@@ -110,7 +110,7 @@
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
-				var src = '<?php print base_url() ?>/admin/delivery/view/' + delivery_id;
+				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
@@ -225,7 +225,7 @@
 		$('#view_dialog').dialog({
 			autoOpen: false,
 			height: 600,
-			width: 600,
+			width: 900,
 			modal: true,
 			buttons: {
 				Print: function(){
@@ -233,12 +233,6 @@
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
 				}, 
-				"Download PDF": function(){
-					var print_id = $('#print_id').val();
-					var src = '<?php print base_url() ?>/admin/prints/deliveryslip/' + print_id + '/pdf';
-					window.location = src;
-					//alert(src);
-				},
 				Close: function() {
 					$( this ).dialog( "close" );
 				}

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Delivery Slip</title>
+    <title>Delivery Details</title>
     <style>
 
         html{margin:0px;}
@@ -101,7 +101,7 @@
         }
 
         table#main_table{
-            width:850px;
+            width:840px;
             padding:0px;
             margin:0px;
         }
@@ -167,18 +167,11 @@
         <tbody>
             <tr>
                 <td id="merchant_detail">
-                    <table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
-                        <tbody>
-                            <tr><h2>DELIVERY NOTE</h2><br />
-                                <td style="align:right"><?php print $qr;?></td>
-                            </tr>
-                        </tbody>
-                    </table>
                     <table border="0" cellpadding="4" cellspacing="0" id="mainInfo">
                         <tbody>
 
                             <tr>
-                                <td colspan="2"><strong>Merchant Info</strong></td>
+                                <td colspan="2"><?php print $qr;?><br /><strong>Merchant Info</strong></td>
                             </tr>
 
                             <tr>
@@ -261,6 +254,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
             </tr>
         </tbody>
     </table>
+
+<!--
     <table border="0" cellpadding="4" cellspacing="0" id="signBox">
         <thead>
             <tr>
@@ -297,6 +292,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
             </tr>
         </tbody>
     </table>
+-->    
 </div>
 </body>
 </html>
