@@ -130,7 +130,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-			$this->gc_qrcode->size(200)
+			$this->gc_qrcode->size(150)
                 ->data($qr_data)
                 ->output_encoding('UTF-8')
                 ->error_correction_level('L')

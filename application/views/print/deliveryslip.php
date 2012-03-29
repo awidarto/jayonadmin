@@ -24,7 +24,7 @@
 		}
 
 		td{
-			font-size: 13px;
+			font-size: 12px;
 		}
 
 		.dataTable{
@@ -37,6 +37,7 @@
 		.dataTable td{
 			border-bottom:thin solid #eee;
 			text-align:left;
+			font-size: 11px;
 		}
 
 		.dataTable th{
@@ -147,6 +148,17 @@
 			vertical-align:top;
 		}
 
+		h2{
+			font-size: 18px;
+			display: block;
+			text-align: center;
+		}
+
+		#order_slot{
+			margin-left:20px;
+			float:right;
+		}
+
 	</style>
 </head>
 <body>
@@ -157,7 +169,7 @@
 				<td id="merchant_detail">
 					<table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
 						<tbody>
-							<tr>
+							<tr><h2>DELIVERY NOTE</h2><br />
 								<td id="jayon_logo"><?php 
 										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
 										<?php print get_option('jex_hq_address');?>
@@ -214,7 +226,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 						</tbody>
 					</table>
 				</td>
-				<td id="order_detail"><h2>DELIVERY NOTE</h2><br />
+				<td id="order_detail">
 					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
 						<tbody>
 							<tr>
@@ -226,13 +238,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr>
 								<td>Delivery Date:</td>
-								<td><?php print $main_info['assignment_date'];?></td>
+								<td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
 							</tr>
-							<tr>
-								<td>Delivery Slot:</td>
-								<td><?php print $main_info['assignment_timeslot'];?></td>
-							</tr>
-
 							<tr>
 								<td colspan="2"><strong>Order Detail</strong></td>
 							</tr>
