@@ -71,15 +71,24 @@ class Prints extends Application
 					number_format($key['unit_total'],2,',','.')			
 				);
 
-				$gt += $key['unit_total'];
-				$d += $key['unit_discount'];
+				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
+				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+				$gt += (int)$u_total;
+				$d += (int)$u_discount;
 
 			}
 
-			$gt = ($data['main_info']['total_price'] < $gt)?$gt:$data['main_info']['total_price'];
-			$dsc = (int)$data['main_info']['total_discount'];
-			$tax = (int)$data['main_info']['total_tax'];
-			$cod = (int)$data['main_info']['cod_cost'];
+			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+			$total = (int)$total;
+			$gt = ($total < $gt)?$gt:$total;
+			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
+			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
+
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$cod = (int)$cod;
+
 			$chg = ($gt - $dsc) + $tax + $cod;
 
 			$this->table->add_row(
@@ -210,15 +219,24 @@ class Prints extends Application
 					number_format($key['unit_total'],2,',','.')			
 				);
 
-				$gt += $key['unit_total'];
-				$d += $key['unit_discount'];
+				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
+				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+				$gt += (int)$u_total;
+				$d += (int)$u_discount;
 
 			}
 
-			$gt = ($data['main_info']['total_price'] < $gt)?$gt:$data['main_info']['total_price'];
-			$dsc = (int)$data['main_info']['total_discount'];
-			$tax = (int)$data['main_info']['total_tax'];
-			$cod = (int)$data['main_info']['cod_cost'];
+			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+			$total = (int)$total;
+			$gt = ($total < $gt)?$gt:$total;
+			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
+			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
+
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$cod = (int)$cod;
+
 			$chg = ($gt - $dsc) + $tax + $cod;
 
 			$this->table->add_row(
@@ -243,19 +261,19 @@ class Prints extends Application
 				);
 
 
-			if($cod == 0){
-				$this->table->add_row(
-					'','',
-					'COD Charges','Paid by Merchant'
-				);
-			}else{
-				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'COD Charges',		
-					number_format($cod,2,',','.')
-				);
-			}
+				if($cod == 0){
+					$this->table->add_row(
+						'','',
+						'COD Charges','Paid by Merchant'
+					);
+				}else{
+					$this->table->add_row(
+						'&nbsp;',		
+						'&nbsp;',		
+						'COD Charges',		
+						number_format($cod,2,',','.')
+					);
+				}
 
 				$this->table->add_row(
 					'&nbsp;',		

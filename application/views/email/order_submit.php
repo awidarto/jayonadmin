@@ -1,5 +1,13 @@
 <html>
 <body>
+<style>
+
+.dataTable td:last-child{
+	/*border-right:thin solid #eee;*/
+	text-align:right;
+}
+
+</style>
 <?php if($app->logo_url != "" ): ?>
 	<p><img src="<?php print $app->logo_url?>" alt="<?php print $app->logo_url?>" /></p>
 <?php endif;?>

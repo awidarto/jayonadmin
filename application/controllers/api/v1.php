@@ -102,6 +102,12 @@ class V1 extends Application
 
 				$this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
+					$this->table_tpl = array(
+						'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
+					);
+					$this->table->set_template($this->table_tpl);
+
+
 					$this->table->set_heading(
 						'No.',		 	 	
 						'Description',	 	 	 	 	 	 	 
@@ -135,51 +141,76 @@ class V1 extends Application
 							$item['unit_total']			
 						);
 
-						$gt += $item['unit_total'];
-						$d += $item['unit_discount'];
+						$u_total = str_replace(array(',','.'), '', $item['unit_total']);
+						$u_discount = str_replace(array(',','.'), '', $item['unit_discount']);						
+						$gt += (int)$u_total;
+						$d += (int)$u_discount;
 
 					}
 					
-					$gt = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:$gt;
-
-					$this->table->add_row(
-						'',		
-						'',		
-						'Total Price',		
-						$gt
-					);
+					$total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
+					$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+					$total = (int)$total;
+					$gt = ($total < $gt)?$gt:$total;
 
 					$disc = (isset($in->total_discount))?$in->total_discount:0;
 					$tax = (isset($in->total_tax))?$in->total_tax:0;
 					$cod = (isset($in->cod_cost))?$in->cod_cost:'Paid by merchant';
+
+					$disc = str_replace(array(',','.'), '', $disc);
+					$tax = str_replace(array(',','.'), '',$tax);
+					$cod = str_replace(array(',','.'), '',$cod);
+
+					$dsc = (int)$dsc;
+					$tax = (int)$tax;
+					$cod = (int)$cod;
+
 					$chg = ($gt - $disc) + $tax + $cod;
 
 					$this->table->add_row(
 						'',		
 						'',		
+						'Total Price',		
+						number_format($gt,2,',','.')
+					);
+
+					$this->table->add_row(
+						'',		
+						'',		
 						'Total Discount',		
-						$disc
+						number_format($disc,2,',','.')
 					);
 
 					$this->table->add_row(
 						'',		
 						'',		
 						'Total Tax',		
-						$tax
+						number_format($tax,2,',','.')
 					);
 
-					$this->table->add_row(
-						'',		
-						'',		
-						'COD Charges',		
-						$cod
-					);
+
+					if($cod == 0){
+						$this->table->add_row(
+							'',
+							'',
+							'COD Charges',
+							'Paid by Merchant'
+						);
+					}else{
+						$this->table->add_row(
+							'',		
+							'',		
+							'COD Charges',		
+							number_format($cod,2,',','.')
+						);
+					}
+
 
 					$this->table->add_row(
 						'',		
 						'',		
 						'Total Charges',		
-						$chg
+						number_format($chg,2,',','.')
 					);
 
 					$nedata['detail'] = $this->table;
