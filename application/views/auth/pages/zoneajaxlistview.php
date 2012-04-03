@@ -81,6 +81,18 @@
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+
+		$('table.dataTable').click(function(e){
+
+			if ($(e.target).is('.view_detail')) {
+				var delivery_id = e.target.id;
+				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
+
+				$('#view_frame').attr('src',src);
+				$('#view_dialog').dialog('open');
+			}
+
+		});
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
@@ -175,6 +187,26 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
+
+		$('#view_dialog').dialog({
+			autoOpen: false,
+			height: 600,
+			width: 900,
+			modal: true,
+			buttons: {
+				Print: function(){
+					var pframe = document.getElementById('print_frame');
+					var pframeWindow = pframe.contentWindow;
+					pframeWindow.print();
+				}, 
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -216,4 +248,11 @@
 			</td>
 		</tr>
 	</table>
+</div>
+
+<div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
+	<input type="hidden" value="" id="print_id" />
+	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
 </div>

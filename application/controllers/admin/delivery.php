@@ -151,7 +151,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['merchant_trans_id'],
 				$app['application_name'],
 				$key['merchant'],
@@ -345,7 +345,7 @@ class Delivery extends Application
 				$datefield,
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
 				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
-				'<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.$key['delivery_id'],
+				'<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
 				//$app['application_name'],
 				//$app['domain'],
@@ -1045,8 +1045,8 @@ class Delivery extends Application
 				$datefield,
 				$devicefield,
 				$key['assignment_timeslot'],
-				$key['delivery_id'],
-				$key['buyerdeliverycity'],
+				//$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
 				$app['application_name'],
 				//$app['domain'],
@@ -1227,7 +1227,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$datefield,
 				$devicefield,
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['assignment_zone'],
 				$app['application_name'],
 				//$app['domain'],
@@ -1512,7 +1512,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1619,7 +1619,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1730,7 +1730,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$key['buyerdeliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				$key['buyer'],
 				$key['merchant'],
@@ -1902,7 +1902,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
@@ -2064,7 +2064,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$key['timestamp'],
 				$key['report_timestamp'],
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['device'],
 				$key['courier'],
 				$key['actor_type'],
