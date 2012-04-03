@@ -596,14 +596,25 @@ class V1 extends Application
 
 					foreach($details as $value => $key)
 					{
-						$gt += $key['unit_total'];
-						$d += $key['unit_discount'];
+
+						$u_total = str_replace(array(',','.'), '', $key['unit_total']);
+						$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+						$gt += (int)$u_total;
+						$d += (int)$u_discount;
 					}
 
-					$gt = ($o['tot_price'] < $gt)?$gt:$o['tot_price'];
-					$dsc = (int)$o['tot_disc'];
-					$tax = (int)$o['tot_tax'];
-					$cod = (int)$o['cod_cost'];
+
+					$total = str_replace(array(',','.'), '', $o['tot_price']);
+					$total = (int)$total;
+					$gt = ($total < $gt)?$gt:$total;
+					$dsc = str_replace(array(',','.'), '', $o['tot_disc']);
+					$tax = str_replace(array(',','.'), '',$o['tot_tax']);
+					$cod = str_replace(array(',','.'), '',$o['cod_cost']);
+
+					$dsc = (int)$dsc;
+					$tax = (int)$tax;
+					$cod = (int)$cod;
+
 					$chg = ($gt - $dsc) + $tax + $cod;
 
 		            //$o['tot_price'] => 
