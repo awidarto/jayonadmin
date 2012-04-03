@@ -75,7 +75,7 @@ class V1 extends Application
 				//$order['dir_lon'] = $in->dir_lon;
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
-				$order['buyerdeliverycity'] = $in->buyerdeliverycity;
+				$order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Jakarta':$in->buyerdeliverycity;
 
 				$order['currency'] = $in->currency;
 				$order['total_price'] = (isset($in->total_price))?$in->total_price:0;
