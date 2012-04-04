@@ -149,7 +149,7 @@ class V1 extends Application
 					}
 					
 					$total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
-					$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+					$total = str_replace(array(',','.'), '', $total);
 					$total = (int)$total;
 					$gt = ($total < $gt)?$gt:$total;
 
@@ -161,7 +161,7 @@ class V1 extends Application
 					$tax = str_replace(array(',','.'), '',$tax);
 					$cod = str_replace(array(',','.'), '',$cod);
 
-					$dsc = (int)$dsc;
+					$disc = (int)$disc;
 					$tax = (int)$tax;
 					$cod = (int)$cod;
 
