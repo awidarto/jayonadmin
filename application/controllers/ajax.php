@@ -31,11 +31,28 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
-
 	public function getcourier(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_courier($q,'fullname','id');
 		print json_encode($zones);
+	}
+
+	public function getmerchant(){
+		$q = $this->input->get('term');
+		$merchants = ajax_find_merchants($q,'fullname','id');
+		print json_encode($merchants);
+	}
+
+	public function getbuyer(){
+		$q = $this->input->get('term');
+		$merchants = ajax_find_buyer($q,'fullname','id');
+		print json_encode($merchants);
+	}
+
+	public function getbuyeremail(){
+		$q = $this->input->get('term');
+		$merchants = ajax_find_buyer_email($q,'fullname','id');
+		print json_encode($merchants);
 	}
 
 	public function getdevice(){

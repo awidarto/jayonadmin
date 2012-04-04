@@ -86,6 +86,48 @@ function ajax_find_courier($zone,$col = 'fullname',$idcol = 'id'){
 	return $q->result_array();
 }
 
+function ajax_find_merchants($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$group_id = user_group_id('merchant');
+
+	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value',false)
+		->like('fullname',$zone)
+		->or_like('merchantname',$zone)
+		->or_like('username',$zone)
+		->or_like('email',$zone)
+		->where('group_id',$group_id)
+		->distinct()
+		->get('members');
+	return $q->result_array();
+}
+
+function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$group_id = user_group_id('buyer');
+
+	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email',false)
+		->like('fullname',$zone)
+		->or_like('merchantname',$zone)
+		->or_like('username',$zone)
+		->or_like('email',$zone)
+		->where('group_id',$group_id)
+		->distinct()
+		->get('members');
+	return $q->result_array();
+}
+
+function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$group_id = user_group_id('buyer');
+
+	$q = $CI->db->select($idcol.' as id ,email as label, email as value, fullname as fullname',false)
+		->like('email',$zone)
+		->where('group_id',$group_id)
+		->distinct()
+		->get('members');
+	return $q->result_array();
+}
+
 function ajax_find_device($zone,$col = 'descriptor'){
 	$CI =& get_instance();
 	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('devices');

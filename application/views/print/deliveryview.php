@@ -159,7 +159,38 @@
             float:right;
         }
 
+        .editable, #note{
+            font-weight:bold;
+            color:maroon;
+        }
+
+        #note{
+            font-size: 11px;
+            padding:3px;
+        }
+
+        .editable input[type='text']{
+            height:14px;
+        }
+
     </style>
+
+    <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
+
+    <?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
+    <?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
+
+    <?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
+    <?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
+    <?php echo $this->ag_asset->load_script('jquery.jeditable.mini.js');?>
+
+    
+    <script>
+    $(document).ready(function() {
+         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
+    });
+    </script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -230,6 +261,14 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
                             </tr>
                             <tr>
+                                <td class="row_label">Delivery City:</td>
+                                <td class="editable" id="buyerdeliverycity"><?php print $main_info['buyerdeliverycity'];?></td>
+                            </tr>
+                            <tr>
+                                <td class="row_label">Delivery Zone:</td>
+                                <td class="editable" id="buyerdeliveryzone"><?php print $main_info['buyerdeliveryzone'];?></td>
+                            </tr>
+                            <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
 
@@ -239,17 +278,17 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td>Shipping Address:</td>
-                                <td><?php print $main_info['shipping_address'];?></td>
+                                <td id="shipping_address" class="editable"><?php print $main_info['shipping_address'];?></td>
                             </tr>
                             <tr>
-                                <td>Contact Number:</td>
-                                <td><?php print $main_info['phone'];?></td>
+                                <td>Phone:</td>
+                                <td id="phone" class="editable"><?php print $main_info['phone'];?></td>
                             </tr>
-
                         </tbody>
                     </table>
 
                     <?php echo $this->table->generate(); ?>
+                    <span id="note">* click to edit maroon colored bold field</span>
                 </td>
             </tr>
         </tbody>

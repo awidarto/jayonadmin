@@ -243,21 +243,31 @@ class Prints extends Application
 				'&nbsp;',		
 				'&nbsp;',		
 				'Total Price',		
-				number_format($gt,2,',','.')
+				array('data'=>number_format($gt,2,',','.'),
+					'class'=>'editable',
+					'id'=>'total_price'
+				)		
+
 			);
 
 				$this->table->add_row(
 					'&nbsp;',		
 					'&nbsp;',		
-					'Total Discount',		
-					number_format($dsc,2,',','.')
+					'Total Discount',
+					array('data'=>number_format($dsc,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_discount'
+					)		
 				);
 
 				$this->table->add_row(
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Tax',		
-					number_format($tax,2,',','.')
+					array('data'=>number_format($tax,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_tax'
+					)		
 				);
 
 
@@ -271,7 +281,10 @@ class Prints extends Application
 						'&nbsp;',		
 						'&nbsp;',		
 						'COD Charges',		
-						number_format($cod,2,',','.')
+						array('data'=>number_format($cod,2,',','.'),
+							'class'=>'editable',
+							'id'=>'cod_cost'
+						)		
 					);
 				}
 
@@ -279,7 +292,11 @@ class Prints extends Application
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Charges',		
-					number_format($chg,2,',','.')
+					array('data'=>number_format($chg,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_charges'
+					)		
+
 				);
 
 			$data['grand_total'] = $gt;

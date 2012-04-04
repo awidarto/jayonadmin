@@ -246,7 +246,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td>Shipping Address:</td>
-                                <td><?php print $main_info['shipping_address'];?></td>
+                                <td id="shipping_address" class="edit" ><?php print $main_info['shipping_address'];?></td>
                             </tr>
                             <tr>
                                 <td>Contact Number:</td>
