@@ -61,6 +61,75 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
+	public function neworder(){
+
+		$url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
+		
+		$trx = array(
+			'api_key'=>$api_key,
+			'transaction_id'=>$trx_id,
+			'buyer_name'=>$buyer_name,
+			'recipient_name'=>$recipient_name,
+			'shipping_address'=>$shipping_address,
+			'buyerdeliveryzone'=>$buyerdeliveryzone,
+			'buyerdeliverycity'=>$buyerdeliverycity,
+			'buyerdeliverytime'=>$buyerdeliverytime,
+			'directions'=>$directions,
+			'auto_confirm'=>false,
+			'email'=>$email,
+			'zip' => $zip,
+			'phone' => $phone,
+			'total_price'=>500000,
+			'total_discount'=>20000,
+			'total_tax'=>'117.500',
+			'chargeable_amount'=>500000,
+			'cod_cost' => '0', 		/* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
+			'currency' => 'IDR', 	/* currency in 3 digit codes*/
+			'status'=>$status, 	/* status can be : pending or confirm, depending on merchant's workflow */
+
+			/*
+				trx_detail should contain merchants transaction details for perticular session, below are just example
+			*/
+
+			'trx_detail'=>array( // 
+				array(
+					'unit_description'=>'kaos oblong swan',
+					'unit_price'=>3000,
+					'unit_quantity'=>100,
+					'unit_total'=>280000,
+					'unit_discount'=>20000
+				),
+				array(
+					'unit_description'=>'kaos turtle neck',
+					'unit_price'=>35000,
+					'unit_quantity'=>2,
+					'unit_total'=>70000,
+					'unit_discount'=>0,
+				),
+				array(
+					'unit_description'=>'kaos polo biru',
+					'unit_price'=>135000,
+					'unit_quantity'=>5,
+					'unit_total'=>675000,
+					'unit_discount'=>0,
+				),
+				array(
+					'unit_description'=>'kaos kutung',
+					'unit_price'=>15000,
+					'unit_quantity'=>10,
+					'unit_total'=>150000,
+					'unit_discount'=>0
+				)
+			)
+		);
+		
+		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
+
+		
+		print $result;
+
+	}
+
 	public function getdateblock($month = null){
 		print getdateblock($month);
 	}	
@@ -80,6 +149,8 @@ class Ajax extends Application
 	public function revokedmonthly(){
 		
 	}
+
+
 
 }
 

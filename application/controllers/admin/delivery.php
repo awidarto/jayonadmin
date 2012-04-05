@@ -1509,6 +1509,7 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1522,7 +1523,8 @@ class Delivery extends Application
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
-				$key['revoke_ref']
+				$key['revoke_ref'],
+				$printslip
 			);
 		}
 
@@ -1556,7 +1558,8 @@ class Delivery extends Application
 			'Phone',
 			'Status',
 			'Reschedule Ref',
-			'Revoke Ref'
+			'Revoke Ref',
+			'Action'
 			); // Setting headings for the table
 
 		$this->table->set_footing(
@@ -1616,6 +1619,7 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1629,7 +1633,8 @@ class Delivery extends Application
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
-				$key['revoke_ref']
+				$key['revoke_ref'],
+				$printslip
 			);
 		}
 
@@ -1663,7 +1668,8 @@ class Delivery extends Application
 			'Phone',
 			'Status',
 			'Reschedule Ref',
-			'Revoke Ref'
+			'Revoke Ref',
+			'Action'
 			); // Setting headings for the table
 
 		$this->table->set_footing(
@@ -1726,6 +1732,7 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
 			$proceed = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
+			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1739,7 +1746,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$proceed.' '.$cancel
+				$printslip.' '.$proceed.' '.$cancel
 				//$key['reschedule_ref'],
 				//$key['revoke_ref']
 			);
@@ -1899,6 +1906,7 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1915,7 +1923,8 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],
-				$key['revoke_ref']
+				$key['revoke_ref'],
+				$printslip
 			);
 		}
 
@@ -1948,7 +1957,8 @@ class Delivery extends Application
 			'Status',
 			'Last Status',
 			'Reschedule Ref',
-			'Revoke Ref'
+			'Revoke Ref',
+			'Action'
 			); // Setting headings for the table
 
 		$this->table->set_footing(
