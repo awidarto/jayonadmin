@@ -211,6 +211,9 @@
             text-align:right;
         }
 
+        .item_price{
+            text-align:right;
+        }
         td.item_form{
             text-align:center;
         }
