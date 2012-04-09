@@ -59,6 +59,15 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function ajax_find_zones_by_city($zone,$city,$col = 'district'){
+	$CI =& get_instance();
+	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)
+		->where('city',$city)
+		->like($col,$zone)
+		->get('districts');
+	return $q->result_array();
+}
+
 function ajax_find_cities($zone,$col = 'city'){
 	$CI =& get_instance();
 	$CI->db->distinct();
@@ -90,7 +99,7 @@ function ajax_find_merchants($zone,$col = 'fullname',$idcol = 'id'){
 	$CI =& get_instance();
 	$group_id = user_group_id('merchant');
 
-	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value',false)
+	$q = $CI->db->select($idcol.' as id ,merchantname as value, concat_ws(\'::\',merchantname,fullname,email) as label, merchantname as merchantname,fullname as fullname,email as email',false)
 		->like('fullname',$zone)
 		->or_like('merchantname',$zone)
 		->or_like('username',$zone)

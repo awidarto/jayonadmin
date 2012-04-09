@@ -61,6 +61,26 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
+	public function getappselect(){
+		$merchant_id = $this->input->post('merchant_id');
+
+		$this->db->select('key,application_name');
+		$this->db->where('merchant_id',$merchant_id);
+		$apps = $this->db->get($this->config->item('applications_table'));
+
+		if($apps->num_rows() > 0){
+			foreach ($apps->result() as $r) {
+				$app[$r->key] = $r->application_name;
+			}			
+		}else{
+			$app[0] = 'Select application domain';
+		}
+
+		$select = form_dropdown('app_id',$app,null,'id="app_id"');
+
+		print json_encode(array('result'=>'ok','data'=>$select));
+	}
+
 	public function neworder(){
 
 		$url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
@@ -128,6 +148,10 @@ class Ajax extends Application
 		
 		print $result;
 
+	}
+
+	public function subcalc(){
+		
 	}
 
 	public function getdateblock($month = null){

@@ -478,9 +478,9 @@
 			modal: true,
 			buttons: {
 				Save: function(){
-					var pframe = document.getElementById('print_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
+					var nframe = document.getElementById('neworder_frame');
+					var nframeWindow = nframe.contentWindow;
+					nframeWindow.submitorder();
 				}, 
 				Close: function() {
 					$( this ).dialog( "close" );

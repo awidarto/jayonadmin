@@ -179,7 +179,7 @@
 
         table#main_table textarea{
             width:220px;
-            height:75px;
+            height:40px;
         }
 
         td#order_details input[type="text"]#quantity{
@@ -199,11 +199,24 @@
         }
 
         td.sums{
+            text-align:left;
+        }
+
+        td.lsums{
+            text-align:right;
+        }
+
+        .sum_input, #recalc{
+            margin-right:30px;
             text-align:right;
         }
 
         td.item_form{
             text-align:center;
+        }
+
+        tr#detail_row td{
+            background-color: #aaa;
         }
     </style>
 
@@ -220,6 +233,14 @@
     <script>
 
     var dateBlock = <?php print getdateblock();?>;
+
+    var sequence = 0;
+
+    var total_price = 0;
+    var total_discount = 0;
+    var total_charges = 0;
+    var total_tax = 0;
+    var cod_cost = 0;
 
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
@@ -292,6 +313,9 @@
             select:function(event,ui){
                 $('#merchant_id').val(ui.item.id);
                 $('#merchant_id_txt').html(ui.item.id);                
+                $('#merchant_fullname').val(ui.item.fullname);                
+                $('#merchant_email').val(ui.item.email); 
+                getapp(ui.item.id);               
             }
         });
 
@@ -329,7 +353,109 @@
             minLength: 2
         });
 
+        function getapp(merchant_id){
+            $.post('<?php print site_url('ajax/getappselect');?>',
+                { merchant_id: merchant_id }, 
+                function(data) {
+                    console.log(data.data);
+                    $('#application_id').html(data.data);
+                },'json');
+        }
+
+        $('#add_item').click(function(){
+            sequence++;
+            var row = '<tr id="trx_'+ sequence+'">';
+                row += '<td class="item_form"><input type="text" class="item_desc" name="description" value="'+ $('#description').val() +'" id="description"  /></td>';
+                row += '<td class="item_form"><input type="text" class="item_qty" name="quantity" value="'+ $('#quantity').val() +'" id="quantity"  /></td>';
+                row += '<td><input type="text" class="item_price" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
+                row += '</tr>';
+
+            var unit_price = $('#unit_total').val()*$('#quantity').val();
+            total_price += unit_price;
+
+            $('#total_price').val(total_price);
+
+            $('#calc_data').before(row);
+
+            calculate();
+
+            $('#description').val('');
+            $('#quantity').val('');
+            $('#unit_total').val('');
+        });
+
+        $('#recalc').click(function(){
+            calculate();
+        });
+
     });
+
+    function submitorder(){
+        alert("Processing...");
+    }
+
+    function removeRow(rowId){
+        var trxid = 'tr#trx_'+rowId;
+        $('#'+rowId).remove();
+        calculate();
+        sequence--;
+    }
+
+    function calculate(){
+
+        var qtys = [];
+        var prcs = [];
+
+        i = 0;
+        $('.item_qty').each(function(){
+            qtys[i] = $(this).val();
+            i++;
+        }); 
+
+        i = 0;
+        $('.item_price').each(function(){
+            prcs[i] = $(this).val();
+            i++;
+        });
+
+        total_price = 0;
+
+        for(i = 0;i < qtys.length;i++){
+            total_price += parseInt(qtys[i]) * parseInt(prcs[i]);
+        }
+
+        $('#total_price').val(total_price);
+
+
+        if(!($('#total_discount').val() === 'undefined' || $('#total_discount').val() == '')){
+            total_discount = parseInt($('#total_discount').val());
+        }else{
+            total_discount = 0;
+        }
+
+        if(!($('#cod_cost').val() === 'undefined' || $('#cod_cost').val() == '')){
+            cod_cost = parseInt($('#cod_cost').val());
+        }else{
+            cod_cost = 0;
+        }
+
+        if(!($('#percent_tax').val() === 'undefined' || $('#percent_tax').val() == '')){
+            percent_tax = parseInt($('#percent_tax').val());
+            if(percent_tax >= 100){
+                percent_tax = 10;
+            }
+            total_tax = (total_price - total_discount) * (percent_tax / 100);
+            $('#total_tax').val(total_tax);
+        }else{
+            total_tax = 0;
+        }
+
+        total_charges = (total_price - total_discount) + total_tax + cod_cost;
+
+        $('#total_charges').val(total_charges);
+
+    }
+
 
 
 
@@ -355,6 +481,8 @@
                                     Merchant ID : <span id="merchant_id_txt"></span><br />
                                     <input type="text" id="merchant_name" name="merchant_name" value="" />
                                     <input type="hidden" value="" id="merchant_id" name="merchant_id" />
+                                    <input type="hidden" value="" id="merchant_fullname" name="merchant_fullname" />
+                                    <input type="hidden" value="" id="merchant_email" name="merchant_email" />
                                 </td>
                             </tr>
                             <tr>
@@ -378,6 +506,12 @@
                                 <td class="row_label">Delivery City:</td>
                                 <td>
                                     <input type="text" id="buyerdeliverycity" name="buyerdeliverycity" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="row_label">ZIP:</td>
+                                <td>
+                                    <input type="text" id="buyerdeliveryzip" name="buyerdeliveryzip" value="" />
                                 </td>
                             </tr>
                             <tr>
@@ -424,6 +558,12 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Direction:</td>
+                                <td>
+                                    <textarea id="direction"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Phone:</td>
                                 <td>
                                     <input type="text" id="phone" name="phone" value="" />
@@ -435,7 +575,42 @@
             </tr>
             <tr>
                 <td colspan="2" id="order_details">
-                    <?php echo $this->table->generate(); ?>
+                    <table border="0" cellpadding="4" cellspacing="0" class="dataTable">
+                        <thead>
+                            <tr>
+                            <th>Description</th><th>Quantity</th>
+                            <th>Total <select name="currency">
+                                <option value="0">IDR</option>
+                                <option value="1">USD</option>
+                                </select>
+                            </th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_body">
+                            <tr id="detail_row">
+                                <td class='item_form'><input type="text" name="description" value="" id="description"  /></td><td class='item_form'><input type="text" name="quantity" value="" id="quantity"  /></td><td class='item_form'><input type="text" name="unit_total" value="" id="unit_total"  /><button name="add_item" type="button" id="add_item" >+</button></td>
+                            </tr>
+                            <tr id="calc_data">
+                                <td>&nbsp;</td><td class='lsums'>Total Price</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
+                            </tr>
+                            <tr class="detail_row">
+                                <td>&nbsp;</td><td class='lsums'>Total Discount</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount" class="sum_input"  /></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
+                            </tr>
+                            <tr class="detail_row">
+                                <td>&nbsp;</td><td class='lsums'>COD Charges</td><td class='sums'><input type="text" name="cod_cost" value="" id="cod_cost" class="sum_input"  /></td>
+                            </tr>
+                            <tr>
+                                <td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td>
+                            </tr>
+                            <tr class="detail_row">
+                                <td>&nbsp;</td><td class='lsums'>&nbsp</td><td id='cod_cost' class='sums'><button name="recalc" type="button" id="recalc" >Calculate</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <?php //echo $this->table->generate(); ?>
                 </td>
             </tr>
         </tbody>
