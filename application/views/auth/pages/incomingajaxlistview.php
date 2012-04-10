@@ -474,7 +474,7 @@
 		$('#neworder_dialog').dialog({
 			autoOpen: false,
 			height: 600,
-			width: 900,
+			width: 950,
 			modal: true,
 			buttons: {
 				Save: function(){

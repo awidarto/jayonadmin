@@ -178,20 +178,39 @@
         }
 
         table#main_table textarea{
-            width:220px;
+            width:200px;
             height:40px;
         }
 
-        td#order_details input[type="text"]#quantity{
-            width:50px;
+        td#order_details input[type="text"]#quantity,
+        td#order_details input[type="text"].item_qty,
+        td#order_details input[type="text"].item_pct_disc,
+        td#order_details input[type="text"]#unit_percent_discount{
+            width:40px;
+            text-align:right;
         }
 
-        td#order_details input[type="text"]#description{
-            width:350px;
+        td#order_details input[type="text"]#unit_nominal_discount,
+        td#order_details input[type="text"]#unit_price,
+        td#order_details input[type="text"].item_unit_price,
+        td#order_details input[type="text"].item_total,
+        td#order_details input[type="text"].item_nom_disc{
+            width:100px;
+            text-align:right;
+        }
+
+        td#order_details input[type="text"].item_total{
+            width:150px;
+            text-align:right;
+        }
+
+        td#order_details input[type="text"]#description,
+        td#order_details input[type="text"].item_desc{
+            width:250px;
         }
 
         td#order_details input[type="text"]{
-            width:220px;
+            width:150px;
         }
 
         .dataTable th{
@@ -214,6 +233,7 @@
         .item_price{
             text-align:right;
         }
+
         td.item_form{
             text-align:center;
         }
@@ -240,6 +260,7 @@
     var sequence = 0;
 
     var total_price = 0;
+    var total_price_discounted = 0;
     var total_discount = 0;
     var total_charges = 0;
     var total_tax = 0;
@@ -368,15 +389,13 @@
         $('#add_item').click(function(){
             sequence++;
             var row = '<tr id="trx_'+ sequence+'">';
-                row += '<td class="item_form"><input type="text" class="item_desc" name="description" value="'+ $('#description').val() +'" id="description"  /></td>';
-                row += '<td class="item_form"><input type="text" class="item_qty" name="quantity" value="'+ $('#quantity').val() +'" id="quantity"  /></td>';
-                row += '<td><input type="text" class="item_price" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
+                row += '<td class="item_form"><input type="text" class="item_desc" name="description" value="'+ $('#description').val() +'" /></td>';
+                row += '<td class="item_form"><input type="text" class="item_qty" name="quantity" value="'+ $('#quantity').val() +'" /></td>';
+                row += '<td><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
+                row += '<td class="item_form"><input type="text" class="item_pct_disc" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
+                row += '<td><input type="text" class="item_nom_disc" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
+                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
                 row += '</tr>';
-
-            var unit_price = $('#unit_total').val()*$('#quantity').val();
-            total_price += unit_price;
-
-            $('#total_price').val(total_price);
 
             $('#calc_data').before(row);
 
@@ -384,6 +403,9 @@
 
             $('#description').val('');
             $('#quantity').val('');
+            $('#unit_price').val('');
+            $('#unit_percent_discount').val('');
+            $('#unit_nominal_discount').val('');
             $('#unit_total').val('');
         });
 
@@ -407,7 +429,11 @@
     function calculate(){
 
         var qtys = [];
-        var prcs = [];
+        var uprice = [];
+        var upct = [];
+        var unom = [];
+        var utotal = [];
+        var itemtotal = [];
 
         i = 0;
         $('.item_qty').each(function(){
@@ -416,25 +442,54 @@
         }); 
 
         i = 0;
-        $('.item_price').each(function(){
-            prcs[i] = $(this).val();
+        $('.item_unit_price').each(function(){
+            uprice[i] = $(this).val();
             i++;
         });
 
+
         total_price = 0;
+        total_discount = 0;
 
-        for(i = 0;i < qtys.length;i++){
-            total_price += parseInt(qtys[i]) * parseInt(prcs[i]);
-        }
+        i = 0;
+        $('.item_total').each(function(){
+            var unit_total = qtys[i] * uprice[i];
+            utotal[i] = unit_total;
+            $(this).val(unit_total);
+            total_price += unit_total;
+            i++;
+        });
 
-        $('#total_price').val(total_price);
+        //calculate unit discount
+        i = 0;
+        $('.item_pct_disc').each(function(){
+            upct[i] = $(this).val();
+            i++;
+        });
 
+        i = 0;
+        $('.item_nom_disc').each(function(){
+            if($(this).val() === 'undefined' || $(this).val() == '' || $(this).val() == 0 || $(this).val() == null || $(this).val() === 'NaN'){
+                if(upct[i] === 'undefined' || upct[i] == '' || upct[i] == 0 || upct[i] == null || upct[i] === 'NaN'){
+                    var disc = 0;                            
+                }else{
+                    var disc = utotal[i] * (upct[i]/100);            
+                }
+                unom[i] = disc;
+            }else{
+                unom[i] = $(this).val();
+                upct[i] = (unom[i] / utotal[i]) * 100;
+            }
+            $(this).val(unom[i]);
+            total_discount += parseInt(unom[i]);
+            i++;
+        });
 
-        if(!($('#total_discount').val() === 'undefined' || $('#total_discount').val() == '')){
-            total_discount = parseInt($('#total_discount').val());
-        }else{
-            total_discount = 0;
-        }
+        i = 0;
+        $('.item_pct_disc').each(function(){
+            $(this).val(upct[i]);
+            i++;
+        });
 
         if(!($('#cod_cost').val() === 'undefined' || $('#cod_cost').val() == '')){
             cod_cost = parseInt($('#cod_cost').val());
@@ -442,7 +497,7 @@
             cod_cost = 0;
         }
 
-        if(!($('#percent_tax').val() === 'undefined' || $('#percent_tax').val() == '')){
+        if(!($('#percent_tax').val() === 'undefined' || $('#percent_tax').val() == '' || $('#percent_tax').val() == 0 || $('#percent_tax').val() == null || $('#percent_tax').val() === 'NaN')){
             percent_tax = parseInt($('#percent_tax').val());
             if(percent_tax >= 100){
                 percent_tax = 10;
@@ -453,14 +508,17 @@
             total_tax = 0;
         }
 
+        if($('#fixed_discount').is(':checked')){
+            total_discount = parseInt($('#total_discount').val());
+        }
+
         total_charges = (total_price - total_discount) + total_tax + cod_cost;
 
-        $('#total_charges').val(total_charges);
+        $('#total_price').val(total_price);
+        $('#total_discount').val(total_discount);
+        $('#total_charges').val(total_charges);        
 
     }
-
-
-
 
     </script>
 
@@ -580,36 +638,46 @@
                 <td colspan="2" id="order_details">
                     <table border="0" cellpadding="4" cellspacing="0" class="dataTable">
                         <thead>
-                            <tr>
-                            <th>Description</th><th>Quantity</th>
-                            <th>Total <select name="currency">
-                                <option value="0">IDR</option>
-                                <option value="1">USD</option>
-                                </select>
-                            </th>
+                            <tr syle="vertical-align:top;">
+                                <th rowspan="2">Description</th>
+                                <th rowspan="2">Quantity</th>
+                                <th rowspan="2">Unit Price</th>
+                                <th rowspan="1" colspan="2">Discount</th>
+                                <th rowspan="2">Total
+                                    <select name="currency">
+                                        <option value="0">IDR</option>
+                                        <option value="1">USD</option>
+                                    </select><button name="recalc" type="button" id="recalc" >Recalc</button>
+                                </th>
+                            </tr>
+                            <tr syle="vertical-align:top;">
+                                <th>in %</th>
+                                <th>in nominal</th>
                             </tr>
                         </thead>
                         <tbody id="detail_body">
                             <tr id="detail_row">
-                                <td class='item_form'><input type="text" name="description" value="" id="description"  /></td><td class='item_form'><input type="text" name="quantity" value="" id="quantity"  /></td><td class='item_form'><input type="text" name="unit_total" value="" id="unit_total"  /><button name="add_item" type="button" id="add_item" >+</button></td>
+                                <td class='item_form'><input type="text" name="description" value="" id="description"  /></td>
+                                <td class='item_form'><input type="text" name="quantity" value="" id="quantity"  /></td>
+                                <td class='item_form'><input type="text" name="unit_price" value="" id="unit_price"  /></td>
+                                <td class='item_form'><input type="text" name="unit_percent_discount" value="" id="unit_percent_discount"  /></td>
+                                <td class='item_form'><input type="text" name="unit_nominal_discount" value="" id="unit_nominal_discount"  /></td>
+                                <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /><button name="add_item" type="button" id="add_item" >+</button></td>
                             </tr>
                             <tr id="calc_data">
-                                <td>&nbsp;</td><td class='lsums'>Total Price</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td class='lsums'>Total Discount</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input" /></td>
                             </tr>
                             <tr>
-                                <td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td class='lsums'>COD Charges</td><td class='sums'><input type="text" name="cod_cost" value="" id="cod_cost" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>COD Charges</td><td class='sums'><input type="text" name="cod_cost" value="" id="cod_cost" class="sum_input"  /></td>
                             </tr>
                             <tr>
-                                <td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td>
-                            </tr>
-                            <tr class="detail_row">
-                                <td>&nbsp;</td><td class='lsums'>&nbsp</td><td id='cod_cost' class='sums'><button name="recalc" type="button" id="recalc" >Calculate</button></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td>
                             </tr>
                         </tbody>
                     </table>
