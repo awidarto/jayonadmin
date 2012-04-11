@@ -213,6 +213,10 @@
             width:150px;
         }
 
+        input[type="text"]{
+            border:thin solid grey;
+        }
+
         .dataTable th{
             text-align:center;
         }
@@ -240,6 +244,10 @@
 
         tr#detail_row td{
             background-color: #aaa;
+        }
+
+        .orange{
+            background-color: orange;
         }
     </style>
 
@@ -350,7 +358,9 @@
             select:function(event,ui){
                 $('#buyer_id').val(ui.item.id);
                 $('#buyer_id_txt').html(ui.item.id);                
-                $('#buyer_email').val(ui.item.email)
+                $('#buyer_email').val(ui.item.email);
+                $('#shipping_address').val(ui.item.shipping);
+                $('#phone').val(ui.item.phone);
             }
         });
 
@@ -362,6 +372,8 @@
                 $('#buyer_id').val(ui.item.id);
                 $('#buyer_id_txt').html(ui.item.id);
                 $('#buyer_name').val(ui.item.fullname)
+                $('#shipping_address').val(ui.item.shipping);
+                $('#phone').val(ui.item.phone);
             }
         });
 
@@ -392,8 +404,8 @@
                 row += '<td class="item_form"><input type="text" class="item_desc" name="description" value="'+ $('#description').val() +'" /></td>';
                 row += '<td class="item_form"><input type="text" class="item_qty" name="quantity" value="'+ $('#quantity').val() +'" /></td>';
                 row += '<td><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
-                row += '<td class="item_form"><input type="text" class="item_pct_disc" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
-                row += '<td><input type="text" class="item_nom_disc" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
+                row += '<td class="item_form"><input type="text" class="item_pct_disc orange" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
+                row += '<td><input type="text" class="item_nom_disc orange" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
                 row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
                 row += '</tr>';
 
@@ -413,10 +425,124 @@
             calculate();
         });
 
+
+        $('#createuser_dialog').dialog({
+            autoOpen: false,
+            height: 400,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Create Buyer": function() {
+                    //do something
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#assign_deliverytime').val('');
+            }
+        });
+
+        $('#create_user').click(function(){
+            $('#createuser_dialog').dialog('open');
+        });
+
+
     });
 
     function submitorder(){
-        alert("Processing...");
+        var result = validate();
+        if(result[0]){
+            alert("Processing...");
+            var pdata = {};
+
+
+            pdata.api_key = $('#app_id').val();
+            //pdata.transaction_id = $('#total_charges').val(); // random generated
+            pdata.buyer_id  = $('#buyer_id').val();
+            pdata.merchant_id  = $('#merchant_id').val();
+            pdata.buyer_name = $('#buyer_name').val();
+            pdata.recipient_name = $('#recipient_name').val();
+            pdata.shipping_address = $('#shipping_address').val();
+            pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
+            pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
+            pdata.buyerdeliverytime = $('#buyerdeliverytime').val();
+            pdata.direction = $('#direction').val();
+            pdata.auto_confirm = true; //true
+            pdata.email = $('#buyer_email').val();
+            pdata.zip = $('#buyerdeliveryzip').val();
+            pdata.phone = $('#phone').val();
+            pdata.total_price = $('#total_price').val();
+            pdata.total_discount = $('#total_discount').val();
+            pdata.total_tax = $('#total_tax').val();
+            pdata.chargeable_amount = $('#total_charges').val();
+            pdata.cod_cost = $('#cod_cost').val();     /* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
+            pdata.currency = $('#currency').val();   /* currency in 3 digit codes*/
+            pdata.status = 'confirmed'; /* status can be : pending or confirm, depending on merchant's workflow */
+
+
+            var udescs = [];
+            var uqtys = [];
+            var uprices = [];
+            var upctdisc = [];
+            var unomdisc = [];
+            var utotals = [];
+
+            i = 0;
+            $('.item_desc').each(function(){
+                udescs[i] = $(this).val();
+                i++;
+            }); 
+
+            i = 0;
+            $('.item_qty').each(function(){
+                uqtys[i] = $(this).val();
+                i++;
+            }); 
+
+            i = 0;
+            $('.item_unit_price').each(function(){
+                uprices[i] = $(this).val();
+                i++;
+            });
+
+            i = 0;
+            $('.item_pct_disc').each(function(){
+                upctdisc[i] = $(this).val();
+                i++;
+            });
+
+            i = 0;
+            $('.item_nom_disc').each(function(){
+                unomdisc[i] = $(this).val();
+                i++;
+            });
+
+            i = 0;
+            $('.item_total').each(function(){
+                utotals[i] = $(this).val();
+                i++;
+            });
+
+
+            pdata.udescs = udescs;
+            pdata.uqtys = uqtys;
+            pdata.uprices = uprices;
+            pdata.upctdisc = upctdisc;
+            pdata.unomdisc = unomdisc;
+            pdata.utotals = utotals;
+
+            $.post('<?php print site_url('ajax/neworder');?>',
+                pdata, 
+                function(data) {
+                    alert(data.status);
+                },'json');
+
+        }else{
+            alert(result[1]);
+        }
     }
 
     function removeRow(rowId){
@@ -424,6 +550,21 @@
         $('#'+rowId).remove();
         calculate();
         sequence--;
+    }
+
+    function validate(){
+            if($('#merchant_id').val() === 'undefined' || $('#merchant_id').val() == '' || $('#merchant_id').val() == 0 || $('#merchant_id').val() == null || $('#merchant_id').val() === 'NaN'){
+                return [false,'Merchant Unspecified'];
+            }
+            /*
+            if($('#buyer_id').val() === 'undefined' || $('#buyer_id').val() == '' || $('#buyer_id').val() == 0 || $('#buyer_id').val() == null || $('#buyer_id').val() === 'NaN'){
+                return [false,'Buyer Unspecified'];
+            }
+            */
+            if($('#app_id').val() == 0){
+                return [false, 'Application Domain Invalid'];
+            }
+            return [true,''];
     }
 
     function calculate(){
@@ -603,7 +744,7 @@
                                 <td class="row_label">Buyer Email:</td>
                                 <td>
                                     <input type="text" id="buyer_email" name="buyer_email" value="" />
-                                    <?php print form_button('add_buyer','Create Buyer');?>
+                                    <?php // print form_button(array('name'=>'add_buyer','content'=>'Create New Buyer','id'=>'create_user'));?>
                                 </td>
                             </tr>
                             <tr>
@@ -642,11 +783,11 @@
                                 <th rowspan="2">Description</th>
                                 <th rowspan="2">Quantity</th>
                                 <th rowspan="2">Unit Price</th>
-                                <th rowspan="1" colspan="2">Discount</th>
+                                <th rowspan="1" colspan="2">Unit Discount</th>
                                 <th rowspan="2">Total
-                                    <select name="currency">
-                                        <option value="0">IDR</option>
-                                        <option value="1">USD</option>
+                                    <select name="currency" id="currency" >
+                                        <option value="IDR">IDR</option>
+                                        <option value="USD">USD</option>
                                     </select><button name="recalc" type="button" id="recalc" >Recalc</button>
                                 </th>
                             </tr>
@@ -660,15 +801,15 @@
                                 <td class='item_form'><input type="text" name="description" value="" id="description"  /></td>
                                 <td class='item_form'><input type="text" name="quantity" value="" id="quantity"  /></td>
                                 <td class='item_form'><input type="text" name="unit_price" value="" id="unit_price"  /></td>
-                                <td class='item_form'><input type="text" name="unit_percent_discount" value="" id="unit_percent_discount"  /></td>
-                                <td class='item_form'><input type="text" name="unit_nominal_discount" value="" id="unit_nominal_discount"  /></td>
+                                <td class='item_form'><input type="text" name="unit_percent_discount" value="" id="unit_percent_discount" class="orange" /></td>
+                                <td class='item_form'><input type="text" name="unit_nominal_discount" value="" id="unit_nominal_discount" class="orange" /></td>
                                 <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /><button name="add_item" type="button" id="add_item" >+</button></td>
                             </tr>
                             <tr id="calc_data">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input" /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
@@ -687,5 +828,47 @@
         </tbody>
     </table>
 </div>
+
+<div id="createuser_dialog" title="Create New Buyer">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:50%;border:0;margin:0;vertical-align:top">
+                Full Name:<br />
+                <input type="text" name="fullname" class="form" value="" /><br />
+                
+                Email:<br />
+                <input type="text" name="email" class="form" value="" /><br />
+
+                Phone Number:<br />
+                <input type="text" name="phone" class="form" value="" /><br />
+
+                Mobile Number:<br />
+                <input type="text" name="mobile" class="form" value="" /><br />
+
+            </td>
+            <td style="width:50%;border:0;margin:0;vertical-align:top">
+                Street:<br />
+                <input type="text" name="street" class="form" value="" /><br />
+
+                District:<br />
+                <input type="text" name="district" class="form" value="" /><br />
+
+                City:<br />
+                <input type="text" name="city" class="form" value="" /><br />
+
+                ZIP:<br />
+                <input type="text" name="zip" class="form" value="" /><br />
+
+                Province:<br />
+                <input type="text" name="province" class="form" value="" /><br />
+
+                Country:<br />
+                <input type="text" name="country" class="form" value="" /><br />
+
+            </td>
+        </tr>
+    </table>
+</div>
+
 </body>
 </html>

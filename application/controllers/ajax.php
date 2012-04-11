@@ -69,9 +69,10 @@ class Ajax extends Application
 		$apps = $this->db->get($this->config->item('applications_table'));
 
 		if($apps->num_rows() > 0){
+			$app[0] = 'Select application domain';
 			foreach ($apps->result() as $r) {
 				$app[$r->key] = $r->application_name;
-			}			
+			}
 		}else{
 			$app[0] = 'Select application domain';
 		}
@@ -83,75 +84,73 @@ class Ajax extends Application
 
 	public function neworder(){
 
-		$url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
-		
+		$this->load->library('curl');
+
+		$udescs = $this->input->post('udescs');
+        $uqtys = $this->input->post('uqtys');
+        $uprices = $this->input->post('uprices');
+        $upctdisc = $this->input->post('upctdisc');
+        $unomdisc = $this->input->post('unomdisc');
+        $utotals = $this->input->post('utotals');
+
+        $trx_detail = array();
+
+        for($i=0;$i < sizeof($uprices);$i++){
+        	$line = array(
+        			'unit_description'=>$udescs[$i],
+					'unit_price'=>$uprices[$i],
+					'unit_quantity'=>$uqtys[$i],
+					'unit_total'=>$utotals[$i],
+					'unit_pct_discount'=>$upctdisc[$i],
+					'unit_discount'=>$unomdisc[$i]
+        		);
+        	$trx_detail[] = $line;
+        }
+
+
+		$merchant_id = $this->input->post('merchant_id');
+		$buyer_id = $this->input->post('buyer_id');		
+
 		$trx = array(
-			'api_key'=>$api_key,
-			'transaction_id'=>$trx_id,
-			'buyer_name'=>$buyer_name,
-			'recipient_name'=>$recipient_name,
-			'shipping_address'=>$shipping_address,
-			'buyerdeliveryzone'=>$buyerdeliveryzone,
-			'buyerdeliverycity'=>$buyerdeliverycity,
-			'buyerdeliverytime'=>$buyerdeliverytime,
-			'directions'=>$directions,
-			'auto_confirm'=>false,
-			'email'=>$email,
-			'zip' => $zip,
-			'phone' => $phone,
-			'total_price'=>500000,
-			'total_discount'=>20000,
-			'total_tax'=>'117.500',
-			'chargeable_amount'=>500000,
-			'cod_cost' => '0', 		/* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
-			'currency' => 'IDR', 	/* currency in 3 digit codes*/
-			'status'=>$status, 	/* status can be : pending or confirm, depending on merchant's workflow */
-
-			/*
-				trx_detail should contain merchants transaction details for perticular session, below are just example
-			*/
-
-			'trx_detail'=>array( // 
-				array(
-					'unit_description'=>'kaos oblong swan',
-					'unit_price'=>3000,
-					'unit_quantity'=>100,
-					'unit_total'=>280000,
-					'unit_discount'=>20000
-				),
-				array(
-					'unit_description'=>'kaos turtle neck',
-					'unit_price'=>35000,
-					'unit_quantity'=>2,
-					'unit_total'=>70000,
-					'unit_discount'=>0,
-				),
-				array(
-					'unit_description'=>'kaos polo biru',
-					'unit_price'=>135000,
-					'unit_quantity'=>5,
-					'unit_total'=>675000,
-					'unit_discount'=>0,
-				),
-				array(
-					'unit_description'=>'kaos kutung',
-					'unit_price'=>15000,
-					'unit_quantity'=>10,
-					'unit_total'=>150000,
-					'unit_discount'=>0
-				)
-			)
+			'api_key'=>$this->input->post('api_key'),
+			'buyer_name'=>$this->input->post('buyer_name'),
+			'recipient_name'=>$this->input->post('recipient_name'),
+			'shipping_address'=>$this->input->post('shipping_address'),
+			'buyerdeliveryzone'=>$this->input->post('buyerdeliveryzone'),
+			'buyerdeliverycity'=>$this->input->post('buyerdeliverycity'),
+			'buyerdeliverytime'=>$this->input->post('buyerdeliverytime'),
+			'directions'=>$this->input->post('direction'),
+			'auto_confirm'=>$this->input->post('auto_confirm'),
+			'email'=>$this->input->post('email'),
+			'zip' => $this->input->post('zip'),
+			'phone' => $this->input->post('phone'),
+			'total_price'=>$this->input->post('total_price'),
+			'total_discount'=>$this->input->post('total_discount'),
+			'total_tax'=>$this->input->post('total_tax'),
+			'chargeable_amount'=>$this->input->post('chargeable_amount'),
+			'cod_cost' => $this->input->post('cod_cost'), 		
+			'currency' => $this->input->post('currency'), 	
+			'status'=>$this->input->post('status'),
+			'merchant_id'=>$this->input->post('merchant_id'),
+			'buyer_id'=>$this->input->post('buyer_id'),
+			'trx_detail'=>$trx_detail
 		);
-		
-		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
 
+		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
+
+		$api_key = $this->input->post('api_key');
+		$trx_id = $trx['transaction_id'];
+
+		$url = base_url().'api/v1/post/'.$api_key.'/'.$trx_id;
+
+		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
 		
 		print $result;
 
 	}
 
 	public function subcalc(){
-		
+
 	}
 
 	public function getdateblock($month = null){

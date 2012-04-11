@@ -113,8 +113,7 @@ function ajax_find_merchants($zone,$col = 'fullname',$idcol = 'id'){
 function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id'){
 	$CI =& get_instance();
 	$group_id = user_group_id('buyer');
-
-	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email',false)
+	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email, concat_ws(\',\',street,district,province,city,country) as shipping, phone as phone',false)
 		->like('fullname',$zone)
 		->or_like('merchantname',$zone)
 		->or_like('username',$zone)
@@ -129,7 +128,7 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 	$CI =& get_instance();
 	$group_id = user_group_id('buyer');
 
-	$q = $CI->db->select($idcol.' as id ,email as label, email as value, fullname as fullname',false)
+	$q = $CI->db->select($idcol.' as id ,email as label, email as value, fullname as fullname, concat_ws(\',\',street,district,province,city,country) as shipping,phone as phone',false)
 		->like('email',$zone)
 		->where('group_id',$group_id)
 		->distinct()
