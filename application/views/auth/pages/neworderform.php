@@ -249,6 +249,27 @@
         .orange{
             background-color: orange;
         }
+
+        button, select{
+            font-size: 11px;
+            border:thin solid grey;
+        }
+
+        #loader{
+            position:absolute;
+            top:350px;
+            left:400px;
+            width:100px;
+            border:thin solid grey;
+            height:20px;
+            background-color: white;
+            font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
+            font-size: 12px;
+            padding:2px;
+            text-align:center;
+            vertical-align: middle;
+
+        }
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -455,7 +476,7 @@
     function submitorder(){
         var result = validate();
         if(result[0]){
-            alert("Processing...");
+            //alert("Processing...");
             var pdata = {};
 
 
@@ -534,10 +555,16 @@
             pdata.unomdisc = unomdisc;
             pdata.utotals = utotals;
 
+            $('#loader').show();
             $.post('<?php print site_url('ajax/neworder');?>',
                 pdata, 
                 function(data) {
-                    alert(data.status);
+                    $('#loader').hide();
+                    if(data.status == 'OK:ORDERPOSTED'){
+                        alert('Transaction Success');
+                        $('#neworder_dialog').dialog( "close" );
+                    }
+                    //alert(data.status);
                 },'json');
 
         }else{
@@ -784,11 +811,11 @@
                                 <th rowspan="2">Quantity</th>
                                 <th rowspan="2">Unit Price</th>
                                 <th rowspan="1" colspan="2">Unit Discount</th>
-                                <th rowspan="2">Total
+                                <th rowspan="2">Total<br />
                                     <select name="currency" id="currency" >
                                         <option value="IDR">IDR</option>
                                         <option value="USD">USD</option>
-                                    </select><button name="recalc" type="button" id="recalc" >Recalc</button>
+                                    </select><button name="recalc" type="button" id="recalc" >Recalculate</button>
                                 </th>
                             </tr>
                             <tr syle="vertical-align:top;">
@@ -828,7 +855,9 @@
         </tbody>
     </table>
 </div>
-
+<div id="loader" style="display:none;">
+    <img src="<?php print base_url();?>assets/images/ajax_loader.gif" /> Processing...
+</div>
 <div id="createuser_dialog" title="Create New Buyer">
     <table style="width:100%;border:0;margin:0;">
         <tr>
