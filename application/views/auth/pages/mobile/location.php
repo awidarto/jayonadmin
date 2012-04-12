@@ -13,9 +13,9 @@
 			    },
 			events:{
 				click:function(marker, event, data){
-					console.log(event.latLng.toString());
-					//console.log(marker);
-					//console.log(data);
+					//console.log(event.latLng.toString());
+					////console.log(marker);
+					////console.log(data);
 					var latlon = event.latLng.toString().replace('(','').replace(')','').replace(' ','').split(',');
 
 					$('#lat').val(latlon[0]);
