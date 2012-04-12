@@ -45,10 +45,15 @@ class V1 extends Application
 				}
 
 				$is_new = false;
-				if($buyer = $this->check_email($in->email)){
+				if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
+					$in->email = 'noemail';
+					$is_new = true;
+				}else if($buyer = $this->check_email($in->email)){
 					$buyer_id = $buyer['id'];
 					$is_new = false;
-				}else{
+				}
+
+				if($is_new){
 					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
 					$dataset['username'] = $buyer_username;
 					$dataset['email'] = $in->email;
@@ -226,6 +231,8 @@ class V1 extends Application
 					print $result;
 				}
 
+				//print_r($app);
+
 				if($app->notify_on_new_order == 1){
 					send_notification('New Delivery Order - Jayon Express COD Service',$in->email,null,null,'order_submit',$nedata,null);
 				}
@@ -234,7 +241,7 @@ class V1 extends Application
 					$edata['fullname'] = $dataset['fullname'];
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
-					if($app->notify_on_new_member == 1){
+					if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
 						send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
 					}
 
