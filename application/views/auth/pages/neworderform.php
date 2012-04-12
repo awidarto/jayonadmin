@@ -716,7 +716,7 @@
                             </tr>
                             <tr>
                                 <td>Store Detail:</td>
-                                <td class="editable" id="application_id">
+                                <td id="application_id">
                                     <select name="app_id" id="app_id">
                                         <option value="0">Select application domain</option>
                                     </select>
