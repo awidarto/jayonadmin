@@ -294,6 +294,7 @@
     var total_charges = 0;
     var total_tax = 0;
     var cod_cost = 0;
+    var percent_tax = 0;
 
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
