@@ -488,5 +488,35 @@ function colorizestatus($status){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
+function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
+	$CI =& get_instance();
 
+	$series = array();
+	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+		$day = str_pad($i, '0',2);
+
+		$date = $year.'-'.$month.'-'.$day;
+
+		$CI->db->like('assignment_date', $date);
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+		$timestamp = strtotime($date);
+		$timestamp = (double)$timestamp;
+		$series[] = array('x'=>$timestamp,'y'=>$count);
+	}
+
+	$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
+	
 ?>

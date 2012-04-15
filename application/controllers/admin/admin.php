@@ -13,7 +13,30 @@ class Admin extends Application
 		{
 			$this->breadcrumb->add_crumb('Home','admin/dashboard');
 			$this->breadcrumb->add_crumb('Dashboard','admin/dashboard');
-			
+
+			$year = date('Y',time());
+			$month = date('m',time());
+
+			$allseries = getmonthlydatacount($year,$month,null,null);
+
+			$page['all'] = $allseries;
+
+			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_delivered')),null);
+
+			$page['delivered'] = json_encode($series);
+
+			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_rescheduled')),null);
+
+			$page['rescheduled'] = json_encode($series);
+
+			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_revoked')),null);
+
+			$page['revoked'] = json_encode($series);
+
+			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_noshow')),null);
+
+			$page['noshow'] = json_encode($series);
+
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}

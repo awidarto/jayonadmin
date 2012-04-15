@@ -327,6 +327,19 @@ class Prints extends Application
 			}
 		}
 
+	public function reconciliation($from, $to ,$merchant_id,$pdf = false){
+
+
+		if($pdf){
+			$html = $this->load->view('print/reconsiliation',$data,true);
+			//print $html; // Load the view
+			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+		}else{
+			$this->load->view('print/reconciliation',$data); // Load the view
+		}
+
+	}
+
 
 }
 

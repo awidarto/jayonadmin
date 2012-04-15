@@ -13,6 +13,7 @@
 		<?php echo $this->ag_asset->load_css('datatables_page.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('datatables_table.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
+		<?php echo $this->ag_asset->load_css('rickshaw.min.css');?>
 
 		
 		<?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
@@ -20,6 +21,10 @@
 
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
+
+		<?php echo $this->ag_asset->load_script('d3.min.js','vendor');?>
+		<?php echo $this->ag_asset->load_script('d3.layout.min.js','vendor');?>
+		<?php echo $this->ag_asset->load_script('rickshaw.min.js');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
 
