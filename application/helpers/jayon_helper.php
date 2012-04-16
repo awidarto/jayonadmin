@@ -550,11 +550,11 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 
 		
 		if(is_null($where)){
-			$CI->db->like('ordertime', $date);
+			$CI->db->like('ordertime', $date, 'after');
 		}else if($where['status'] == 'confirmed' || $where['status'] == 'pending'){
-			$CI->db->like('buyerdeliverytime', $date);
+			$CI->db->like('buyerdeliverytime', $date, 'after');
 		}else{
-			$CI->db->like('assignment_date', $date);
+			$CI->db->like('assignment_date', $date, 'after');
 		}
 
 		if(!is_null($where)){
