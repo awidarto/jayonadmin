@@ -39,7 +39,7 @@ td {
 			<td style="width:100%;height:100%;vertical-align:top;">
 				<h3>Statistics</h3>
 				<div id="statistics"  style="width:100%;height:100%;">
-					<span>Incoming <?php print $period;?></span>
+					<span>Total Incoming <?php print $period;?></span>
 					<div id="incoming_monthly" class="stat_box">
 						<img src="<?php print base_url();?>admin/admin/monthlygraph" alt="monthly_all" />
 					</div>
@@ -58,6 +58,10 @@ td {
 					<span>No Show <?php print $period;?></span>
 					<div id="noshow_monthly" class="stat_box">
 						<img src="<?php print base_url();?>admin/admin/monthlygraph/noshow" alt="monthly_all" />
+					</div>
+					<span>Archived <?php print $period;?></span>
+					<div id="noshow_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/admin/monthlygraph/archived" alt="monthly_all" />
 					</div>
 				</div>
 			</td>
