@@ -47,7 +47,12 @@ class Admin extends Application
 		$year = date('Y',time());
 		$month = date('m',time());
 
-		$series = getmonthlydatacountarray($year,$month,array('status'=>$status),null);
+		if(is_null($status)){
+			$status = null;
+		}else{
+			$status = array('status'=>$status);
+		}
+		$series = getmonthlydatacountarray($year,$month,$status,null);
 		//$series = getmonthlydatacountarray($year,$month,$status,null);
 
 		$lineplot->SetPlotType('bars');
