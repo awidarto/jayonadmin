@@ -20,6 +20,12 @@ class Reports extends Application
 	public function index(){
 		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
 
+		$year = date('Y',time());
+		$month = date('m',time());
+
+		$page['period'] = ' - '.date('M Y',time());
+		$page['page_title'] = 'Dashboard';
+
 		$page['page_title'] = 'Report Summary';
 		$this->ag_auth->view('reports/index',$page); // Load the view
 	}
