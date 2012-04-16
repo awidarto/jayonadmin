@@ -18,7 +18,7 @@
 </script>
 <style>
 .stat_box{
-	border:thin solid #ccc;
+	border:0px solid #ccc;
 	margin-bottom:10px;
 	display: block;
 }
