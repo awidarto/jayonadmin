@@ -17,26 +17,7 @@ class Admin extends Application
 			$year = date('Y',time());
 			$month = date('m',time());
 
-			$allseries = getmonthlydatacount($year,$month,null,null);
-
-			$page['all'] = $allseries;
-
-			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_delivered')),null);
-
-			$page['delivered'] = json_encode($series);
-
-			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_rescheduled')),null);
-
-			$page['rescheduled'] = json_encode($series);
-
-			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_revoked')),null);
-
-			$page['revoked'] = json_encode($series);
-
-			$series = getmonthlydatacount($year,$month,array('status'=>$this->config->item('trans_status_mobile_noshow')),null);
-
-			$page['noshow'] = json_encode($series);
-
+			$page['period'] = ' - '.date('M Y',time());
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}
@@ -57,6 +38,37 @@ class Admin extends Application
 		}else{
 			print "failed to send notification";
 		}
+	}
+
+	public function monthlygraph($status = null){
+		$this->load->library('plot');
+		$lineplot = $this->plot->plot(500,130);
+
+		$year = date('Y',time());
+		$month = date('m',time());
+
+		$series = getmonthlydatacountarray($year,$month,array('status'=>$status),null);
+		//$series = getmonthlydatacountarray($year,$month,$status,null);
+
+		$lineplot->SetPlotType('bars');
+		$lineplot->setShading(0);
+		$lineplot->SetDataValues($series);
+
+		$lineplot->SetYDataLabelPos('plotin');
+
+		# With Y data labels, we don't need Y ticks or their labels, so turn them off.
+		//$lineplot->SetYTickLabelPos('none');
+		//$lineplot->SetYTickPos('none');		
+
+		$lineplot->SetYTickIncrement(1);
+		$lineplot->SetPrecisionY(0);
+
+		//Turn off X axis ticks and labels because they get in the way:
+		$lineplot->SetXTickLabelPos('none');
+		$lineplot->SetXTickPos('none');
+
+		//Draw it
+		$lineplot->DrawGraph();
 	}
 
 	public function resetpass(){

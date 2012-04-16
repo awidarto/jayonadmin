@@ -496,7 +496,14 @@ function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
 
 	$data = array();
 	for($i = 1 ; $i <= $num;$i++){
-		$day = str_pad($i, '0',2);
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
 
 		$date = $year.'-'.$month.'-'.$day;
 
@@ -510,6 +517,9 @@ function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
 		$CI->db->from($CI->config->item('incoming_delivery_table'));
 
 		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
 		$timestamp = strtotime($date);
 		$timestamp = (double)$timestamp;
 		$series[] = array('x'=>$timestamp,'y'=>$count);
@@ -518,5 +528,47 @@ function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
 	$series = str_replace('"', '', json_encode($series)) ;
 	return $series;
 }
+
+function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null){
+	$CI =& get_instance();
+
+	$series = array();
+	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
+
+		$date = $year.'-'.$month.'-'.$day;
+
+		$CI->db->like('assignment_date', $date);
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
+		//$timestamp = strtotime($date);
+		//$timestamp = (double)$timestamp;
+		$series[] = array($day,$count);
+	}
+
+	//$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
+
 	
 ?>
