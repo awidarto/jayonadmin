@@ -548,16 +548,21 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 
 		$date = $year.'-'.$month.'-'.$day;
 
-		//$CI->db->like('assignment_date', $date);
-		//$CI->db->or_like('buyerdeliverytime', $date);
-		$CI->db->like('buyerdeliverytime', $date);
+		
+		if(is_null($status) || $status == 'confirmed' || $status == 'pending'){
+			$CI->db->or_like('buyerdeliverytime', $date);
+		}else{
+			$CI->db->like('assignment_date', $date);
+		}
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
 		
 		if(!is_null($merchant_id)){
 			$CI->db->where('merchant_id', $merchant_id);
 		}
-		if(!is_null($where)){
-			$CI->db->where($where);
-		}
+
 		$CI->db->from($CI->config->item('incoming_delivery_table'));
 
 		$count = $CI->db->count_all_results();
