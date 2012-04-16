@@ -34,7 +34,7 @@ td {
 		<tr>
 			<td>
 				<h3>Last 5 Positions</h3>
-				<div id="map" style="width:600px;height:800px;display:block;"></div>
+				<div id="map" style="width:600px;height:950px;display:block;"></div>
 			</td>
 			<td style="width:100%;height:100%;vertical-align:top;">
 				<h3>Statistics</h3>
