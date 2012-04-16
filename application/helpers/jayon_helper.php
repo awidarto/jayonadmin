@@ -548,7 +548,7 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 
 		$date = $year.'-'.$month.'-'.$day;
 
-		
+		/*
 		if(is_null($where)){
 			$CI->db->like('ordertime', $date, 'after');
 		}else{
@@ -559,6 +559,13 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 				$CI->db->like('assignment_date', $date, 'after');
 				$CI->db->where($where);
 			}
+		}
+		*/
+
+		$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
 		}
 
 		if(!is_null($merchant_id)){
