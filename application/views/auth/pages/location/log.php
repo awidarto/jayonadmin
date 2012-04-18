@@ -171,7 +171,7 @@
 	<div id="tracker" >
 		<table style="padding:0px;margin:0px;">
 			<tr>
-				<td>
+				<td style="vertical-align: top;">
 					<h3>Position Tracker</h3>
 					<div id="map" style="width:525px;height:400px;display:block;border:thin solid grey;"></div>
 				</td>
