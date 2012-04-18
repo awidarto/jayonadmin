@@ -10,7 +10,7 @@
 		}
 
 		#wrapper{
-			width:850px;
+			width:1000px;
 			margin:5px;
 			display:block;
 			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
@@ -20,11 +20,11 @@
 
 		h2{
 			margin:0px;
-			padding-top:15px;
 		}
 
 		td{
 			font-size: 12px;
+			padding:5px;
 		}
 
 		.dataTable{
@@ -81,10 +81,14 @@
 			width:170px;
 		}
 
-		#order_detail,#merchant_detail{
+		#order_detail,#merchant_detail,#sign_boxes{
 			vertical-align:top;
 			padding-top:0px;
 			
+		}
+
+		#order_detail{
+			width:400px;
 		}
 
 		#order_detail h2{
@@ -92,8 +96,13 @@
 		}
 
 		#merchant_detail{
+			width:300px;
 			margin:0px;
-			padding:8px;
+			padding:0px;
+		}
+
+		table#mainInfo{
+			width:100%;
 		}
 
 		#mainInfo tr>td:first-child, #orderInfo tr>td:first-child{
@@ -101,7 +110,6 @@
 		}
 
 		table#main_table{
-			width:850px;
 			padding:0px;
 			margin:0px;
 		}
@@ -111,32 +119,8 @@
 		}
 
 		table#signBox{
-			font-size: 12px;
-			margin-top:15px;
-			width:840px;
-		}
-
-		#signBox th{
-			width:100px;
-			vertical-align:top;
-			border-top: thin solid #eee;
-			border-bottom: thin solid #eee;
-			/*border-right:thin solid #eee;*/
-			margin:2px;
-		}
-
-		#sign_name td{
-			border-top: thin solid #eee;
-			border-bottom: thin solid #eee;
-			/*border-right:thin solid #eee;*/
-		}
-
-		tr#sign_name td:first-child{
-			/*border-left: thin solid #eee;*/
-		}
-
-		#signBox th:first-child{
-			/*border-left: thin solid #eee;*/
+			font-size: 11px;
+			width:300px;
 		}
 
 		#mainInfo tr td:last-child, #orderInfo tr td:last-child{
@@ -157,6 +141,28 @@
 		#order_slot{
 			margin-left:20px;
 			float:right;
+		}
+
+		tr.sign_head td{
+			border: thin solid #eee;
+			text-align:center;
+			font-weight: bold;
+		}
+
+		tr.sign_space td{
+			height:50px;
+			border: thin solid #eee;
+			text-align:center;
+		}
+
+		tr.sign_name td{
+			font-size: 14px;
+			border: thin solid #eee;
+		}
+
+		tr.spacer td{
+			height:8px;
+			display: block;
 		}
 
 	</style>
@@ -220,8 +226,10 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 ?>							
 							<tr>
-								<td>Store Detail:</td>
-								<td><?php print trim($merchant_info);?></td>
+								<td colspan="2">Store Detail:</td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php print trim($merchant_info);?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -262,42 +270,63 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 					<?php echo $this->table->generate(); ?>
 				</td>
-			</tr>
-		</tbody>
-	</table>
-	<table border="0" cellpadding="4" cellspacing="0" id="signBox">
-		<thead>
-			<tr>
-				<th>Created By</th>
-				<th>Online Store</th>
-				<th>Goods Received By</th>
-				<th>Cash Received By</th>
-				<th>Reporting</th>
-				<th>Staff Dispatch Admin</th>
-				<th>Finance</th>
-				<th>Courier</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr style="height:40px;">
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr id="sign_name">
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
+				
+				<td id="sign_boxes">
+					<table border="0" cellpadding="4" cellspacing="0" id="signBox">
+						<tbody>
+							<tr class="sign_head">
+								<td>Created By</td>
+								<td>Online Store</td>
+							</tr>
+							<tr class="sign_space">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_name">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_head">
+								<td>Goods Received By</td>
+								<td>Cash Received By</td>
+							</tr>
+							<tr class="sign_space">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_name">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_head">
+								<td>Reporting</td>
+								<td>Staff Dispatch Admin</td>
+							</tr>
+							<tr class="sign_space">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_name">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_head">
+								<td>Finance</td>
+								<td>Courier</td>
+							</tr>
+							<tr class="sign_space">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_name">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+
+
+				</td>
 			</tr>
 		</tbody>
 	</table>

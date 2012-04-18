@@ -80,7 +80,7 @@
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
-				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
