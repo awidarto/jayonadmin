@@ -224,6 +224,52 @@ class Users extends Application
 		
 	} // public function register()
 
+	public function editprofile()
+	{
+		$id = $this->session->userdata('userid');
+
+		//print_r($this->session->userdata);
+		//print $id;		
+		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]');
+		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
+		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
+
+
+		$user = $this->get_user($id);
+		$data['user'] = $user;
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$data['groups'] = $this->get_group();
+			$data['page_title'] = 'Edit Personal Profile';
+			$this->ag_auth->view('users/editprofile',$data);
+		}
+		else
+		{
+			$dataset['username'] = set_value('username');
+			$dataset['fullname'] = set_value('fullname');
+			$dataset['mobile'] = set_value('mobile'); 
+			$dataset['email'] = set_value('email');
+			
+			if($this->update_user($id,$dataset) === TRUE)
+			{
+				$this->oi->add_success('Personal profile updated successfully.');
+				
+			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
+			else
+			{
+				$this->oi->add_error('Failed to update personal profile');
+			}
+
+			redirect('admin/dashboard');
+
+		} // if($this->form_validation->run() == FALSE)
+		
+	} // public function register()
+
+
+
 	public function editpass($id)
 	{
 		$this->form_validation->set_rules('password', 'Password', 'min_length[6]|matches[password_conf]');

@@ -58,7 +58,7 @@
 				<div id="page_title" style="float:left;width:500px;"><h2 style="margin:0px;text-align:left;"><?php print (isset($data['page_title']))?$data['page_title']:'';?></h2></div>
 				<div id="user_info"  style="float:right;width:400px;padding:0px;">
 					You are currently login as <?php echo username();?><br />
-					<?php echo anchor('admin/users/edit', 'Edit Personal Profile'); ?>&nbsp;&nbsp;<?php echo anchor('admin/admin/changepass', 'Change password'); ?>&nbsp;&nbsp;<?php echo anchor('logout', 'Logout'); ?>
+					<?php echo anchor('admin/users/editprofile', 'Edit Personal Profile'); ?>&nbsp;&nbsp;<?php echo anchor('admin/admin/changepass', 'Change password'); ?>&nbsp;&nbsp;<?php echo anchor('logout', 'Logout'); ?>
 				</div>
 			</div>
 		<?php endif;?>
