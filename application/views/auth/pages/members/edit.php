@@ -4,7 +4,9 @@
 
 			<?php print form_fieldset('Personal Info'); ?>
 
-			Username: <strong><?php echo $user['username'];?></strong><br /><br />
+			<!--Username: <strong><?php echo $user['username'];?></strong><br /><br />-->
+			Username:<br />
+			<input type="text" name="username" size="50" class="form" value="<?php echo set_value('username',$user['username']); ?>" /><?php echo form_error('email'); ?><br /><br />
 
 			Group:<br />
 				<?php echo form_dropdown('group_id',$groups,set_value('group_id',$user['group_id']));?>

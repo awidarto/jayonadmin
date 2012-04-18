@@ -975,6 +975,7 @@ class Members extends Application
 			$utype = 'Buyer';
 		}
 
+		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
@@ -1016,6 +1017,7 @@ class Members extends Application
 		else
 		{
 
+			$dataset['username'] = set_value('username');
 			$dataset['fullname'] = set_value('fullname');
 			$dataset['merchantname'] = set_value('merchantname');
 			$dataset['bank'] = set_value('bank');

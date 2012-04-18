@@ -24,7 +24,6 @@ class Reports extends Application
 		$month = date('m',time());
 
 		$page['period'] = ' - '.date('M Y',time());
-		$page['page_title'] = 'Dashboard';
 
 		$page['page_title'] = 'Report Summary';
 		$this->ag_auth->view('reports/index',$page); // Load the view
