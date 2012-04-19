@@ -92,6 +92,7 @@
         }
 
         #merchant_detail{
+            vertical-align:top;
             margin:0px;
             padding:8px;
         }
@@ -253,6 +254,10 @@
         button, select{
             font-size: 11px;
             border:thin solid grey;
+        }
+
+        #trx_result{
+            font-weight:bold;
         }
 
         #loader{
@@ -551,17 +556,22 @@
             pdata.unomdisc = unomdisc;
             pdata.utotals = utotals;
 
-            $('#loader').show();
-            $.post('<?php print site_url('ajax/neworder');?>',
-                pdata, 
-                function(data) {
-                    $('#loader').hide();
-                    if(data.status == 'OK:ORDERPOSTED'){
-                        alert('Transaction Success');
-                        $('#neworder_dialog').dialog( "close" );
-                    }
-                    //alert(data.status);
-                },'json');
+            if($('#trx_result').html() != 'Transaction Success'){
+                $('#loader').show();
+                $.post('<?php print site_url('ajax/neworder');?>',
+                    pdata, 
+                    function(data) {
+                        $('#loader').hide();
+                        if(data.status == 'OK:ORDERPOSTED'){
+                            //alert('Transaction Success');
+                            $('#trx_result').html('Transaction Success');
+                            $('#neworder_dialog').dialog( "close" );
+                        }
+                        //alert(data.status);
+                    },'json');
+            }else{
+                alert('Order already posted, please close dialog and start over.');
+            }
 
         }else{
             alert(result[1]);
@@ -832,7 +842,7 @@
                                 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td>
+                                <td>&nbsp;</td><td colspan="2" id="trx_result">&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
