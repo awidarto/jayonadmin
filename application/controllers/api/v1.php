@@ -375,6 +375,9 @@ class V1 extends Application
 						$delivery_id = "N/A";
 					}
 
+					$$in->lat = (isset($in->lat))?$in->lat:'';
+					$$in->lon = (isset($in->lon))?$in->lon:'';
+
 					$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
 						'report_timestamp'=>date('Y-m-d h:i:s',time()),
