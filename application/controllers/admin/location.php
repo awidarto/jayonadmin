@@ -114,6 +114,7 @@ class Location extends Application
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
+			->order_by($this->config->item('location_log_table').'.timestamp','desc')
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('location_log_table'));
 
