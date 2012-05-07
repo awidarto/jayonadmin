@@ -281,7 +281,6 @@ class Prints extends Application
 						'&nbsp;',		
 						'COD Charges',		
 						array('data'=>number_format($cod,2,',','.'),
-							'class'=>'editable',
 							'id'=>'cod_cost'
 						)		
 					);

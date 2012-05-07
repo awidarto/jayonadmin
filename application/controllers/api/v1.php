@@ -365,6 +365,7 @@ class V1 extends Application
 				if($dev = $this->get_dev_info($in->key)){
 
 					$dataset['status'] = $in->status;
+					$dataset['deliverytime'] = date('Y-m-d h:i:s',time());
 
 					//other action for different status migh be needed
 

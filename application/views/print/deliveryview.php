@@ -179,7 +179,26 @@
             height:60px;
         }
 
+        #trx_result{
+            font-weight:bold;
+            text-align:center;
+        }
 
+        #loader{
+            position:absolute;
+            top:350px;
+            left:400px;
+            width:100px;
+            border:thin solid grey;
+            height:20px;
+            background-color: white;
+            font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
+            font-size: 12px;
+            padding:2px;
+            text-align:center;
+            vertical-align: middle;
+
+        }
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -224,24 +243,47 @@
 
         });
 
+        function validate(){
+            if($('#buyerdeliverycity').val() === 'undefined' || $('#buyerdeliverycity').val() == '' || $('#buyerdeliverycity').val() == 0 || $('#buyerdeliverycity').val() == null || $('#merchant_id').val() === 'NaN'){
+                return [false,'City Unspecified'];
+            }
+
+            if($('#buyerdeliveryzone').val() === 'undefined' || $('#buyerdeliveryzone').val() == '' || $('#buyerdeliveryzone').val() == 0 || $('#buyerdeliveryzone').val() == null || $('#merchant_id').val() === 'NaN'){
+                return [false,'Zone Unspecified'];
+            }
+
+            /*
+            if($('#buyer_id').val() === 'undefined' || $('#buyer_id').val() == '' || $('#buyer_id').val() == 0 || $('#buyer_id').val() == null || $('#buyer_id').val() === 'NaN'){
+                return [false,'Buyer Unspecified'];
+            }
+            if($('#app_id').val() == 0){
+                return [false, 'Application Domain Invalid'];
+            }
+            */
+            return [true,''];
+        }
+
+
         function submitorder(){
+            //alert('submit order');
             var result = validate();
             if(result[0]){
                 //alert("Processing...");
                 var pdata = {};
 
 
-                pdata.api_key = $('#app_id').val();
+                //pdata.api_key = $('#app_id').val();
                 //pdata.transaction_id = $('#total_charges').val(); // random generated
-                pdata.buyer_id  = $('#buyer_id').val();
-                pdata.merchant_id  = $('#merchant_id').val();
-                pdata.buyer_name = $('#buyer_name').val();
+                //pdata.buyer_id  = $('#buyer_id').val();
+                //pdata.merchant_id  = $('#merchant_id').val();
+                //pdata.buyer_name = $('#buyer_name').val();
+                pdata.delivery_id = $('#delivery_id').val();
                 pdata.recipient_name = $('#recipient_name').val();
                 pdata.shipping_address = $('#shipping_address').val();
                 pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
                 pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
                 pdata.buyerdeliverytime = $('#buyerdeliverytime').val();
-                pdata.direction = $('#direction').val();
+                pdata.directions = $('#directions').val();
                 pdata.auto_confirm = true; //true
                 pdata.email = $('#buyer_email').val();
                 pdata.zip = $('#buyerdeliveryzip').val();
@@ -262,7 +304,7 @@
                         pdata, 
                         function(data) {
                             $('#loader').hide();
-                            if(data.status == 'OK:ORDERPOSTED'){
+                            if(data.status == 'OK:ORDERUPDATED'){
                                 //alert('Transaction Success');
                                 $('#trx_result').html('Transaction Success');
                                 $('#neworder_dialog').dialog( "close" );
@@ -335,6 +377,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             <tr>
                                 <td colspan="2"><?php print trim($merchant_info);?></td>
                             </tr>
+                            <tr>
+                                <td colspan="2" id="trx_result"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </td>
@@ -346,7 +391,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Number:</td>
-                                <td><?php print $main_info['delivery_id'];?></td>
+                                <td><?php print $main_info['delivery_id'];?>
+                                    <input type="hidden" name="delivery_id" value="<?php print $main_info['delivery_id'];?>" id="delivery_id">
+                                </td>
                             </tr>
                             <tr>
                                 <td>Delivery Date:</td>
@@ -374,19 +421,19 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td>Shipping Address:</td>
-                                <td id="shipping_address">
+                                <td>
                                     <?php print form_textarea('shipping_address',$main_info['shipping_address'],'id="shipping_address"');?>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Direction:</td>
+                                <td>How to Get There:</td>
                                 <td>
                                     <?php print form_textarea('directions',$main_info['directions'],'id="directions"');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Phone:</td>
-                                <td id="phone" >
+                                <td>
                                     <?php print form_input('phone',$main_info['phone'],'id="phone"');?>
                                 </td>
                             </tr>
@@ -394,13 +441,16 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                     </table>
 
                     <?php echo $this->table->generate(); ?>
-                    <span id="note">* click to edit maroon colored bold field</span>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div id="loader" style="display:none;">
+        <img src="<?php print base_url();?>assets/images/ajax_loader.gif" /> Processing...
+    </div>
 
 <!--
+    <span id="note">* click to edit maroon colored bold field</span>
     <table border="0" cellpadding="4" cellspacing="0" id="signBox">
         <thead>
             <tr>

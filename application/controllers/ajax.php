@@ -82,6 +82,31 @@ class Ajax extends Application
 		print json_encode(array('result'=>'ok','data'=>$select));
 	}
 
+	public function editdetail(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		$dataset['recipient_name'] = $this->input->post('recipient_name');
+		$dataset['shipping_address'] = $this->input->post('shipping_address');
+		$dataset['buyerdeliveryzone'] = $this->input->post('buyerdeliveryzone');
+		$dataset['buyerdeliverycity'] = $this->input->post('buyerdeliverycity');
+		$dataset['directions'] = $this->input->post('directions');
+		//$dataset['auto_confirm'] = $this->input->post('auto_confirm');
+		$dataset['phone'] = $this->input->post('phone');
+		//$dataset['total_price'] = $this->input->post('total_price');
+		//$dataset['total_discount'] = $this->input->post('total_discount');
+		//$dataset['total_tax'] = $this->input->post('total_tax');
+		//$dataset['chargeable_amount'] = $this->input->post('chargeable_amount');
+		//$dataset['status'] = $this->input->post('status');
+
+		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+			$result = json_encode(array('status'=>'OK:ORDERUPDATED','timestamp'=>now(),'delivery_id'=>'','buyer_id'=>''));
+		}else{
+			$result = json_encode(array('status'=>'ERR:NOORDERUPDATED','timestamp'=>now(),'delivery_id'=>'','buyer_id'=>''));
+		}
+
+		print $result;
+	}
+
 	public function neworder(){
 
 		$this->load->library('curl');

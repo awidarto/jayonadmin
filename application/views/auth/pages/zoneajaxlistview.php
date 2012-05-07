@@ -195,7 +195,7 @@
 			modal: true,
 			buttons: {
 				Save: function(){
-					var nframe = document.getElementById('neworder_frame');
+					var nframe = document.getElementById('view_frame');
 					var nframeWindow = nframe.contentWindow;
 					nframeWindow.submitorder();
 				}, 
