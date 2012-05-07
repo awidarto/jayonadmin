@@ -25,6 +25,7 @@
 
         td{
             font-size: 12px;
+            vertical-align:top;
         }
 
         .dataTable{
@@ -169,9 +170,15 @@
             padding:3px;
         }
 
-        .editable input[type='text']{
-            height:14px;
+        .editable * input{
+            height:20px;
+            width:150px;
         }
+
+        textarea{
+            height:60px;
+        }
+
 
     </style>
 
@@ -186,9 +193,92 @@
 
     
     <script>
-    $(document).ready(function() {
-         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
-    });
+        $(document).ready(function() {
+
+            $.editable.addInputType('autocomplete', {
+                element : $.editable.types.text.element,
+                plugin : function(settings, original) {
+                    $('input', this).autocomplete(settings.autocomplete.data);
+                }
+            });
+
+            $('.editable').editable('<?php print base_url();?>ajax/editdetail',{
+                cancel    : 'Cancel',
+                submit    : 'OK',
+                indicator : '<img src="<?php print base_url();?>assets/images/ajax_loader.gif">',
+                tooltip   : 'Click to edit...',
+                style     : 'inherit'
+            });
+
+            $( '#buyerdeliverycity' ).autocomplete({
+                source: '<?php print site_url('ajax/getcities')?>',
+                method: 'post',
+                minLength: 2
+            });
+
+            $( '#buyerdeliveryzone' ).autocomplete({
+                source: '<?php print site_url('ajax/getzone')?>',
+                method: 'post',
+                minLength: 2
+            });
+
+        });
+
+        function submitorder(){
+            var result = validate();
+            if(result[0]){
+                //alert("Processing...");
+                var pdata = {};
+
+
+                pdata.api_key = $('#app_id').val();
+                //pdata.transaction_id = $('#total_charges').val(); // random generated
+                pdata.buyer_id  = $('#buyer_id').val();
+                pdata.merchant_id  = $('#merchant_id').val();
+                pdata.buyer_name = $('#buyer_name').val();
+                pdata.recipient_name = $('#recipient_name').val();
+                pdata.shipping_address = $('#shipping_address').val();
+                pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
+                pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
+                pdata.buyerdeliverytime = $('#buyerdeliverytime').val();
+                pdata.direction = $('#direction').val();
+                pdata.auto_confirm = true; //true
+                pdata.email = $('#buyer_email').val();
+                pdata.zip = $('#buyerdeliveryzip').val();
+                pdata.phone = $('#phone').val();
+                pdata.total_price = $('#total_price').val();
+                pdata.total_discount = $('#total_discount').val();
+                pdata.total_tax = $('#total_tax').val();
+                pdata.chargeable_amount = $('#total_charges').val();
+                pdata.cod_cost = $('#cod_cost').val();     /* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
+                pdata.currency = $('#currency').val();   /* currency in 3 digit codes*/
+                pdata.status = 'confirmed'; /* status can be : pending or confirm, depending on merchant's workflow */
+
+
+
+                if($('#trx_result').html() != 'Transaction Success'){
+                    $('#loader').show();
+                    $.post('<?php print site_url('ajax/editdetail');?>',
+                        pdata, 
+                        function(data) {
+                            $('#loader').hide();
+                            if(data.status == 'OK:ORDERPOSTED'){
+                                //alert('Transaction Success');
+                                $('#trx_result').html('Transaction Success');
+                                $('#neworder_dialog').dialog( "close" );
+                            }
+                            //alert(data.status);
+                        },'json');
+                }else{
+                    alert('Order already posted, please close dialog and start over.');
+                }
+
+            }else{
+                alert(result[1]);
+            }
+        }
+
+
     </script>
 
 </head>
@@ -240,8 +330,10 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 ?>                          
                             <tr>
-                                <td>Store Detail:</td>
-                                <td><?php print trim($merchant_info);?></td>
+                                <td colspan="2">Store Detail:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><?php print trim($merchant_info);?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -262,11 +354,15 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery City:</td>
-                                <td class="editable" id="buyerdeliverycity"><?php print $main_info['buyerdeliverycity'];?></td>
+                                <td>
+                                    <?php print form_input('buyerdeliverycity',$main_info['buyerdeliverycity'],'id="buyerdeliverycity"');?>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Zone:</td>
-                                <td class="editable" id="buyerdeliveryzone"><?php print $main_info['buyerdeliveryzone'];?></td>
+                                <td>
+                                    <?php print form_input('buyerdeliveryzone',$main_info['buyerdeliveryzone'],'id="buyerdeliveryzone"');?>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
@@ -274,15 +370,25 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
                             <tr>
                                 <td class="row_label">Delivered To:</td>
-                                <td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
+                                <td><?php print form_input('recipient_name',($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'],'id="recipient_name"');?></td>
                             </tr>
                             <tr>
                                 <td>Shipping Address:</td>
-                                <td id="shipping_address" class="editable"><?php print $main_info['shipping_address'];?></td>
+                                <td id="shipping_address">
+                                    <?php print form_textarea('shipping_address',$main_info['shipping_address'],'id="shipping_address"');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Direction:</td>
+                                <td>
+                                    <?php print form_textarea('directions',$main_info['directions'],'id="directions"');?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Phone:</td>
-                                <td id="phone" class="editable"><?php print $main_info['phone'];?></td>
+                                <td id="phone" >
+                                    <?php print form_input('phone',$main_info['phone'],'id="phone"');?>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

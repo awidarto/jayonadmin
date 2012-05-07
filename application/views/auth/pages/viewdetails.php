@@ -159,6 +159,10 @@
             float:right;
         }
 
+        textarea{
+            height:100px;
+        }
+
     </style>
 </head>
 <body>

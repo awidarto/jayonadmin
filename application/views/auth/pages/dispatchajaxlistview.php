@@ -228,6 +228,11 @@
 			width: 900,
 			modal: true,
 			buttons: {
+				Save: function(){
+					var nframe = document.getElementById('neworder_frame');
+					var nframeWindow = nframe.contentWindow;
+					nframeWindow.submitorder();
+				}, 
 				Print: function(){
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;

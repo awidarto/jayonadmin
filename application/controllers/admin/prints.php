@@ -195,6 +195,8 @@ class Prints extends Application
 
 			$data['main_info'] = $main->row_array();
 
+			//print_r($main->row_array());
+
 			$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
 
 			$details = $details->result_array();
@@ -244,7 +246,6 @@ class Prints extends Application
 				'&nbsp;',		
 				'Total Price',		
 				array('data'=>number_format($gt,2,',','.'),
-					'class'=>'editable',
 					'id'=>'total_price'
 				)		
 
@@ -255,7 +256,6 @@ class Prints extends Application
 					'&nbsp;',		
 					'Total Discount',
 					array('data'=>number_format($dsc,2,',','.'),
-						'class'=>'editable',
 						'id'=>'total_discount'
 					)		
 				);
@@ -265,7 +265,6 @@ class Prints extends Application
 					'&nbsp;',		
 					'Total Tax',		
 					array('data'=>number_format($tax,2,',','.'),
-						'class'=>'editable',
 						'id'=>'total_tax'
 					)		
 				);
@@ -293,7 +292,6 @@ class Prints extends Application
 					'&nbsp;',		
 					'Total Charges',		
 					array('data'=>number_format($chg,2,',','.'),
-						'class'=>'editable',
 						'id'=>'total_charges'
 					)		
 

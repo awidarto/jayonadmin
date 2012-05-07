@@ -333,7 +333,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 		$data['type'] = 'notification';
 	}
 
-	if(!is_null($reply_to)){
+	if(!is_null($reply_to) && $reply_to != ''){
 		$CI->email->reply_to($reply_to);
 	}
 
@@ -347,7 +347,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 		$log['to'] = $to;			
 	}
 
-	if(!is_null($cc)){
+	if(!is_null($cc) && $cc != ''){
 		if(is_array($cc)){
 			foreach ($cc as $cm) {
 				$CI->email->cc($cm);
