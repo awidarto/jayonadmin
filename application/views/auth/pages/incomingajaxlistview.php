@@ -482,6 +482,7 @@
 					nframeWindow.submitorder();
 				}, 
 				Close: function() {
+					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
