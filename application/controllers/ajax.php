@@ -90,6 +90,7 @@ class Ajax extends Application
 		$dataset['buyerdeliveryzone'] = $this->input->post('buyerdeliveryzone');
 		$dataset['buyerdeliverycity'] = $this->input->post('buyerdeliverycity');
 		$dataset['directions'] = $this->input->post('directions');
+		$dataset['assignment_date'] = $this->input->post('assignment_date');
 		//$dataset['auto_confirm'] = $this->input->post('auto_confirm');
 		$dataset['phone'] = $this->input->post('phone');
 		//$dataset['total_price'] = $this->input->post('total_price');

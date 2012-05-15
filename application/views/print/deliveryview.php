@@ -212,6 +212,9 @@
 
     
     <script>
+        var asInitVals = new Array();
+        var dateBlock = <?php print getdateblock();?>;
+
         $(document).ready(function() {
 
             $.editable.addInputType('autocomplete', {
@@ -240,6 +243,63 @@
                 method: 'post',
                 minLength: 2
             });
+
+            $('#assignment_date').datepicker({
+                numberOfMonths: 2,
+                showButtonPanel: true,
+                dateFormat:'yy-mm-dd',
+                onSelect:function(dateText, inst){
+                    if(dateBlock[dateText] == 'weekend'){
+                        alert('no delivery on weekend');
+                    }else if(dateBlock[dateText] == 'full'){
+                        alert('time slot is full');
+                    }else{
+                        $('#rescheduled_deliverytime').val(dateText);
+                    }
+                },
+                beforeShowDay:getBlocking
+            });
+
+
+            function getBlocking(d){
+                /*
+                    $.datepicker.formatDate('yy-mm-dd', d);
+                */
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth() + 1; //months are zero based
+                var curr_year = d.getFullYear();
+            
+                curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+                curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+                var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+                var select = 1;
+                var css = 'open';
+                var popup = 'working day';
+                
+                if(window.dateBlock[indate] == 'weekend'){
+                    select = 0;
+                    css = 'weekend';
+                    popup = 'weekend';
+                }else if(window.dateBlock[indate] == 'holiday'){
+                    select = 0;
+                    css = 'weekend';
+                    popup = 'holiday';
+                }else if(window.dateBlock[indate] == 'blocked'){
+                    select = 0;
+                    css = 'blocked';
+                    popup = 'zero time slot';
+                }else if(window.dateBlock[indate] == 'full'){
+                    select = 0;
+                    css = 'blocked';
+                    popup = 'zero time slot';
+                }else{
+                    select = 1;
+                    css = '';
+                    popup = 'working day';
+                }
+                return [select,css,popup];
+            }
 
         });
 
@@ -283,6 +343,7 @@
                 pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
                 pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
                 pdata.buyerdeliverytime = $('#buyerdeliverytime').val();
+                pdata.assignment_date = $('#assignment_date').val();
                 pdata.directions = $('#directions').val();
                 pdata.auto_confirm = true; //true
                 pdata.email = $('#buyer_email').val();
@@ -397,7 +458,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td>Delivery Date:</td>
-                                <td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
+                                <td>
+                                    <?php print form_input('assignment_date',$main_info['assignment_date'],'id="assignment_date"');?>
+                                    <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery City:</td>

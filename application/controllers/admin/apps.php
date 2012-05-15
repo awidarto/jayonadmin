@@ -236,11 +236,26 @@ class Apps extends Application
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
 
-	public function delete($id)
+	public function delete($id,$merchant_id = null)
 	{
-		$this->db->where('id', $id)->delete($this->config->item('applications_table'));
-		$page['page_title'] = 'Delete Application';
-		$this->ag_auth->view('apps/delete_success');
+		
+		if(in_array('members',$this->uri->segment_array())){
+			$back_url = 'admin/members/merchant/apps/manage/'.$merchant_id;
+		}else{
+			$back_url = 'admin/apps/manage';
+		}
+
+		if($this->db->where('id', $id)->delete($this->config->item('applications_table')) === TRUE)
+		{
+			$this->oi->add_success('Application Item deleted');
+			redirect($back_url);
+
+		} // if($this->ag_auth->register($username, $password, $email) === TRUE)
+		else
+		{
+			$this->oi->add_error('Failed to delete Application Item');
+			redirect($back_url);
+		}
 	}
 
 	public function get_merchant($id){
@@ -348,31 +363,33 @@ class Apps extends Application
 
 			if($this->db->insert($this->config->item('applications_table'),$dataset) === TRUE)
 			{
-				$data['message'] = "The application has now been created.";
-				$data['page_title'] = 'Add Application';
+
 				if(in_array('members',$this->uri->segment_array())){
 					$data['act_url'] = 'admin/members/merchantadd/'.$merchant_id;
-					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+					$success_url = 'admin/members/merchant/apps/manage/'.$merchant_id;
 				}else{
 					$data['act_url'] = 'admin/apps/add/'.$merchant_id;
-					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+					$success_url = 'admin/apps/manage';
 				}
-				$this->ag_auth->view('message', $data);
+
+				$this->oi->add_success('Application created & saved');
+				redirect($success_url);
 
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$data['message'] = "The application has not been created.";
-				$data['page_title'] = 'Add Application Error';
 
 				if(in_array('members',$this->uri->segment_array())){
 					$data['act_url'] = 'admin/members/merchantadd/'.$merchant_id;
-					$data['back_url'] = anchor('admin/members/merchantmanage/'.$merchant_id,'Back to list');
+					$error_url = 'admin/members/merchant/apps/manage/'.$merchant_id;
 				}else{
 					$data['act_url'] = 'admin/apps/add/'.$merchant_id;
-					$data['back_url'] = anchor('admin/apps/manage','Back to list');
+					$error_url = 'admin/apps/manage';
 				}
-				$this->ag_auth->view('message', $data);
+
+				$this->oi->add_error('Failed to create Application');
+				redirect($error_url);
+
 			}
 
 		} // if($this->form_validation->run() == FALSE)
@@ -490,7 +507,7 @@ class Apps extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$this->oi->add_success('Failed to update Application');
+				$this->oi->add_error('Failed to update Application');
 				redirect($error_url);
 			}
 
