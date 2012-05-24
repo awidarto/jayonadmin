@@ -303,6 +303,8 @@
     var cod_cost = 0;
     var percent_tax = 0;
 
+    var lastorder = <?php print get_option('auto_lock_hours')*60*60*1000;?>;
+
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
 
@@ -334,10 +336,74 @@
             defaultTime: '08:00',
             onHourShow:OnHourShowCallback,
             onSelect: function(time, inst) {
+                $('#'+ inst.id).val('');
                 //console.log('onSelect triggered with time : ' + time + ' for instance id : ' + inst.id);
-                $('#'+ inst.id).val(time + ':00');
+                
+                var buyerdate = $('#buyerdeliverydate').val();
+
+                //console.log(buyerdate);
+                if(buyerdate === undefined || buyerdate == ''){
+                    $('#'+ inst.id).val('');
+                    alert('Please pick a date first');
+                }else{
+                    var now = new Date();
+                    var then = new Date(buyerdate +' '+time + ':00');
+                    //console.log('now : ' + now.getTime());
+                    //console.log('then : ' + then.getTime());
+
+                    var leeway = then.getTime() - now.getTime();
+                    if(leeway < 0){
+                        alert('Please do not specify past date');
+                    }else{
+                        if(leeway < lastorder){
+                            $('#'+ inst.id).val('');
+                            alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
+                        }else{
+                            $('#'+ inst.id).val(time + ':00');
+                        }
+                    }
+
+                }
+
             }
         });
+        /*
+        $('#buyerdeliverytime').change(
+            function(){
+                var buyerdate = $('#buyerdeliverydate').val();
+
+                var validatetime = new RegExp('^([01]\d|2[0-3]):?([0-5]\d)$');
+
+                console.log(validatetime.exec($(this).val()));
+
+                //console.log(buyerdate);
+                if(buyerdate === undefined || buyerdate == ''){
+                    $(this).val('');
+                    alert('Please pick a date first');
+                }else if($(this).val().length == 5 && validatetime.exec($(this).val())){
+                    var now = new Date();
+
+                    var then = new Date(buyerdate + ' ' + $(this).val());
+                    console.log('now : ' + now.getTime());
+                    console.log('then : ' + then.getTime());
+
+                    var leeway = then.getTime() - now.getTime();
+                    if(leeway < 0){
+                        alert('Please do not specify past date');
+                    }else{
+                        if(leeway < lastorder){
+                            $(this).val('');
+                            alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
+                        }
+                    }
+
+                }else if($(this).val().length == 5){
+                    alert('Invalid time format, please use hh:mm, in 24 hours format');
+                }
+
+            }
+        );
+        */
 
         function OnHourShowCallback(hour) {
             if (hour == 13 || hour == 18) {
