@@ -155,6 +155,34 @@ class Location extends Application
 		$this->breadcrumb->add_crumb('Location','admin/location');
 		$this->breadcrumb->add_crumb('Location Log','admin/location/log');
 
+
+		$page['devices'] = $this->db->distinct()
+			->select('identifier')
+			->get($this->config->item('location_log_table'))
+			->result_array();
+
+		$locations = array();
+
+		$loc = $this->db
+			->select('identifier,timestamp,latitude as lat,longitude as lng')
+			->limit(10,0)
+			->order_by('timestamp','desc')
+			->get($this->config->item('location_log_table'))
+			->result();				
+
+		foreach($loc as $l){
+			$locations[] = array(
+				'lat'=>(double)$l->lat,
+				'lng'=>(double)$l->lng,
+				'data'=>array(
+						'timestamp'=>$l->timestamp,
+						'identifier'=>$l->identifier
+					)
+				);
+		}
+
+		$page['locdata'] = json_encode($locations);
+
 		$this->table->set_heading(
 			'Timestamp',
 			'Device Identifier',
