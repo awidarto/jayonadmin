@@ -2,16 +2,51 @@
 <?php echo $this->ag_asset->load_script('gmap3.min.js');?>
 
 <script>
+	
+	var locdata = <?php print $locdata;?>;
 
 	$(document).ready(function() {
+
+		$('#map').gmap3(
+			{ action:'init',
+				options:{
+					center:[-6.17742,106.828308],
+					zoom: 12
+				}
+			},
+			{ action:'addMarkers',
+				radius:100,
+				markers: locdata,
+				marker: {
+					options: {
+						icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
+					},
+					events:{
+						mouseover: function(marker,event,data){
+							$(this).gmap3(
+								{action:'clear',name:'overlay'},
+								{action:'addOverlay',
+									latLng:marker.getPosition(),
+									content:
+										'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
+											'<div class="bg"></div>' +
+											'<div class="text">' + data.identifier + '<br />' + data.timestamp + '</div>' +
+										'</div>',
+									offset: {
+										x:-46,
+										y:-73
+									}
+								}
+							);
+						},
+						mouseout: function(){
+							$(this).gmap3({action:'clear', name:'overlay'});
+						}
+					}
+				}
+			}
+		);
 		
-		$('#map').gmap3({
-			action:'init',
-			options:{
-			      center:[-6.17742,106.828308],
-			      zoom: 12
-			    }
-		});
 
 	});
 
@@ -33,7 +68,7 @@ td {
 	<table style="padding:0px;margin:0px;">
 		<tr>
 			<td>
-				<h3>Last 5 Positions</h3>
+				<h3>Device Last Positions</h3>
 				<div id="map" style="width:600px;height:950px;display:block;"></div>
 			</td>
 			<td style="width:100%;height:100%;vertical-align:top;">

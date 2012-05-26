@@ -199,6 +199,30 @@ class Ajax extends Application
 		
 	}
 
+	public function getlastfiveloc(){
+		
+		$locs = $this->db->select('timestamp,identifier,latitude as lat,longitude as lng')
+			->limit(5,0)
+			->order_by('timestamp','desc')
+			->get($this->config->item('location_log_table'));
+
+		$locations = array();
+
+		foreach ($locs->result() as $l) {
+			$locations[] = array(
+				'lat'=>(double)$l->lat,
+				'lng'=>(double)$l->lng,
+				'data'=>array(
+						'timestamp'=>$l->timestamp,
+						'identifier'=>$l->identifier
+					)
+				);
+		}
+
+		$locjson = json_encode($locations);
+
+		print str_replace('"', '', $locjson);
+	}
 
 
 }

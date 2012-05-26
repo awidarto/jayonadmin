@@ -17,6 +17,35 @@ class Admin extends Application
 			$year = date('Y',time());
 			$month = date('m',time());
 
+			$devices = $this->db->distinct()
+				->select('identifier')
+				->get($this->config->item('location_log_table'))
+				->result();
+
+			$locations = array();
+
+			foreach($devices as $d){
+				$loc = $this->db
+					->select('identifier,timestamp,latitude as lat,longitude as lng')
+					->where('identifier',$d->identifier)
+					->limit(1,0)
+					->order_by('timestamp','desc')
+					->get($this->config->item('location_log_table'))
+					->row();				
+
+				$locations[] = array(
+					'lat'=>(double)$loc->lat,
+					'lng'=>(double)$loc->lng,
+					'data'=>array(
+							'timestamp'=>$loc->timestamp,
+							'identifier'=>$loc->identifier
+						)
+					);
+			}
+
+			$page['locdata'] = json_encode($locations);
+
+
 			$page['period'] = ' - '.date('M Y',time());
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
