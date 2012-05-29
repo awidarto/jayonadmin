@@ -500,6 +500,14 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     <?php print form_input('phone',$main_info['phone'],'id="phone"');?>
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="2"><strong>Package Detail</strong></td>
+                            </tr>
+
+                            <tr>
+                                <td class="row_label">Dimension:</td>
+                                <td><?php print $main_info['width'].' cm x '.$main_info['height'].' cm x '.$main_info['length'].' cm';?></td>
+                            </tr>
                         </tbody>
                     </table>
 

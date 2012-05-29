@@ -275,6 +275,11 @@
             vertical-align: middle;
 
         }
+
+        table#main_table input[type="text"].short{
+            width:35px;
+        }
+
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -594,6 +599,9 @@
             pdata.cod_cost = $('#cod_cost').val();     /* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
             pdata.currency = $('#currency').val();   /* currency in 3 digit codes*/
             pdata.status = 'confirmed'; /* status can be : pending or confirm, depending on merchant's workflow */
+            pdata.width = $('#package_width').val();
+            pdata.height = $('#package_height').val();
+            pdata.length = $('#package_length').val();
 
 
             var udescs = [];
@@ -899,6 +907,14 @@
                                 <td>Phone:</td>
                                 <td>
                                     <input type="text" id="phone" name="phone" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Package Dimension:</td>
+                                <td>
+                                    Width / Lebar : <input class="short" type="text" id="package_width" name="package_width" value="" /> cm <br />
+                                    Height / Tinggi : <input class="short" type="text" id="package_height" name="package_height" value="" /> cm <br />
+                                    Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm 
                                 </td>
                             </tr>
                         </tbody>

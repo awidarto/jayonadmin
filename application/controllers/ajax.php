@@ -159,7 +159,10 @@ class Ajax extends Application
 			'status'=>$this->input->post('status'),
 			'merchant_id'=>$this->input->post('merchant_id'),
 			'buyer_id'=>$this->input->post('buyer_id'),
-			'trx_detail'=>$trx_detail
+			'trx_detail'=>$trx_detail,
+			'width' => $this->input->post('width'),
+			'height' => $this->input->post('height'),
+			'length' => $this->input->post('length')
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());

@@ -93,7 +93,11 @@ class V1 extends Application
 				$order['shipping_zip'] = $in->zip;
 				$order['phone'] = $in->phone;
 				$order['status'] = $in->status;
-				
+
+				$order['width'] = $in->width;
+				$order['height'] = $in->height;
+				$order['length'] = $in->length;				
+
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();
 
