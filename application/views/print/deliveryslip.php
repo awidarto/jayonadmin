@@ -261,10 +261,18 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 							<tr>
-								<td>Contact Number:</td>
+								<td>Contact Number / Phone:</td>
 								<td><?php print $main_info['phone'];?></td>
 							</tr>
 
+							<tr>
+								<td>Email:</td>
+								<td><?php print $main_info['email'];?></td>
+							</tr>
+							<tr>
+								<td>Direction / Petunjuk Jalan:</td>
+								<td><?php print $main_info['directions'];?></td>
+							</tr>
 						</tbody>
 					</table>
 

@@ -696,6 +696,35 @@
             if($('#app_id').val() == 0){
                 return [false, 'Application Domain Invalid'];
             }
+
+            if($('#package_width').val() === 'undefined' || $('#package_width').val() == '' || $('#package_width').val() == 0 || $('#package_width').val() == null || $('#package_width').val() === 'NaN'){
+                return [false,'Width Unspecified'];
+            }
+
+            if($('#package_height').val() === 'undefined' || $('#package_height').val() == '' || $('#package_height').val() == 0 || $('#package_height').val() == null || $('#package_height').val() === 'NaN'){
+                return [false,'Height Unspecified'];
+            }
+
+            if($('#package_length').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
+                return [false,'Length Unspecified'];
+            }
+
+            if($('#package_width').val() > <?php print get_option('max_width');?>){
+                return [false,'Max Width Exceeded'];
+            }
+
+            if($('#package_height').val() > <?php print get_option('max_height');?>){
+                return [false,'Max Height Exceeded'];
+            }
+
+            if($('#package_length').val() > <?php print get_option('max_length');?>){
+                return [false,'Max Length Exceeded'];
+            }
+
+            if($('#direction').val() === 'undefined' || $('#direction').val() == '' || $('#direction').val() == 0 || $('#direction').val() == null || $('#direction').val() === 'NaN'){
+                return [false,'Direction Unspecified'];
+            }
+
             return [true,''];
     }
 
@@ -898,7 +927,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>How to Get There:</td>
+                                <td>How to Get There / Petunjuk Jalan:</td>
                                 <td>
                                     <textarea id="direction"></textarea>
                                 </td>
@@ -912,9 +941,9 @@
                             <tr>
                                 <td>Package Dimension:</td>
                                 <td>
-                                    Width / Lebar : <input class="short" type="text" id="package_width" name="package_width" value="" /> cm <br />
-                                    Height / Tinggi : <input class="short" type="text" id="package_height" name="package_height" value="" /> cm <br />
-                                    Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm 
+                                    Width / Lebar : <input class="short" type="text" id="package_width" name="package_width" value="" /> cm ( max <?php print get_option('max_width');?> cm )<br />
+                                    Height / Tinggi : <input class="short" type="text" id="package_height" name="package_height" value="" /> cm ( max <?php print get_option('max_height');?> cm )<br />
+                                    Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm ( max <?php print get_option('max_length');?> cm ) 
                                 </td>
                             </tr>
                         </tbody>

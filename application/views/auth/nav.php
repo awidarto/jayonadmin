@@ -71,9 +71,7 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Reports'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/reports\/daily')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/daily', 'Daily'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/weekly')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/weekly', 'Weekly'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/mothly')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/monthly', 'Monthly'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>

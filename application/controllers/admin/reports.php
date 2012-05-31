@@ -54,6 +54,14 @@ class Reports extends Application
 		
 	}
 
+	public function reconciliation(){
+		$this->breadcrumb->add_crumb('Reconciliations','admin/reports/reconciliation');
+
+		$page['page_title'] = 'Reconciliations';
+		$this->ag_auth->view('reports/reconciliation',$page); // Load the view
+		
+	}
+
 }
 
 ?>
