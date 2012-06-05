@@ -182,14 +182,9 @@ function getdateblock($month = null, $city = null){
 
 	//get holidays
 
-	$hdays = $CI->db->select('holiday')
-		->like('holiday',$year,'after')
-		->get($CI->config->item('jayon_holidays_table'));
-
-	$holidays = array();
-	foreach ($hdays->result_array() as $key => $val) {
-		$holidays[] = $val['holiday'];
-	}
+	$holidays = getholidays();
+	$weekend_on = get_option('weekend_delivery');
+	$holiday_on = get_option('holiday_delivery');
 
 	for($m = $month; $m < ($month + 2);$m++){
 		for($i = 1;$i < 32;$i++){
@@ -204,7 +199,7 @@ function getdateblock($month = null, $city = null){
 				if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
 					//print $date." : ".$slot."\r\n";
 					$blocking[$date] = 'weekend';
-				}else if(in_array($date, $holidays)){
+				}else if(in_array($date, $holidays) && !$holiday_on){
 					$blocking[$date] = 'holiday';
 				}else{
 					$slot = $CI->db
@@ -217,6 +212,17 @@ function getdateblock($month = null, $city = null){
 		}
 	}
 	return json_encode($blocking);
+}
+
+function getholidays(){
+	$CI =& get_instance();
+	$CI->db->select('holiday');
+	$h = array();
+	$holidays = $CI->db->get($CI->config->item('jayon_holidays_table'));
+	foreach ($holidays->result_array() as $key => $value) {
+		$h[] = $value['holiday'];
+	}
+	return $h;
 }
 
 function checkdateblock($date = null, $city = null){

@@ -324,6 +324,8 @@
                     alert('no delivery on weekend');
                 }else if(dateBlock[dateText] == 'full'){
                     alert('time slot is full');
+                }else if(dateBlock[dateText] == 'holiday'){
+                    alert('date is holiday');
                 }else{
                     $('#rescheduled_deliverytime').val(dateText);
                 }
@@ -524,7 +526,7 @@
                 row += '<td><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
                 row += '<td class="item_form"><input type="text" class="item_pct_disc orange" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
                 row += '<td><input type="text" class="item_nom_disc orange" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
-                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
+                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >Remove / Hapus</button></td>';
                 row += '</tr>';
 
             $('#calc_data').before(row);
@@ -695,6 +697,10 @@
             */
             if($('#app_id').val() == 0){
                 return [false, 'Application Domain Invalid'];
+            }
+
+            if($('#package_length').val() === 'undefined' || $('#phone').val() == '' || $('#phone').val() == 0 || $('#phone').val() == null || $('#phone').val() === 'NaN'){
+                return [false,'COntact Number / Phone Unspecified'];
             }
 
             if($('#package_width').val() === 'undefined' || $('#package_width').val() == '' || $('#package_width').val() == 0 || $('#package_width').val() == null || $('#package_width').val() === 'NaN'){
