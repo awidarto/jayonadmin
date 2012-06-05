@@ -196,7 +196,7 @@ function getdateblock($month = null, $city = null){
 				$date = $year.'-'.$month.'-'.$day;
 				$day = getdate(strtotime($date));
 				//print_r($day)."\r\n";
-				if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
+				if(($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday') && !$weekend_on){
 					//print $date." : ".$slot."\r\n";
 					$blocking[$date] = 'weekend';
 				}else if(in_array($date, $holidays) && !$holiday_on){
