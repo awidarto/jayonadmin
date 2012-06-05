@@ -153,7 +153,9 @@ class Options extends Application
 		$this->form_validation->set_rules('val', 'Option Name', 'trim|xss_clean');
 		
 		$user = $this->get_options($id);
+		$user['keylabel'] = $this->to_label($user['key']);
 		$data['user'] = $user;
+
 				
 		if($this->form_validation->run() == FALSE)
 		{
@@ -164,7 +166,7 @@ class Options extends Application
 		{
 			$dataset['key'] = set_value('key');
 			$dataset['val'] = set_value('val');
-			
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_options_table'),$dataset) == TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{

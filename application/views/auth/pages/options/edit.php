@@ -1,7 +1,8 @@
 <div id="form">
 	<div class="form_box">
 			<form method="post" action="<?php echo site_url('admin/options/edit/'.$user['id'])?>">
-			<?php echo set_value('key',$user['key']); ?>
+			<?php //echo set_value('key',$user['key']); ?>
+			<?php echo $user['keylabel']; ?>
 			<input type="hidden" name="key" value="<?php echo set_value('key',$user['key']); ?>" />
 			<?php if($user['choices'] == ""):?>
 
