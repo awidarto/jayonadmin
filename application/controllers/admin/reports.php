@@ -57,9 +57,103 @@ class Reports extends Application
 	public function reconciliation(){
 		$this->breadcrumb->add_crumb('Reconciliations','admin/reports/reconciliation');
 
+		$this->table->set_heading(
+			'Year',
+			'Week',
+			'From',
+			'To',
+			'Generate'
+			); // Setting headings for the table
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconsiliation';
 		$page['page_title'] = 'Reconciliations';
-		$this->ag_auth->view('reports/reconciliation',$page); // Load the view
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 		
+	}
+
+	public function ajaxreconsiliation(){
+
+
+		$week = date('W',time());
+		$year = date('Y',time());
+
+		$aadata = array();
+
+		for($i = $week; $i > 0; $i--)
+		{
+
+			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
+			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
+
+			$generate = anchor("admin/reports/globalreport/".$from."/".$to, "Global"); // Build actions links
+			$merchantlist = anchor("admin/reports/merchants/".$from."/".$to, "By Merchant"); // Build actions links
+			$courierlist = anchor("admin/reports/couriers/".$from."/".$to, "By Courier"); // Build actions links
+			$aadata[] = array(
+				$year,
+				$i,
+				date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks')),
+				date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day')),
+				$generate.' '.$merchantlist.' '.$courierlist
+			); // Adding row to table
+		}
+
+		$count_all = count($aadata);
+
+		$count_display_all = count($aadata);
+
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+
+		print json_encode($result); // Load the view
+	}
+
+	public function merchants($from,$to){
+		$this->breadcrumb->add_crumb('Reconciliations','admin/reports/reconciliation');
+
+		$this->table->set_heading(
+			'Year',
+			'Week',
+			'From',
+			'To',
+			'Generate'
+			); // Setting headings for the table
+
+		$page['ajaxurl'] = 'admin/reports/ajaxmerchants/'.$from.'/'.$to;
+		$page['page_title'] = 'Merchant Reconciliations';
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+
+	}
+
+	public function ajaxmerchants($from,$to){
+
+	}
+
+	public function couriers($from,$to){
+		$this->breadcrumb->add_crumb('Reconciliations','admin/reports/reconciliation');
+
+		$this->table->set_heading(
+			'Year',
+			'Week',
+			'From',
+			'To',
+			'Generate'
+			); // Setting headings for the table
+
+		$page['ajaxurl'] = 'admin/reports/ajaxcouriers/'.$from.'/'.$to;
+		$page['page_title'] = 'Reconciliations';
+		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+	}
+
+	public function ajaxcouriers($id){
+
+	}
+
+	public function globalreport($from,$to){
+
 	}
 
 }

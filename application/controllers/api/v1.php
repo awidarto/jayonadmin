@@ -97,6 +97,9 @@ class V1 extends Application
 				$order['width'] = $in->width;
 				$order['height'] = $in->height;
 				$order['length'] = $in->length;				
+				$order['weight'] = (isset($in->weight))?$in->weight:0;				
+				$order['delivery_type'] = $in->delivery_type;				
+				$order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;				
 
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();

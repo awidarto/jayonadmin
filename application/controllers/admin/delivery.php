@@ -885,6 +885,20 @@ class Delivery extends Application
 				array('status'=>$this->config->item('trans_status_admin_courierassigned'),
 						'courier_id'=>$assignment_courier_id));
 
+		$this->db
+			->where('device_id',$assignment_device_id)
+			->where('delivery_date',$assignment_date)
+			->delete($this->config->item('device_assignment_table'));
+
+		$assignment = array(
+				'delivery_date'=>$assignment_date,
+				'device_id'=>$assignment_device_id,
+				'courier_id'=>$assignment_courier_id
+			);
+
+		$this->db
+			->insert($this->config->item('device_assignment_table'),$assignment);
+
 					$data = array(
 						'timestamp'=>date('Y-m-d h:i:s',time()),
 						'report_timestamp'=>date('Y-m-d h:i:s',time()),
@@ -1040,13 +1054,16 @@ class Delivery extends Application
 
 			$devicefield = ($bardate == $key['assignment_date'] && $bardev == $key['device_id'])?'':$devicecheck;
 
+			$reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
+
 
 			$aadata[] = array(
 				$datefield,
 				$devicefield,
 				$key['assignment_timeslot'],
 				//$key['delivery_id'],
-				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',				$key['buyerdeliverycity'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
 				$app['application_name'],
 				//$app['domain'],
@@ -1058,7 +1075,7 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
-				//$printslip.' '.$edit.' '.$delete
+				$reassign//$printslip.' '.$edit.' '.$delete
 			);
 
 
@@ -1094,7 +1111,8 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Shipping Address',
 			'Phone',
-			'Status'
+			'Status',
+			'Actions'
 			); // Setting headings for the table
 
 		$this->table->set_footing(
@@ -1308,6 +1326,7 @@ class Delivery extends Application
 			'buyer',
 			'shipping_address',
 			'phone',
+			'',
 			'status',
 			'merchant_id',
 			'merchant_trans_id'
@@ -1391,6 +1410,8 @@ class Delivery extends Application
 			//$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+			$reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
+
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
 			$devicefield = ($bardev == $key['device'])?'':$key['device'];
@@ -1411,7 +1432,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$printslip.' '.$changestatus
+				$printslip.' '.$reassign
 			);
 
 			$bardate = $key['assignment_date'];

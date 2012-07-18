@@ -132,6 +132,8 @@ class Apps extends Application
 			$delete = anchor("admin/apps/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = (in_array('ajaxmerchantmanage',$this->uri->segment_array()))?anchor('admin/members/merchant/apps/edit/'.$key['id'], "Edit"):anchor('admin/apps/edit/'.$key['id'], "Edit"); // Build actions links
 			$add = anchor("admin/apps/add/".$key['merchant_id']."/", "Add"); // Build actions links
+			$cod = anchor("admin/tariff/cod/".$key['id']."/".$key['merchant_id']."/", "COD"); // Build actions links
+			$delivery = anchor("admin/tariff/delivery/".$key['id']."/".$key['merchant_id']."/", "Delivery"); // Build actions links
 			$aadata[] = array(
 				$this->get_merchant($key['merchant_id']),
 				$key['application_name'],
@@ -139,7 +141,7 @@ class Apps extends Application
 				$key['key'],
 				$key['callback_url'],
 				$key['application_description'],
-				$edit.' '.$delete
+				$edit.' '.$delete.'<br /><br />Tariff Tables<br /> '.$cod.' '.$delivery
 			); // Adding row to table
 		}
 

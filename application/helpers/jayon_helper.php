@@ -153,6 +153,43 @@ function user_group_id($group)
 	return $row->id;
 }
 
+function get_weight_range($tariff,$app_id = null){
+	$CI =& get_instance();
+
+	if($tariff > 0){
+		$CI->db->select('kg_from,kg_to');
+		$CI->db->where('total',$tariff);
+		$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+		$row = $result->row();
+		return $row->kg_from.' kg - '.$row->kg_to.' kg';		
+	}else{
+		return 0;
+	}
+}
+
+function get_cod_tariff($total_price,$app_id = null){
+	$CI =& get_instance();
+
+	$CI->db->select_max('to_price','max');
+	$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+	$row = $result->row();
+
+	if($total_price > $row->max){
+		$CI->db->select_max('surcharge');
+		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+		$row = $result->row();
+	}else{
+		$CI->db->select('surcharge');
+		$CI->db->where('from_price <= ',$total_price);
+		$CI->db->where('to_price >= ',$total_price);
+		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+		$row = $result->row();			
+	}
+
+	return $row->surcharge;
+
+}
+
 function get_option($key){
 	$CI =& get_instance();
 

@@ -31,8 +31,10 @@ $config['delivery_log_table'] = 'delivery_log';
 $config['location_log_table'] = 'location_log';
 $config['access_log_table'] = 'api_access_log';
 $config['sequence_table'] = 'applications';
-$config['device_assignment_table'] = 'device_assignment';
+$config['device_assignment_table'] = 'device_courier_log';
 
+$config['jayon_delivery_fee_table'] = 'weight_tariff';
+$config['jayon_cod_fee_table'] = 'cod_surcharge';
 
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';

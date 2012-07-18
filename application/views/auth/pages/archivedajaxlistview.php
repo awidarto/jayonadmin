@@ -160,6 +160,7 @@
 					pframeWindow.print();
 				}, 
 				Close: function() {
+					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},

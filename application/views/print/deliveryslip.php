@@ -9,6 +9,11 @@
 			font-size: 12px;
 		}
 
+		hr{
+			border:0px;
+			border-bottom:thin solid #aaa;
+		}
+
 		#wrapper{
 			width:1000px;
 			margin:5px;
@@ -165,6 +170,10 @@
 			display: block;
 		}
 
+		.fine{
+			font-size: 11px;
+		}
+
 	</style>
 </head>
 <body>
@@ -192,11 +201,11 @@
 							</tr>
 
 							<tr>
-								<td>Online Store:</td>
-								<td><?php print $main_info['merchant'];?></td>
+								<td>Store Name<hr /><span class="fine">Nama Toko</span></td>
+								<td><?php print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_domain'].'</span>';?></td>
 							</tr>
 							<tr>
-								<td>Transaction ID:</td>
+								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
 								<td><?php print $main_info['merchant_trans_id'];?></td>
 							</tr>
 <?php 
@@ -226,10 +235,26 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 ?>							
 							<tr>
-								<td colspan="2">Store Detail:</td>
+								<td colspan="2">Store Detail</td>
 							</tr>
 							<tr>
 								<td colspan="2"><?php print trim($merchant_info);?></td>
+							</tr>
+						</tbody>
+					</table>
+					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
+						<tbody>
+							<tr>
+								<td colspan="2"><strong>Package Info</strong></td>
+							</tr>
+							<tr>
+								<td class="row_label">Dimension ( L x W x H )<hr />
+									<span class="fine">Dimensi ( P x L x T )</span></td>
+								<td><?php print $main_info['length'].' cm x '.$main_info['width'].' cm x '.$main_info['height'];?> cm</td>
+							</tr>
+							<tr>
+								<td>Weight<hr /><span class="fine">Berat</span></td>
+								<td><?php print get_weight_range($main_info['weight']);?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -241,11 +266,15 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td colspan="2"><strong>Delivery Info</strong></td>
 							</tr>
 							<tr>
-								<td class="row_label">Delivery Number:</td>
+								<td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
+								<td><?php print $main_info['delivery_type'];?></td>
+							</tr>
+							<tr>
+								<td class="row_label">Delivery Number<hr /><span class="fine">No. Pengiriman</span></td>
 								<td><?php print $main_info['delivery_id'];?></td>
 							</tr>
 							<tr>
-								<td>Delivery Date:</td>
+								<td>Delivery Date<hr /><span class="fine">Tanggal Pengiriman</span></td>
 								<td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
 							</tr>
 							<tr>
@@ -253,24 +282,24 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 
 							<tr>
-								<td class="row_label">Delivered To:</td>
+								<td class="row_label">Delivered To<hr /><span class="fine">Penerima</span></td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Shipping Address:</td>
+								<td>Shipping Address<hr /><span class="fine">Alamat Tujuan</span></td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 							<tr>
-								<td>Contact Number / Phone:</td>
+								<td>Phone<hr /><span class="fine">Telepon</span></td>
 								<td><?php print $main_info['phone'];?></td>
 							</tr>
 
 							<tr>
-								<td>Email:</td>
+								<td>Email<hr /><span class="fine">Alamat Email</span></td>
 								<td><?php print $main_info['email'];?></td>
 							</tr>
 							<tr>
-								<td>Direction / Petunjuk Jalan:</td>
+								<td>Direction<hr /><span class="fine">Petunjuk Jalan</span></td>
 								<td><?php print $main_info['directions'];?></td>
 							</tr>
 						</tbody>
@@ -328,7 +357,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr class="sign_name">
 								<td>&nbsp;</td>
-								<td>&nbsp;</td>
+								<td><?php print $main_info['courier_name'];?></td>
 							</tr>
 						</tbody>
 					</table>

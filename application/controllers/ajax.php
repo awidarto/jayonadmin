@@ -61,6 +61,25 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
+	public function getorder(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,d.identifier as device,c.fullname as courier');
+		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+
+		$order = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)
+					->get($this->config->item('incoming_delivery_table'));
+
+		if($order->num_rows() > 0){
+			print json_encode(array('result'=>'ok','data'=>$order->row_array()));
+		}else{
+			print json_encode(array('result'=>'err','data'=>'No data found'));
+		}
+
+	}
+
 	public function getappselect(){
 		$merchant_id = $this->input->post('merchant_id');
 
@@ -80,6 +99,71 @@ class Ajax extends Application
 		$select = form_dropdown('app_id',$app,null,'id="app_id"');
 
 		print json_encode(array('result'=>'ok','data'=>$select));
+	}
+
+	public function getweightselect(){
+
+	}
+
+	public function getcodselect(){
+		
+	}
+
+	public function getweighttable(){
+
+	}
+
+	public function getcodtable(){
+		
+	}
+
+
+	function reassign(){
+		$delivery_id = $this->input->post('delivery_id');
+		$courier_id = $this->input->post('courier_id');
+		$assignment_device_id = $this->input->post('assignment_device_id');
+		$assignment_timeslot = $this->input->post('assignment_timeslot');
+		$assignment_date = $this->input->post('assignment_date');
+
+		if($courier_id == 'current'){
+
+			/*
+				$courier = $this->db
+					->distinct()
+					->select('courier_id')
+					->where('device_id',$assignment_device_id)
+					->where('assignment_date',$assignment_date)
+					->get($this->config->item('assigned_delivery_table'));
+			*/
+
+			$courier = $this->db
+				->select('courier_id')
+				->where('device_id',$assignment_device_id)
+				->where('delivery_date',$assignment_date)
+				->get($this->config->item('device_assignment_table'));
+
+			//print $this->db->last_query();
+
+			if($courier->num_rows() > 0){
+				$courier_id = $courier->row()->courier_id;
+				$dataset['courier_id'] = $courier_id;
+			}else{
+				$dataset['courier_id'] = '';
+				$dataset['status'] = $this->config->item('trans_status_admin_devassigned');
+			}
+		}
+
+		$dataset['device_id'] = $assignment_device_id;
+		$dataset['assignment_timeslot'] = $assignment_timeslot;
+
+		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+			$result = json_encode(array('status'=>'OK:REASSIGNED','timestamp'=>now(),'delivery_id'=>$delivery_id,'courier_id'=>$courier_id));
+		}else{
+			$result = json_encode(array('status'=>'ERR:NOREASSIGN','timestamp'=>now(),'delivery_id'=>'','buyer_id'=>''));
+		}
+
+		print $result;
+
 	}
 
 	public function editdetail(){
@@ -107,6 +191,26 @@ class Ajax extends Application
 
 		print $result;
 	}
+
+	public function getzoneselect(){
+		$city = $this->input->post('city');
+
+		$this->db->where(array('city'=>$city));
+		$zones = $this->db->get($this->config->item('jayon_zones_table'));
+
+		if($zones->num_rows() > 0){
+			$zone[0] = 'Select delivery zone';
+			foreach ($zones->result() as $r) {
+				$zone[$r->district] = $r->district;
+			}
+		}else{
+			$zone[0] = 'Select delivery zone';
+		}
+
+		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="buyerdeliveryzone"');
+
+		print json_encode(array('result'=>'ok','data'=>$select));
+	}	
 
 	public function neworder(){
 
@@ -154,6 +258,7 @@ class Ajax extends Application
 			'total_discount'=>$this->input->post('total_discount'),
 			'total_tax'=>$this->input->post('total_tax'),
 			'chargeable_amount'=>$this->input->post('chargeable_amount'),
+			'delivery_cost' => $this->input->post('delivery_cost'), 		
 			'cod_cost' => $this->input->post('cod_cost'), 		
 			'currency' => $this->input->post('currency'), 	
 			'status'=>$this->input->post('status'),
@@ -162,7 +267,9 @@ class Ajax extends Application
 			'trx_detail'=>$trx_detail,
 			'width' => $this->input->post('width'),
 			'height' => $this->input->post('height'),
-			'length' => $this->input->post('length')
+			'length' => $this->input->post('length'),
+			'weight' => $this->input->post('weight'),
+			'delivery_type' => $this->input->post('delivery_type')
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
@@ -177,6 +284,89 @@ class Ajax extends Application
 		print $result;
 
 	}
+
+
+	public function saveweight(){
+		$delivery_id = $this->input->post('delivery_id');
+        $delivery_cost = $this->input->post('weight_tariff');
+
+			$order = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$order = $order->row_array();
+
+			$total = str_replace(array(',','.'), '', $order['total_price']);
+			$dsc = str_replace(array(',','.'), '', $order['total_discount']);
+			$tax = str_replace(array(',','.'), '',$order['total_tax']);
+
+			$dc = str_replace(array(',','.'), '',$delivery_cost);
+			$cod = str_replace(array(',','.'), '',$order['cod_cost']);
+
+			$total = (int)$total;
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$dc = (int)$dc;
+			$cod = (int)$cod;
+
+			$chg = ($total - $dsc) + $tax + $dc + $cod;
+
+			$newdata = array(
+				'delivery_cost'=>$delivery_cost,
+				'weight'=>$delivery_cost
+			);
+
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('delivery_cost'=>$delivery_cost,'weight'=>$delivery_cost));
+
+		if($this->db->affected_rows() > 0){
+
+			print json_encode(array('status'=>'OK','delivery_cost'=>number_format($delivery_cost,2,',','.'),'weight_range'=>get_weight_range($delivery_cost),'total_charges'=>number_format($chg,2,',','.')));
+		}else{
+			print json_encode(array('status'=>'ERR','delivery_cost'=>0));
+		}
+
+	}
+
+	public function savedeliverytype(){
+		$delivery_id = $this->input->post('delivery_id');
+        $delivery_type = $this->input->post('delivery_type');
+
+			$order = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$order = $order->row_array();
+
+			$total = str_replace(array(',','.'), '', $order['total_price']);
+			$dsc = str_replace(array(',','.'), '', $order['total_discount']);
+			$tax = str_replace(array(',','.'), '',$order['total_tax']);
+
+			$dc = str_replace(array(',','.'), '',$order['delivery_cost']);
+			$cod = str_replace(array(',','.'), '',$order['cod_cost']);
+
+			$total = (int)$total;
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$dc = (int)$dc;
+
+			if($delivery_type == 'COD'){
+				$cod = get_cod_tariff(($total - $dsc) + $tax);
+			}else{
+				$cod = 0;
+			}
+
+			$chg = ($total - $dsc) + $tax + $dc + $cod;
+
+			$newdata = array(
+				'cod_cost'=>$cod,
+				'delivery_type'=>$delivery_type
+			);
+
+
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+		if($this->db->affected_rows() > 0){
+			print json_encode(array('status'=>'OK','delivery_type'=>$delivery_type,'cod_cost'=>number_format($cod,2,',','.'),'total_charges'=>number_format($chg,2,',','.')));
+		}else{
+			print json_encode(array('status'=>'ERR','delivery_type'=>0));
+		}
+
+	}
+
 
 	public function subcalc(){
 

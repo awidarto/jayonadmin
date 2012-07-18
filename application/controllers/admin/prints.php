@@ -37,9 +37,12 @@ class Prints extends Application
 						a.zip as m_zip,
 						a.phone as m_phone,
 						a.mobile as m_mobile,
-						a.application_name as app_name')
+						a.application_name as app_name,
+						a.domain as app_domain,
+						c.fullname as courier_name' )
 					->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
 					->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
+					->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left')
 					->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left')
 					->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
 
@@ -83,13 +86,15 @@ class Prints extends Application
 			$gt = ($total < $gt)?$gt:$total;
 			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
 			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
 			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
 
 			$dsc = (int)$dsc;
 			$tax = (int)$tax;
+			$dc = (int)$dc;
 			$cod = (int)$cod;
 
-			$chg = ($gt - $dsc) + $tax + $cod;
+			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
 				'&nbsp;',		
@@ -113,19 +118,25 @@ class Prints extends Application
 				);
 
 
-			if($cod == 0){
-				$this->table->add_row(
-					'','',
-					'COD Charges','Paid by Merchant'
-				);
-			}else{
 				$this->table->add_row(
 					'&nbsp;',		
 					'&nbsp;',		
-					'COD Charges',		
-					number_format($cod,2,',','.')
+					'Delivery Charge',		
+					array('data'=>number_format($dc,2,',','.'),
+						'class'=>'editable',
+						'id'=>'delivery_cost'
+					)		
 				);
-			}
+
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'COD Surcharge',		
+					array('data'=>number_format($cod,2,',','.'),
+						'class'=>'editable',
+						'id'=>'cod_cost'
+					)		
+				);
 
 				$this->table->add_row(
 					'&nbsp;',		
@@ -197,6 +208,35 @@ class Prints extends Application
 
 			//print_r($main->row_array());
 
+			$this->db->select('seq,kg_from,kg_to,calculated_kg,tariff_kg,total');
+			$this->db->order_by('seq','asc');
+			$weights = $this->db->get($this->config->item('jayon_delivery_fee_table'));
+
+			if($weights->num_rows() > 0){
+				$weight[0] = 'Select weight range';
+				foreach ($weights->result() as $r) {
+					$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+				}
+			}else{
+				$weight[0] = 'Select weight range';
+			}
+
+			$weightselect = form_dropdown('package_weight',$weight,$data['main_info']['weight'],'id="package_weight"');
+
+			$data['weightselect'] = $weightselect;
+
+			$delivery_type = array(
+				'0'=>'Select delivery type',
+				'COD'=>'COD',
+				'Delivery Only'=>'Delivery Only'
+			);
+
+			$typeselect = form_dropdown('delivery_type',$delivery_type,$data['main_info']['delivery_type'],'id="delivery_type_select"');
+
+			$data['typeselect'] = $typeselect;
+
+
+
 			$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
 
 			$details = $details->result_array();
@@ -233,13 +273,15 @@ class Prints extends Application
 			$gt = ($total < $gt)?$gt:$total;
 			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
 			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
 			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
 
 			$dsc = (int)$dsc;
 			$tax = (int)$tax;
+			$dc = (int)$dc;
 			$cod = (int)$cod;
 
-			$chg = ($gt - $dsc) + $tax + $cod;
+			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
 				'&nbsp;',		
@@ -270,21 +312,25 @@ class Prints extends Application
 				);
 
 
-				if($cod == 0){
-					$this->table->add_row(
-						'','',
-						'COD Charges','Paid by Merchant'
-					);
-				}else{
-					$this->table->add_row(
-						'&nbsp;',		
-						'&nbsp;',		
-						'COD Charges',		
-						array('data'=>number_format($cod,2,',','.'),
-							'id'=>'cod_cost'
-						)		
-					);
-				}
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'Delivery Charge',		
+					array('data'=>number_format($dc,2,',','.'),
+						'class'=>'editable',
+						'id'=>'delivery_cost'
+					)		
+				);
+
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'COD Surcharge',		
+					array('data'=>number_format($cod,2,',','.'),
+						'class'=>'editable',
+						'id'=>'cod_cost'
+					)		
+				);
 
 				$this->table->add_row(
 					'&nbsp;',		

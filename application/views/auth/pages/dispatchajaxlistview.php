@@ -115,6 +115,38 @@
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
 			}
+
+			if ($(e.target).is('.reassign')) {
+				var delivery_id = e.target.id;
+
+				$.post('<?php print site_url('ajax/getorder');?>',{ delivery_id:delivery_id }, function(data) {
+					if(data.result == 'ok'){
+
+						$('#reassign_delivery_id').html(data.data.delivery_id);
+						$('#disp_deliverycity').html(data.data.assignment_city);
+						$('#disp_deliveryzone').html(data.data.assignment_zone);
+						$('#disp_deliverydate').html(data.data.assignment_date);
+						$('#current_device').html(data.data.device);
+						$('#current_courier').html(data.data.courier);
+
+						var date_assign = data.data.assignment_date;
+
+						var zone_assign = data.data.assignment_zone;
+
+						var city_assign = data.data.buyerdeliverycity;
+
+						$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ 
+								assignment_date: date_assign,
+								assignment_zone: zone_assign,
+								assignment_city: city_assign 
+							}, function(data) {
+								$('#reassign_dev_list').html(data.html);
+							},'json');						
+						$('#device_reassign_dialog').dialog('open');
+					}
+				},'json');
+			}
+
 		});
 		
 		$('#getDevices').click(function(){
@@ -157,6 +189,41 @@
 				Cancel: function() {
 					$('#dev_list').html("");
 					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//allFields.val( "" ).removeClass( "ui-state-error" );
+				$('#assign_deliverytime').val('');
+			}
+		});
+
+		$('#device_reassign_dialog').dialog({
+			autoOpen: false,
+			height: 300,
+			width: 500,
+			modal: true,
+			buttons: {
+				"Re-Assign to Device": function() {
+
+					$.post('<?php print site_url('ajax/reassign');?>',
+						{ 
+							delivery_id:$('#reassign_delivery_id').html(),
+							assignment_date:$('#disp_deliverydate').html(),
+							assignment_device_id: $("input[name='dev_id']:checked").val(),
+							assignment_timeslot: $('.timeslot:checked').val(),
+							courier_id: 'current'
+						}, 
+						function(data) {
+							if(data.status == 'OK:REASSIGNED'){
+								//redraw table
+								oTable.fnDraw();
+								$('#device_reassign_dialog').dialog( 'close' );
+							}
+						},'json');
+				},
+				Cancel: function() {
+					$('#dev_list').html('');
+					$( this ).dialog( 'close' );
 				}
 			},
 			close: function() {
@@ -315,6 +382,28 @@
 					print form_dropdown('new_status',$sl,'','id="new_status"');
 
 				?>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div id="device_reassign_dialog" title="Re-Assign Device">
+	<table style="margin: 0px;border: 0px;">
+		<tr>
+			<td>
+				Delivery ID : <span id="reassign_delivery_id" style="font-weight: bold"></span><br />
+				City : <span id="disp_deliverycity" style="font-weight: bold"></span><br />
+				Delivery Date : <span id="disp_deliverydate" style="font-weight: bold" ></span><br />
+				Current Device : <span id="current_device" style="font-weight: bold" ></span><br />
+				Assigned To : <span id="current_courier" style="font-weight: bold" ></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Available Devices :<br />
+				<ul id="reassign_dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
+					Loading...
+				</ul>
 			</td>
 		</tr>
 	</table>
