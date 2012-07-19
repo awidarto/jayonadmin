@@ -331,6 +331,7 @@
     var cod_surcharge_table = <?php print $codhash; ?>;    
 
     var current_app = 0;
+    var delivery_fee = 0;
 
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
@@ -614,7 +615,7 @@
         });
 
         $('#weight_selection').change(function(e){
-            var delivery_fee = $(e.target).val();
+            delivery_fee = $(e.target).val();
             $('#delivery_cost_txt').html(delivery_fee);
             $('#delivery_cost').val(delivery_fee);
             calculate();            
@@ -622,13 +623,6 @@
 
         $('#delivery_type').change(function(){
             getweightandcod();
-            calculate();
-        });
-
-        $('#package_weight').change(function(){
-            var delivery_fee = $('#package_weight').val();
-            $('#delivery_cost_txt').html(delivery_fee);
-            $('#delivery_cost').val(delivery_fee);
             calculate();
         });
 
@@ -954,7 +948,7 @@
             total_discount = parseInt($('#total_discount').val());
         }
 
-        delivery_cost = ($('#package_weight').val() == 0)?0:parseInt($('#delivery_cost').val());
+        delivery_cost = ($('#package_weight').val() == 0)?0:parseInt(delivery_fee);
 
         total_value = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax);
 
