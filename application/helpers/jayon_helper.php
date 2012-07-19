@@ -190,6 +190,49 @@ function get_cod_tariff($total_price,$app_id = null){
 
 }
 
+function get_cod_table($app_id){
+	$CI =& get_instance();
+
+	$CI->db->where('app_id',$app_id);
+	$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+
+	if($result->num_rows() > 0){
+		return $result->result();
+	}else{
+		return false;
+	}
+
+}
+
+function get_delivery_charge_table($app_id){
+	$CI =& get_instance();
+
+	$CI->db->where('app_id',$app_id);
+	$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+
+	if($result->num_rows() > 0){
+		return $result->result();
+	}else{
+		return false;
+	}
+
+}
+
+function get_app_id_from_key($key){
+	$CI =& get_instance();
+
+	$CI->db->select('id');
+	$CI->db->where('key',$key);
+	$result = $CI->db->get($CI->config->item('applications_table'));
+
+	if($result->num_rows() > 0){
+		return $result->row()->id;
+	}else{
+		return false;
+	}
+
+}
+
 function get_option($key){
 	$CI =& get_instance();
 

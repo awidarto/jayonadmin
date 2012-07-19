@@ -82,6 +82,7 @@ class Ajax extends Application
 
 	public function getappselect(){
 		$merchant_id = $this->input->post('merchant_id');
+		$delivery_type = $this->input->post('delivery_type');
 
 		$this->db->select('key,application_name');
 		$this->db->where('merchant_id',$merchant_id);
@@ -101,22 +102,73 @@ class Ajax extends Application
 		print json_encode(array('result'=>'ok','data'=>$select));
 	}
 
-	public function getweightselect(){
+	public function getweightdata(){
+		$app_key = $this->input->post('app_key');
+		if($app_key == 0){
+			$dctable = false;
+		}else{
+			$app_id = get_app_id_from_key($app_key);
+			$dctable = get_delivery_charge_table($app_id);
+		}
 
+		if($dctable == true){
+			$weight[0] = 'Select weight range';
+			foreach ($dctable as $r) {
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+			}
+		}else{
+			$dctable = get_delivery_charge_table(0);
+			$weight[0] = 'Select weight range';
+			foreach ($dctable as $r) {
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+			}
+		}
+
+		$weightselect = form_dropdown('package_weight',$weight,null,'id="package_weight"');
+		$weighttable = $this->table->generate();
+
+		print json_encode(array('result'=>'ok','data'=>array('selector'=>$weightselect,'table'=>$weighttable)));
 	}
 
-	public function getcodselect(){
-		
+	public function getcoddata(){
+		$app_key = $this->input->post('app_key');
+		if($app_key == 0){
+			$dctable = false;
+		}else{
+			$app_id = get_app_id_from_key($app_key);
+			$dctable = get_cod_table($app_id);
+		}
+
+		if($dctable == true){
+			foreach ($dctable as $r) {
+				$this->table->add_row('IDR '.number_format($r->from_price,2,',','.').' - IDR '.number_format($r->to_price,2,',','.'), 'IDR '.number_format($r->surcharge,2,',','.'));
+			}
+		}else{
+			$dctable = get_cod_table(0);
+			foreach ($dctable as $r) {
+				$this->table->add_row('IDR '.number_format($r->from_price,2,',','.').' - IDR '.number_format($r->to_price,2,',','.'), 'IDR '.number_format($r->surcharge,2,',','.'));
+			}
+		}
+
+		$codhash = json_encode($dctable);			
+		$codselect = $dctable;
+		$codtable = $this->table->generate();
+
+		print json_encode(array('result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));		
 	}
 
 	public function getweighttable(){
+		$app_id = $this->input->post('app_id');
+		$dctable = get_delivery_charge_table($app_id);
+
 
 	}
 
 	public function getcodtable(){
 		
 	}
-
 
 	function reassign(){
 		$delivery_id = $this->input->post('delivery_id');

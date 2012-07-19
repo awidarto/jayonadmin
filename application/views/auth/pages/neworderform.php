@@ -330,6 +330,8 @@
 
     var cod_surcharge_table = <?php print $codhash; ?>;    
 
+    var current_app = 0;
+
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
 
@@ -505,7 +507,7 @@
             }
         });
 
-        $( '#buyer_email' ).autocomplete({
+        $('#buyer_email' ).autocomplete({
             source: '<?php print site_url('ajax/getbuyeremail')?>',
             method: 'post',
             minLength: 2,
@@ -532,7 +534,7 @@
 
         function getapp(merchant_id){
             $.post('<?php print site_url('ajax/getappselect');?>',
-                { merchant_id: merchant_id }, 
+                { merchant_id: merchant_id,delivery_type:$('#delivery_type').val() }, 
                 function(data) {
                     $('#application_id').html(data.data);
                 },'json');
@@ -604,19 +606,15 @@
 
         });
 
+        $('#application_id').change(function(e){
+            var val = $(e.target).val();
+            current_app = val;
+            getweightandcod();
+            calculate();
+        });
+
         $('#delivery_type').change(function(){
-
-            var delivery_type = $('#delivery_type').val();
-
-            if(delivery_type == 'COD'){
-                $('#cod_line').show();
-                $('#cod_tab').show();
-            }else{
-                $('#cod_line').hide();
-                $('#cod_tab').hide();
-                $('#cod_cost_txt').html(0);
-                $('#cod_cost').val(0);
-            }
+            getweightandcod();
             calculate();
         });
 
@@ -626,6 +624,37 @@
             $('#delivery_cost').val(delivery_fee);
             calculate();
         });
+
+        function getweightandcod(){
+            var delivery_type = $('#delivery_type').val();
+
+            console.log(current_app);
+
+            if(delivery_type == 'COD'){
+                $.post('<?php print site_url('ajax/getcoddata');?>',
+                    { app_key: current_app }, 
+                    function(data) {
+                        $('#cod_tab_data').html(data.data.table);
+                        cod_surcharge_table = $.parseJSON(data.data.codhash);
+                        calculate();
+                    },'json');
+
+                $('#cod_line').show();
+                $('#cod_tab').show();
+            }else{
+                $('#cod_line').hide();
+                $('#cod_tab').hide();
+                $('#cod_cost_txt').html(0);
+                $('#cod_cost').val(0);
+            }
+
+            $.post('<?php print site_url('ajax/getweightdata');?>',
+                { app_key: current_app }, 
+                function(data) {
+                    $('#delivery_tab_data').html(data.data.table);
+                    $('#weight_selection').html(data.data.selector);
+                },'json');
+        }
 
         function getzone(city){
             $.post('<?php print site_url('ajax/getzoneselect');?>',
@@ -755,16 +784,15 @@
     }
 
     function getCODcharge(total_price){
-        var curr;        
 
         if(total_price == 0){
             return 0;
         }
 
         for( i = 0; i < cod_surcharge_table.length;i++){
-            curr = cod_surcharge_table[i];
+            var curr = cod_surcharge_table[i];
             if(curr.from_price < total_price && total_price < curr.to_price){
-                return curr.surcharge;
+                return parseInt(curr.surcharge);
             }
         }
     }
@@ -921,13 +949,13 @@
 
         delivery_cost = ($('#package_weight').val() == 0)?0:parseInt($('#delivery_cost').val());
 
-        total_value = (total_price - total_discount) + total_tax;
+        total_value = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax);
 
-        cod_cost = parseInt(getCODcharge(total_value));
 
-        total_charges = (total_price - total_discount) + total_tax + delivery_cost;
+        total_charges = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax) + parseInt(delivery_cost);
 
         if($('#delivery_type').val() == 'COD'){
+            cod_cost = parseInt(getCODcharge(parseInt(total_value)));
             total_charges += cod_cost;
         }else{
             cod_cost = 0;
@@ -1010,14 +1038,14 @@
                             </tr>
                             <tr>
                                 <td>Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
-                                <td>
-                                    <?php print $weighttable;?>
+                                <td id="delivery_tab_data">
+                                    <?php // print $weighttable;?>
                                 </td>
                             </tr>
                             <tr id="cod_tab" style="display:none">
                                 <td>COD Surcharge<hr /><span class="fine">Tarif Jasa COD</span></td>
-                                <td>
-                                    <?php print $codtable;?>
+                                <td id="cod_tab_data">
+                                    <?php //print $codtable;?>
                                 </td>
 
                         </tbody>
@@ -1084,8 +1112,8 @@
                             </tr>
                             <tr>
                                 <td>Package Weight<hr /><span class="fine">Berat Paket</span></td>
-                                <td>
-                                    <?php print $weightselect; ?>
+                                <td id="weight_selection">
+                                    <?php //print $weightselect; ?>
                                 </td>
                             </tr>
                         </tbody>
