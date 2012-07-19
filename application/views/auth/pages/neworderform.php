@@ -613,6 +613,13 @@
             calculate();
         });
 
+        $('#weight_selection').change(function(e){
+            var delivery_fee = $(e.target).val();
+            $('#delivery_cost_txt').html(delivery_fee);
+            $('#delivery_cost').val(delivery_fee);
+            calculate();            
+        });
+
         $('#delivery_type').change(function(){
             getweightandcod();
             calculate();
