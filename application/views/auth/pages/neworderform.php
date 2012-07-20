@@ -799,8 +799,12 @@
     }
 
     function validate(){
+
+            var validisplay = '';
+
             if($('#merchant_id').val() === 'undefined' || $('#merchant_id').val() == '' || $('#merchant_id').val() == 0 || $('#merchant_id').val() == null || $('#merchant_id').val() === 'NaN'){
-                return [false,'Merchant Unspecified'];
+                validisplay += 'Merchant Unspecified\r\n';
+                //return [false,'Merchant Unspecified'];
             }
             /*
             if($('#buyer_id').val() === 'undefined' || $('#buyer_id').val() == '' || $('#buyer_id').val() == 0 || $('#buyer_id').val() == null || $('#buyer_id').val() === 'NaN'){
@@ -808,58 +812,75 @@
             }
             */
             if($('#app_id').val() == 0){
-                return [false, 'Application Domain Invalid'];
+                validisplay += 'Invalid Store ID\r\n';
+                //return [false, 'Application Domain Invalid'];
             }
 
             if($('#buyerdeliverycity').val() == 0){
-                return [false, 'Please specify City'];
+                validisplay += 'City Unspecified\r\n';
+                //return [false, 'Please specify City'];
             }
 
             if($('#buyerdeliveryzone').val() === 'undefined' || $('#buyerdeliveryzone').val() == '' || $('#buyerdeliveryzone').val() == 0 || $('#buyerdeliveryzone').val() == null || $('#buyerdeliveryzone').val() === 'NaN'){
-                return [false,'Please specify Zone'];
+                validisplay += 'Zone Unspecified\r\n';
+                //return [false,'Please specify Zone'];
             }
 
             if($('#package_weight').val() == 0){
-                return [false, 'Weight Unspecified'];
+                validisplay += 'Weight Unspecified\r\n';
+                //return [false, 'Weight Unspecified'];
             }
 
             if($('#delivery_type').val() == 0){
-                return [false, 'Please specify Delivery Type'];
-            }
-
-            if($('#package_length').val() === 'undefined' || $('#phone').val() == '' || $('#phone').val() == 0 || $('#phone').val() == null || $('#phone').val() === 'NaN'){
-                return [false,'COntact Number / Phone Unspecified'];
+                validisplay += 'Delivery Type Unspecified\r\n';
+                //return [false, 'Please specify Delivery Type'];
             }
 
             if($('#package_width').val() === 'undefined' || $('#package_width').val() == '' || $('#package_width').val() == 0 || $('#package_width').val() == null || $('#package_width').val() === 'NaN'){
-                return [false,'Width Unspecified'];
+                validisplay += 'Width Unspecified\r\n';
+                //return [false,'Width Unspecified'];
             }
 
             if($('#package_height').val() === 'undefined' || $('#package_height').val() == '' || $('#package_height').val() == 0 || $('#package_height').val() == null || $('#package_height').val() === 'NaN'){
-                return [false,'Height Unspecified'];
+                validisplay += 'Height Unspecified\r\n';
+                //return [false,'Height Unspecified'];
             }
 
-            if($('#package_length').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
-                return [false,'Length Unspecified'];
+            if($('#package_length').val() === 'undefined' || $('#phone').val() == '' || $('#phone').val() == 0 || $('#phone').val() == null || $('#phone').val() === 'NaN'){
+                validisplay += 'Contact Number / Phone Unspecified\r\n';
+                //return [false,'Contact Number / Phone Unspecified'];
+            }
+
+            if($('#phone').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
+                validisplay += 'Length Unspecified\r\n';
+                //return [false,'Length Unspecified'];
             }
 
             if($('#package_width').val() > <?php print get_option('max_width');?>){
-                return [false,'Max Width Exceeded'];
+                validisplay += 'Max Width Exceeded\r\n';
+                //return [false,'Max Width Exceeded'];
             }
 
             if($('#package_height').val() > <?php print get_option('max_height');?>){
-                return [false,'Max Height Exceeded'];
+                validisplay += 'Max Height Exceeded\r\n';
+                //return [false,'Max Height Exceeded'];
             }
 
             if($('#package_length').val() > <?php print get_option('max_length');?>){
-                return [false,'Max Length Exceeded'];
+                validisplay += 'Max Length Exceeded\r\n';
+                //return [false,'Max Length Exceeded'];
             }
 
             if($('#direction').val() === 'undefined' || $('#direction').val() == '' || $('#direction').val() == 0 || $('#direction').val() == null || $('#direction').val() === 'NaN'){
-                return [false,'Direction Unspecified'];
+                validisplay += 'Direction Unspecified\r\n';
+                //return [false,'Direction Unspecified'];
             }
 
-            return [true,''];
+            if(validisplay == ''){
+                return [true,''];
+            }else{
+                return [false,validisplay];
+            }
     }
 
     function calculate(){
