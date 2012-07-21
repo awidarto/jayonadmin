@@ -26,6 +26,8 @@
 		<?php echo $this->ag_asset->load_script('d3.layout.min.js','vendor');?>
 		<?php echo $this->ag_asset->load_script('rickshaw.min.js');?>
 
+		<?php echo $this->ag_asset->load_script('jquery.jeditable.mini.js');?>
+
 		<title><?php echo $this->config->item('site_title'); ?></title>
 
 		<script>

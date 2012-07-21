@@ -61,36 +61,19 @@
 		} );
 
 		$('table.dataTable').click(function(e){
-
 			if ($(e.target).is('.delete_link')) {
 				var user_id = e.target.id;
 				var answer = confirm("Are you sure you want to delete this entry ?");
 				if (answer){
-					$.post('<?php print site_url('admin/tariff/ajaxdeletecod');?>',{'id':user_id}, function(data) {
+					$.post('<?php print site_url('admin/tariff/ajaxdeletedelivery');?>',{'id':user_id}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
-							alert("COD entry id : " + user_id + " deleted");
+							alert("Delivery fee entry id : " + user_id + " deleted");
 						}
 					},'json');
 				}else{
 					//alert(user_id + " not deleted");
-				}
-		   	}
-
-			if ($(e.target).is('.cancel_link')) {
-				var delivery_id = e.target.id;
-				var answer = confirm("Are you sure you want to archive this order ?");
-				if (answer){
-					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{'delivery_id':delivery_id}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							alert(delivery_id + " archived");
-						}
-					},'json');
-				}else{
-					alert(delivery_id + " not archived");
 				}
 		   	}
 
@@ -109,6 +92,58 @@
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
+			}
+		});
+
+		$('#doArchive').click(function(){
+			var assigns = '';
+			var count = 0;
+			$('.assign_check:checked').each(function(){
+
+				var deliverydate = $('#dt_'+this.value).html();
+				var status = $('#st_'+this.value).html();
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
+				count++;
+			});
+			
+			if(count > 0){
+				$('#archive_list').html(assigns);
+				$('#archive_dialog').dialog('open');
+			}else{
+				alert('Please select one or more delivery orders');
+			}
+		});
+
+		$('#archive_dialog').dialog({
+			autoOpen: false,
+			height: 300,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Archive Delivery Orders": function() {
+					var delivery_ids = [];
+					var laststatus = [];
+					i = 0;
+					$('.assign_check:checked').each(function(){
+						delivery_ids[i] = $(this).val();
+						laststatus[i] = $(this).attr('title');
+						i++;
+					}); 
+					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							$('#archive_dialog').dialog( "close" );
+						}
+					},'json');
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//allFields.val( "" ).removeClass( "ui-state-error" );
+				$('#archive_list').html('');
 			}
 		});
 
@@ -138,6 +173,26 @@
 			}
 		});
 
+		$('#view_dialog').dialog({
+			autoOpen: false,
+			height: 600,
+			width: 900,
+			modal: true,
+			buttons: {
+				Print: function(){
+					var pframe = document.getElementById('print_frame');
+					var pframeWindow = pframe.contentWindow;
+					pframeWindow.print();
+				}, 
+				Close: function() {
+					oTable.fnDraw();
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
 	});
 </script>
 <?php if(isset($add_button)):?>
