@@ -79,6 +79,7 @@ class V1 extends Application
 				//$order['dir_lat'] = $in->dir_lat;
 				//$order['dir_lon'] = $in->dir_lon;
 				$order['buyerdeliverytime'] = $in->buyerdeliverytime;
+				$order['buyerdeliveryslot'] = $in->buyerdeliveryslot;
 				$order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
 				$order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Jakarta':$in->buyerdeliverycity;
 
@@ -674,6 +675,7 @@ class V1 extends Application
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
 		}else{
+			$this->db->where('is_on',1);
 			$z = $this->db->get($this->config->item('jayon_zones_table'));
 			$zones = $z->result_array();
 			$result = json_encode(array('status'=>'OK:ZONEOUT','data'=>$zones,'timestamp'=>now()));
@@ -692,6 +694,7 @@ class V1 extends Application
 			print $result;
 		}else{
 			$z = $this->db
+				->where('is_on',1)
 				->like('district',$query)
 				->or_like('city',$query)
 				->get($this->config->item('jayon_zones_table'));

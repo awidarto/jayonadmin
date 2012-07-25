@@ -26,6 +26,7 @@ function get_yearly_sequence()
 
 function get_zones($col = '*',$flatten = true){
 	$CI =& get_instance();
+	$CI->db->where('is_on',1);
 	$q = $CI->db->select($col)->get('districts');
 	if($flatten){
 		foreach($q->result_array() as $val){
@@ -39,6 +40,7 @@ function get_zones($col = '*',$flatten = true){
 
 function get_zone_options(){
 	$CI =& get_instance();
+	$CI->db->where('is_on',1);
 	$q = $CI->db->select('district,city')->get('districts');
 
 	$result = array();
@@ -55,7 +57,7 @@ function get_zone_options(){
 
 function ajax_find_zones($zone,$col = 'district'){
 	$CI =& get_instance();
-	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('districts');
+	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->where('is_on',1)->get('districts');
 	return $q->result_array();
 }
 
@@ -216,6 +218,42 @@ function get_delivery_charge_table($app_id){
 		return false;
 	}
 
+}
+
+function get_slot_select(){
+
+	$CI =& get_instance();
+
+	$CI->db->where('is_on',1);
+	$slots = $CI->db->get($CI->config->item('jayon_timeslots_table'));
+
+	if($slots->num_rows() > 0){
+		$slot[0] = 'Select delivery slot';
+		foreach ($slots->result() as $r) {
+			$slot[$r->slot_no] = $r->time_from.':00 - '.$r->time_to.':00';
+		}
+	}else{
+		$slot[0] = 'Select delivery slot';
+	}
+
+	$select = form_dropdown('buyerdeliverytime',$slot,null,'id="buyerdeliverytime"');
+
+	return $select;
+}
+
+function get_slot_range($slot){
+	$CI =& get_instance();
+
+	if($slot > 0){
+		$CI->db->select('time_from,time_to');
+		$CI->db->where('slot_no',$slot);
+		$CI->db->where('is_on',1);
+		$result = $CI->db->get($CI->config->item('jayon_timeslots_table'));
+		$row = $result->row();
+		return $row->time_from.':00 - '.$row->time_to.':00';		
+	}else{
+		return 0;
+	}
 }
 
 function get_app_id_from_key($key){

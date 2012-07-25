@@ -248,6 +248,7 @@ class Ajax extends Application
 		$city = $this->input->post('city');
 
 		$this->db->where(array('city'=>$city));
+		$this->db->where(array('is_on'=>1));
 		$zones = $this->db->get($this->config->item('jayon_zones_table'));
 
 		if($zones->num_rows() > 0){
@@ -260,6 +261,25 @@ class Ajax extends Application
 		}
 
 		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="buyerdeliveryzone"');
+
+		print json_encode(array('result'=>'ok','data'=>$select));
+	}	
+
+	public function getslotselect(){
+
+		$this->db->where(array('is_on'=>1));
+		$slots = $this->db->get($this->config->item('jayon_timeslot_table'));
+
+		if($slots->num_rows() > 0){
+			$slot[0] = 'Select delivery slot';
+			foreach ($slots->result() as $r) {
+				$slot[$r->slot_no] = $r->time_from.':00 - '.$r->time_to.':00';
+			}
+		}else{
+			$slot[0] = 'Select delivery slot';
+		}
+
+		$select = form_dropdown('buyerdeliverytime',$slot,null,'id="buyerdeliverytime"');
 
 		print json_encode(array('result'=>'ok','data'=>$select));
 	}	
@@ -301,6 +321,7 @@ class Ajax extends Application
 			'buyerdeliveryzone'=>$this->input->post('buyerdeliveryzone'),
 			'buyerdeliverycity'=>$this->input->post('buyerdeliverycity'),
 			'buyerdeliverytime'=>$this->input->post('buyerdeliverytime'),
+			'buyerdeliveryslot'=>$this->input->post('buyerdeliveryslot'),
 			'directions'=>$this->input->post('direction'),
 			'auto_confirm'=>$this->input->post('auto_confirm'),
 			'email'=>$this->input->post('email'),

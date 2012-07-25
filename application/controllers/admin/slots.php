@@ -1,6 +1,6 @@
 <?php
 
-class Zones extends Application
+class Slots extends Application
 {
 	
 	public function __construct()
@@ -26,12 +26,12 @@ class Zones extends Application
 		$sort_dir = $this->input->post('sSortDir_0');
 
 		$columns = array(
-			'district','city','province','country','is_on'
+			'id', 'seq', 'time_from', 'time_to', 'slot_no', 'is_on'
 			);
 
 		// get total count result
-		$count_all = $this->db->count_all($this->config->item('jayon_zones_table'));
-		$count_display_all = $this->db->count_all_results($this->config->item('jayon_zones_table'));
+		$count_all = $this->db->count_all($this->config->item('jayon_timeslots_table'));
+		$count_display_all = $this->db->count_all_results($this->config->item('jayon_timeslots_table'));
 
 		if($this->input->post('sSearch') != ''){
 			$srch = $this->input->post('sSearch');
@@ -41,7 +41,9 @@ class Zones extends Application
 			$this->db->or_like('country',$srch);
 		}
 		
-		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_zones_table'));
+		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by($columns[$sort_col],$sort_dir)
+			->get($this->config->item('jayon_timeslots_table'));
 		
 		//print $this->db->last_query();
 		
@@ -59,10 +61,10 @@ class Zones extends Application
 			$colorclass = ($key['is_on'] == 1)?'':' red';
 
 			$onswitch = '<span id="'.$key['id'].'" class="onswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
-			//$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
+			//$delete = anchor("admin/timeslots/delete/".$key['id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/slots/edit/".$key['id']."/", "Edit"); // Build actions links
 			//$aadata[] = array($key['holiday'],$key['holidayname'],$edit.' '.$delete); // Adding row to table
-			$aadata[] = array($key['district'],$key['city'],$key['province'],$key['country'],$onswitch,$edit.' '.$delete); // Adding row to table
+			$aadata[] = array($key['id'],$key['seq'],$key['slot_no'],$key['time_from'],$key['time_to'],$onswitch,$edit.' '.$delete); // Adding row to table
 		}
 		
 		$result = array(
@@ -80,23 +82,14 @@ class Zones extends Application
 	{
 	    $this->load->library('table');		
 
-		$this->breadcrumb->add_crumb('Zones','admin/zones/manage');
+		$this->breadcrumb->add_crumb('Time Slots','admin/slots/manage');
 			
-		$data = $this->db->get($this->config->item('jayon_zones_table'));
-		$result = $data->result_array();
-		$this->table->set_heading('District', 'City','Province','Country','Status','Actions'); // Setting headings for the table
-		
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
-			$this->table->add_row($key['district'],$key['city'],$key['province'],$key['country'],$edit.' '.$delete); // Adding row to table
-		}
+		$this->table->set_heading('ID', 'Sequence','Slot','From','To','Status','Actions'); // Setting headings for the table
 
 		$page['sortdisable'] = '';
-		$page['ajaxurl'] = 'admin/zones/ajaxmanage';
-		$page['add_button'] = array('link'=>'admin/zones/add','label'=>'Add New Zone');
-		$page['page_title'] = 'Manage Zones';
+		$page['ajaxurl'] = 'admin/slots/ajaxmanage';
+		$page['add_button'] = array('link'=>'admin/slots/add','label'=>'Add New Slot');
+		$page['page_title'] = 'Manage timeslots';
 		$this->ag_auth->view('districtajaxlistview',$page); // Load the view
 	}
 
@@ -107,7 +100,7 @@ class Zones extends Application
 		
 		$dataset['is_on'] = $toggle;
 
-		if($this->db->where('id',$id)->update($this->config->item('jayon_zones_table'),$dataset) == TRUE){
+		if($this->db->where('id',$id)->update($this->config->item('jayon_timeslots_table'),$dataset) == TRUE){
 			print json_encode(array('result'=>'ok'));
 		}else{
 			print json_encode(array('result'=>'failed'));
@@ -118,22 +111,15 @@ class Zones extends Application
 	{
 		$id = $this->input->post('id');
 		
-		if($this->db->where('id', $id)->delete($this->config->item('jayon_zones_table'))){
+		if($this->db->where('id', $id)->delete($this->config->item('jayon_timeslots_table'))){
 			print json_encode(array('result'=>'ok'));
 		}else{
 			print json_encode(array('result'=>'failed'));
 		}
 	}
-	
-	public function delete($id)
-	{
-		$this->db->where('id', $id)->delete($this->config->item('jayon_zones_table'));
-		$page['page_title'] = 'Delete Zone';
-		$this->ag_auth->view('zones/delete_success',$page);
-	}
 
 	public function get_zones($id){
-		$result = $this->db->where('id', $id)->get($this->config->item('jayon_zones_table'));
+		$result = $this->db->where('id', $id)->get($this->config->item('jayon_timeslots_table'));
 		if($result->num_rows() > 0){
 			return $result->row_array();
 		}else{
@@ -142,7 +128,7 @@ class Zones extends Application
 	}
 	
 	public function update_holiday($id,$data){
-		$result = $this->db->where('id', $id)->update($this->config->item('jayon_zones_table'),$data);
+		$result = $this->db->where('id', $id)->update($this->config->item('jayon_timeslots_table'),$data);
 		return $this->db->affected_rows();
 	}
 	
@@ -157,7 +143,7 @@ class Zones extends Application
 		if($this->form_validation->run() == FALSE)
 		{	
 			$data['page_title'] = 'Add Zone';
-			$this->ag_auth->view('zones/add',$data);
+			$this->ag_auth->view('timeslots/add',$data);
 		}
 		else
 		{
@@ -166,11 +152,11 @@ class Zones extends Application
 			$dataset['province'] = set_value('province');
 			$dataset['country'] = set_value('country');
 			
-			if($this->db->insert($this->config->item('jayon_zones_table'),$dataset) === TRUE)
+			if($this->db->insert($this->config->item('jayon_timeslots_table'),$dataset) === TRUE)
 			{
 				$data['message'] = "The zone has now been set.";
 				$data['page_title'] = 'Add Zone';
-				$data['back_url'] = anchor('admin/zones/manage','Back to list');
+				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -178,7 +164,7 @@ class Zones extends Application
 			{
 				$data['message'] = "The zone can not be set.";
 				$data['page_title'] = 'Add Zone Error';
-				$data['back_url'] = anchor('admin/zones/manage','Back to list');
+				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 			}
 
@@ -199,7 +185,7 @@ class Zones extends Application
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['page_title'] = 'Edit Zone';
-			$this->ag_auth->view('zones/edit',$data);
+			$this->ag_auth->view('timeslots/edit',$data);
 		}
 		else
 		{
@@ -208,12 +194,12 @@ class Zones extends Application
 			$dataset['province'] = set_value('province');
 			$dataset['country'] = set_value('country');
 			
-			if($this->db->where('id',$id)->update($this->config->item('jayon_zones_table'),$dataset) == TRUE)
+			if($this->db->where('id',$id)->update($this->config->item('jayon_timeslots_table'),$dataset) == TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
 				$data['message'] = "The zone has now updated.";
 				$data['page_title'] = 'Edit Zone';
-				$data['back_url'] = anchor('admin/zones/manage','Back to list');
+				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -221,7 +207,7 @@ class Zones extends Application
 			{
 				$data['message'] = "The zone can not be updated.";
 				$data['page_title'] = 'Edit Zone Error';
-				$data['back_url'] = anchor('admin/zones/manage','Back to list');
+				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 			}
 

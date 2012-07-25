@@ -42,7 +42,7 @@ $config['jayon_holidays_table'] = 'holidays';
 $config['jayon_devices_table'] = 'devices';
 $config['jayon_options_table'] = 'options';
 $config['jayon_zones_table'] = 'districts';
-$config['jayon_timeslots_table'] = 'slots';
+$config['jayon_timeslots_table'] = 'time_slots';
 $config['jayon_email_outbox_table'] = 'email_outbox';
 
 //test only

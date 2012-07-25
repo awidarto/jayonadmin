@@ -64,6 +64,7 @@
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/devices')?>" ><?php if(user_group('admin')) { echo anchor('admin/devices/manage', 'Devices '); } ?></li><?php endif;?>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/holidays')?>" ><?php if(user_group('admin')) { echo anchor('admin/holidays/manage', 'Holidays'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/zones')?>" ><?php if(user_group('admin')) { echo anchor('admin/zones/manage', 'Zones'); } ?></li><?php endif;?>
+					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/slots\/manage')?>" ><?php if(user_group('admin')) { echo anchor('admin/slots/manage', 'Time Slots'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/log\/access')?>" ><?php if(user_group('admin')) { echo anchor('admin/log/access', 'API Access Log'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/log\/outbox')?>" ><?php if(user_group('admin')) { echo anchor('admin/log/outbox', 'Email Outbox'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/options')?>" ><?php if(user_group('admin')) { echo anchor('admin/options/manage', 'Options'); } ?></li><?php endif;?>
