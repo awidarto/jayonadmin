@@ -22,6 +22,7 @@ class Order extends Application
 		$this->load->library('table');
 
 		$this->db->distinct('city');
+		$this->db->where('is_on',1);
 		$this->db->order_by('city');
 		$cities = $this->db->get($this->config->item('jayon_zones_table'));
 

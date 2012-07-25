@@ -58,11 +58,12 @@ class Zones extends Application
 			$onstatus = ($key['is_on'] == 1)?'On':'Off';
 			$colorclass = ($key['is_on'] == 1)?'':' red';
 
+			$oncityswitch = '<span id="'.$key['id'].'" title="'.$key['city'].'" class="oncityswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
 			$onswitch = '<span id="'.$key['id'].'" class="onswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
 			//$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
 			//$aadata[] = array($key['holiday'],$key['holidayname'],$edit.' '.$delete); // Adding row to table
-			$aadata[] = array($key['district'],$key['city'],$key['province'],$key['country'],$onswitch,$edit.' '.$delete); // Adding row to table
+			$aadata[] = array($key['district'],$key['city'].' '.$oncityswitch,$key['province'],$key['country'],$onswitch,$edit.' '.$delete); // Adding row to table
 		}
 		
 		$result = array(
@@ -109,6 +110,20 @@ class Zones extends Application
 
 		if($this->db->where('id',$id)->update($this->config->item('jayon_zones_table'),$dataset) == TRUE){
 			print json_encode(array('result'=>'ok'));
+		}else{
+			print json_encode(array('result'=>'failed'));
+		}
+	}
+
+	public function ajaxcitytoggle()
+	{
+		$city = $this->input->post('city');
+		$toggle = ($this->input->post('switchto') == 'On')?1:0;
+		
+		$dataset['is_on'] = $toggle;
+
+		if($this->db->where('city',$city)->update($this->config->item('jayon_zones_table'),$dataset) == TRUE){
+			print json_encode(array('result'=>'ok','sql'=>$this->db->last_query()));
 		}else{
 			print json_encode(array('result'=>'failed'));
 		}

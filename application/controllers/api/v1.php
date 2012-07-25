@@ -668,6 +668,27 @@ class V1 extends Application
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
+	/* Lists JEX available time slot */
+
+	public function slotlist($api_key = null){
+		if(is_null($api_key)){
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
+		}else{
+			$this->db->where('is_on',1);
+			$this->db->order_by('seq','asc');
+			$this->db->select('slot_no as slot, time_from, time_to');
+			$z = $this->db->get($this->config->item('jayon_timeslots_table'));
+			$slots = $z->result_array();
+			$result = json_encode(array('status'=>'OK:TIMESLOT','data'=>$slots,'timestamp'=>now()));
+			print $result;
+		}
+
+		$this->log_access($api_key, __METHOD__ ,$result);
+
+	}
+
+
 	/* Lists JEX zones of coverage */
 
 	public function zonelist($api_key = null){

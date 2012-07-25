@@ -112,7 +112,31 @@
 						}
 					},'json');
 				}else{
-					alert(user_id + " not deleted");
+					alert("Switch cancelled");
+				}
+		   	}
+
+			if ($(e.target).is('.oncityswitch_link')) {
+				var zone_id = e.target.id;
+				var city = e.target.title;
+				var currentsw = $('#' + zone_id).html();
+
+				if(currentsw == 'On'){
+					nextsw = 'Off';
+				}else{
+					nextsw = 'On';
+				}
+
+				var answer = confirm("Switch " + city +" "+ nextsw + " ?");
+				if (answer){
+					$.post('<?php print site_url('admin/zones/ajaxcitytoggle');?>',{'city':city,'switchto':nextsw}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+						}
+					},'json');
+				}else{
+					alert("Switch cancelled");
 				}
 		   	}
 
