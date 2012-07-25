@@ -99,6 +99,8 @@
 			var date_assign = $('.assign_date:checked').val();
 			var city_assign = $('.assign_city:checked').val();
 
+			console.log(date_assign);
+
 			
 			if(date_assign == '' || city_assign == '' ){
 

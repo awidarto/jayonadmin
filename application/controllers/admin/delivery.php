@@ -337,7 +337,7 @@ class Delivery extends Application
 
 			$app = $this->get_app_info($key['application_key']);
 
-			$datecheck = form_radio('assign_date',$key['assignment_date'],FALSE,'class="assign_date"').'<strong>'.$key['assignment_date'].'</strong>';
+			$datecheck = form_radio('assign_date',$key['assignment_date'],FALSE,'class="assign_date"').'<strong>'.$key['assignment_date'].' '.get_slot_range($key['buyerdeliveryslot']).'</strong>';
 
 			$citycheck = form_radio('assign_city',$key['buyerdeliverycity'],FALSE,'class="assign_city"').'<strong>'.$key['buyerdeliverycity'].'</strong>';
 
@@ -2319,9 +2319,9 @@ class Delivery extends Application
 					->where('device_id',$device['id'])
 					->count_all_results($this->config->item('assigned_delivery_table'));
 				//$result[] = array('id'=>$device['id'],'device'=>$device['identifier'],'assignment'=>$count_dev);
-				$slotform .= sprintf($slotradio,$sl, $sl,$count_dev);
+				$slotform .= sprintf($slotradio,$sl, get_slot_range($sl),$count_dev);
 			}
-			$result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><input type="radio" name="dev_id" value="%s">%s <br />Delivery Slot : %s</li>',
+			$result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:16px;"><input type="radio" name="dev_id" value="%s">%s <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delivery Slot :<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s</li>',
 				$device['id'],
 				$device['identifier'].' - '.$device['devname'],
 				$slotform );
