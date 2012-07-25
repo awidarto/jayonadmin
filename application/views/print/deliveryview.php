@@ -514,7 +514,12 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td>Delivery Date:</td>
                                 <td>
                                     <?php print form_input('assignment_date',$main_info['assignment_date'],'id="assignment_date"');?>
-                                    <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
+                            </tr>
+                            <tr>
+                                <td>Delivery Slot:</td>
+                                <td>
+                                    Requested : <?php print get_slot_range($main_info['buyerdeliveryslot']);?><br /><br />
+                                    Assigned : <?php print get_slot_range($main_info['assignment_timeslot']);?></td>
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Type:</td>
