@@ -1063,7 +1063,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$datefield,
 				$devicefield,
-				$key['assignment_timeslot'],
+				get_slot_range($key['assignment_timeslot']),
 				//$key['delivery_id'],
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
