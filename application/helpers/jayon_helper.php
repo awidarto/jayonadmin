@@ -38,6 +38,21 @@ function get_zones($col = '*',$flatten = true){
 	}
 }
 
+function get_city_status(){
+	$CI =& get_instance();
+	$CI->db->select('city');
+	$CI->db->where('is_on',1);
+	$CI->db->distinct('city');
+	$q = $CI->db->get('districts');
+
+	$res = array();
+	foreach($q->result_array() as $r){
+		$res[] = $r['city'];
+	}
+
+	return $res;
+}
+
 function get_zone_options(){
 	$CI =& get_instance();
 	$CI->db->where('is_on',1);

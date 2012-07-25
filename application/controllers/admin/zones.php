@@ -40,7 +40,9 @@ class Zones extends Application
 			$this->db->or_like('province',$srch);
 			$this->db->or_like('country',$srch);
 		}
-		
+
+		$this->db->order_by('city','asc');
+		$this->db->order_by('district','asc');		
 		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_zones_table'));
 		
 		//print $this->db->last_query();
@@ -48,6 +50,10 @@ class Zones extends Application
 		$result = $data->result_array();
 			
 		$aadata = array();
+
+		$city_status = get_city_status();
+
+		//print_r($city_status);
 		
 		
 		foreach($result as $value => $key)
@@ -58,7 +64,10 @@ class Zones extends Application
 			$onstatus = ($key['is_on'] == 1)?'On':'Off';
 			$colorclass = ($key['is_on'] == 1)?'':' red';
 
-			$oncityswitch = '<span id="'.$key['id'].'" title="'.$key['city'].'" class="oncityswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
+			$oncitystatus = (in_array($key['city'],$city_status))?'On':'Off';
+			$citycolorclass = ($oncitystatus == 'On')?'':' red';			
+
+			$oncityswitch = '<span id="'.$key['id'].'" title="'.$key['city'].'" class="oncityswitch_link'.$citycolorclass.'" style="cursor:pointer;text-decoration:underline;">'.$oncitystatus.'</span>'; // Build actions links
 			$onswitch = '<span id="'.$key['id'].'" class="onswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
 			//$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
