@@ -351,6 +351,8 @@
                     alert('time slot is full');
                 }else if(dateBlock[dateText] == 'holiday'){
                     alert('date is holiday');
+                }else if(dateBlock[dateText] == 'overquota'){
+                    alert('daily capacity exceeded');
                 }else{
                     $('#rescheduled_deliverytime').val(dateText);
                 }
@@ -476,6 +478,10 @@
                 select = 0;
                 css = 'blocked';
                 popup = 'zero time slot';
+            }else if(window.dateBlock[indate] == 'overquota'){
+                select = 0;
+                css = 'blocked';
+                popup = 'daily capacity exceeded';
             }else{
                 select = 1;
                 css = '';

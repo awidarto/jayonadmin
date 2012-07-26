@@ -25,21 +25,40 @@ class Devices extends Application
 			
 		$data = $this->db->get($this->config->item('jayon_devices_table'));
 		$result = $data->result_array();
-		$this->table->set_heading('Identifier', 'Description','Device Name','Device Key','Mobile Number','District','City','Actions'); // Setting headings for the table
+		$this->table->set_heading('Identifier','Status','Description','Device Name','Device Key','Mobile Number','District','City','Actions'); // Setting headings for the table
 		
 		foreach($result as $value => $key)
 		{
+			$onstatus = ($key['is_on'] == 1)?'On':'Off';
+			$colorclass = ($key['is_on'] == 1)?'':' red_switch';
+
+			$onswitch = '<span id="'.$key['id'].'" class="onswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
+
 			$delete = anchor("admin/devices/delete/".$key['id']."/", "Delete"); // Build actions links
 			$assign = anchor("admin/devices/assignment/".$key['id']."/", "Assignment"); // Build actions links
 			$edit = anchor("admin/devices/edit/".$key['id']."/", "Edit"); // Build actions links
-			$this->table->add_row($key['identifier'], $key['descriptor'],$key['devname'],$key['key'],$key['mobile'],$key['district'],$key['city'],$edit.' '.$assign.' '.$delete); // Adding row to table
+			$this->table->add_row($key['identifier'],$onswitch, $key['descriptor'],$key['devname'],$key['key'],$key['mobile'],$key['district'],$key['city'],$edit.' '.$assign.' '.$delete); // Adding row to table
 		}
 
 		$page['add_button'] = array('link'=>'admin/devices/add','label'=>'Add New Device');
 		$page['page_title'] = 'Manage Devices';
-		$this->ag_auth->view('listview',$page); // Load the view
+		$this->ag_auth->view('devicelistview',$page); // Load the view
 	}
 
+	public function ajaxtoggle()
+	{
+		$id = $this->input->post('id');
+		$setsw = $this->input->post('switchto');
+		$toggle = ($setsw == 'On')?1:0;
+		
+		$dataset['is_on'] = $toggle;
+
+		if($this->db->where('id',$id)->update($this->config->item('jayon_devices_table'),$dataset) == TRUE){
+			print json_encode(array('result'=>'ok','state'=>$setsw));
+		}else{
+			print json_encode(array('result'=>'failed'));
+		}
+	}
 
 	public function ajaxassignment($id)
 	{

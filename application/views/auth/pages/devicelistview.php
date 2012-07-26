@@ -10,18 +10,13 @@
 <script>
 	$(document).ready(function() {
 
-		$('.onswitch_link').click(function(){
-			alert($(this).html());
-		});
-
 		$('table.dataTable').click(function(e){
-
-			alert('click');
-
 
 			if ($(e.target).is('.onswitch_link')) {				
 				var dev_id = e.target.id;
 				var currentsw = $('#' + dev_id).html();
+
+				var nextsw = '';
 
 				if(currentsw == 'On'){
 					nextsw = 'Off';
@@ -34,7 +29,14 @@
 					$.post('<?php print site_url('admin/devices/ajaxtoggle');?>',{'id':dev_id,'switchto':nextsw}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
-							oTable.fnDraw();
+							$('#' + dev_id).html(data.state);
+							if(data.state == 'Off'){
+								$('#' + dev_id).removeClass('red_switch').addClass('red_switch');
+							}else{
+								$('#' + dev_id).removeClass('red_switch');
+							}
+
+							//oTable.fnDraw();
 						}
 					},'json');
 				}else{
@@ -47,8 +49,9 @@
 
 	});
 </script>
-
-<div class="button_nav">
-	<?php echo anchor('admin/devices/add','Add New Device','class="button add"')?>
-</div>
+<?php if(isset($add_button)):?>
+	<div class="button_nav">
+		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
+	</div>
+<?php endif;?>
 <?php echo $this->table->generate(); ?>

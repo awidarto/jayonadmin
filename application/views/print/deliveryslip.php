@@ -248,12 +248,11 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td colspan="2"><strong>Package Info</strong></td>
 							</tr>
 							<tr>
-								<td class="row_label">Dimension ( L x W x H )<hr />
-									<span class="fine">Dimensi ( P x L x T )</span></td>
+								<td class="row_label">Dimension <span class="fine">( L x W x H )</span></td>
 								<td><?php print $main_info['length'].' cm x '.$main_info['width'].' cm x '.$main_info['height'];?> cm</td>
 							</tr>
 							<tr>
-								<td>Weight<hr /><span class="fine">Berat</span></td>
+								<td>Weight</td>
 								<td><?php print get_weight_range($main_info['weight']);?></td>
 							</tr>
 						</tbody>
@@ -266,15 +265,15 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td colspan="2"><strong>Delivery Info</strong></td>
 							</tr>
 							<tr>
-								<td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
+								<td class="row_label">Delivery Type</td>
 								<td><?php print $main_info['delivery_type'];?></td>
 							</tr>
 							<tr>
-								<td class="row_label">Delivery Number<hr /><span class="fine">No. Pengiriman</span></td>
+								<td class="row_label">Delivery Number</td>
 								<td><?php print $main_info['delivery_id'];?></td>
 							</tr>
 							<tr>
-								<td>Delivery Date<hr /><span class="fine">Tanggal Pengiriman</span></td>
+								<td>Delivery Date</td>
 								<td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
 							</tr>
 							<tr>
@@ -282,24 +281,24 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 
 							<tr>
-								<td class="row_label">Delivered To<hr /><span class="fine">Penerima</span></td>
+								<td class="row_label">Delivered To</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Shipping Address<hr /><span class="fine">Alamat Tujuan</span></td>
+								<td>Shipping Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 							<tr>
-								<td>Phone<hr /><span class="fine">Telepon</span></td>
+								<td>Phone</td>
 								<td><?php print $main_info['phone'];?></td>
 							</tr>
 
 							<tr>
-								<td>Email<hr /><span class="fine">Alamat Email</span></td>
+								<td>Email</td>
 								<td><?php print $main_info['email'];?></td>
 							</tr>
 							<tr>
-								<td>Direction<hr /><span class="fine">Petunjuk Jalan</span></td>
+								<td>Direction</td>
 								<td><?php print $main_info['directions'];?></td>
 							</tr>
 						</tbody>
