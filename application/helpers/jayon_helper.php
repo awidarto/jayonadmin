@@ -361,17 +361,25 @@ function getdateblock($month = null, $city = null){
 function overquota($date){
 	$CI =& get_instance();
 
+	$CI->db->where('is_on',1);
 	$devcount = $CI->db->count_all($CI->config->item('jayon_devices_table'));
 	$slots = get_slot_count();
 	$shifts = (int) get_option('daily_shifts');
 
 	$dailyquota = $devcount * $slots * $shifts;
 
+	/*
 	$CI->db->like('buyerdeliverytime',$date);
 	$CI->db->where('assignment_date','0000-00-00');
 	$CI->db->or_where('assignment_date',$date);
 	$CI->db->from($CI->config->item('incoming_delivery_table'));
 	$quota = $CI->db->count_all_results();
+	*/
+
+	$sqlf = "SELECT COUNT( * ) AS  numrows FROM %s WHERE  (buyerdeliverytime LIKE  '%s%%' AND  assignment_date =  '%s') OR  assignment_date =  '%s'";
+	$sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date,'0000-00-00',$date);
+	$quota = $CI->db->query($sql);
+	$quota = $quota->row()->numrows;
 
 	if($dailyquota >= $quota){
 		return false;
