@@ -55,10 +55,11 @@ class Zones extends Application
 
 		//print_r($city_status);
 		
-		
-		foreach($result as $value => $key)
-		{
+		$city_display = "";
+		$last_city = "";
 
+		foreach($result as $value => $key)
+		{	
 			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
 
 			$onstatus = ($key['is_on'] == 1)?'On':'Off';
@@ -68,11 +69,20 @@ class Zones extends Application
 			$citycolorclass = ($oncitystatus == 'On')?'':' red';			
 
 			$oncityswitch = '<span id="'.$key['id'].'" title="'.$key['city'].'" class="oncityswitch_link'.$citycolorclass.'" style="cursor:pointer;text-decoration:underline;">'.$oncitystatus.'</span>'; // Build actions links
+
+			if($last_city == $key['city']){
+				$city_display = '';
+			}else{
+				$city_display = $key['city'].' '.$oncityswitch;
+			}
+
 			$onswitch = '<span id="'.$key['id'].'" class="onswitch_link'.$colorclass.'" style="cursor:pointer;text-decoration:underline;">'.$onstatus.'</span>'; // Build actions links
 			//$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
 			//$aadata[] = array($key['holiday'],$key['holidayname'],$edit.' '.$delete); // Adding row to table
-			$aadata[] = array($key['district'],$key['city'].' '.$oncityswitch,$key['province'],$key['country'],$onswitch,$edit.' '.$delete); // Adding row to table
+			$aadata[] = array($city_display,$key['district'].'&nbsp;&nbsp;&nbsp;'.$onswitch,$key['province'],$key['country'],$edit.' '.$delete); // Adding row to table
+			
+			$last_city = $key['city'];
 		}
 		
 		$result = array(
@@ -94,15 +104,8 @@ class Zones extends Application
 			
 		$data = $this->db->get($this->config->item('jayon_zones_table'));
 		$result = $data->result_array();
-		$this->table->set_heading('District', 'City','Province','Country','Status','Actions'); // Setting headings for the table
+		$this->table->set_heading('City','District', 'Province','Country','Actions'); // Setting headings for the table
 		
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/zones/delete/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/zones/edit/".$key['id']."/", "Edit"); // Build actions links
-			$this->table->add_row($key['district'],$key['city'],$key['province'],$key['country'],$edit.' '.$delete); // Adding row to table
-		}
-
 		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/zones/ajaxmanage';
 		$page['add_button'] = array('link'=>'admin/zones/add','label'=>'Add New Zone');

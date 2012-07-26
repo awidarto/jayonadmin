@@ -1435,7 +1435,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$printslip.' '.$reassign
+				$printslip.' '.$reassign.' '.$changestatus
 			);
 
 			$bardate = $key['assignment_date'];
