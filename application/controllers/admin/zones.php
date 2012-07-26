@@ -63,10 +63,10 @@ class Zones extends Application
 			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
 
 			$onstatus = ($key['is_on'] == 1)?'On':'Off';
-			$colorclass = ($key['is_on'] == 1)?'':' red';
+			$colorclass = ($key['is_on'] == 1)?'':' red_switch';
 
 			$oncitystatus = (in_array($key['city'],$city_status))?'On':'Off';
-			$citycolorclass = ($oncitystatus == 'On')?'':' red';			
+			$citycolorclass = ($oncitystatus == 'On')?'':' red_switch';			
 
 			$oncityswitch = '<span id="'.$key['id'].'" title="'.$key['city'].'" class="oncityswitch_link'.$citycolorclass.'" style="cursor:pointer;text-decoration:underline;">'.$oncitystatus.'</span>'; // Build actions links
 

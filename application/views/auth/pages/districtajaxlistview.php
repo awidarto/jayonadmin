@@ -1,3 +1,12 @@
+<style>
+	.red_switch{
+		background-color: red;
+		padding:2px;
+		color:white;
+		text-decoration: none;
+	}
+
+</style>
 <script>
 	var asInitVals = new Array();
 
