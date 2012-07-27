@@ -432,7 +432,7 @@ class V1 extends Application
 						if($ord->num_rows() > 0){
 							$ord = $ord->row();
 
-							$edata['fullname'] = $ord->buyer_name];
+							$edata['fullname'] = $ord->buyer_name;
 							$edata['delivery_id'] = $delivery_id;
 							$edata['ordertime'] = $ord->ordertime;
 							$edata['status'] = ucwords(str_replace('_', '', $in->status));
