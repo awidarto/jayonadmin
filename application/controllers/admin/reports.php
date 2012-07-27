@@ -85,7 +85,7 @@ class Reports extends Application
 			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
 			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
 
-			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$key['id'].'" title="Global" style="cursor:pointer;text-decoration:underline;" >Global</span>';
+			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_noid'.'" title="Global" style="cursor:pointer;text-decoration:underline;" >Global</span>';
 
 
 			$generate = anchor("admin/reports/globalreport/".$from."/".$to, "Global"); // Build actions links
