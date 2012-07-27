@@ -85,7 +85,7 @@ class Reports extends Application
 			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
 			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
 
-			$printrecon = '<span class="printslip" id="'.$from.'_'.$to.'" style="cursor:pointer;text-decoration:underline;" >Global</span>';
+			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$key['id'].'" title="Global" style="cursor:pointer;text-decoration:underline;" >Global</span>';
 
 
 			$generate = anchor("admin/reports/globalreport/".$from."/".$to, "Global"); // Build actions links
@@ -279,7 +279,8 @@ class Reports extends Application
 			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
 
-			$printrecon = '<span class="printslip" id="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
+			//$printrecon = '<span class="printslip" id="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
+			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$key['id'].'" title="Merchant" data="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
 			
 			$aadata[] = array(
 			 	$key['merchantname'],
@@ -348,7 +349,8 @@ class Reports extends Application
 			$edit = anchor("admin/couriers/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = anchor("admin/couriers/details/".$key['id']."/", $key['username']); // Build detail links
 
-			$printrecon = '<span class="printslip" id="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
+			//$printrecon = '<span class="printslip" id="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
+			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$key['id'].'" title="Courier" data="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
 
 			$aadata[] = array($detail, $key['email'],$key['fullname'],$key['mobile'],$key['phone'],$printrecon); // Adding row to table
 		}

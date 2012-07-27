@@ -370,11 +370,14 @@ class Prints extends Application
 			}
 		}
 
-	public function reconciliation($from, $to ,$merchant_id,$pdf = false){
-
+	public function reconciliation($from, $to ,$type,$id,$pdf = false){
+		$data['type'] = $type;
+		$data['type_name'] = $id;
+		$data['period'] = $from.' s/d '.$to;
+		$data['bank_account'] = 'xxxxxx';
 
 		if($pdf){
-			$html = $this->load->view('print/reconsiliation',$data,true);
+			$html = $this->load->view('print/reconciliation',$data,true);
 			//print $html; // Load the view
 			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
 		}else{

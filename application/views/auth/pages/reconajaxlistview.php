@@ -77,10 +77,15 @@
 				}
 		   	}
 
-			if ($(e.target).is('.printslip')) {
-				var delivery_id = e.target.id;
+			if ($(e.target).is('.printrecon')) {
+				var from_to = e.target.id;
+				from_to = from_to.split('_');
+
+				var type = e.target.title;
+				var type_id = from_to[2];
+
 				$('#print_id').val(delivery_id);
-				var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/reconciliation/' + from_to[0] +'/'+ from_to[1] +'/'+ type  +'/'+ type_id ;
 
 				$('#print_frame').attr('src',src);
 				$('#print_dialog').dialog('open');
@@ -160,7 +165,7 @@
 				}, 
 				"Download PDF": function(){
 					var print_id = $('#print_id').val();
-					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
+					var src = '<?php print base_url() ?>admin/prints/reconciliation/' + print_id + '/pdf';
 					window.location = src;
 					//alert(src);
 				},

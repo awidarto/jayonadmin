@@ -404,6 +404,45 @@ class V1 extends Application
 					delivery_log($data);
 					$result = json_encode(array('status'=>'OK:STATPOSTED','timestamp'=>now()));
 					print $result;
+
+					/* send notifications on select status */
+
+					$sendable = array(
+						//$this->config->item('trans_status_mobile_dispatched'),
+						//$this->config->item('trans_status_mobile_departure'),
+						//$this->config->item('trans_status_mobile_return'),
+						$this->config->item('trans_status_mobile_pickedup'),
+						//$this->config->item('trans_status_mobile_enroute'),
+						//$this->config->item('trans_status_mobile_location'),
+						$this->config->item('trans_status_mobile_rescheduled'),
+						$this->config->item('trans_status_mobile_delivered'),
+						//$this->config->item('trans_status_mobile_revoked'),
+						//$this->config->item('trans_status_mobile_noshow'),
+					);
+
+					if(in_array($in->status,$sendable)){
+
+						$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,b.email as buyer_email,b.fullname as buyer_name,m.email as merchant_email,a.application_name as app_name');
+						$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+						$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+						$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+
+						$ord = $this->db->where('delivery_id',$in->delivery_id)->get();
+
+						if($ord->num_rows() > 0){
+							$ord = $ord->row();
+
+							$edata['fullname'] = $ord->buyer_name];
+							$edata['delivery_id'] = $delivery_id;
+							$edata['ordertime'] = $ord->ordertime;
+							$edata['status'] = ucwords(str_replace('_', '', $in->status));
+
+							//send_notification($subject,$to,$cc = null,$reply_to = null,$template = 'default',$data = null,$attachment = null)
+							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->buyer_email,$ord->merchant_email,null,'status_update',$edata,null);
+						}
+
+					}
+
 				}else{
 					$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
 					print $result;

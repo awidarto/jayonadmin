@@ -346,11 +346,7 @@ function getdateblock($month = null, $city = null){
 				}else if(overquota($date)){
 					$blocking[$date] = 'overquota';
 				}else{
-					$slot = $CI->db
-						->where('assignment_date',$date)
-						->count_all_results($CI->config->item('assigned_delivery_table'));
-					$slot = ($slot < $maxcap)?'open':'full';
-					$blocking[$date] = $slot;
+					$blocking[$date] = 'open';
 				}
 			}
 		}

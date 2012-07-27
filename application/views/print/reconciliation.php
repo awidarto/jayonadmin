@@ -22,6 +22,10 @@
             padding-top:15px;
         }
 
+        h3{
+            text-align: center;
+        }
+
         td{
             font-size: 12px;
         }
@@ -115,6 +119,10 @@
             width:840px;
         }
 
+        table#sign tr td:first-child{
+            width:75%;
+        }
+
         #signBox th{
             width:100px;
             vertical-align:top;
@@ -181,9 +189,10 @@
 		<table id="mainInfo">
 			<tr>
 				<td>
-					Merchant ID
+                    <?php print $type;?>
 				</td>
 				<td>
+                    <?php print $type_name;?>
 				</td>
 			</tr>
 			<tr>
@@ -191,6 +200,7 @@
 					Period of Reconciliations
 				</td>
 				<td>
+                    <?php print $period; ?>
 				</td>
 			</tr>
 			<tr>
@@ -198,6 +208,7 @@
 					Bank Account
 				</td>
 				<td>
+                    <?php $bank_account;?>
 				</td>
 			</tr>
 		</table>
@@ -252,24 +263,24 @@
 		</table>
 						
 		<p>Mohon untuk ditandatangani apabila jumlah rekonsiliasi telah sesuai dengan jumlah transaksi anda melalui layanan Cash On Delivery dari Jayon Express selama periode tersebut diatas</p>
-		<p>Transfer ke rekening anda paling cepat 1 hari setelah kami meneima konfirmasi persetujuan kesesuaian jumlah rekonsiliasi</p>				
+		<p>Transfer ke rekening anda paling cepat 1 hari setelah kami menerima konfirmasi persetujuan kesesuaian jumlah rekonsiliasi</p>				
 		<p>Laporan Rekonsiliasi ini bukanlah transaksi penjualan antara Jayon Express Pte.Ltd dengan toko online melainkan merupakan penarikan uang titipan hasil penjualan milik toko online sebagaimana tersebut diatas sehingga bukan merupakan obyek pajak bagi Jayon Express</p>				
 
-		<table>
+		<table id="sign">
 			<tr>
-				<td></td>
+				<td>&nbsp;</td>
 				<td>Menyetujui Jumlah Rekonsiliasi</td>
 			</tr>
 			<tr>
-				<td></td>
+                <td>&nbsp;</td>
 				<td>Tanggal :</td>
 			</tr>
 			<tr>
-				<td></td>
+                <td>&nbsp;</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td></td>
+                <td>&nbsp;</td>
 				<td class="underlined">Nama</td>
 			</tr>
 		</table>				
