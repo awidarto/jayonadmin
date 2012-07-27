@@ -1535,6 +1535,8 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
+			$thumbnail = get_thumbnail($key['delivery_id']);
+
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
@@ -1544,6 +1546,7 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				$key['courier'],
 				$key['shipping_address'],
+				$thumbnail,
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
@@ -1579,6 +1582,7 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Courier',
 			'Shipping Address',
+			'Reciever',
 			'Phone',
 			'Status',
 			'Reschedule Ref',

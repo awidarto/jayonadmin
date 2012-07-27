@@ -441,6 +441,24 @@ function checkdateblock($date = null, $city = null){
 	}
 }
 
+
+function get_thumbnail($delivery_id){
+	$CI =& get_instance();
+
+	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
+		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+			$thumbnail = base_url().'public/reciever-thumb/th_'.$delivery_id.'.jpg';
+			$thumbnail = sprintf('<img src="%s" />',$thumbnail);					
+		}else{
+			$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+		}
+	}else{
+		$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+	}
+
+	return $thumbnail;
+}
+
 function delivery_log($data){
 	$CI =& get_instance();
 	$CI->db->insert($CI->config->item('delivery_log_table'),$data);
