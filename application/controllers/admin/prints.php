@@ -382,17 +382,33 @@ class Prints extends Application
 
 		if($id == 'noid'){
 			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
 		}else{
-			$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
-			$data['type_name'] = $user->fullname;
+			if($type == 'Merchant'){
+				$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
+				$data['type_name'] = $user->fullname;
+				$data['bank_account'] = ($user->account_number == '')?'n/a':$user->bank.' - '.$user->account_number.' - '.$user->account_name;
+			}else if($type == 'Courier'){
+				$user = $this->db->where('id',$id)->get($this->config->item('jayon_couriers_table'))->row();
+				$data['type_name'] = $user->fullname;
+				$data['bank_account'] = 'n/a';
+			}
 		}
 
 		$data['type'] = $type;
 		$data['period'] = $from.' s/d '.$to;
-		$data['bank_account'] = 'xxxxxx';
 
 		$sfrom = date('Y-m-d',strtotime($from));
 		$sto = date('Y-m-d',strtotime($to));
+
+		$this->db->select($this->config->item('delivered_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.domain as domain,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->from($this->config->item('delivered_delivery_table'));
+		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
+		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
 
 		$column = 'assignment_date';
 		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
@@ -400,40 +416,56 @@ class Prints extends Application
 		$this->db->where($daterange, null, false);
 		$this->db->where($column.' != ','0000-00-00');
 
+		if($id != 'noid'){
+			if($type == 'Merchant'){
+				$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
+			}else if($type == 'Courier'){
+				$this->db->where($this->config->item('delivered_delivery_table').'.courier_id',$id);
+			}
+		}
+
+		$this->db->and_();
+		$this->db->group_start();
 		$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
 		$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
 		$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
 		$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+		$this->db->group_end();
 
-
-		$rows = $this->db->get($this->config->item('delivered_delivery_table'));
+		$rows = $this->db->get();
 
 		//print $this->db->last_query();
 
 		$this->table->set_heading(
-				array('data'=>'Delivery Details',
-					'colspan'=>'6'
-				)	
-			);
+			array('data'=>'Delivery Details',
+				'colspan'=>'7'
+			)	
+		);
 
 
 		$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
-				'Delivery ID',
-				'Delivery Date',
-				'Status',		
-				'Value'		
-				); // Setting headings for the table
+			'No.',		 	 	
+			'Merchant Trans ID',	 	 	 	 	 	 	 
+			'Delivery ID',
+			'Merchant Name',
+			'Store',
+			'Delivery Date',
+			'Status',		
+			'Value'		
+		); // Setting headings for the table
 
 		$seq = 1;
 		$total_billing = 0;
+
+		//print_r($rows->result());
 
 		foreach($rows->result() as $r){
 			$this->table->add_row(
 				$seq,		
 				$r->merchant_trans_id,		
 				$r->delivery_id,
+				$r->merchant,
+				$r->app_name.'<hr />'.$r->domain,
 				$r->assignment_date,
 				$r->status,
 				number_format((int)str_replace('.','',$r->total_price),2,',','.')
@@ -446,14 +478,14 @@ class Prints extends Application
 		}
 
 		$this->table->add_row(
-			array('data'=>'&nbsp;','colspan'=>5),
+			array('data'=>'Total','colspan'=>7),
 			number_format($total_billing,2,',','.')
 		);
 
 		$this->table->add_row(
 			'Terbilang',
 			array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-				'colspan'=>5)
+				'colspan'=>7)
 		);
 
 		$recontab = $this->table->generate();
@@ -462,7 +494,9 @@ class Prints extends Application
 		if($pdf){
 			$html = $this->load->view('print/reconciliation',$data,true);
 			//print $html; // Load the view
-			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
 		}else{
 			$this->load->view('print/reconciliation',$data); // Load the view
 		}

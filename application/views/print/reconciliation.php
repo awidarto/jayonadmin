@@ -208,7 +208,7 @@
 					Bank Account
 				</td>
 				<td>
-                    <?php $bank_account;?>
+                    <?php print $bank_account;?>
 				</td>
 			</tr>
 		</table>

@@ -84,7 +84,11 @@
 				var type = e.target.title;
 				var type_id = from_to[2];
 
-				$('#print_id').val(delivery_id);
+				$('#print_id').val(type_id);
+				$('#print_from').val(from_to[0]);
+				$('#print_to').val(from_to[1]);
+				$('#print_type').val(type);
+				
 				var src = '<?php print base_url() ?>admin/prints/reconciliation/' + from_to[0] +'/'+ from_to[1] +'/'+ type  +'/'+ type_id ;
 
 				$('#print_frame').attr('src',src);
@@ -165,7 +169,12 @@
 				}, 
 				"Download PDF": function(){
 					var print_id = $('#print_id').val();
-					var src = '<?php print base_url() ?>admin/prints/reconciliation/' + print_id + '/pdf';
+					var from = $('#print_from').val();
+					var to = $('#print_to').val();
+					var type = $('#print_type').val();
+
+					var src = '<?php print base_url() ?>admin/prints/reconciliation/' + from +'/'+ to +'/'+ type  +'/'+ print_id + '/pdf';
+
 					window.location = src;
 					//alert(src);
 				},
@@ -224,6 +233,9 @@
 
 <div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
+	<input type="hidden" value="" id="print_from" />
+	<input type="hidden" value="" id="print_to" />
+	<input type="hidden" value="" id="print_type" />
 	<iframe id="print_frame" name="print_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>

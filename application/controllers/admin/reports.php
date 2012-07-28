@@ -175,7 +175,7 @@ class Reports extends Application
 
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
 
-		$this->db->select('*,g.description as groupname');
+		$this->db->select($this->config->item('jayon_members_table').'.*,g.description as groupname');
 		$this->db->join('groups as g','members.group_id = g.id','left');
 
 		$search = false;
@@ -266,6 +266,7 @@ class Reports extends Application
 
 		$aadata = array();
 
+		//print_r($result);
 
 		foreach($result as $value => $key)
 		{
