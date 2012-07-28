@@ -493,8 +493,6 @@ class Prints extends Application
 
 		if($pdf){
 			$html = $this->load->view('print/reconciliation',$data,true);
-			//print $html; // Load the view
-
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
 			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
 		}else{

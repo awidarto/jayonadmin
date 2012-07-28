@@ -179,6 +179,11 @@
         .editable input[type='text']{
             height:14px;
         }
+
+        hr{
+            border:none;
+            border-bottom: thin solid #eee;
+        }
 	</style>
 </head>
 <body>
