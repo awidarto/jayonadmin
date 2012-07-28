@@ -223,44 +223,7 @@
 			</tr>
 		</table>
 						
-		<table class="dataTable">
-			<thead>
-				<tr>
-					<th colspan="5" >Detail Transaksi</th>
-				</tr>
-				<tr>
-					<th>No</th>
-					<th>Merchant Transaction ID</th>
-					<th>Delivery ID</th>
-					<th>Delivery Date</th>
-					<th>Status</th>
-					<th>Value</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="2">Total Jumlah Rekonsiliasi</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td colspan="2">Terbilang</td>
-					<td colspan="3"></td>
-				</tr>
-			</tfoot>
-		</table>
+        <?php print $recontab;?>
 						
 		<p>Mohon untuk ditandatangani apabila jumlah rekonsiliasi telah sesuai dengan jumlah transaksi anda melalui layanan Cash On Delivery dari Jayon Express selama periode tersebut diatas</p>
 		<p>Transfer ke rekening anda paling cepat 1 hari setelah kami menerima konfirmasi persetujuan kesesuaian jumlah rekonsiliasi</p>				

@@ -125,7 +125,7 @@
 
 		table#signBox{
 			font-size: 11px;
-			width:300px;
+			width:200px;
 		}
 
 		#mainInfo tr td:last-child, #orderInfo tr td:last-child{
@@ -152,16 +152,19 @@
 			border: thin solid #eee;
 			text-align:center;
 			font-weight: bold;
+			font-size: 11px;
+
 		}
 
 		tr.sign_space td{
+			font-size: 12px;
 			height:50px;
 			border: thin solid #eee;
 			text-align:center;
 		}
 
 		tr.sign_name td{
-			font-size: 14px;
+			font-size: 12px;
 			border: thin solid #eee;
 		}
 
@@ -172,6 +175,10 @@
 
 		.fine{
 			font-size: 11px;
+		}
+
+		td.lsums{
+			text-align: right;
 		}
 
 	</style>

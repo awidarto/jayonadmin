@@ -97,31 +97,35 @@ class Prints extends Application
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
-				'&nbsp;',		
-				'&nbsp;',		
-				'Total Price',		
+					array('data'=>'Total Price',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),									
 				number_format($gt,2,',','.')
 			);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Discount',		
+					array('data'=>'Total Discount',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),										
 					number_format($dsc,2,',','.')
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Tax',		
+					array('data'=>'Total Tax',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),	
 					number_format($tax,2,',','.')
 				);
 
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Delivery Charge',		
+					array('data'=>'Delivery Charge',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),	
 					array('data'=>number_format($dc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'delivery_cost'
@@ -129,9 +133,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'COD Surcharge',		
+					array('data'=>'COD Surcharge',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),		
 					array('data'=>number_format($cod,2,',','.'),
 						'class'=>'editable',
 						'id'=>'cod_cost'
@@ -139,9 +144,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Charges',		
+					array('data'=>'Total Charges',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),		
 					number_format($chg,2,',','.')
 				);
 
@@ -371,10 +377,87 @@ class Prints extends Application
 		}
 
 	public function reconciliation($from, $to ,$type,$id,$pdf = false){
+
+		$this->load->library('number_words');
+
+		if($id == 'noid'){
+			$data['type_name'] = '-';
+		}else{
+			$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
+			$data['type_name'] = $user->fullname;
+		}
+
 		$data['type'] = $type;
-		$data['type_name'] = $id;
 		$data['period'] = $from.' s/d '.$to;
 		$data['bank_account'] = 'xxxxxx';
+
+		$sfrom = date('Y-m-d',strtotime($from));
+		$sto = date('Y-m-d',strtotime($to));
+
+		$column = 'assignment_date';
+		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+		$this->db->where($daterange, null, false);
+		$this->db->where($column.' != ','0000-00-00');
+
+		$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+		$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+		$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+		$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+
+
+		$rows = $this->db->get($this->config->item('delivered_delivery_table'));
+
+		//print $this->db->last_query();
+
+		$this->table->set_heading(
+				array('data'=>'Delivery Details',
+					'colspan'=>'6'
+				)	
+			);
+
+
+		$this->table->set_heading(
+				'No.',		 	 	
+				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'Delivery ID',
+				'Delivery Date',
+				'Status',		
+				'Value'		
+				); // Setting headings for the table
+
+		$seq = 1;
+		$total_billing = 0;
+
+		foreach($rows->result() as $r){
+			$this->table->add_row(
+				$seq,		
+				$r->merchant_trans_id,		
+				$r->delivery_id,
+				$r->assignment_date,
+				$r->status,
+				number_format((int)str_replace('.','',$r->total_price),2,',','.')
+			);
+
+			if($r->status == $this->config->item('trans_status_mobile_delivered')){
+				$total_billing += (int)str_replace('.','',$r->total_price);
+			}
+			$seq++;
+		}
+
+		$this->table->add_row(
+			array('data'=>'&nbsp;','colspan'=>5),
+			number_format($total_billing,2,',','.')
+		);
+
+		$this->table->add_row(
+			'Terbilang',
+			array('data'=>$this->number_words->to_words($total_billing).' rupiah',
+				'colspan'=>5)
+		);
+
+		$recontab = $this->table->generate();
+		$data['recontab'] = $recontab;
 
 		if($pdf){
 			$html = $this->load->view('print/reconciliation',$data,true);
