@@ -443,21 +443,38 @@ class Prints extends Application
 		);
 
 
-		$this->table->set_heading(
-			'No.',		 	 	
-			'Merchant Trans ID',	 	 	 	 	 	 	 
-			'Delivery ID',
-			'Merchant Name',
-			'Store',
-			'Delivery Date',
-			'Status',		
-			'Goods Price',
-			'Disc',
-			'Tax',
-			'Delivery Chg',
-			'COD Surchg',		
-			'Payable Value'		
-		); // Setting headings for the table
+		if($type == 'Merchant' || $type == 'Global'){
+			$this->table->set_heading(
+				'No.',		 	 	
+				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'Delivery ID',
+				'Merchant Name',
+				'Store',
+				'Delivery Date',
+				'Status',
+				'Goods Price',
+				'Disc',
+				'Tax',
+				'Delivery Chg',
+				'COD Surchg',		
+				'Payable Value'		
+			); // Setting headings for the table
+
+		}else if($type == 'Courier'){
+			$this->table->set_heading(
+				'No.',		 	 	
+				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'Delivery ID',
+				'Merchant Name',
+				'Store',
+				'Delivery Date',
+				'Status',
+				'Delivery Chg',
+				'COD Surchg',		
+				'Payable Value'		
+			); // Setting headings for the table			
+		}
+
 
 		$seq = 1;
 		$total_billing = 0;
@@ -502,27 +519,53 @@ class Prints extends Application
 			$total_delivery += (int)str_replace('.','',$dc);
 			$total_cod += (int)str_replace('.','',$cod);
 
-			$this->table->add_row(
-				$seq,		
-				$r->merchant_trans_id,		
-				$r->delivery_id,
-				$r->merchant,
-				$r->app_name.'<hr />'.$r->domain,
-				$r->assignment_date,
-				$r->status,
-				number_format((int)str_replace('.','',$total),2,',','.'),
-				number_format((int)str_replace('.','',$dsc),2,',','.'),
-				number_format((int)str_replace('.','',$tax),2,',','.'),
-				number_format((int)str_replace('.','',$dc),2,',','.'),			
-				number_format((int)str_replace('.','',$cod),2,',','.'),
-				number_format((int)str_replace('.','',$payable),2,',','.')
-			);
+			if($type == 'Merchant' || $type == 'Global'){
+				$this->table->add_row(
+					$seq,		
+					$r->merchant_trans_id,		
+					$r->delivery_id,
+					$r->merchant,
+					$r->app_name.'<hr />'.$r->domain,
+					$r->assignment_date,
+					$r->status,
+					number_format((int)str_replace('.','',$total),2,',','.'),
+					number_format((int)str_replace('.','',$dsc),2,',','.'),
+					number_format((int)str_replace('.','',$tax),2,',','.'),
+					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$cod),2,',','.'),
+					number_format((int)str_replace('.','',$payable),2,',','.')
+				);
+
+			}else if($type == 'Courier'){
+				$this->table->add_row(
+					$seq,		
+					$r->merchant_trans_id,		
+					$r->delivery_id,
+					$r->merchant,
+					$r->app_name.'<hr />'.$r->domain,
+					$r->assignment_date,
+					$r->status,
+					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$cod),2,',','.'),
+					number_format((int)str_replace('.','',$payable),2,',','.')
+				);				
+			}
 
 			$seq++;
 		}
 
+			if($type == 'Merchant' || $type == 'Global'){
+				$total_span = 10;
+				$say_span = 12;
+
+			}else if($type == 'Courier'){
+				$total_span = 7;
+				$say_span = 9;
+			}
+
+
 		$this->table->add_row(
-			array('data'=>'Total','colspan'=>10),
+			array('data'=>'Total','colspan'=>$total_span),
 			number_format($total_delivery,2,',','.'),
 			number_format($total_cod,2,',','.'),
 			number_format($total_billing,2,',','.')
@@ -530,25 +573,27 @@ class Prints extends Application
 
 		$this->table->add_row(
 			'Terbilang',
-			array('data'=>'&nbsp;','colspan'=>12)
+			array('data'=>'&nbsp;','colspan'=>$say_span)
 		);
 
-		$this->table->add_row(
-			'Payable',
-			array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-				'colspan'=>12)
-		);
+		if($type == 'Merchant' || $type == 'Global'){
+			$this->table->add_row(
+				'Payable',
+				array('data'=>$this->number_words->to_words($total_billing).' rupiah',
+					'colspan'=>$say_span)
+			);
+		}
 
 		$this->table->add_row(
 			'Delivery Charge',
 			array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
-				'colspan'=>12)
+				'colspan'=>$say_span)
 		);
 
 		$this->table->add_row(
 			'COD Surcharge',
 			array('data'=>$this->number_words->to_words($total_cod).' rupiah',
-				'colspan'=>12)
+				'colspan'=>$say_span)
 		);
 
 		$recontab = $this->table->generate();
