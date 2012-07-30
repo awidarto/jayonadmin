@@ -554,14 +554,14 @@ class Prints extends Application
 			$seq++;
 		}
 
-			if($type == 'Merchant' || $type == 'Global'){
-				$total_span = 10;
-				$say_span = 12;
+		if($type == 'Merchant' || $type == 'Global'){
+			$total_span = 10;
+			$say_span = 12;
 
-			}else if($type == 'Courier'){
-				$total_span = 7;
-				$say_span = 9;
-			}
+		}else if($type == 'Courier'){
+			$total_span = 7;
+			$say_span = 9;
+		}
 
 
 		$this->table->add_row(
