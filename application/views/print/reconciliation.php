@@ -229,6 +229,8 @@
 		</table>
 						
         <?php print $recontab;?>
+
+        
 						
 		<p>Mohon untuk ditandatangani apabila jumlah rekonsiliasi telah sesuai dengan jumlah transaksi anda melalui layanan Cash On Delivery dari Jayon Express selama periode tersebut diatas</p>
 		<p>Transfer ke rekening anda paling cepat 1 hari setelah kami menerima konfirmasi persetujuan kesesuaian jumlah rekonsiliasi</p>				
