@@ -290,9 +290,10 @@ function get_app_id_from_key($key){
 	$result = $CI->db->get($CI->config->item('applications_table'));
 
 	if($result->num_rows() > 0){
-		return $result->row()->id;
+		$res = $result->row();
+		return $res->id;
 	}else{
-		return false;
+		return 0;
 	}
 
 }

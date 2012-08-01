@@ -100,6 +100,8 @@
 			var city_assign = $('.assign_city:checked').val();
 
 			console.log(date_assign);
+			console.log(city_assign);
+
 
 			
 			if(date_assign == '' || city_assign == '' ){
@@ -114,6 +116,9 @@
 				//$('.assign_check:checked').each(function(){
 
 				var city_assign_class = city_assign.replace(' ','_');
+
+				console.log(city_assign_class);
+
 				$('.' + date_assign +'_'+ city_assign_class).each(function(){
 
 					var zone = date_assign + ' | ' +$('#'+this.value).html() +' | '+ city_assign;

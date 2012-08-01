@@ -104,8 +104,9 @@ class Ajax extends Application
 
 	public function getweightdata(){
 		$app_key = $this->input->post('app_key');
-		if($app_key == 0){
+		if($app_key == '0'){
 			$dctable = false;
+			$app_id = 0;
 		}else{
 			$app_id = get_app_id_from_key($app_key);
 			$dctable = get_delivery_charge_table($app_id);
@@ -129,13 +130,14 @@ class Ajax extends Application
 		$weightselect = form_dropdown('package_weight',$weight,null,'id="package_weight"');
 		$weighttable = $this->table->generate();
 
-		print json_encode(array('result'=>'ok','data'=>array('selector'=>$weightselect,'table'=>$weighttable)));
+		print json_encode(array('result'=>'ok','data'=>array('app_id'=>$app_id,'selector'=>$weightselect,'table'=>$weighttable)));
 	}
 
 	public function getcoddata(){
 		$app_key = $this->input->post('app_key');
-		if($app_key == 0){
+		if($app_key == '0'){
 			$dctable = false;
+			$app_id = 0;
 		}else{
 			$app_id = get_app_id_from_key($app_key);
 			$dctable = get_cod_table($app_id);
@@ -254,7 +256,7 @@ class Ajax extends Application
 		if($zones->num_rows() > 0){
 			$zone[0] = 'Select delivery zone';
 			foreach ($zones->result() as $r) {
-				$zone[$r->district] = $r->district;
+				$zone[trim($r->district)] = trim($r->district);
 			}
 		}else{
 			$zone[0] = 'Select delivery zone';

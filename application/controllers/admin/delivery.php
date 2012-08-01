@@ -337,12 +337,14 @@ class Delivery extends Application
 
 			$app = $this->get_app_info($key['application_key']);
 
+			$key['buyerdeliverycity'] = trim($key['buyerdeliverycity']);
+
 			$datecheck = form_radio('assign_date',$key['assignment_date'],FALSE,'class="assign_date"').'<strong>'.$key['assignment_date'].' '.get_slot_range($key['buyerdeliveryslot']).'</strong>';
 
-			$citycheck = form_radio('assign_city',$key['buyerdeliverycity'],FALSE,'class="assign_city"').'<strong>'.$key['buyerdeliverycity'].'</strong>';
+			$citycheck = form_radio('assign_city',trim($key['buyerdeliverycity']),FALSE,'class="assign_city"').'<strong>'.trim($key['buyerdeliverycity']).'</strong>';
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$datecheck;
-			$cityfield = ($barcity == $key['buyerdeliverycity'] && $bardate == $key['assignment_date'])?'':$citycheck;
+			$cityfield = ($barcity == trim($key['buyerdeliverycity']) && $bardate == $key['assignment_date'])?'':$citycheck;
 
 			$aadata[] = array(
 				$datefield,
@@ -2312,7 +2314,10 @@ class Delivery extends Application
 		$assignment_zone = $this->input->post('assignment_zone');
 		$assignment_city = $this->input->post('assignment_city');
 
-		$dev = $this->db->select('id,identifier,descriptor,devname')->like('city',$assignment_city)->get($this->config->item('jayon_devices_table'));
+		$dev = $this->db->select('id,identifier,descriptor,devname')->like('city',trim($assignment_city))->get($this->config->item('jayon_devices_table'));
+		
+		$sql = $this->db->last_query();
+
 		$result = array();
 
 		$slots = get_option('daily_shifts');
@@ -2336,7 +2341,7 @@ class Delivery extends Application
 				$device['identifier'].' - '.$device['devname'],
 				$slotform );
 		}
-		print json_encode(array('html'=>implode('',$result)));
+		print json_encode(array('html'=>implode('',$result),'sql'=>$sql));
 
 	}
 
