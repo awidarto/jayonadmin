@@ -1638,7 +1638,7 @@ class Delivery extends Application
 			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
 			->group_end();
 		$data = $this->db->limit($limit_count, $limit_offset)
-			->order_by('deliverytime','desc')
+			->order_by($this->config->item('delivered_delivery_table').'.deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
