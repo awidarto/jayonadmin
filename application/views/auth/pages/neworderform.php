@@ -401,6 +401,7 @@
 
             }
         });
+
         /*
         $('#buyerdeliverytime').change(
             function(){
@@ -835,7 +836,7 @@
                 //return [false,'Please specify Zone'];
             }
 
-            if($('#package_weight').val() == 0){
+            if($('#package_weight').val() == ''){
                 validisplay += 'Weight Unspecified\r\n';
                 //return [false, 'Weight Unspecified'];
             }
