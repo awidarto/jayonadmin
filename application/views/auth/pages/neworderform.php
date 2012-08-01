@@ -321,6 +321,7 @@
         td.ui-state-disabled, td.ui-widget-content .ui-state-disabled, td.ui-widget-header .ui-state-disabled {
             opacity: 1;
         }
+        
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
