@@ -237,6 +237,25 @@ function get_delivery_charge_table($app_id){
 
 }
 
+function get_slot_max(){
+
+	$CI =& get_instance();
+
+	$CI->db->where('is_on',1);
+	$slots = $CI->db->get($CI->config->item('jayon_timeslots_table'));
+
+	$slot = array();
+
+	if($slots->num_rows() > 0){
+		$slot[0] = 0;
+		foreach ($slots->result() as $r) {
+			$slot[$r->slot_no] = $r->time_to.':00';
+		}
+	}
+
+	return $slot;
+}
+
 function get_slot_select(){
 
 	$CI =& get_instance();

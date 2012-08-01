@@ -93,6 +93,7 @@ class Order extends Application
 	    $data['merchantfullname'] = $this->session->userdata('fullname');
 		$data['cityselect'] = $cityselect;
 		$data['typeselect'] = $typeselect;
+		$data['slotmax'] = json_encode(get_slot_max());
 		$data['slotselect'] = get_slot_select();
 		$data['weightselect'] = $weightselect;
 		$data['weighttable'] = $weighttable;
