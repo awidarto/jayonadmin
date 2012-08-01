@@ -2354,7 +2354,10 @@ class Delivery extends Application
 		$dataset['status'] = $this->input->post('new_status');
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
 
-		if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')){
+		if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
+			$dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
+			$dataset['status'] == $this->config->item('trans_status_mobile_noshow')
+			){
 			$dataset['deliverytime'] = date('Y-m-d H:i:s', time());
 		}
 
