@@ -382,7 +382,7 @@ function overquota($date){
 	$CI->db->where('is_on',1);
 	$devcount = $CI->db->count_all($CI->config->item('jayon_devices_table'));
 	$slots = get_slot_count();
-	$shifts = (int) get_option('daily_shifts');
+	$shifts = (int) get_option('quota_per_shift');
 
 	$dailyquota = $devcount * $slots * $shifts;
 
