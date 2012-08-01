@@ -60,12 +60,12 @@ class V1 extends Application
 					$dataset['fullname'] = $in->buyer_name;
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);
-					$dataset['created'] = date('Y-m-d h:i:s',time());
+					$dataset['created'] = date('Y-m-d H:i:s',time());
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}
-				$order['created'] = date('Y-m-d h:i:s',time());
-				$order['ordertime'] = date('Y-m-d h:i:s',time());
+				$order['created'] = date('Y-m-d H:i:s',time());
+				$order['ordertime'] = date('Y-m-d H:i:s',time());
 				$order['application_id'] = $app->id;
 				$order['application_key'] = $app->key;
 				$order['buyer_id'] = $buyer_id;
@@ -324,7 +324,7 @@ class V1 extends Application
 
 				if($dev = $this->get_dev_info($in->key)){
 
-					$dataset['timestamp'] = date('Y-m-d h:i:s',time());
+					$dataset['timestamp'] = date('Y-m-d H:i:s',time());
 					$dataset['device_id'] = $dev->id;
 					$dataset['identifier'] = $dev->identifier;
 					$dataset['courier_id'] = '';
@@ -388,8 +388,8 @@ class V1 extends Application
 					$in->lon = (isset($in->lon))?$in->lon:'';
 
 					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$delivery_id,
 						'device_id'=>$dev->id,
 						'courier_id'=>'',
@@ -482,8 +482,8 @@ class V1 extends Application
 						if($dev = $this->get_dev_info_by_id($in->identifier)){
 
 							$data = array(
-								'timestamp'=>date('Y-m-d h:i:s',time()),
-								'report_timestamp'=>date('Y-m-d h:i:s',time()),
+								'timestamp'=>date('Y-m-d H:i:s',time()),
+								'report_timestamp'=>date('Y-m-d H:i:s',time()),
 								'delivery_id'=>'',
 								'device_id'=>$dev->id,
 								'courier_id'=>'',
@@ -552,8 +552,8 @@ class V1 extends Application
 					$out = $orders->result_array();
 
 					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>'',
 						'device_id'=>$dev->id,
 						'courier_id'=>'',
@@ -684,8 +684,8 @@ class V1 extends Application
 				}
 
 				$data = array(
-					'timestamp'=>date('Y-m-d h:i:s',time()),
-					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'timestamp'=>date('Y-m-d H:i:s',time()),
+					'report_timestamp'=>date('Y-m-d H:i:s',time()),
 					'delivery_id'=>'',
 					'device_id'=>$dev->id,
 					'actor_type'=>'MB',
@@ -799,7 +799,7 @@ class V1 extends Application
 					//print $buyer_id;
 
 
-					$order['ordertime'] = date('Y-m-d h:i:s',time());
+					$order['ordertime'] = date('Y-m-d H:i:s',time());
 					$order['application_id'] = $app->id;
 					$order['application_key'] = $app->key;
 					$order['buyer_id'] = $buyer_id; // change this to current buyer after login
@@ -946,7 +946,7 @@ class V1 extends Application
 	}
 
 	private function log_access($api_key,$query,$result,$args = null){
-		$data['timestamp'] = date('Y-m-d h:i:s',time());
+		$data['timestamp'] = date('Y-m-d H:i:s',time());
 		$data['accessor_ip'] = $this->accessor_ip;
 		$data['api_key'] = (is_null($api_key))?'':$api_key;
 		$data['query'] = $query;
