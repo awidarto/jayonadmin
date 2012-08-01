@@ -300,6 +300,27 @@
             font-size: 11px;
         }  
 
+        td.overquota, td.overquota .ui-state-default, td.full .ui-state-default{
+            background-image: none;
+            background-color: orange;
+            color:#eee;
+            opacity: 1;
+        }
+
+        td.holiday, td.holiday .ui-state-default, td.weekend .ui-state-default{
+            background-image: none;
+            background-color: maroon;
+            color:#eee;
+            opacity: 1;
+        }
+
+        td.holiday, td.overquota{
+            padding:2px;
+        }
+
+        td.ui-state-disabled, td.ui-widget-content .ui-state-disabled, td.ui-widget-header .ui-state-disabled {
+            opacity: 1;
+        }
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
