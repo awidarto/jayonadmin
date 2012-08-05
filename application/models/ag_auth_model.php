@@ -28,13 +28,21 @@ class AG_Auth_model extends CI_Model
 
 		$this->user_table = $this->config->item('auth_user_table');
 		$this->group_table = $this->config->item('auth_group_table');
+
+		$this->courier_table = $this->config->item('jayon_couriers_table');
+
 	}
 	
 	public function login_check($username, $field_type)
 	{
-		$query = $this->db->get_where($this->user_table, array($field_type => $username));
-		$result = $query->row_array();
-		
+
+		$query = $this->db->get_where($this->courier_table, array($field_type => $username));
+		if($query->num_rows() > 0){
+			$result = $query->row_array();
+		}else{
+			$query = $this->db->get_where($this->user_table, array($field_type => $username));
+			$result = $query->row_array();
+		}
 		return $result;
 	}
 	

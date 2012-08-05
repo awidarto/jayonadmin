@@ -72,6 +72,7 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Reports'); } ?>
 				<ul>
+					<li class="<?php print set_hilite('admin\/reports$')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Statistics'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
 			</li>

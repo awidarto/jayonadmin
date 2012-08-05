@@ -13,19 +13,20 @@ class Reports extends Application
 		$this->table->set_template($this->table_tpl);
 
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
-		$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
+		$this->breadcrumb->add_crumb('Reports','admin/reports');
 		
 	}
 
 	public function index(){
 		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
+		$this->breadcrumb->add_crumb('Statistics','admin/reports');
 
 		$year = date('Y',time());
 		$month = date('m',time());
 
 		$page['period'] = ' - '.date('M Y',time());
 
-		$page['page_title'] = 'Report Summary';
+		$page['page_title'] = 'Monthly Statistics';
 		$this->ag_auth->view('reports/index',$page); // Load the view
 	}
 
@@ -67,7 +68,7 @@ class Reports extends Application
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Reconciliations';
-		$this->ag_auth->view('reconajaxlistview',$page); // Load the view
+		$this->ag_auth->view('reconciliation',$page); // Load the view
 		
 	}
 
