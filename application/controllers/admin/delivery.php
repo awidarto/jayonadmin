@@ -115,8 +115,12 @@ class Delivery extends Application
 
 		$aadata = array();
 
+		$num = $limit_offset;
+
 		foreach($result as $value => $key)
 		{
+			$num++;
+
 			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
@@ -146,6 +150,7 @@ class Delivery extends Application
 			}
 
 			$aadata[] = array(
+				$num,
 				$key['ordertime'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				get_slot_range($key['buyerdeliveryslot']),
@@ -167,6 +172,7 @@ class Delivery extends Application
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
 			);
+
 		}
 
 		$result = array(
@@ -185,6 +191,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
 
 		$this->table->set_heading(
+			'#',
 			'Timestamp',
 			'Requested Delivery Date',
 			'Requested Time Slot',
