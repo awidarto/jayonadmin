@@ -215,6 +215,7 @@ class Delivery extends Application
 
 		$this->table->set_footing(
 			'',
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
@@ -227,7 +228,7 @@ class Delivery extends Application
 			form_button('do_cancel','Cancel Selection','id="doCancel"')
 			);
 
-		$page['sortdisable'] = '2';
+		$page['sortdisable'] = '0,2';
 		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
 		$page['page_title'] = 'Incoming Delivery Orders';
 		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
@@ -336,8 +337,12 @@ class Delivery extends Application
 
 		$barcity = '';
 
+		$num = $limit_offset;
+		
 		foreach($result as $value => $key)
 		{
+			$num++;
+
 			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
@@ -354,6 +359,7 @@ class Delivery extends Application
 			$cityfield = ($barcity == trim($key['buyerdeliverycity']) && $bardate == $key['assignment_date'])?'':$citycheck;
 
 			$aadata[] = array(
+				$num,
 				$datefield,
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
 				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
@@ -392,6 +398,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Device Zone Assignment','admin/delivery/zoning');
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Time',
 			'City',
 			'Zone',
@@ -410,6 +417,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
@@ -417,7 +425,7 @@ class Delivery extends Application
 			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
 			);
 
-		$page['sortdisable'] = '1,2';
+		$page['sortdisable'] = '0,1,2';
 		$page['ajaxurl'] = 'admin/delivery/ajaxzoning';
 		$page['page_title'] = 'Device Zone Assignment';
 		$this->ag_auth->view('zoneajaxlistview',$page); // Load the view
@@ -1051,8 +1059,11 @@ class Delivery extends Application
 
 		$bardev = '';
 
+		$num = $limit_offset;
+
 		foreach($result as $value => $key)
 		{
+			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
@@ -1070,6 +1081,7 @@ class Delivery extends Application
 
 
 			$aadata[] = array(
+				$num,
 				$datefield,
 				$devicefield,
 				get_slot_range($key['assignment_timeslot']),
@@ -1111,6 +1123,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Courier Assignment','admin/delivery/assigned');
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Date',
 			'Device',
 			'Time Slot',
@@ -1128,8 +1141,10 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			form_button('do_dispatch','Assign Courier','id="doDispatch"')
@@ -1362,19 +1377,47 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('assignment_date',$this->input->post('sSearch_0'));
+			$this->db->like($this->config->item('assigned_delivery_table').'assignment_date',$this->input->post('sSearch_0'));
 			$search = true;
 		}
-
-
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
-			$search = true;
-		}
-
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('assignment_zone',$this->input->post('sSearch_1'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_3'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like('merchant_trans_id',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
+			$this->db->like('delivery_id',$this->input->post('sSearch_6'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_7') != ''){
+			$this->db->like('b.fullname',$this->input->post('sSearch_7'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_8') != ''){
+			$this->db->like('shipping_address',$this->input->post('sSearch_8'));
 			$search = true;
 		}
 
@@ -1415,8 +1458,12 @@ class Delivery extends Application
 		$barcity = '';
 		$barzone = '';
 
+		$num = $limit_offset;
+
 		foreach($result as $value => $key)
 		{
+			$num++;
+
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			//$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
@@ -1432,6 +1479,7 @@ class Delivery extends Application
 			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
 
 			$aadata[] = array(
+				$num,
 				$datefield,
 				$devicefield,
 				$courierfield,
@@ -1472,6 +1520,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('In Progress Orders','admin/delivery/assigned');
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Date',
 			'Device',
 			'Courier',
@@ -1488,9 +1537,17 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			'',
+			'<input type="text" name="search_city" id="search_city" value="Search City" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />'
+			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
+			'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'<input type="text" name="search_shipping" id="search_shipping" value="Search Address" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '0,1,2,3,11';
@@ -1537,9 +1594,10 @@ class Delivery extends Application
 
 		$aadata = array();
 
-
+		$num = $limit_offset;
 		foreach($result as $value => $key)
 		{
+			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
@@ -1547,6 +1605,7 @@ class Delivery extends Application
 			$thumbnail = get_thumbnail($key['delivery_id']);
 
 			$aadata[] = array(
+				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
@@ -1583,6 +1642,7 @@ class Delivery extends Application
 		$result = $data->result_array();
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Time',
 			'Delivery ID',
 			//'Application ID',
@@ -1600,10 +1660,10 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
 			);
 
@@ -1651,14 +1711,16 @@ class Delivery extends Application
 		$result = $data->result_array();
 
 		$aadata = array();
-
+		$num = $limit_offset;
 		foreach($result as $value => $key)
 		{
+			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
+				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
@@ -1695,6 +1757,7 @@ class Delivery extends Application
 		$result = $data->result_array();
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Time',
 			'Delivery ID',
 			//'Application ID',
@@ -1712,6 +1775,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
@@ -1764,9 +1828,11 @@ class Delivery extends Application
 
 		$aadata = array();
 
+		$num = $limit_offset;
 
 		foreach($result as $value => $key)
 		{
+			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
@@ -1774,6 +1840,7 @@ class Delivery extends Application
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
+				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$key['buyerdeliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
@@ -1808,6 +1875,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Rescheduled Orders','admin/delivery/rescheduled');
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Time',
 			'Requested Time',
 			'Delivery ID',
@@ -1826,6 +1894,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
@@ -1942,14 +2011,17 @@ class Delivery extends Application
 
 		$aadata = array();
 
+		$num = $limit_offset;
 
 		foreach($result as $value => $key)
 		{
+			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 
 			$aadata[] = array(
+				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
@@ -1986,6 +2058,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Order Archive','admin/delivery/archived');
 
 		$this->table->set_heading(
+			'#',
 			'Delivery Time',
 			'Delivery ID',
 			//'Application ID',
@@ -2005,6 +2078,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search buyer" class="search_init" />',
