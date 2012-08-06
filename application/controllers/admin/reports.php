@@ -127,9 +127,9 @@ class Reports extends Application
 		$this->db->and_();
 		$this->db->group_start();
 		$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+		//$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+		//$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+		//$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
 		$this->db->group_end();
 
 		$rows = $this->db->get();
@@ -168,10 +168,10 @@ class Reports extends Application
 				'Merchant Name',
 				'Store',
 				'Delivery Date',
-				'Status',
-				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
+				'Status'
+				//'Delivery Chg',
+				//'COD Surchg',		
+				//'Payable Value'		
 			); // Setting headings for the table			
 		}
 
@@ -244,10 +244,10 @@ class Reports extends Application
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
 					$r->assignment_date,
-					$r->status,
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
-					number_format((int)str_replace('.','',$cod),2,',','.'),
-					number_format((int)str_replace('.','',$payable),2,',','.')
+					$r->status
+					//number_format((int)str_replace('.','',$dc),2,',','.'),			
+					//number_format((int)str_replace('.','',$cod),2,',','.'),
+					//number_format((int)str_replace('.','',$payable),2,',','.')
 				);				
 			}
 
