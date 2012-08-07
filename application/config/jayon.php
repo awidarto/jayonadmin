@@ -36,6 +36,8 @@ $config['device_assignment_table'] = 'device_courier_log';
 $config['jayon_delivery_fee_table'] = 'weight_tariff';
 $config['jayon_cod_fee_table'] = 'cod_surcharge';
 
+$config['jayon_prepaid_table'] = 'prepaid_delivery';
+
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_holidays_table'] = 'holidays';

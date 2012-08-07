@@ -97,5 +97,6 @@ table#recon_select td input{
 	</div>
 </div>
 <div>
+	<h3><?php print $type.' '.$period; ?></h3>
 	<?php print $recontab; ?>
 </div>

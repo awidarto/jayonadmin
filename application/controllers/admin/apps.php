@@ -134,6 +134,7 @@ class Apps extends Application
 			$add = anchor("admin/apps/add/".$key['merchant_id']."/", "Add"); // Build actions links
 			$cod = anchor("admin/tariff/cod/".$key['id']."/".$key['merchant_id']."/", "COD"); // Build actions links
 			$delivery = anchor("admin/tariff/delivery/".$key['id']."/".$key['merchant_id']."/", "Delivery"); // Build actions links
+			$prepaid = anchor("admin/prepaid/credit/".$key['id']."/".$key['merchant_id']."/", "Prepaid Credit"); // Build actions links
 			$aadata[] = array(
 				$this->get_merchant($key['merchant_id']),
 				$key['application_name'],
@@ -141,7 +142,8 @@ class Apps extends Application
 				$key['key'],
 				$key['callback_url'],
 				$key['application_description'],
-				$edit.' '.$delete.'<br /><br />Tariff Tables<br /> '.$cod.' '.$delivery
+				$edit.' '.$delete.'<br />
+				<br />Tariff Tables<br /> '.$cod.' '.$delivery.'<br /><br />'.$prepaid
 			); // Adding row to table
 		}
 
