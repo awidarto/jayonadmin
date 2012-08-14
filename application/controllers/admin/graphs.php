@@ -112,19 +112,19 @@ class Graphs extends Application
 		$agsum = array_sum($agg);
 
 		if($status == 'all'){
-			$plot = new PHPlot(600,450);
+			$plot = new PHPlot(800,450);
+			$plot->SetLegendPosition(1, 0, 'plot', 1.01, 0, -5, 5);
 		}else{
 			$plot = new PHPlot(500,250);
 			$plot->SetYAxisPosition(-100);
+			$plot->SetLegendPosition(1, 0, 'plot', 1.01, 0, -5, 5);
 		}
 
 		if($agsum == 0){
 			$plot->SetLegend(array('No Data'));
-			$plot->SetLegendPosition(1, 0, 'plot', 1.01, 0, -5, 5);
 			$piedata[] = array('No Data',100);
 		}else{
 			$plot->SetLegend($cities);
-			$plot->SetLegendPosition(1, 0, 'plot', 1.01, 0, -5, 5);
 			foreach($agg as $key=>$val){
 				//$piedata[] = array($key,($val / $agsum)*100);
 				$piedata[] = array($key,$val);
