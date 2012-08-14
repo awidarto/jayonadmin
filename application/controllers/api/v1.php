@@ -57,6 +57,7 @@ class V1 extends Application
 					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
 					$dataset['username'] = $buyer_username;
 					$dataset['email'] = $in->email;
+					$dataset['phone'] = $in->phone;
 					$dataset['fullname'] = $in->buyer_name;
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);

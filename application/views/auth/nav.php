@@ -3,7 +3,6 @@
         $hilite = preg_match('/'.$urlpattern.'/',current_url());
         return ($hilite)?'nav_current':'';
     }
-
 ?>
 	<script> 
 		$(document).ready(function() {
@@ -70,9 +69,10 @@
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/options')?>" ><?php if(user_group('admin')) { echo anchor('admin/options/manage', 'Options'); } ?></li><?php endif;?>
 				</ul>
 			</li>
-			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Reports'); } ?>
+			<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/statistics', 'Reports'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/reports$')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports', 'Statistics'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/dist')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/dist', 'Distributions'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
 			</li>

@@ -30,6 +30,142 @@ class Reports extends Application
 		$this->ag_auth->view('reports/index',$page); // Load the view
 	}
 
+	public function statistics($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
+		$this->breadcrumb->add_crumb('Statistics','admin/reports/statistics');
+
+		//$year = date('Y',time());
+		//$month = date('m',time());
+
+		//$page['period'] = ' - '.date('M Y',time());
+
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$data['type'] = $type;
+		$data['period'] = $from.' s/d '.$to;
+
+		$page['page_title'] = 'Statistics';
+
+		$data['controller'] = 'admin/reports/statistics/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/statistics',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/statistics',$data); // Load the view
+		}else{
+			$this->ag_auth->view('statistics',$data); // Load the view
+		}
+	}
+
+	public function dist($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
+		$this->breadcrumb->add_crumb('Distribution','admin/reports/statistics');
+
+		//$year = date('Y',time());
+		//$month = date('m',time());
+
+		//$page['period'] = ' - '.date('M Y',time());
+
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$data['type'] = $type;
+		$data['period'] = $from.' s/d '.$to;
+
+		$page['page_title'] = 'Distribution Graph';
+
+		$data['controller'] = 'admin/reports/dist/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/dist',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/dist',$data); // Load the view
+		}else{
+			$this->ag_auth->view('dist',$data); // Load the view
+		}
+	}
+
 	public function daily(){
 
 		$this->breadcrumb->add_crumb('Daily Report','admin/reports/daily');
@@ -62,19 +198,40 @@ class Reports extends Application
 
 		$pdf = null;
 
-		if($scope == 'week'){
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
 			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
 			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
 		}else if($scope == 'date'){
 			$from = $par1;
 			$to = $par2;
 			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
 			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
 		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
 
 		/* copied from print controller */
 
@@ -305,6 +462,8 @@ class Reports extends Application
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Reconciliations';
+
+		$data['controller'] = 'admin/reports/reconciliation/';
 
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/reconciliation',$data,true);

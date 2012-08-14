@@ -803,5 +803,82 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 	return $series;
 }
 
+function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = null){
+	$CI =& get_instance();
+
+	$series = array();
+	//$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$start = strtotime($from);
+	$end = strtotime($to);
+
+	if($start == $end){
+		$num = 1;
+	}else{
+		$num = ceil(abs($end - $start) / 86400);
+	}
+
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
+
+		//$date = $year.'-'.$month.'-'.$day;
+
+		$date = date('Y-m-d',$start + ( $i * 86400));
+
+		/*
+		if(is_null($where)){
+			$CI->db->like('ordertime', $date, 'after');
+		}else{
+			if($where['status'] == 'confirmed' || $where['status'] == 'pending'){
+				$CI->db->like('buyerdeliverytime', $date, 'after');
+				$CI->db->where($where);
+			}else{
+				$CI->db->like('assignment_date', $date, 'after');
+				$CI->db->where($where);
+			}
+		}
+		*/
+
+
+		$column = 'ordertime';
+		//$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $from, $to);
+
+		//$CI->db->where($daterange, null, false);
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
+		//$timestamp = strtotime($date);
+		//$timestamp = (double)$timestamp;
+		$series[] = array($date,$count);
+	}
+
+	//$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
 	
 ?>
