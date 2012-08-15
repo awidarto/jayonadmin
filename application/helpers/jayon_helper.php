@@ -38,6 +38,42 @@ function get_zones($col = '*',$flatten = true){
 	}
 }
 
+function get_courier($id = null,$flatten = true){
+	$CI =& get_instance();
+	if(!is_null($id)){
+		 $CI->db->where('id',$id);	
+	}
+
+	$q = $CI->db->select(array('id','fullname'))->get('couriers');
+	if($flatten){
+		foreach($q->result_array() as $val){
+			$result[$val['id']] = $val['fullname'];
+		}
+		return $result;
+	}else{
+		return $q->result_array();
+	}
+}
+
+function get_merchant($id = null,$flatten = true){
+	$CI =& get_instance();
+	if(!is_null($id)){
+		 $CI->db->where('id',$id);	
+	}
+
+	$CI->db->where('group_id',user_group_id('merchant'));	
+
+	$q = $CI->db->select(array('id','fullname'))->get('members');
+	if($flatten){
+		foreach($q->result_array() as $val){
+			$result[$val['id']] = $val['fullname'];
+		}
+		return $result;
+	}else{
+		return $q->result_array();
+	}
+}
+
 function get_city_status(){
 	$CI =& get_instance();
 	$CI->db->select('city');

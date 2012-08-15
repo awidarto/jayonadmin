@@ -73,7 +73,9 @@
 				<ul>
 					<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/dist')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/dist', 'Distributions'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/reconciliation', 'Global Reconciliation'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/courierrecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/courierrecon', 'Courier Reconciliation'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/merchantrecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/merchantrecon', 'Merchant Reconciliation'); } ?></li>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>
