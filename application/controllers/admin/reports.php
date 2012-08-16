@@ -43,6 +43,12 @@ class Reports extends Application
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;
 
+		if(is_null($scope)){
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}		
+
 		$pdf = null;
 
 		if($scope == 'month'){
