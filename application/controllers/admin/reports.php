@@ -53,15 +53,15 @@ class Reports extends Application
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
 			$data['week'] = 1;
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
@@ -127,15 +127,15 @@ class Reports extends Application
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
 			$data['week'] = 1;
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
@@ -201,8 +201,8 @@ class Reports extends Application
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
@@ -214,8 +214,8 @@ class Reports extends Application
 			$ptitle = 'Monthly Distribution Graph - '.$mo.' ( '.$from.' s/d '.$to.' )';
 
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
@@ -307,15 +307,15 @@ class Reports extends Application
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
 			$data['week'] = 1;
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
@@ -594,8 +594,8 @@ class Reports extends Application
 		for($i = $week; $i > 0; $i--)
 		{
 
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
 
 			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_noid'.'" title="Global" style="cursor:pointer;text-decoration:underline;" >Global</span>';
 
@@ -606,8 +606,8 @@ class Reports extends Application
 			$aadata[] = array(
 				$year,
 				$i,
-				date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks')),
-				date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day')),
+				date('Y-m-d', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks')),
+				date('Y-m-d', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day')),
 				$printrecon.' '.$merchantlist.' '.$courierlist
 			); // Adding row to table
 		}
@@ -1646,15 +1646,15 @@ class Reports extends Application
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
 			$data['week'] = 1;
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
