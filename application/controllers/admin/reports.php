@@ -1044,7 +1044,7 @@ class Reports extends Application
 
 			$this->table->add_row(
 				$seq,		
-				$r['assignment_date'],		
+				date('d M Y',strtotime($r['assignment_date'])),		
 				$dl,
 				$ns,
 				$rs,
@@ -1305,7 +1305,7 @@ class Reports extends Application
 
 			$this->table->add_row(
 				$seq,		
-				$r['assignment_date'],		
+				date('d M Y',strtotime($r['assignment_date'])),		
 				$dl,
 				$ns,
 				$rs,
