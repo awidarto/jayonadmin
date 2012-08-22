@@ -58,6 +58,23 @@ table#recon_select td input{
 	width:80px;
 }
 
+table#recon_select tr.dark {
+	background-color: #aaa;
+}
+
+table#recon_select td {
+	padding: 3px;
+}
+
+.dataTable * td, .dataTable * th{
+	text-align: center;	
+}
+
+.dataTable * td.right{
+	text-align: right;
+}
+
+
 </style>
 
 <?php
@@ -84,39 +101,41 @@ table#recon_select td input{
 <div id="form">
 	<div class="form_box">
 		<form method="get">
-			<table style="width:500px;" id="recon_select">
+			<table style="width:500px;" id="recon_select" cellspacing="0" >
 				<tr>
 					<td>Merchant</td>
-					<td><?php print form_dropdown('user_scopes',$merchants,null,'id = "user_scopes"'); ?></td>
-					<td>Year<?php print form_dropdown('year_scopes',$years,$year,'id = "year_scopes"');?></td>
-					<td></td>
+					<td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
 				</tr>
 				<tr>
-					<td colspan="4"><strong>Generate By :</strong></td>
+					<td>Year</td>
+					<td colspan="3"><?php print form_dropdown('year_scopes',$years,$year,'id = "year_scopes"');?></td>
 				</tr>
 				<tr>
+					<td colspan="4"><strong>Filter By :</strong></td>
+				</tr>
+				<tr class="dark">
 					<td>Month</td>
 					<td><?php print form_dropdown('month_scopes',$months,$month,'id = "month_scopes"');?></td>
-					<td><span id="get_month" class="action_link" >Get By Month</span></td>
+					<td><span id="get_month" class="action_link" >Generate</span></td>
 					<td></td>
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align:center;"><strong>OR</strong></td>
 				</tr>
-				<tr>
+				<tr class="dark">
 					<td>Week Number</td>
 					<td><?php print form_dropdown('week_scopes',$weeks,$week,'id = "week_scopes"');?></td>
-					<td><span id="get_week" class="action_link" >Get By Week</span></td>
+					<td><span id="get_week" class="action_link" >Generate</span></td>
 					<td></td>
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align:center;"><strong>OR</strong></td>
 				</tr>
-				<tr>
+				<tr class="dark">
 					<td>From Date</td>
 					<td><?php print form_input(array('name'=>'date_from','id'=>'date_from','class'=>'text','value'=>$from));?></td>
 					<td><?php print 'To '.form_input(array('name'=>'date_to','id'=>'date_to','class'=>'text','value'=>$to));?></td>
-					<td><span id="get_date_range" class="action_link" >Get By Date Range</span></td>
+					<td><span id="get_date_range" class="action_link" >Generate</span></td>
 				</tr>
 			</table>
 		</form>

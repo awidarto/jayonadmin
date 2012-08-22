@@ -30,6 +30,80 @@ class Reports extends Application
 		$this->ag_auth->view('reports/index',$page); // Load the view
 	}
 
+	public function revenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
+		$this->breadcrumb->add_crumb('Revenue Report','admin/reports/revenue');
+
+		//$year = date('Y',time());
+		//$month = date('m',time());
+
+		//$page['period'] = ' - '.date('M Y',time());
+
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		if(is_null($scope)){
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}		
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$data['type'] = $type;
+		$data['period'] = $from.' s/d '.$to;
+
+		$page['page_title'] = 'Revenue Report';
+
+		$data['controller'] = 'admin/reports/revenue/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/revenue',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/revenue',$data); // Load the view
+		}else{
+			$this->ag_auth->view('revenue',$data); // Load the view
+		}
+	}
+
 	public function statistics($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 		//$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
 		$this->breadcrumb->add_crumb('Statistics','admin/reports/statistics');
@@ -552,24 +626,32 @@ class Reports extends Application
 		print json_encode($result); // Load the view
 	}
 
-	public function courierrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+	public function merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;
+
+		if(is_null($scope)){
+			$id = 'noid';
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}		
 
 		$pdf = null;
 
 		if($scope == 'month'){
 			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
-			$from =	date('d-m-Y', strtotime($year.'/'.$par1.'/1'));
-			$to =	date('d-m-Y', strtotime($year.'/'.$par1.'/'.$days));
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
 			$pdf = $par2;
 
 			$data['month'] = $par1;
 			$data['week'] = 1;
 		}else if($scope == 'week'){
-			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
-			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
 			$pdf = $par2;
 
 			$data['month'] = 1;
@@ -594,7 +676,723 @@ class Reports extends Application
 		$data['from'] = $from;
 		$data['to'] = $to;
 
-		$data['couriers'] = array_merge(array('Global'=>'All'),get_courier());
+		$clist = get_merchant(null,false);
+
+		$cs = array('noid'=>'All');
+		foreach ($clist as $ckey) {
+			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];	
+		}
+
+		$data['merchants'] = $cs;
+		$data['id'] = $id;
+
+		/* copied from print controller */
+
+		$this->load->library('number_words');
+
+		if($id == 'noid'){
+			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
+			$data['type'] = 'Global';
+		}else{
+			$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
+			//print $this->db->last_query();
+			$data['type'] = $user->merchantname.' - '.$user->fullname;
+			$data['type_name'] = $user->fullname;
+			$data['bank_account'] = 'n/a';
+		}
+
+		$data['period'] = $from.' s/d '.$to;
+
+		$sfrom = date('Y-m-d',strtotime($from));
+		$sto = date('Y-m-d',strtotime($to));
+
+		$this->db->distinct();
+		$this->db->select('assignment_date,status,cod_cost,delivery_cost,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost, sum(((total_price-total_discount)+total_tax)) as package_value');
+		$this->db->from($this->config->item('delivered_delivery_table'));
+
+		$column = 'assignment_date';
+		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+		$this->db->where($daterange, null, false);
+		$this->db->where($column.' != ','0000-00-00');
+
+		if($id != 'noid'){
+			$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
+		}
+
+		$this->db->and_();
+			$this->db->group_start();
+				$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+			$this->db->group_end();
+
+		$this->db->group_by('assignment_date,cod_cost');
+
+		$rows = $this->db->get();
+
+		//print $this->db->last_query();
+
+		$this->table->set_heading(
+			array('data'=>'Delivery Details',
+				'colspan'=>'4'
+			)	
+		);
+
+
+		$this->table->set_heading(
+			'No.',		 	 	
+			'Date',
+			'Packet Value',
+			'COD Count',
+			'COD Packet Value',
+			'COD Surcharge',
+			'Delivery Only',
+			'Delivery Fee',
+			'Delivered',
+			'No Show',
+			'Rescheduled',
+			'Delivery Count'
+		); // Setting headings for the table			
+
+		$seq = 0;
+		$rowdate = '';
+		$tarray = array();
+		foreach($rows->result() as $r){
+			if($rowdate == ''){
+				$rowdate = $r->assignment_date;
+				$tarray[$seq]['cod_package_value'] = 0;
+				$tarray[$seq]['package_value'] = 0;
+			}
+
+			if($r->assignment_date != $rowdate){
+				$seq++;
+				$rowdate = $r->assignment_date;
+				$tarray[$seq]['cod_package_value'] = 0;
+				$tarray[$seq]['package_value'] = 0;
+			}
+
+			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
+			$tarray[$seq]['assignment_date'] = $r->assignment_date;
+			$tarray[$seq][$r->status] = $r->count;
+			$tarray[$seq]['cod_count'] = ($r->cod_cost > 0 )?$r->count:0;
+			$tarray[$seq]['do_count'] = ($r->cod_cost > 0 )?0:$r->count;
+
+			$tarray[$seq]['cod_cost'] = $r->cod_cost;
+			$tarray[$seq]['do_cost'] = $r->delivery_cost;
+			$tarray[$seq]['package_value'] += $r->package_value;
+			$tarray[$seq]['cod_package_value'] += ($r->cod_cost > 0 )?$r->package_value:0;
+
+		}
+
+		$seq = 1;
+		$aseq = 0;
+
+
+		$tdl = 0;
+		$tns = 0;
+		$trs = 0;
+		$tcod = 0;
+		$tdo = 0;
+		$tcodc = 0;
+		$tdoc = 0;
+		$tpv = 0;
+		$tcpv = 0;
+
+		foreach ($tarray as $r) {
+
+			$dl = (isset($r['delivered']))?$r['delivered']:0;
+			$ns = (isset($r['noshow']))?$r['noshow']:0;
+			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
+
+			$tdl += $dl;
+			$tns += $ns;
+			$trs += $rs;
+			$tcod += $r['cod_count'];
+			$tdo += $r['do_count'];
+
+			$tcodc += $r['cod_cost'];
+			$tdoc += $r['do_cost'];
+			$tpv += $r['package_value'];
+			$tcpv += $r['cod_package_value'];
+
+			$this->table->add_row(
+				$seq,		
+				date('d M Y',strtotime($r['assignment_date'])),		
+				array('data'=>number_format((int)str_replace('.','',$r['package_value']),2,',','.'),'class'=>'right'),
+				$r['cod_count'],
+				array('data'=>number_format((int)str_replace('.','',$r['cod_package_value']),2,',','.'),'class'=>'right'),
+				array('data'=>number_format((int)str_replace('.','',$r['cod_cost']),2,',','.'),'class'=>'right'),
+				$r['do_count'],
+				array('data'=>number_format((int)str_replace('.','',$r['do_cost']),2,',','.'),'class'=>'right'),
+				$dl,
+				$ns,
+				$rs,
+				$dl + $ns + $rs
+			);				
+
+			$seq++;
+			$aseq++;
+		}
+
+		$gt = $tdl + $tns + $trs;
+
+		$this->table->add_row(
+			'',		
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
+			array('data'=>number_format((int)str_replace('.','',$tpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+			array('data'=>$tcod,'style'=>'border-top:thin solid grey'),		
+			array('data'=>number_format((int)str_replace('.','',$tcpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+			array('data'=>number_format((int)str_replace('.','',$tcodc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+			array('data'=>$tdo,'style'=>'border-top:thin solid grey'),		
+			array('data'=>number_format((int)str_replace('.','',$tdoc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
+		);				
+
+		$recontab = $this->table->generate();
+		$data['recontab'] = $recontab;
+
+		/* end copy */
+
+		$this->breadcrumb->add_crumb('Merchant Reconciliations','admin/reports/reconciliation');
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+		$page['page_title'] = 'Merchant Reconciliations';
+
+		$data['controller'] = 'admin/reports/merchantrecon/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/merchantrecon',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/merchantrecon',$data); // Load the view
+		}else{
+			$this->ag_auth->view('merchantrecon',$data); // Load the view
+		}		
+	}
+
+	public function courierrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		if(is_null($scope)){
+			$id = 'noid';
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}		
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$clist = get_courier(null,false);
+
+		$cs = array('noid'=>'All');
+		foreach ($clist as $ckey) {
+			$cs[$ckey['id']] = $ckey['fullname'];	
+		}
+
+		$data['couriers'] = $cs;
+		$data['id'] = $id;
+
+		/* copied from print controller */
+
+		$this->load->library('number_words');
+
+		if($id == 'noid'){
+			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
+		}else{
+			$user = $this->db->where('id',$id)->get($this->config->item('jayon_couriers_table'))->row();
+			//print $this->db->last_query();
+			$data['type_name'] = $user->fullname;
+			$data['bank_account'] = 'n/a';
+		}
+
+		if($id == 'noid'){
+			$data['type'] = 'Global';
+		}else{
+			$cr = get_courier($id,false);
+			$data['type'] = $cr['fullname'];
+		}
+		$data['period'] = $from.' s/d '.$to;
+
+		$sfrom = date('Y-m-d',strtotime($from));
+		$sto = date('Y-m-d',strtotime($to));
+
+		$this->db->distinct();
+		$this->db->select('assignment_date,status,count(*) as count');
+		$this->db->from($this->config->item('delivered_delivery_table'));
+
+		$column = 'assignment_date';
+		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+		$this->db->where($daterange, null, false);
+		$this->db->where($column.' != ','0000-00-00');
+
+		if($id != 'noid'){
+			$this->db->where($this->config->item('delivered_delivery_table').'.courier_id',$id);
+		}
+
+		$this->db->and_();
+			$this->db->group_start();
+				$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+			$this->db->group_end();
+
+		$this->db->group_by('assignment_date');
+
+		$rows = $this->db->get();
+
+		//print $this->db->last_query();
+
+		$this->table->set_heading(
+			array('data'=>'Delivery Details',
+				'colspan'=>'4'
+			)	
+		);
+
+
+		$this->table->set_heading(
+			'No.',		 	 	
+			'Date',	 	 	 	 	 	 	 
+			'Delivered',
+			'No Show',
+			'Rescheduled',
+			'Delivery Count'
+		); // Setting headings for the table			
+
+		$seq = 0;
+		$rowdate = '';
+		$tarray = array();
+		foreach($rows->result() as $r){
+			if($rowdate == ''){
+				$rowdate = $r->assignment_date;
+			}
+			if($r->assignment_date != $rowdate){
+				$seq++;
+				$rowdate = $r->assignment_date;
+			}
+
+			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
+			$tarray[$seq]['assignment_date'] = $r->assignment_date;
+			$tarray[$seq][$r->status] = $r->count;
+
+
+		}
+
+		$seq = 1;
+		$aseq = 0;
+
+
+		$tdl = 0;
+		$tns = 0;
+		$trs = 0;
+
+		foreach ($tarray as $r) {
+
+			$dl = (isset($r['delivered']))?$r['delivered']:0;
+			$ns = (isset($r['noshow']))?$r['noshow']:0;
+			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
+
+			$tdl += $dl;
+			$tns += $ns;
+			$trs += $rs;
+
+			$this->table->add_row(
+				$seq,		
+				$r['assignment_date'],		
+				$dl,
+				$ns,
+				$rs,
+				$dl + $ns + $rs
+			);				
+
+			$seq++;
+			$aseq++;
+		}
+
+		$gt = $tdl + $tns + $trs;
+
+		$this->table->add_row(
+			'',		
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
+			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
+		);				
+
+		/*
+		if($type == 'Merchant' || $type == 'Global'){
+			$total_span = 10;
+			$say_span = 12;
+
+		}else if($type == 'Courier'){
+			$total_span = 7;
+			$say_span = 9;
+		}
+
+
+		$this->table->add_row(
+			array('data'=>'Total','colspan'=>$total_span),
+			number_format($total_delivery,2,',','.'),
+			number_format($total_cod,2,',','.'),
+			number_format($total_billing,2,',','.')
+		);
+
+		$this->table->add_row(
+			'Terbilang',
+			array('data'=>'&nbsp;','colspan'=>$say_span)
+		);
+
+		if($type == 'Merchant' || $type == 'Global'){
+			$this->table->add_row(
+				'Payable',
+				array('data'=>$this->number_words->to_words($total_billing).' rupiah',
+					'colspan'=>$say_span)
+			);
+		}
+
+		$this->table->add_row(
+			'Delivery Charge',
+			array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
+				'colspan'=>$say_span)
+		);
+
+		$this->table->add_row(
+			'COD Surcharge',
+			array('data'=>$this->number_words->to_words($total_cod).' rupiah',
+				'colspan'=>$say_span)
+		);
+
+		*/
+
+		$recontab = $this->table->generate();
+		$data['recontab'] = $recontab;
+
+		/* end copy */
+
+		$this->breadcrumb->add_crumb('Courier Reconciliations','admin/reports/reconciliation');
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+		$page['page_title'] = 'Courier Reconciliations';
+
+		$data['controller'] = 'admin/reports/courierrecon/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/courierrecon',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/courierrecon',$data); // Load the view
+		}else{
+			$this->ag_auth->view('courierrecon',$data); // Load the view
+		}		
+	}
+
+
+	public function devicerecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		if(is_null($scope)){
+			$id = 'noid';
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}		
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$clist = get_courier(null,false);
+
+		$clist = $this->db->where('is_on',1)->get('devices')->result_array();
+
+		$cs = array('noid'=>'All');
+		foreach ($clist as $ckey) {
+			$cs[$ckey['id']] = $ckey['identifier'];	
+		}
+
+		$data['devices'] = $cs;
+		$data['id'] = $id;
+		//$data['couriers'] = get_courier();
+
+		/* copied from print controller */
+
+		$this->load->library('number_words');
+
+		if($id == 'noid'){
+			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
+		}else{
+			$user = $this->db->where('id',$id)->get($this->config->item('jayon_devices_table'))->row();
+			//print $this->db->last_query();
+			$data['type_name'] = $user->identifier;
+			$data['bank_account'] = 'n/a';
+		}
+
+		if($id == 'noid'){
+			$data['type'] = 'Global';
+		}else{
+			$dev = $this->db->where('id',$id)->get('devices')->row();
+			$data['type'] = $dev->identifier;
+		}
+		$data['period'] = $from.' s/d '.$to;
+
+		$sfrom = date('Y-m-d',strtotime($from));
+		$sto = date('Y-m-d',strtotime($to));
+
+		$this->db->distinct();
+		$this->db->select('assignment_date,status,count(*) as count');
+		$this->db->from($this->config->item('delivered_delivery_table'));
+
+		$column = 'assignment_date';
+		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+		$this->db->where($daterange, null, false);
+		$this->db->where($column.' != ','0000-00-00');
+
+		if($id != 'noid'){
+			$this->db->where($this->config->item('delivered_delivery_table').'.device_id',$id);
+		}
+
+		$this->db->and_();
+			$this->db->group_start();
+				$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+			$this->db->group_end();
+
+		$this->db->group_by('assignment_date');
+
+		$rows = $this->db->get();
+
+		//print $this->db->last_query();
+
+		$this->table->set_heading(
+			array('data'=>'Delivery Details',
+				'colspan'=>'4'
+			)	
+		);
+
+
+		$this->table->set_heading(
+			'No.',		 	 	
+			'Date',	 	 	 	 	 	 	 
+			'Delivered',
+			'No Show',
+			'Rescheduled',
+			'Delivery Count'
+		); // Setting headings for the table			
+
+		$seq = 0;
+		$rowdate = '';
+		$tarray = array();
+		foreach($rows->result() as $r){
+			if($rowdate == ''){
+				$rowdate = $r->assignment_date;
+			}
+			if($r->assignment_date != $rowdate){
+				$seq++;
+				$rowdate = $r->assignment_date;
+			}
+
+			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
+			$tarray[$seq]['assignment_date'] = $r->assignment_date;
+			$tarray[$seq][$r->status] = $r->count;
+
+
+		}
+
+		$seq = 1;
+		$aseq = 0;
+
+
+		$tdl = 0;
+		$tns = 0;
+		$trs = 0;
+
+		foreach ($tarray as $r) {
+
+			$dl = (isset($r['delivered']))?$r['delivered']:0;
+			$ns = (isset($r['noshow']))?$r['noshow']:0;
+			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
+
+			$tdl += $dl;
+			$tns += $ns;
+			$trs += $rs;
+
+			$this->table->add_row(
+				$seq,		
+				$r['assignment_date'],		
+				$dl,
+				$ns,
+				$rs,
+				$dl + $ns + $rs
+			);				
+
+			$seq++;
+			$aseq++;
+		}
+
+		$gt = $tdl + $tns + $trs;
+
+		$this->table->add_row(
+			'',		
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
+			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
+			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
+		);				
+
+		$recontab = $this->table->generate();
+		$data['recontab'] = $recontab;
+
+		/* end copy */
+
+		$this->breadcrumb->add_crumb('Device Reconciliations','admin/reports/devicerecon');
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+		$page['page_title'] = 'Device Reconciliations';
+
+		$data['controller'] = 'admin/reports/devicerecon/';
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/devicerecon',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+		}else if($pdf == 'print'){
+			$this->load->view('print/devicerecon',$data); // Load the view
+		}else{
+			$this->ag_auth->view('devicerecon',$data); // Load the view
+		}		
+	}
+
+	public function _devicerecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;			
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$data['devices'] = array_merge(array('Global'=>'All'),get_device());
 
 		/* copied from print controller */
 
@@ -821,25 +1619,25 @@ class Reports extends Application
 
 		/* end copy */
 
-		$this->breadcrumb->add_crumb('Courier Reconciliations','admin/reports/reconciliation');
+		$this->breadcrumb->add_crumb('Device Reconciliations','admin/reports/reconciliation');
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
-		$page['page_title'] = 'Courier Reconciliations';
+		$page['page_title'] = 'Device Reconciliations';
 
-		$data['controller'] = 'admin/reports/courierrecon/';
+		$data['controller'] = 'admin/reports/devicerecon/';
 
 		if($pdf == 'pdf'){
-			$html = $this->load->view('print/courierrecon',$data,true);
+			$html = $this->load->view('print/devicerecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
 			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
 		}else if($pdf == 'print'){
-			$this->load->view('print/courierrecon',$data); // Load the view
+			$this->load->view('print/devicerecon',$data); // Load the view
 		}else{
-			$this->ag_auth->view('courierrecon',$data); // Load the view
+			$this->ag_auth->view('devicerecon',$data); // Load the view
 		}		
 	}
 
-	public function merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+	public function _merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;

@@ -65,6 +65,7 @@ table#recon_select tr.dark {
 table#recon_select td {
 	padding: 3px;
 }
+
 </style>
 
 <?php
@@ -93,9 +94,9 @@ table#recon_select td {
 		<form method="get">
 			<table style="width:500px;" id="recon_select" cellspacing="0">
 				<tr>
-					<td>Year</td>
-					<td><?php print form_dropdown('year_scopes',$years,$year,'id = "year_scopes"');?></td>
-					<td>Scope <?php print form_dropdown('user_scopes',$opts,null,'id = "user_scopes"'); ?></td>
+					<td>Devices</td>
+					<td><?php print form_dropdown('user_scopes',$devices,$id,'id = "user_scopes"'); ?></td>
+					<td>Year<?php print form_dropdown('year_scopes',$years,$year,'id = "year_scopes"');?></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -130,63 +131,6 @@ table#recon_select td {
 	</div>
 </div>
 <div>
-	<h3><?php print $period; ?></h3>
-		<table>
-			<tbody>
-<!--				<tr>
-					<td colspan="2">
-						<div id="statistics"  style="width:100%;height:100%;">
-							<span>Top 5 Merchant - All Status</span>
-							<div id="incoming_monthly" class="stat_box" style="text-align:center">
-								<img src="<?php print base_url();?>admin/graphs/topxgraph/3/all/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-						</div>
-					</td>
-				</tr>
--->				<tr>
-					<td colspan="2">
-						<div id="statistics"  style="width:100%;height:100%;">
-							<span>City Distribution - All Status</span>
-							<div id="incoming_monthly" class="stat_box" style="text-align:center">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/all/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div id="statistics"  style="width:100%;height:100%;">
-							<span>Incoming <?php print $period;?></span>
-							<div id="incoming_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/incoming/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-							<span>Delivered <?php print $period;?></span>
-							<div id="delivered_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/delivered/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-							<span>Rescheduled <?php print $period;?></span>
-							<div id="rescheduled_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/rescheduled/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-						</div>
-					</td>
-					<td>
-						<div id="statistics"  style="width:100%;height:100%;">
-							<span>Revoked <?php print $period;?></span>
-							<div id="revoked_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/revoked/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-							<span>No Show <?php print $period;?></span>
-							<div id="noshow_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/noshow/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-							<span>Archived <?php print $period;?></span>
-							<div id="noshow_monthly" class="stat_box">
-								<img src="<?php print base_url();?>admin/graphs/citydistgraph/archived/<?php print $from.'/'.$to;?>" alt="monthly_all" />
-							</div>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<h3><?php print $type.' '.$period; ?></h3>
+	<?php print $recontab; ?>
 </div>

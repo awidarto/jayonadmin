@@ -45,11 +45,14 @@ function get_courier($id = null,$flatten = true){
 	}
 
 	$q = $CI->db->select(array('id','fullname'))->get('couriers');
+	
 	if($flatten){
 		foreach($q->result_array() as $val){
 			$result[$val['id']] = $val['fullname'];
 		}
 		return $result;
+	}if(!is_null($id)){
+		return $q->row_array();
 	}else{
 		return $q->result_array();
 	}
@@ -63,12 +66,14 @@ function get_merchant($id = null,$flatten = true){
 
 	$CI->db->where('group_id',user_group_id('merchant'));	
 
-	$q = $CI->db->select(array('id','fullname'))->get('members');
+	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
 	if($flatten){
 		foreach($q->result_array() as $val){
 			$result[$val['id']] = $val['fullname'];
 		}
 		return $result;
+	}if(!is_null($id)){
+		return $q->row_array();
 	}else{
 		return $q->result_array();
 	}
