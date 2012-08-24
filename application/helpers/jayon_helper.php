@@ -888,8 +888,16 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 			}
 		}
 		*/
+		if(isset($where['status']) && $where['status'] == 'all'){
+			unset($where['status']);
+		}
 
-		$column = 'assignment_date';
+		if(isset($where['status']) && $where['status'] == 'incoming'){
+			$column = 'ordertime';
+			unset($where['status']);
+		}else{
+			$column = 'assignment_date';
+		}
 
 		//$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $from, $to);
 
