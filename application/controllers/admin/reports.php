@@ -292,6 +292,9 @@ class Reports extends Application
 			);				
 
 		}else{
+			$this->table->add_row(
+				array('data'=>'No Transaction','colspan'=>13,'style'=>'border-bottom:thin solid grey')
+			);
 			$tcod_pct = '';
 			$tdo_pct = '';
 		}
