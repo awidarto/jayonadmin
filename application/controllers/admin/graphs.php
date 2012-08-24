@@ -94,7 +94,7 @@ class Graphs extends Application
 
 		foreach($cities as $city){
 			if($status == 'all'){
-				$cityselect = array('buyerdeliverycity'=>$city);
+				$cityselect = array('buyerdeliverycity'=>$city,'status'=>'all');
 			}else{
 				$cityselect = array('buyerdeliverycity'=>$city,'status'=>$status);
 			}
