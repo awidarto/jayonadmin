@@ -709,6 +709,25 @@ class V1 extends Application
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
+	public function uploadpic($api_key = null){
+		if(is_null($api_key)){
+			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+			print $result;
+		}else{
+			$delivery_id = $this->input->post('delivery_id');
+
+			$target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+
+			if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+				$result = json_encode(array('status'=>'OK:PICUPLOAD','timestamp'=>now()));
+				print $result;
+			} else{
+				$result = json_encode(array('status'=>'ERR:UPLOADFAILED','timestamp'=>now()));
+				print $result;
+			}
+		}
+	}
+
 	/* Lists JEX available time slot */
 
 	public function slotlist($api_key = null){
