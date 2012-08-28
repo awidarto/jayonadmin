@@ -710,6 +710,7 @@ class V1 extends Application
 	}
 
 	public function uploadpic($api_key = null){
+
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
 			print $result;
@@ -719,6 +720,19 @@ class V1 extends Application
 			$target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
 
 			if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+
+				$config['image_library'] = 'gd2';
+				$config['source_image']	= $target_path;
+				$config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+				$config['create_thumb'] = false;
+				$config['maintain_ratio'] = TRUE;
+				$config['width']	 = 100;
+				$config['height']	= 75;
+
+				$this->load->library('image_lib', $config); 
+
+				$this->image_lib->resize();
+
 				$result = json_encode(array('status'=>'OK:PICUPLOAD','timestamp'=>now()));
 				print $result;
 			} else{
