@@ -156,8 +156,8 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 }else{
 	//online version should redirect to main site
 	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
-	$config['picture_path'] = '/var/www/pro/jayonadmin/public/reciever/';
-	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/reciever_thumb/';
+	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
+	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
 }
 
 ?>
