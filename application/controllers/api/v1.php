@@ -375,6 +375,9 @@ class V1 extends Application
 
 					$dataset['status'] = $in->status;
 					$dataset['deliverytime'] = date('Y-m-d H:i:s',time());
+					$dataset['delivery_note'] = $in->notes;
+					$dataset['latitude'] = $in->lat;
+					$dataset['longitude'] = $in->lon;
 
 					//other action for different status migh be needed
 
