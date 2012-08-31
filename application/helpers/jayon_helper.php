@@ -526,7 +526,7 @@ function delivery_log($data,$upsert = false){
 	$CI =& get_instance();
 	if($upsert == true){
 		$CI->db->where('sync_id != ',$data['sync_id']);	
-		$CI->db->where('dev_id != ',$data['dev_id']);	
+		$CI->db->where('device_id != ',$data['device_id']);	
 		$CI->db->where('timestamp != ',$data['timestamp']);	
 	}
 	$CI->db->insert($CI->config->item('delivery_log_table'),$data);
