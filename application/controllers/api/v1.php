@@ -392,7 +392,7 @@ class V1 extends Application
 					$in->lon = (isset($in->lon))?$in->lon:'';
 
 					$data = array(
-						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',strtotime($in->capture_time)),
 						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'sync_id'=>(isset($in->sync_id))?$in->sync_id:0,
 						'delivery_id'=>$delivery_id,

@@ -151,8 +151,8 @@ $config['master_key'] = '7e931g6628S59A0sJ4pYVqAjdo0v66Wb';
 
 if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['public_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/';
-	$config['picture_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/reciever/';
-	$config['thumbnail_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/reciever_thumb/';
+	$config['picture_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/receiver/';
+	$config['thumbnail_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/receiver_thumb/';
 }else{
 	//online version should redirect to main site
 	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
