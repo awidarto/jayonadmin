@@ -551,6 +551,8 @@ class V1 extends Application
 			if($dev = $this->get_dev_info($api_key)){
 
 				if(isset($_POST['trx'])){
+
+					file_put_contents('log_data.txt',$_POST['trx']);
 					$in = json_decode($_POST['trx']);
 
 					//set status based on reported
