@@ -28,7 +28,7 @@ class Admin extends Application
 				$loc = $this->db
 					->select('identifier,timestamp,latitude as lat,longitude as lng')
 					->where('identifier',$d->identifier)
-					->where('timestamp',date('Y-m-d H:i:s',time()))
+					->like('timestamp',date('Y-m-d',time()),'after')				
 					->limit(1,0)
 					->order_by('timestamp','desc')
 					->get($this->config->item('location_log_table'));
