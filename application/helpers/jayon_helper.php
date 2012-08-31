@@ -525,12 +525,22 @@ function get_thumbnail($delivery_id){
 function delivery_log($data,$upsert = false){
 	$CI =& get_instance();
 	if($upsert == true){
-		$CI->db->where('sync_id != ',$data['sync_id']);	
-		$CI->db->where('device_id != ',$data['device_id']);	
-		$CI->db->where('timestamp != ',$data['timestamp']);	
+		$CI->db->where('sync_id = ',$data['sync_id']);	
+		$CI->db->where('device_id = ',$data['device_id']);	
+		$CI->db->where('timestamp = ',$data['timestamp']);
+		$CI->db->from($CI->config->item('delivery_log_table'));
+
+		$in = $CI->db->count_all_results();
+
+		print $CI->db->last_query();
+
+		if($in == 0){
+			$CI->db->insert($CI->config->item('delivery_log_table'),$data);
+		}
+
+	}else{
+		$CI->db->insert($CI->config->item('delivery_log_table'),$data);
 	}
-	$CI->db->insert($CI->config->item('delivery_log_table'),$data);
-	print $CI->db->last_query();
 	return true;
 }
 
