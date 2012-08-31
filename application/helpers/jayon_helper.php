@@ -532,9 +532,9 @@ function delivery_log($data,$upsert = false){
 
 		$in = $CI->db->count_all_results();
 
-		print $CI->db->last_query();
+		print $in;
 
-		if($in == 0){
+		if($in <= 0){
 			$CI->db->insert($CI->config->item('delivery_log_table'),$data);
 		}
 
