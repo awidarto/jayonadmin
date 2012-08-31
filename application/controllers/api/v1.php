@@ -576,7 +576,7 @@ class V1 extends Application
 							'notes'=>$val->delivery_note,
 							'sync_id'=>$val->sync_id
 						);
-						delivery_log($data);
+						delivery_log($data,true);
 					}
 
 					//get slot for specified date
