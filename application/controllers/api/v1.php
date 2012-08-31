@@ -563,7 +563,7 @@ class V1 extends Application
 					foreach($in as $key=>$val){
 
 						$data = array(
-							'timestamp'=>date('Y-m-d H:i:s',$val->capture_time),
+							'timestamp'=>date('Y-m-d H:i:s',strtotime($val->capture_time)),
 							'report_timestamp'=>date('Y-m-d H:i:s',time()),
 							'delivery_id'=>$val->delivery_id,
 							'device_id'=>$dev->id,
