@@ -394,6 +394,7 @@ class V1 extends Application
 					$data = array(
 						'timestamp'=>date('Y-m-d H:i:s',time()),
 						'report_timestamp'=>date('Y-m-d H:i:s',time()),
+						'sync_id'=>(isset($in->sync_id))?$in->sync_id:0,
 						'delivery_id'=>$delivery_id,
 						'device_id'=>$dev->id,
 						'courier_id'=>'',
