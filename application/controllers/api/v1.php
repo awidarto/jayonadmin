@@ -554,7 +554,7 @@ class V1 extends Application
 
 					$in = json_decode($_POST['trx']);
 
-					file_put_contents('log_data.txt',print_r($in));
+					//file_put_contents('log_data.txt',print_r($in));
 
 					//set status based on reported
 
@@ -563,17 +563,18 @@ class V1 extends Application
 					foreach($in as $key=>$val){
 
 						$data = array(
-							'timestamp'=>date('Y-m-d H:i:s',time()),
+							'timestamp'=>date('Y-m-d H:i:s',$val->capture_time),
 							'report_timestamp'=>date('Y-m-d H:i:s',time()),
-							'delivery_id'=>'',
+							'delivery_id'=>$val->delivery_id,
 							'device_id'=>$dev->id,
 							'courier_id'=>'',
 							'actor_type'=>'MB',
 							'actor_id'=>$dev->id,
-							'latitude'=>'',
-							'longitude'=>'',
+							'latitude'=>$val->latitude,
+							'longitude'=>$val->longitude,
 							'status'=>'sync_report',
-							'notes'=>''
+							'notes'=>$val->delivery_note,
+							'sync_id'=>$val->sync_id
 						);
 						delivery_log($data);
 					}
