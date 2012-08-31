@@ -644,6 +644,7 @@ class V1 extends Application
 							d.revoke_ref as rev_ref')
 					->from($this->config->item('assigned_delivery_table').' as d')
 					->join('members as m','d.merchant_id=m.id','left')
+					->where('status',$this->config->item('trans_status_admin_courierassigned'))
 					->where('assignment_date',$indate)
 					->where('device_id',$dev->id)
 					->get();

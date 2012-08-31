@@ -8,7 +8,7 @@ class Graphs extends Application
 		$this->load->library('plot');
 	}
 
-	public function monthlygraph($status = null){
+	public function monthlygraph($status = null,$type = null){
 		$lineplot = $this->plot->plot(500,130);
 
 		$year = date('Y',time());
@@ -19,7 +19,7 @@ class Graphs extends Application
 		}else{
 			$status = array('status'=>$status);
 		}
-		$series = getmonthlydatacountarray($year,$month,$status,null);
+		$series = getmonthlydatacountarray($year,$month,$status,null,$type);
 		//$series = getmonthlydatacountarray($year,$month,$status,null);
 
 		$lineplot->SetPlotType('bars');

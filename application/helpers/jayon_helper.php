@@ -802,7 +802,7 @@ function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
 	return $series;
 }
 
-function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null){
+function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null,$type = null){
 	$CI =& get_instance();
 
 	$series = array();
