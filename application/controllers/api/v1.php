@@ -552,31 +552,34 @@ class V1 extends Application
 
 				if(isset($_POST['trx'])){
 
-					file_put_contents('log_data.txt',$_POST['trx']);
 					$in = json_decode($_POST['trx']);
+
+					file_put_contents('log_data.txt',print_r($in));
 
 					//set status based on reported
 
-					$out = $orders->result_array();
+					//$out = $orders->result_array();
 
-					$data = array(
-						'timestamp'=>date('Y-m-d H:i:s',time()),
-						'report_timestamp'=>date('Y-m-d H:i:s',time()),
-						'delivery_id'=>'',
-						'device_id'=>$dev->id,
-						'courier_id'=>'',
-						'actor_type'=>'MB',
-						'actor_id'=>$dev->id,
-						'latitude'=>'',
-						'longitude'=>'',
-						'status'=>'sync_report',
-						'notes'=>''
-					);
+					foreach($in as $key=>$val){
 
-					delivery_log($data);
+						$data = array(
+							'timestamp'=>date('Y-m-d H:i:s',time()),
+							'report_timestamp'=>date('Y-m-d H:i:s',time()),
+							'delivery_id'=>'',
+							'device_id'=>$dev->id,
+							'courier_id'=>'',
+							'actor_type'=>'MB',
+							'actor_id'=>$dev->id,
+							'latitude'=>'',
+							'longitude'=>'',
+							'status'=>'sync_report',
+							'notes'=>''
+						);
+						delivery_log($data);
+					}
 
 					//get slot for specified date
-					$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$out ,'timestamp'=>now()));
+					$result = json_encode(array('status'=>'OK:LOGSYNC','timestamp'=>now()));
 					print $result;
 				}else{
 					$result = json_encode(array('status'=>'ERR:NODATA','timestamp'=>now()));
