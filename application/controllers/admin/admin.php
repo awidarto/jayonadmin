@@ -28,19 +28,23 @@ class Admin extends Application
 				$loc = $this->db
 					->select('identifier,timestamp,latitude as lat,longitude as lng')
 					->where('identifier',$d->identifier)
+					->where('timestamp',date('Y-m-d H:i:s',time()))
 					->limit(1,0)
 					->order_by('timestamp','desc')
-					->get($this->config->item('location_log_table'))
-					->row();				
+					->get($this->config->item('location_log_table'));
 
-				$locations[] = array(
-					'lat'=>(double)$loc->lat,
-					'lng'=>(double)$loc->lng,
-					'data'=>array(
-							'timestamp'=>$loc->timestamp,
-							'identifier'=>$loc->identifier
-						)
-					);
+				if($loc->num_rows() > 0){
+					$loc = $loc->row();
+
+					$locations[] = array(
+						'lat'=>(double)$loc->lat,
+						'lng'=>(double)$loc->lng,
+						'data'=>array(
+								'timestamp'=>$loc->timestamp,
+								'identifier'=>$loc->identifier
+							)
+						);					
+				}		
 			}
 
 			$page['locdata'] = json_encode($locations);

@@ -169,20 +169,24 @@ class Location extends Application
 			$loc = $this->db
 				->select('identifier,timestamp,latitude as lat,longitude as lng')
 				->where('identifier',$d->identifier)
+				->where('timestamp',date('Y-m-d H:i:s',time()))				
 				->limit(10,0)
 				->order_by('timestamp','desc')
-				->get($this->config->item('location_log_table'))
-				->result();				
+				->get($this->config->item('location_log_table'));
+	
+			if($loc->num_rows() > 0){
+				$loc = $loc->result();				
 
-			foreach($loc as $l){
-				$locations[] = array(
-					'lat'=>(double)$l->lat,
-					'lng'=>(double)$l->lng,
-					'data'=>array(
-							'timestamp'=>$l->timestamp,
-							'identifier'=>$l->identifier
-						)
-					);
+				foreach($loc as $l){
+					$locations[] = array(
+						'lat'=>(double)$l->lat,
+						'lng'=>(double)$l->lng,
+						'data'=>array(
+								'timestamp'=>$l->timestamp,
+								'identifier'=>$l->identifier
+							)
+						);
+				}
 			}
 		}
 
