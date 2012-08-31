@@ -11,7 +11,7 @@
 			{ action:'init',
 				options:{
 					center:[-6.17742,106.828308],
-					zoom: 12
+					zoom: 11
 				}
 			},
 			{ action:'addMarkers',
