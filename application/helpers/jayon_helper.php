@@ -530,6 +530,7 @@ function delivery_log($data,$upsert = false){
 		$CI->db->where('timestamp != ',$data['timestamp']);	
 	}
 	$CI->db->insert($CI->config->item('delivery_log_table'),$data);
+	print $CI->db->last_query();
 	return true;
 }
 
