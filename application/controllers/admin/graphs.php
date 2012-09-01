@@ -8,22 +8,28 @@ class Graphs extends Application
 		$this->load->library('plot');
 	}
 
-	public function monthlygraph($status = null,$type = null){
-		$lineplot = $this->plot->plot(500,130);
+	public function monthlygraph($status = 'all',$span = 'half'){
+		$lineplot = $this->plot->plot(600,300);
 
 		$year = date('Y',time());
 		$month = date('m',time());
 
-		if(is_null($status)){
+		if(is_null($status) || $status == 'all'){
 			$status = null;
 		}else{
 			$status = array('status'=>$status);
 		}
-		$series = getmonthlydatacountarray($year,$month,$status,null,$type);
+		//$month = '08';
+		$series = getmonthlydatacounttypearray($year,$month,$status,null,$span);
+		//$series = getmonthlydatacounttypearray($year,$month,$status,null);
+		//$tseries = getmonthlydatacountarray($year,$month,$status,null);
 		//$series = getmonthlydatacountarray($year,$month,$status,null);
 
-		$lineplot->SetPlotType('bars');
+		//print_r($series);
+
+		$lineplot->SetPlotType('stackedbars');
 		$lineplot->setShading(0);
+		$lineplot->SetDataType('text-data');
 		$lineplot->SetDataValues($series);
 
 		$lineplot->SetYDataLabelPos('plotin');
@@ -35,16 +41,22 @@ class Graphs extends Application
 		$lineplot->SetYTickIncrement(1);
 		$lineplot->SetPrecisionY(0);
 
+		$lineplot->SetLegend(array('COD','Delivery Only'));
+
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
-
+		$lineplot->SetYDataLabelPos('plotstack');
+		$lineplot->SetMarginsPixels(null,null,70,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->setLegendReverse(true);
+		
 		//Draw it
 		$lineplot->DrawGraph();
 	}
 
 	public function rangegraph($status = null,$from = null, $to = null){
-		$lineplot = $this->plot->plot(500,230);
+		$lineplot = $this->plot->plot(500,350);
 
 		$year = date('Y',time());
 		$month = date('m',time());
@@ -60,8 +72,9 @@ class Graphs extends Application
 
 		//print_r($series);
 
-		$lineplot->SetPlotType('bars');
+		$lineplot->SetPlotType('stackedbars');
 		$lineplot->setShading(0);
+		$lineplot->SetDataType('text-data');
 		$lineplot->SetDataValues($series);
 
 		$lineplot->SetYDataLabelPos('plotin');
@@ -72,11 +85,16 @@ class Graphs extends Application
 
 		$lineplot->SetYTickIncrement(1);
 		$lineplot->SetPrecisionY(0);
+		$lineplot->SetLegend(array('COD','Delivery Only'));
 
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
 		$lineplot->SetXDataLabelAngle(90);
+		$lineplot->SetYDataLabelPos('plotstack');
+		$lineplot->SetMarginsPixels(null,null,70,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->setLegendReverse(true);
 
 		//Draw it
 		$lineplot->DrawGraph();
