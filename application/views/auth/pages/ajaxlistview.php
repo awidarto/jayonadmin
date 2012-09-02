@@ -63,9 +63,10 @@
 		$('table.dataTable').click(function(e){
 			if($(e.target).is('.thumb')){
 				var delivery_id = e.target.alt;
+				var currentTime = new Date();
 				$.fancybox.open([
 			        {
-			            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',                
+			            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),                
 			            title : delivery_id
 			        }
 			    ]);
@@ -79,6 +80,7 @@
 					if(data.result == 'ok'){
 						//redraw table
 						oTable.fnDraw();
+						alert("Photo of " + data.delivery_id + " rotated");
 					}
 				},'json');	
 
@@ -86,7 +88,7 @@
 				function(data) {
 					if(data.result == 'ok'){
 						oTable.fnDraw();
-						alert("Photo of " + data.delivery_id + " rotated");
+						alert("Thumbnail of " + data.delivery_id + " rotated");
 					}
 				},'json');	
 			}

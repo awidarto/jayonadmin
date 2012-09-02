@@ -90,7 +90,7 @@ class Ajax extends Application
 			$result = 'err';
 		}
 
-		print json_encode(array('result'=>$result,'delivery_id'=>$delivery_id,'data'=>$this->image_lib->display_errors()));
+		print json_encode(array('result'=>$result,'delivery_id'=>$delivery_id,'data'=>$config['source_image'].' '.$this->image_lib->display_errors()));
 	}
 
 	public function getorder(){
