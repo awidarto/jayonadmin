@@ -73,7 +73,7 @@
 			}
 
 			if($(e.target).is('.rotate')){
-				var delivery_id = e.target.name;
+				var delivery_id = e.target.id;
 				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id}, 
 				function(data) {
 					if(data.result == 'ok'){
