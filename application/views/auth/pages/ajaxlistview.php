@@ -72,6 +72,19 @@
 
 			}
 
+			if($(e.target).is('.rotate')){
+				var delivery_id = e.target.name;
+				$.post('<?php print site_url('admin/ajax/rotatephoto');?>',{'delivery_id':delivery_id}, 
+				function(data) {
+					if(data.result == 'ok'){
+						//redraw table
+						oTable.fnDraw();
+						alert("Photo of " + delivery_id + " rotated");
+					}
+				},'json');	
+			}
+
+
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
 				var answer = confirm("Are you sure you want to archive this order ?");

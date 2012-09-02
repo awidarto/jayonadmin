@@ -61,6 +61,26 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 
+	public function rotatephoto(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		$this->load->library('image_lib');
+		
+		$config['image_library'] = 'gd2';
+		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
+		$config['rotation_angle'] = '90';
+		$this->image_lib->initialize($config); 
+
+		if ( ! $this->image_lib->rotate())
+		{
+			$result = 'ok';
+		}else{
+			$result = 'err';
+		}
+
+		print json_encode(array('result'=>$result));
+	}
+
 	public function getorder(){
 		$delivery_id = $this->input->post('delivery_id');
 
