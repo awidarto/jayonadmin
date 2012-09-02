@@ -79,7 +79,7 @@
 				function(data) {
 					if(data.result == 'ok'){
 						//redraw table
-						oTable.fnDraw();
+						//oTable.fnDraw();
 						alert("Photo of " + data.delivery_id + " rotated");
 					}
 				},'json');	
