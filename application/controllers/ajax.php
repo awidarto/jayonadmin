@@ -69,18 +69,19 @@ class Ajax extends Application
 		$this->load->library('image_lib');
 		
 		$config['image_library'] = 'gd2';
-		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
 		$config['rotation_angle'] = '90';
+		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
+
 		$this->image_lib->initialize($config); 
 
-		if ( ! $this->image_lib->rotate())
+		if ( $this->image_lib->rotate())
 		{
 			$result = 'ok';
 		}else{
 			$result = 'err';
 		}
 
-		print json_encode(array('result'=>$result));
+		print json_encode(array('result'=>$result,'data'=>$config['source_image']));
 	}
 
 	public function getorder(){
