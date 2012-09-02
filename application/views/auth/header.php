@@ -9,6 +9,7 @@
 		<?php echo $this->ag_asset->load_css('style.css');?>
 		<?php echo $this->ag_asset->load_css('menu.css');?>
 		<?php echo $this->ag_asset->load_css('oi.css');?>
+		<?php echo $this->ag_asset->load_css('jquery.fancybox.css');?>
 
 		<?php echo $this->ag_asset->load_css('datatables_page.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('datatables_table.css','jquery-datatables');?>
