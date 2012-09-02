@@ -79,7 +79,7 @@ class Ajax extends Application
 
 		if ( $this->image_lib->rotate())
 		{
-			$thresult = 'thumbnail rotated';
+			$thresult = 'thumbnail rotated '.$config['source_image'];
 		}else{
 			$thresult = 'thumbnail rotation failed';
 		}
