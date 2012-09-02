@@ -89,7 +89,8 @@ class Ajax extends Application
 		//$config['image_library'] = 'imagemagick';
 		//$config['library_path'] = '/usr/bin/';
 		//$config['rotation_angle'] = '90';
-		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
+		//$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
+		$config['source_image']	= $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
 
 		chmod($config['source_image'],0777);
 
