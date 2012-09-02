@@ -63,34 +63,21 @@ class Ajax extends Application
 
 	public function rotatephoto(){
 		$delivery_id = $this->input->post('delivery_id');
+		$is_thumb = $this->input->post('is_thumb');
 
 		$delivery_id = trim(str_replace('r_', '', $delivery_id));
 
 		$this->load->library('image_lib');
-
+		
 		$config['image_library'] = 'imagemagick';
 		$config['library_path'] = '/usr/bin/';
 		$config['rotation_angle'] = '90';
-		$config['source_image']	= $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
 
-		chmod($config['source_image'],0777);
-
-		$this->image_lib->initialize($config); 
-
-		if ( $this->image_lib->rotate())
-		{
-			$thresult = 'thumbnail rotated '.$config['source_image'];
+		if($is_thumb == 1){
+			$config['source_image']	= $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
 		}else{
-			$thresult = 'thumbnail rotation failed';
+			$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
 		}
-
-		$this->image_lib->clear();
-		
-		//$config['image_library'] = 'imagemagick';
-		//$config['library_path'] = '/usr/bin/';
-		//$config['rotation_angle'] = '90';
-		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
-		//$config['source_image']	= $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
 
 		chmod($config['source_image'],0777);
 
@@ -103,7 +90,7 @@ class Ajax extends Application
 			$result = 'err';
 		}
 
-		print json_encode(array('result'=>$result,'data'=>$thresult.' '.$this->image_lib->display_errors()));
+		print json_encode(array('result'=>$result,'delivery_id'=>$delivery_id,'data'=>$this->image_lib->display_errors()));
 	}
 
 	public function getorder(){

@@ -74,12 +74,19 @@
 
 			if($(e.target).is('.rotate')){
 				var delivery_id = e.target.id;
-				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id}, 
+				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':0}, 
 				function(data) {
 					if(data.result == 'ok'){
 						//redraw table
 						oTable.fnDraw();
-						alert("Photo of " + delivery_id + " rotated");
+					}
+				},'json');	
+
+				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':1}, 
+				function(data) {
+					if(data.result == 'ok'){
+						oTable.fnDraw();
+						alert("Photo of " + data.delivery_id + " rotated");
 					}
 				},'json');	
 			}
