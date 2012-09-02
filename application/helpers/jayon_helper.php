@@ -511,7 +511,7 @@ function get_thumbnail($delivery_id){
 	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
 		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
 			$thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
-			$thumbnail = sprintf('<img style="cursor:pointer;" src="%s" onClick="javascript:openPhoto(\''.$delivery_id.'\',\''.$delivery_id.'\');" />',$thumbnail);					
+			$thumbnail = sprintf('<img style="cursor:pointer;" class="thumb" alt="'.$delivery_id.'" src="%s" onClick="javascript:openPhoto(\''.$delivery_id.'\',\''.$delivery_id.'\');" />',$thumbnail);					
 		}else{
 			$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
 		}

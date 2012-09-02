@@ -61,6 +61,17 @@
 		} );
 
 		$('table.dataTable').click(function(e){
+			if($(e.target).is('.thumb')){
+				var delivery_id = e.target.alt;
+				$.fancybox.open([
+			        {
+			            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',                
+			            title : delivery_id
+			        }
+			    ]);
+
+			}
+
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
 				var answer = confirm("Are you sure you want to archive this order ?");
