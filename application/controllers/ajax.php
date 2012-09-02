@@ -68,7 +68,8 @@ class Ajax extends Application
 
 		$this->load->library('image_lib');
 		
-		$config['image_library'] = 'gd2';
+		$config['image_library'] = 'netpbm';
+		$config['library_path'] = '/usr/share/';
 		$config['rotation_angle'] = '90';
 		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
 
