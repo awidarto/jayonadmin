@@ -64,6 +64,8 @@ class Ajax extends Application
 	public function rotatephoto(){
 		$delivery_id = $this->input->post('delivery_id');
 
+		$delivery_id = trim(str_replace('r_', '', $delivery_id));
+
 		$this->load->library('image_lib');
 		
 		$config['image_library'] = 'gd2';
