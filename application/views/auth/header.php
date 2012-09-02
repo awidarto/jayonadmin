@@ -21,6 +21,7 @@
 
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
+		<?php echo $this->ag_asset->load_script('jquery.fancybox.pack.js','fancybox');?>
 
 		<?php echo $this->ag_asset->load_script('d3.min.js','vendor');?>
 		<?php echo $this->ag_asset->load_script('d3.layout.min.js','vendor');?>
@@ -34,6 +35,15 @@
 			$(document).ready(function() {
 
 				$('#flash_message').delay(1500).slideUp('slow');
+
+				function openPhoto(delivery_id,title){
+					$.fancybox.open([
+					        {
+					            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',                
+					            title : title
+					        }
+					    ]);
+				}
 
 			});
 		</script>
