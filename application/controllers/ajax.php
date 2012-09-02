@@ -72,8 +72,8 @@ class Ajax extends Application
 		$config['rotation_angle'] = '90';
 		$config['source_image']	= $this->config->item('picture_path').$delivery_id.'.jpg';
 
-		chmod($config['source_image'],777);
-		
+		chmod($config['source_image'],0777);
+
 		$this->image_lib->initialize($config); 
 
 		if ( $this->image_lib->rotate())
