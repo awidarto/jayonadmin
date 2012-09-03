@@ -771,7 +771,7 @@ function colorizetype($type){
 		$type = 'DO';
 	}
 
-	return sprintf('<span class="%s">%s</span>',$class,$type);
+	return sprintf('<span class="%s" style="text-align:center;">%s</span>',$class,$type);
 }
 
 
