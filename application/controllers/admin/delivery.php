@@ -1567,6 +1567,22 @@ class Delivery extends Application
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
 
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'assignment_date',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'delivery_id',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+
 		// get total count result
 		$count_all = $this->db
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
