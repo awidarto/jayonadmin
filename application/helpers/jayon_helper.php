@@ -768,6 +768,7 @@ function colorizetype($type){
 		$class = 'brown';
 	}else{
 		$class = 'red';
+		$type = 'DO';
 	}
 
 	return sprintf('<span class="%s">%s</span>',$class,$type);
