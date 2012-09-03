@@ -67,12 +67,13 @@ class V1 extends Application
 					$dataset['province'] = 		 	 	 	 	 	 	 
 					$dataset['mobile']		 	 	 	 	 	 	 
 					*/
+					
 					$dataset['street'] = $in->shipping_address;	 	 	 	 	 	 
 					$dataset['district'] = $in->buyerdeliveryzone; 
 					$dataset['city'] = $in->buyerdeliverycity;	 	 	 	 	 	 	 
 					$dataset['country']	= 'Indonesia';	 	 	 	 	 	 	 
-					$dataset['zip'] = $in->zip;	
-					
+					$dataset['zip'] = $in->zip;
+
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}

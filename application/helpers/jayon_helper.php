@@ -762,6 +762,18 @@ function colorizestatus($status){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
+function colorizetype($type){
+
+	if($type == 'COD'){
+		$class = 'brown';
+	}else{
+		$class = 'red';
+	}
+
+	return sprintf('<span class="%s">%s</span>',$class,$type);
+}
+
+
 function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
 	$CI =& get_instance();
 
