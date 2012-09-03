@@ -264,8 +264,12 @@ class Apps extends Application
 
 	public function get_merchant($id){
 		$result = $this->db->select('merchantname')->where('id',$id)->get($this->config->item('jayon_members_table'));
-		$row = $result->row();
-		return ($row->merchantname === '')?'anonymous merchant':$row->merchantname;
+		if($result->num_rows() > 0){
+			$row = $result->row();
+			return ($row->merchantname == '')?'anonymous merchant':$row->merchantname;
+		}else{
+			return 'anonymous merchant';
+		}
 	}
 
 	public function get_app($id){
