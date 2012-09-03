@@ -1379,7 +1379,7 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'assignment_date',$this->input->post('sSearch_0'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
 			$search = true;
 		}
 
@@ -1567,22 +1567,6 @@ class Delivery extends Application
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
 
-		if($this->input->post('sSearch_0') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'assignment_date',$this->input->post('sSearch_0'));
-			$search = true;
-		}
-
-		if($this->input->post('sSearch_1') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'delivery_id',$this->input->post('sSearch_1'));
-			$search = true;
-		}
-
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
-			$search = true;
-		}
-
-
 		// get total count result
 		$count_all = $this->db
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
@@ -1598,6 +1582,31 @@ class Delivery extends Application
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
 		$search = false;
+
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_4'));
+			$search = true;
+		}
 
 		if($search){
 			$this->db->and_();
@@ -1688,6 +1697,10 @@ class Delivery extends Application
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
+			'',
+			'',
+			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
 			);
 
