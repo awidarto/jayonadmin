@@ -208,7 +208,7 @@
 			<tr>
 				<td style="vertical-align: top;">
 					<h3>Position Tracker</h3>
-					<div id="map" style="width:525px;height:400px;display:block;border:thin solid grey;"></div>
+					<div id="map" style="width:800px;height:700px;display:block;border:thin solid grey;"></div>
 				</td>
 				<td style="width:100%;height:100%;vertical-align:top;">
 					<h3>Position Logs</h3>
