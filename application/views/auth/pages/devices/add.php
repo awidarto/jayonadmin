@@ -7,6 +7,11 @@ $(document).ready(function() {
 		minLength: 2
 	});
 	*/
+
+	$('#color_pick').simpleColor({
+		displayColorCode:true
+	});
+
 	$( "#city" ).bind( "keydown", function( event ) {
 					if ( event.keyCode === $.ui.keyCode.TAB &&
 							$( this ).data( "autocomplete" ).menu.active ) {
@@ -100,6 +105,9 @@ $(document).ready(function() {
 
 			Device Name:<br />
 			<input type="text" name="devname" size="50" class="form" value="<?php echo set_value('devname'); ?>" /><?php echo form_error('devname'); ?><br /><br />
+
+			Map Color:<br />
+			<input type="text" name="color" size="25" id="color_pick" class="form" value="<?php echo set_value('color'); ?>" /><?php echo form_error('color'); ?><br /><br />
 
 			Mobile Number:<br />
 			<input type="text" name="mobile" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />

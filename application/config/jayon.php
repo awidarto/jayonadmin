@@ -126,6 +126,17 @@ $config['fetch_method'] = array(
 	'URL'=>'URL Segment'
 );
 
+$config['path_colors'] = array(
+	'#FF0000',
+	'#00FF00',
+	'#0000FF',
+	'#0F0F0F',
+	'#FF0000',
+	'#00FF00',
+	'#0000FF',
+	'#0F0F0F'
+);
+
 $config['smtp_host'] = 'ssl://smtp.googlemail.com';
 $config['smtp_port'] = '465';
 

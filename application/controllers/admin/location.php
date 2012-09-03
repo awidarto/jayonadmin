@@ -165,6 +165,8 @@ class Location extends Application
 
 		$locations = array();
 
+		$paths = array();
+
 		foreach($devices as $d){
 			$loc = $this->db
 				->select('identifier,timestamp,latitude as lat,longitude as lng')
@@ -175,8 +177,7 @@ class Location extends Application
 				->get($this->config->item('location_log_table'));
 	
 			if($loc->num_rows() > 0){
-				$loc = $loc->result();				
-
+				$loc = $loc->result();
 				foreach($loc as $l){
 					$locations[] = array(
 						'lat'=>(double)$l->lat,
@@ -186,10 +187,27 @@ class Location extends Application
 								'identifier'=>$l->identifier
 							)
 						);
+					$paths[$d->identifier][] = array((double)$l->lat,(double)$l->lng);
 				}
 			}
 		}
 
+		foreach($paths as $key=>$val){
+
+			$pathcmd[] = "{ action: 'addPolyline',
+								options:{
+								strokeColor: '".get_device_color($key)."',
+								strokeOpacity: 1.0,
+								strokeWeight: 2
+							},
+							path:".json_encode($val)."}";
+
+		}
+
+		$pathcmd = implode(',', $pathcmd);
+
+		$page['pathcmd'] = $pathcmd;
+		//print_r($paths);
 
 		$page['locdata'] = json_encode($locations);
 

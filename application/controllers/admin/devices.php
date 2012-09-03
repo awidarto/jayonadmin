@@ -236,6 +236,7 @@ class Devices extends Application
 		$this->form_validation->set_rules('identifier', 'Identifier', 'required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('descriptor', 'Description', 'required|trim|xss_clean');			 	 	 	 	 	 	 
 		$this->form_validation->set_rules('devname', 'Device Name', 'required|trim|xss_clean');   		 	 	 	 	 	 	 	 
+		$this->form_validation->set_rules('color', 'Color', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('district', 'Zone', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('city', 'City', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
@@ -252,6 +253,7 @@ class Devices extends Application
 			$dataset['identifier'] = set_value('identifier');
 			$dataset['descriptor'] = set_value('descriptor');
 			$dataset['devname'] = set_value('devname');
+			$dataset['color'] = set_value('color');
 			$dataset['mobile'] = set_value('mobile'); 
 			$dataset['district'] = set_value('district'); 
 			$dataset['city'] = set_value('city'); 
@@ -282,6 +284,7 @@ class Devices extends Application
 		$this->form_validation->set_rules('identifier', 'Identifier', 'required|trim|xss_clean');		 	 	 	 	 	 	 
 		$this->form_validation->set_rules('descriptor', 'Description', 'required|trim|xss_clean');			 	 	 	 	 	 	 
 		$this->form_validation->set_rules('devname', 'Device Name', 'required|trim|xss_clean');   		 	 	 	 	 	 	 	 
+		$this->form_validation->set_rules('color', 'Color', 'trim|xss_clean');   		 	 	 	 	 	 	 	 
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('district', 'Zone', 'trim|xss_clean');
 		$this->form_validation->set_rules('city', 'City', 'trim|xss_clean');
@@ -300,6 +303,7 @@ class Devices extends Application
 			$dataset['identifier'] = set_value('identifier');
 			$dataset['descriptor'] = set_value('descriptor');
 			$dataset['devname'] = set_value('devname');
+			$dataset['color'] = set_value('color');
 			$dataset['district'] = set_value('district'); 
 			$dataset['city'] = set_value('city'); 
 			$dataset['mobile'] = set_value('mobile'); 

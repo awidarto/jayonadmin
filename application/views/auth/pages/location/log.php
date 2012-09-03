@@ -14,6 +14,8 @@
 			      zoom: 11
 			    }
 			},
+			<?php print $pathcmd;?>
+			,
 			{ action:'addMarkers',
 				radius:100,
 				markers: locdata,
