@@ -533,7 +533,7 @@ class Members extends Application
 			'zip',
 			'mobile',
 			'phone',
-			'groupname',
+			//'groupname',
 			'created',
 			'bank',
 			'account_number',
