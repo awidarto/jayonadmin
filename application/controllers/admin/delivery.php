@@ -1732,6 +1732,7 @@ class Delivery extends Application
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
+				colorizetype($key['delivery_type']),
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
@@ -1769,6 +1770,7 @@ class Delivery extends Application
 			'Delivery Time',
 			'Delivery ID',
 			//'Application ID',
+			'Type',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
@@ -1785,9 +1787,7 @@ class Delivery extends Application
 		$this->table->set_footing(
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
 			);
 
