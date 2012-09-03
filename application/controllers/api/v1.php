@@ -62,6 +62,17 @@ class V1 extends Application
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);
 					$dataset['created'] = date('Y-m-d H:i:s',time());
+
+					/*
+					$dataset['province'] = 		 	 	 	 	 	 	 
+					$dataset['mobile']		 	 	 	 	 	 	 
+					*/
+					$dataset['street'] = $in->shipping_address;	 	 	 	 	 	 
+					$dataset['district'] = $in->buyerdeliveryzone; 
+					$dataset['city'] = $in->buyerdeliverycity;	 	 	 	 	 	 	 
+					$dataset['country']	= 'Indonesia';	 	 	 	 	 	 	 
+					$dataset['zip'] = $in->zip;	
+					
 					$buyer_id = $this->register_buyer($dataset);
 					$is_new = true;
 				}
