@@ -172,7 +172,7 @@ class Location extends Application
 				->select('identifier,timestamp,latitude as lat,longitude as lng')
 				->where('identifier',$d->identifier)
 				->like('timestamp',date('Y-m-d',time()),'after')				
-				->limit(10,0)
+				//->limit(10,0)
 				->order_by('timestamp','desc')
 				->get($this->config->item('location_log_table'));
 	
