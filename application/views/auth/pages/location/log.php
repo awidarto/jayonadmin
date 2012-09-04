@@ -188,7 +188,7 @@
 		function refresh(){
 			refreshMap();
 			oTable.fnDraw();
-			setTimeout(refresh, 60000);
+			setTimeout(refresh, <?php print get_option('map_refresh_rate');?> * 1000);
 		}
 
 		refresh();		
