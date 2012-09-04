@@ -155,7 +155,7 @@ class Location extends Application
 		$this->breadcrumb->add_crumb('Location','admin/location');
 		$this->breadcrumb->add_crumb('Location Log','admin/location/log');
 
-
+		/*
 		$devices = $this->db->distinct()
 			->select('identifier')
 			->get($this->config->item('location_log_table'))
@@ -210,6 +210,8 @@ class Location extends Application
 		//print_r($paths);
 
 		$page['locdata'] = json_encode($locations);
+
+		*/
 
 		$this->table->set_heading(
 			'Timestamp',

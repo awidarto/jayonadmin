@@ -3,10 +3,88 @@
 
 <script>
 	var asInitVals = new Array();
-	var locdata = <?php print $locdata;?>;
+	//var locdata = <?php //print $locdata;?>;
 	
 	$(document).ready(function() {
-	    
+		$('#map').gmap3({
+			action:'init',
+			options:{
+			      center:[-6.17742,106.828308],
+			      zoom: 11
+			    }
+		});
+
+		function refreshMap(){
+
+			$.post('<?php print site_url('ajax/getmapmarker');?>',null, 
+				function(data) {
+					if(data.result == 'ok'){
+						$('#map').gmap3({
+							action:'clear'
+						});
+
+						$.each(data.paths,function(){
+							$('#map').gmap3({
+								action:'addPolyline',
+								options:{
+									strokeColor: this.color,
+									strokeOpacity: 1.0,
+									strokeWeight: 2
+								},
+								path: this.poly
+							});
+
+						});
+
+						$.each(data.locations,function(){
+
+							$('#map').gmap3({
+								action:'addMarker',
+								latLng:[this.data.lat, this.data.lng],
+								marker: {
+									options: {
+										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
+									},
+									data:{identifier:this.data.identifier,timestamp:this.data.timestamp},
+									events:{
+										mouseover: function(marker,event,data){
+											console.log(data);
+											$(this).gmap3(
+												{action:'clear',name:'overlay'},
+												{action:'addOverlay',
+													latLng:marker.getPosition(),
+													content:
+														'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
+															'<div class="bg"></div>' +
+															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '</div>' +
+														'</div>',
+													offset: {
+														x:-46,
+														y:-73
+													}
+												}
+											);
+										},
+										mouseout: function(){
+											$(this).gmap3({action:'clear', name:'overlay'});
+										}
+									}
+								}								
+							});
+
+						});
+					}
+				},'json');
+
+		}
+
+
+
+
+
+
+
+	    /*
 		$('#map').gmap3({
 			action:'init',
 			options:{
@@ -14,7 +92,7 @@
 			      zoom: 11
 			    }
 			},
-			<?php print $pathcmd;?>
+			<?php //print $pathcmd;?>
 			,
 			{ action:'addMarkers',
 				radius:100,
@@ -47,7 +125,7 @@
 					}
 				}
 			}
-		);
+			*/
 		
 	    var oTable = $('.dataTable').dataTable(
 			{
@@ -105,6 +183,17 @@
 				this.value = asInitVals[$('tfoot input').index(this)];
 			}
 		} );
+
+		//Refresh page every x second ( in milis)
+		function refresh(){
+			refreshMap();
+			oTable.fnDraw();
+			setTimeout(refresh, 60000);
+		}
+
+		refresh();		
+
+
 
 		$( '#assign_courier' ).autocomplete({
 			source: '<?php print site_url('ajax/getcourier')?>',
@@ -189,14 +278,6 @@
 			}
 		});
 		
-		/*
-		function refresh(){
-			oTable.fnDraw();
-			setTimeout(refresh, 10000);
-		}
-
-		refresh();
-		*/
 	} );
 	
 	

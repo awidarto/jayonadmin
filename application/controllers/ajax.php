@@ -112,6 +112,55 @@ class Ajax extends Application
 
 	}
 
+	public function getmapmarker(){
+
+		$devices = $this->db->distinct()
+			->select('identifier')
+			->get($this->config->item('location_log_table'))
+			->result();
+
+		$locations = array();
+
+		$paths = array();
+
+		foreach($devices as $d){
+
+			$mapcolor = get_device_color($d->identifier);
+
+			$loc = $this->db
+				->select('identifier,timestamp,latitude as lat,longitude as lng')
+				->where('identifier',$d->identifier)
+				->like('timestamp',date('Y-m-d',time()),'after')				
+				//->like('timestamp','2012-09-03','after')				
+				//->limit(10,0)
+				->order_by('timestamp','desc')
+				->get($this->config->item('location_log_table'));
+	
+			if($loc->num_rows() > 0){
+				$path = array();
+				$loc = $loc->result();
+				foreach($loc as $l){
+					$locations[] = array(
+						'data'=>array(
+								'lat'=>(double)$l->lat,
+								'lng'=>(double)$l->lng,
+								'timestamp'=>$l->timestamp,
+								'identifier'=>$l->identifier
+							)
+						);
+					$path[] = array(
+							(double)$l->lat,
+							(double)$l->lng
+						);
+				}
+				$paths[]=array('color'=>$mapcolor,'poly'=>$path);
+			}
+		}
+
+		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths));
+
+	}
+
 	public function getappselect(){
 		$merchant_id = $this->input->post('merchant_id');
 		$delivery_type = $this->input->post('delivery_type');
