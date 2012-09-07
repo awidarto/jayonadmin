@@ -118,7 +118,7 @@ class Ajax extends CI_Controller
 		$timestamp = $this->input->post('timestamp');
 
 		$device_name = ($device_name == 'Search device')?'':$device_name;
-		$timestamp = ($timestamp == 'Search time')?'':$timestamp;
+		$timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
 
 		$this->db->distinct();
 		$this->db->select('identifier');
