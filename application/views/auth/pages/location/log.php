@@ -15,8 +15,10 @@
 		});
 
 		function refreshMap(){
+			var currtime = new Date();
+			console.log(currtime.getTime());
 
-			$.post('<?php print site_url('ajax/getmapmarker');?>',null, 
+			$.post('<?php print site_url('ajax/getmapmarker');?>/' + currtime.getTime() ,null, 
 				function(data) {
 					if(data.result == 'ok'){
 						$('#map').gmap3({
