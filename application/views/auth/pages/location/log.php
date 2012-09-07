@@ -164,6 +164,7 @@
 		$('tfoot input').keyup( function () {
 			/* Filter on the column (the index) of this element */
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+			refreshMap();
 		} );
 
 		/*
@@ -223,6 +224,7 @@
 		
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+			refreshMap();
 		});
 
 		/*Delivery process mandatory*/

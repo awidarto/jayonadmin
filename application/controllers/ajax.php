@@ -1,6 +1,6 @@
 <?php
 
-class Ajax extends Application
+class Ajax extends CI_Controller
 {
 	public function __construct()
 	{
@@ -114,9 +114,20 @@ class Ajax extends Application
 
 	public function getmapmarker(){
 
-		$devices = $this->db->distinct()
-			->select('identifier')
-			->get($this->config->item('location_log_table'))
+		$device_name = $this->input->post('device_identifier');
+		$timestamp = $this->input->post('timestamp');
+
+		$device_name = ($device_name == 'Search device')?'':$device_name;
+		$timestamp = ($timestamp == 'Search time')?'':$timestamp;
+
+		$this->db->distinct();
+		$this->db->select('identifier');
+
+		if($device_name != ''){
+			$this->db->like('identifier',$device_name);
+		}
+
+		$devices = $this->db->get($this->config->item('location_log_table'))
 			->result();
 
 		$locations = array();
@@ -127,12 +138,18 @@ class Ajax extends Application
 
 			$mapcolor = get_device_color($d->identifier);
 
-			$loc = $this->db
+			$this->db
 				->select('identifier,timestamp,latitude as lat,longitude as lng')
-				->where('identifier',$d->identifier)
-				->like('timestamp',date('Y-m-d',time()),'after')				
+				->where('identifier',$d->identifier);
+
+			if($timestamp == ''){
+				$this->db->like('timestamp',date('Y-m-d',time()),'after');
+			}else{
+				$this->db->like('timestamp',$timestamp,'after');	
+			}
 				//->like('timestamp','2012-09-03','after')				
 				//->limit(10,0)
+			$loc = $this->db
 				->order_by('timestamp','desc')
 				->get($this->config->item('location_log_table'));
 	
