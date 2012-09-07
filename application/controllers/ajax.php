@@ -1,6 +1,6 @@
 <?php
 
-class Ajax extends CI_Controller
+class Ajax extends Application
 {
 	public function __construct()
 	{
