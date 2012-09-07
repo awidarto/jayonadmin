@@ -16,9 +16,13 @@
 
 		function refreshMap(){
 			var currtime = new Date();
-			console.log(currtime.getTime());
+			//console.log(currtime.getTime());
 
-			$.post('<?php print site_url('ajax/getmapmarker');?>/' + currtime.getTime() ,null, 
+			$.post('<?php print site_url('ajax/getmapmarker');?>/' + currtime.getTime() ,
+				{
+					'device_identifier':$('#search_device').val(),
+					'timestamp':$('#search_deliverytime').val()
+				}, 
 				function(data) {
 					if(data.result == 'ok'){
 						$('#map').gmap3({
@@ -50,7 +54,7 @@
 									data:{identifier:this.data.identifier,timestamp:this.data.timestamp},
 									events:{
 										mouseover: function(marker,event,data){
-											console.log(data);
+											//console.log(data);
 											$(this).gmap3(
 												{action:'clear',name:'overlay'},
 												{action:'addOverlay',
