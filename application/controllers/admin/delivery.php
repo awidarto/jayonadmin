@@ -1472,6 +1472,7 @@ class Delivery extends Application
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 			$reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
+			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -1495,7 +1496,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$printslip.' '.$reassign.' '.$changestatus
+				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
 
 			$bardate = $key['assignment_date'];
@@ -1631,7 +1632,7 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
-
+			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 			$thumbnail = get_thumbnail($key['delivery_id']);
 
 			$aadata[] = array(
@@ -1650,7 +1651,7 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip
+				$printslip.' '.$viewlog
 			);
 		}
 

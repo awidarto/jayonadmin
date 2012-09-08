@@ -135,7 +135,7 @@ class Log extends Application
 			'<input type="text" name="search_key" id="search_courier" value="Search API Key" class="search_init" />',
 			'<input type="text" name="search_function" id="search_function" value="Search Function" class="search_init" />',
 			'<input type="text" name="search_params" id="search_params" value="Search params" class="search_init" />',
-			'<input type="text" name="search_result" id="search_resultr" value="Search result" class="search_init" />'
+			'<input type="text" name="search_result" id="search_result" value="Search result" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '';
@@ -265,6 +265,56 @@ class Log extends Application
 		);
 
 		print json_encode($result);
+	}
+
+	public function deliverylog($delivery_id){
+		$this->table->set_heading(
+			'Timestamp',
+			'Report Timestamp',
+			'Sync ID',
+			'Delivery ID',
+			'Device ID',
+			'Courier ID',
+			'Actor',
+			'Actor ID',
+			'Latitude',
+			'Longitude',
+			'Status',
+			'API Event',
+			'Delivery Note',
+			'Req By',
+			'Req Name',
+			'Req Note'
+		); // Setting headings for the table
+
+		$data = $this->db
+			->where('delivery_id',$delivery_id)
+			->order_by('timestamp','desc')
+			->get($this->config->item('delivery_log_table'));
+
+		foreach($data->result_array() as $key){
+			$this->table->add_row(
+				$key['timestamp'],
+				$key['report_timestamp'],
+				$key['sync_id'],
+				$key['delivery_id'],
+				$key['device_id'],
+				$key['courier_id'],
+				$key['actor_type'],
+				$key['actor_id'],
+				$key['latitude'],
+				$key['longitude'],
+				$key['status'],
+				$key['api_event'],
+				$key['notes'],
+				$key['req_by'],
+				$key['req_name'],
+				$key['req_note']
+			);
+		}
+
+		$this->load->view('print/deliverylog',null); // Load the view
+
 	}
 
 	public function outbox()

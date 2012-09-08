@@ -584,7 +584,8 @@ class V1 extends Application
 							'actor_id'=>$dev->id,
 							'latitude'=>$val->latitude,
 							'longitude'=>$val->longitude,
-							'status'=>'sync_report',
+							'status'=>$val->status,
+							'api_event'=>'sync_report',
 							'notes'=>$val->delivery_note,
 							'sync_id'=>$val->sync_id
 						);
