@@ -9,6 +9,15 @@ function get_delivery_id($sequence,$merchant_id){
 	return $delivery_id;
 }
 
+function get_devices(){
+	$CI =& get_instance();
+
+	$identifiers = $CI->db->select('identifier')
+		->get($CI->config->item('jayon_devices_table'))->result();
+
+	return $identifiers;
+}
+
 function get_device_color($identifier){
 	$CI =& get_instance();
 

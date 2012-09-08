@@ -227,6 +227,11 @@
 			refreshMap();
 		});
 
+		$('#search_device').change(function(){
+			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+			refreshMap();
+		});
+
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });

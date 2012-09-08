@@ -1849,6 +1849,7 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$aadata[] = array(
 				$num,
@@ -1866,7 +1867,7 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip
+				$printslip.' '.$viewlog
 			);
 		}
 
@@ -2002,6 +2003,7 @@ class Delivery extends Application
 			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
 			$proceed = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$aadata[] = array(
 				$num,
@@ -2018,7 +2020,7 @@ class Delivery extends Application
 				get_thumbnail($key['delivery_id']),
 				$key['phone'],
 				colorizestatus($key['status']),
-				$printslip.' '.$proceed.' '.$cancel
+				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog
 				//$key['reschedule_ref'],
 				//$key['revoke_ref']
 			);
@@ -2190,6 +2192,7 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$aadata[] = array(
 				$num,
@@ -2209,7 +2212,7 @@ class Delivery extends Application
 				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip
+				$printslip.' '.$viewlog
 			);
 		}
 

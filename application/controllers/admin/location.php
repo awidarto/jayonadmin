@@ -222,11 +222,22 @@ class Location extends Application
 			'Status'
 			); // Setting headings for the table
 
+		$devs = array();
+		$devs['Search device'] = '-';
+		foreach (get_devices() as $dev) {
+			$devs[$dev->identifier] = $dev->identifier;
+		}
+
+		$dev_search = form_dropdown('search_device',$devs,'Search device','id="search_device"');
+
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
-			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+			$dev_search,
 			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />'
 			);
+
+			//'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+
 
 		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/location/ajaxlog';
