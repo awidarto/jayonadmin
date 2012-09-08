@@ -232,11 +232,10 @@ class Location extends Application
 
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
-			$dev_search,
+			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />'
 			);
 
-			//'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 
 
 		$page['sortdisable'] = '';
