@@ -239,7 +239,7 @@ class Location extends Application
 
 
 		$page['sortdisable'] = '';
-		$page['ajaxurl'] = 'admin/location/ajaxlog';
+		$page['ajaxurl'] = 'ajaxpos/ajaxlog';
 		$page['page_title'] = 'Location Log';
 		$this->ag_auth->view('location/log',$page); // Load the view
 

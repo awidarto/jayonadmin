@@ -18,7 +18,7 @@
 			var currtime = new Date();
 			//console.log(currtime.getTime());
 
-			$.post('<?php print site_url('ajax/getmapmarker');?>/' + currtime.getTime() ,
+			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
 				{
 					'device_identifier':$('#search_device').val(),
 					'timestamp':$('#search_deliverytime').val()
