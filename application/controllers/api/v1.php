@@ -422,6 +422,19 @@ class V1 extends Application
 					$result = json_encode(array('status'=>'OK:STATPOSTED','timestamp'=>now()));
 					print $result;
 
+					$locset['timestamp'] = date('Y-m-d H:i:s',strtotime($in->capture_time));
+					$locset['device_id'] = $dev->id;
+					$locset['identifier'] = $dev->identifier;
+					$locset['courier_id'] = '';
+					$locset['latitude'] = $in->lat;
+					$locset['longitude'] = $in->lon;
+					$locset['status'] = $in->status;
+					//$dataset['notes'] = $in->notes;
+
+
+					$this->db->insert($this->config->item('location_log_table'),$locset);
+
+
 					/* send notifications on select status */
 
 					$sendable = array(
