@@ -43,12 +43,17 @@
 						});
 
 						$.each(data.locations,function(){
-
+							if(this.data.status == 'loc_update'){
+								icon =  new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_red.png');
+							}else{
+								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+							}
 							$('#map').gmap3({
 								action:'addMarker',
 								latLng:[this.data.lat, this.data.lng],
 								marker: {
 									options: {
+										icon:icon
 										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
 									},
 									data:{identifier:this.data.identifier,timestamp:this.data.timestamp},

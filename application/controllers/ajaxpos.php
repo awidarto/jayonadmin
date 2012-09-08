@@ -33,7 +33,7 @@ class Ajaxpos extends CI_Controller
 			$mapcolor = get_device_color($d->identifier);
 
 			$this->db
-				->select('identifier,timestamp,latitude as lat,longitude as lng')
+				->select('identifier,timestamp,latitude as lat,longitude as lng,status')
 				->where('identifier',$d->identifier);
 
 			if($timestamp == ''){
@@ -56,7 +56,8 @@ class Ajaxpos extends CI_Controller
 								'lat'=>(double)$l->lat,
 								'lng'=>(double)$l->lng,
 								'timestamp'=>$l->timestamp,
-								'identifier'=>$l->identifier
+								'identifier'=>$l->identifier,
+								'status'=>$l->status
 							)
 						);
 					$path[] = array(
