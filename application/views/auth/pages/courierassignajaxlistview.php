@@ -3,6 +3,7 @@
 	var reassign_id = '';
 	
 	$(document).ready(function() {
+
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -66,8 +67,7 @@
 			minLength: 2,
 			select:function(event,ui){
 				$('#assign_courier_id').val(ui.item.id);
-				$('#assign_courier_id_txt').html(ui.item.id);
-				
+				$('#assign_courier_id_txt').html(ui.item.id);				
 			}
 		});
 
@@ -160,14 +160,29 @@
 						var device_id = $("#assign_device").val();
 						var courier_id = $("#assign_courier_id").val();
 						var assignment_date = $("#assign_date").val();
+						var id_class = "."+assignment_date+"-"+device_id;
+
+
+						//console.log($(id_class).html());
+
+						var delivery_ids = new Array();
+
+						$(id_class).each(function(){
+							var d = $(this).html();
+							delivery_ids.push(d);
+						});
+
+						//console.log(delivery_ids);
 						//alert(device_id);
-						$.post('<?php print site_url('admin/delivery/ajaxdispatch');?>',{ assignment_device_id: device_id,assignment_courier_id: courier_id,assignment_date: assignment_date }, function(data) {
+						
+						$.post('<?php print site_url('admin/delivery/ajaxdispatch');?>',{ assignment_device_id: device_id,assignment_courier_id: courier_id,assignment_date: assignment_date,delivery_id: delivery_ids }, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
 								oTable.fnDraw();
 								$('#assign_dialog').dialog( "close" );
 							}
 						},'json');
+
 					}
 				},
 				Cancel: function() {

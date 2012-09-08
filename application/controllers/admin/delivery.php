@@ -886,9 +886,40 @@ class Delivery extends Application
 		if(is_array($delivery_id)){
 			foreach($delivery_id as $d){
 				$this->do_date_assignment($d,$assignment_date);
+				$data = array(
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
+						'delivery_id'=>$d,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_admin_dated'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
 			}
 		}else{
 			$this->do_date_assignment($delivery_id,$assignment_date);
+				$data = array(
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
+						'delivery_id'=>$delivery_id,
+						'device_id'=>'',
+						'courier_id'=>'',
+						'actor_type'=>'AD',
+						'actor_id'=>$this->session->userdata('userid'),
+						'latitude'=>'',
+						'longitude'=>'',
+						'status'=>$this->config->item('trans_status_admin_dated'),
+						'notes'=>''
+					);
+
+				delivery_log($data);
+
 		}
 
 		print json_encode(array('result'=>'ok'));
@@ -899,13 +930,65 @@ class Delivery extends Application
 		$assignment_device_id = $this->input->post('assignment_device_id');
 		$assignment_courier_id = $this->input->post('assignment_courier_id');
 		$assignment_date = $this->input->post('assignment_date');
+		$delivery_id = $this->input->post('delivery_id');
 
-		$this->db
-			->where('device_id',$assignment_device_id)
-			->where('assignment_date',$assignment_date)
-			->update($this->config->item('assigned_delivery_table'),
-				array('status'=>$this->config->item('trans_status_admin_courierassigned'),
-						'courier_id'=>$assignment_courier_id));
+		$affect = 0;
+
+		if(is_array($delivery_id)){
+			foreach ($delivery_id as $d) {
+				$this->db
+					->where('device_id',$assignment_device_id)
+					->where('assignment_date',$assignment_date)
+					->where('delivery_id',$d)
+					->update($this->config->item('assigned_delivery_table'),
+						array('status'=>$this->config->item('trans_status_admin_courierassigned'),
+								'courier_id'=>$assignment_courier_id));
+				$affect += $this->db->affected_rows();
+
+				$data = array(
+					'timestamp'=>date('Y-m-d H:i:s',time()),
+					'report_timestamp'=>date('Y-m-d H:i:s',time()),
+					'delivery_id'=>$d,
+					'device_id'=>$assignment_device_id,
+					'courier_id'=>$assignment_courier_id,
+					'actor_type'=>'AD',
+					'actor_id'=>$this->session->userdata('userid'),
+					'latitude'=>'',
+					'longitude'=>'',
+					'status'=>$this->config->item('trans_status_admin_courierassigned'),
+					'api_event'=>$this->config->item('trans_status_admin_dispatched'),
+					'notes'=>''
+				);
+
+				delivery_log($data);
+			}
+		}else{
+			$this->db
+				->where('device_id',$assignment_device_id)
+				->where('assignment_date',$assignment_date)
+				->where('delivery_id',$delivery_id)
+				->update($this->config->item('assigned_delivery_table'),
+					array('status'=>$this->config->item('trans_status_admin_courierassigned'),
+							'courier_id'=>$assignment_courier_id));
+			$affect += $this->db->affected_rows();			
+
+			$data = array(
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
+				'delivery_id'=>$delivery_id,
+				'device_id'=>$assignment_device_id,
+				'courier_id'=>$assignment_courier_id,
+				'actor_type'=>'AD',
+				'actor_id'=>$this->session->userdata('userid'),
+				'latitude'=>'',
+				'longitude'=>'',
+				'status'=>$this->config->item('trans_status_admin_courierassigned'),
+				'api_event'=>$this->config->item('trans_status_admin_dispatched'),
+				'notes'=>''
+			);
+
+			delivery_log($data);
+		}
 
 		$this->db
 			->where('device_id',$assignment_device_id)
@@ -921,23 +1004,7 @@ class Delivery extends Application
 		$this->db
 			->insert($this->config->item('device_assignment_table'),$assignment);
 
-					$data = array(
-						'timestamp'=>date('Y-m-d H:i:s',time()),
-						'report_timestamp'=>date('Y-m-d H:i:s',time()),
-						'delivery_id'=>'',
-						'device_id'=>$assignment_device_id,
-						'courier_id'=>$assignment_courier_id,
-						'actor_type'=>'AD',
-						'actor_id'=>$this->session->userdata('userid'),
-						'latitude'=>'',
-						'longitude'=>'',
-						'status'=>$this->config->item('trans_status_admin_courierassigned'),
-						'notes'=>''
-					);
-
-				delivery_log($data);
-
-		print json_encode(array('result'=>'ok'));
+		print json_encode(array('result'=>'ok','data'=>$affect));
 	}
 
 	public function ajaxassignzone(){
@@ -1088,7 +1155,7 @@ class Delivery extends Application
 				$devicefield,
 				get_slot_range($key['assignment_timeslot']),
 				//$key['delivery_id'],
-				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
 				$app['application_name'],
@@ -2566,7 +2633,8 @@ class Delivery extends Application
 					'latitude'=>'',
 					'longitude'=>'',
 					'status'=>$this->input->post('new_status'),
-					'notes'=>''
+					'api_event'=>'admin_change_status',
+					'notes'=>$order_exist
 				);
 
 			delivery_log($data);
