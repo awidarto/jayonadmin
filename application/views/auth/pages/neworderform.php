@@ -529,7 +529,19 @@
         });
 
         $( '#buyer_name' ).autocomplete({
-            source: '<?php print site_url('ajax/getbuyer')?>',
+            /*source: '<?php print site_url('ajax/getbuyer')?>',*/
+            source:function(request,response){
+                var request_data = {
+                    term: request.term,
+                    merchant_id: $('#merchant_id').val()
+                };
+
+                var url = '<?php print site_url('ajax/getbuyer')?>';
+
+                $.post(url, request_data, function (data, status, xhr) {
+                     response(data);
+                },'json');
+            },
             method: 'post',
             minLength: 2,
             select:function(event,ui){

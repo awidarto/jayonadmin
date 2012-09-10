@@ -45,7 +45,9 @@ class Ajax extends Application
 
 	public function getbuyer(){
 		$q = $this->input->get('term');
-		$merchants = ajax_find_buyer($q,'fullname','id');
+		$merchant_id = $this->input->post('merchant_id');
+		$merchant_id = ($merchant_id == '')?null:$merchant_id;
+		$merchants = ajax_find_buyer($q,'fullname','id',$merchant_id);
 		print json_encode($merchants);
 	}
 

@@ -187,7 +187,30 @@ function ajax_find_merchants($zone,$col = 'fullname',$idcol = 'id'){
 	return $q->result_array();
 }
 
-function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id'){
+function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id',$merchant_id = null){
+	$CI =& get_instance();
+	$group_id = user_group_id('buyer');
+
+	$CI->db->like('members.fullname',$zone)
+		->or_like('members.merchantname',$zone)
+		->or_like('members.username',$zone)
+		->or_like('members.email',$zone)
+		->where('members.group_id',$group_id)
+		->distinct();
+
+	if(is_null($merchant_id)){
+		$CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email, concat_ws(\',\',street,district,province,city,country) as shipping, phone as phone',false);
+	}else{
+		$CI->db->select('members.'.$idcol.' as id ,members.'.$col.' as label, members.'.$col.' as value, m.merchant_id as merchant_id, members.email as email, concat_ws(\',\',street,district,province,city,country) as shipping, members.phone as phone',false);
+		$CI->db->join($CI->config->item('assigned_delivery_table').' as m','members.id = m.buyer_id','left');
+		$CI->db->where('merchant_id',$merchant_id);
+	}
+
+	$q = $CI->db->get('members');
+	return $q->result_array();
+}
+
+function old_ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id',$merchant_id = null){
 	$CI =& get_instance();
 	$group_id = user_group_id('buyer');
 	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email, concat_ws(\',\',street,district,province,city,country) as shipping, phone as phone',false)
