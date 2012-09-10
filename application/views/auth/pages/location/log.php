@@ -59,7 +59,7 @@
 									data:{identifier:this.data.identifier,timestamp:this.data.timestamp},
 									events:{
 										mouseover: function(marker,event,data){
-											//console.log(data);
+											console.log(data);
 											$(this).gmap3(
 												{action:'clear',name:'overlay'},
 												{action:'addOverlay',
