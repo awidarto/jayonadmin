@@ -67,7 +67,7 @@
 													content:
 														'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
 															'<div class="bg"></div>' +
-															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '</div>' +
+															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '<br />' + data.status + '</div>' +
 														'</div>',
 													offset: {
 														x:-46,
