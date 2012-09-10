@@ -209,6 +209,66 @@ class Admin extends Application
 		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
 		return $result;
 	}	
+
+	public function mergeaddress($mode = 'dry'){
+
+		set_time_limit(0);
+
+		$this->db->distinct();
+		$this->db->select('buyer_id,phone,buyer_name as fullname,shipping_address as street,buyerdeliveryzone as district,buyerdeliverycity as city,shipping_zip as zip');
+		$this->db->from($this->config->item('incoming_delivery_table'));
+
+		$dx = $this->db->get()->result();
+
+		//street	district	province	city	country	zip
+
+		foreach ($dx as $d) {
+			//$data['buyer_id']	=
+
+            //$data['fullname'] 	= $d->fullname;
+
+            print_r($d);
+            print "\r\n_____________________________\r\n";
+
+			$by = $this->db
+					->select('phone,street,district,city,zip')
+	            	->from($this->config->item('jayon_members_table'))
+	            	->where('id',$d->buyer_id)
+	            	->get()->row();
+
+
+        	print_r($by);
+            print "\r\n_____________________________\r\n";
+
+            
+            $data['phone']		= (isset($by->phone) && ($by->phone == '' || is_null($by->phone)))?$d->phone:$by->phone;
+            $data['street'] 	= (isset($by->street) && ($by->street == '' || is_null($by->street)))?$d->street:$by->street;
+            $data['district'] 	= (isset($by->district) && ($by->district == '' || is_null($by->district)))?$d->district:$by->district;
+            $data['city'] 		= (isset($by->city) && ($by->city == '' || is_null($by->city)))?$d->city:$by->city;
+            $data['zip'] 		= (isset($by->zip) && ($by->zip == '' || is_null($by->zip)))?$d->zip:$by->zip;
+			
+            /*
+            $data['phone']		= ($by->phone == '' || is_null($by->phone))?$d->phone:$by->phone;
+            $data['street'] 	= ($by->street == '' || is_null($by->street))?$d->street:$by->street;
+            $data['district'] 	= ($by->district == '' || is_null($by->district))?$d->district:$by->district;
+            $data['city'] 		= ($by->city == '' || is_null($by->city))?$d->city:$by->city;
+            $data['zip'] 		= ($by->zip == '' || is_null($by->zip))?$d->zip:$by->zip;
+			*/
+			
+            print_r($data);
+            print "\r\n==============================\r\n";
+
+            if($mode == 'run'){
+	            $this->db
+	            	->where('id',$d->buyer_id)
+	            	->update($this->config->item('jayon_members_table'),$data);
+            }
+
+		}
+
+
+
+	}
 }
 
 /* End of file: dashboard.php */
