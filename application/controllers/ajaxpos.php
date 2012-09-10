@@ -54,7 +54,7 @@ class Ajaxpos extends CI_Controller
 					$lat = (double)$l->lat;
 					$lng = (double)$l->lng;
 
-					if($lat != 0 && $lon != 0){
+					if($lat != 0 && $lng != 0){
 						$locations[] = array(
 							'data'=>array(
 									'lat'=>$lat,
