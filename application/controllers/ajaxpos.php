@@ -51,19 +51,25 @@ class Ajaxpos extends CI_Controller
 				$path = array();
 				$loc = $loc->result();
 				foreach($loc as $l){
-					$locations[] = array(
-						'data'=>array(
-								'lat'=>(double)$l->lat,
-								'lng'=>(double)$l->lng,
-								'timestamp'=>$l->timestamp,
-								'identifier'=>$l->identifier,
-								'status'=>$l->status
-							)
-						);
-					$path[] = array(
-							(double)$l->lat,
-							(double)$l->lng
-						);
+					$lat = (double)$l->lat;
+					$lng = (double)$l->lng;
+
+					if($lat > 0 && $lon > 00){
+						$locations[] = array(
+							'data'=>array(
+									'lat'=>$lat,
+									'lng'=>$lng,
+									'timestamp'=>$l->timestamp,
+									'identifier'=>$l->identifier,
+									'status'=>$l->status
+								)
+							);
+						$path[] = array(
+								$lat,
+								$lng
+							);
+
+					}
 				}
 				$paths[]=array('color'=>$mapcolor,'poly'=>$path);
 			}
