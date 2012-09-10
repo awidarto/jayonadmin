@@ -56,7 +56,7 @@
 										//icon:icon
 										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
 									},
-									data:{identifier:this.data.identifier,timestamp:this.data.timestamp},
+									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},
 									events:{
 										mouseover: function(marker,event,data){
 											console.log(data);
