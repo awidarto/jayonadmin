@@ -48,14 +48,16 @@ class Util extends CI_Controller{
 
 	            print "\r\n______________merged______________\r\n";
 	            print_r($data);
-	            print "\r\n==============================\r\n";
 
 	            if($mode == 'run'){
 		            $this->db
 		            	->where('id',$d->buyer_id)
 		            	->update($this->config->item('jayon_members_table'),$data);
+		            print "\r\n______________merging______________\r\n";
+		            $this->db->affected_rows();
 	            }
 
+	            print "\r\n==============================\r\n";
 
             }
 
