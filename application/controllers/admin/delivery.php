@@ -1850,6 +1850,7 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$aadata[] = array(
 				$num,
@@ -1867,7 +1868,7 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip.' '.$viewlog
+				$printslip.' '.$viewlog.' '.$changestatus
 			);
 		}
 
