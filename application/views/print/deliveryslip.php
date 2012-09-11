@@ -206,10 +206,18 @@
 							<tr>
 								<td colspan="2"><strong>Merchant Info</strong></td>
 							</tr>
-
+							<tr>
+								<td>Merchant Name<hr /><span class="fine">Nama Penjual</span></td>
+								<td>
+									<?php print $main_info['merchant'].'</span>';?>
+								</td>
+							</tr>
 							<tr>
 								<td>Store Name<hr /><span class="fine">Nama Toko</span></td>
-								<td><?php print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_domain'].'</span>';?></td>
+								<td>
+									<?php //print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_name'].'</span>';?>
+									<?php print $main_info['app_name'].'</span>';?>
+								</td>
 							</tr>
 							<tr>
 								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
