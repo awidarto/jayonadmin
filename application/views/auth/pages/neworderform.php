@@ -924,6 +924,11 @@
                 //return [false,'Direction Unspecified'];
             }
 
+            if( $('#show_merchant').is(':checked') == false && $('#show_shop').is(':checked') == false ){
+                validisplay += 'One or both Merchant name and Store name must be shown\r\n';
+                //return [false,'Max Length Exceeded'];
+            }
+
             var timeslot = $('#buyerdeliverytime').val();
 
             var tslot = slotmax[timeslot];
