@@ -199,6 +199,10 @@
             vertical-align: middle;
 
         }
+
+        .fine{
+            font-size: 10px;
+        }          
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -260,6 +264,53 @@
                 beforeShowDay:getBlocking
             });
 
+            $('#show_merchant').change(function(){
+
+                var currentsw = $('#show_merchant').is(':checked');
+                var id = $('#show_merchant').val();
+
+                if(currentsw == true){
+                    nextsw = 'On';
+                }else{
+                    nextsw = 'Off';
+                }
+
+                var answer = confirm("Switch merchant name display " + nextsw + " ?");
+                if (answer){
+                    $.post('<?php print site_url('ajax/toggle');?>',{'id':id,'switchto':nextsw,'field':'show_merchant'}, function(data) {
+                        if(data.result == 'ok'){
+
+                        }
+                    },'json');
+                }else{
+                    alert("Switch cancelled");
+                }
+
+            });
+
+            $('#show_shop').change(function(){
+
+                var currentsw = $('#show_shop').is(':checked');
+                var id = $('#show_shop').val();
+
+                if(currentsw == true){
+                    nextsw = 'On';
+                }else{
+                    nextsw = 'Off';
+                }
+
+                var answer = confirm("Switch store name display " + nextsw + " ?");
+                if (answer){
+                    $.post('<?php print site_url('ajax/toggle');?>',{'id':id,'switchto':nextsw,'field':'show_shop'}, function(data) {
+                        if(data.result == 'ok'){
+
+                        }
+                    },'json');
+                }else{
+                    alert("Switch cancelled");
+                }
+
+            });
 
             function getBlocking(d){
                 /*
@@ -453,8 +504,22 @@
                             </tr>
 
                             <tr>
-                                <td>Online Store:</td>
-                                <td><?php print $main_info['merchant'];?></td>
+                                <td>
+                                    Merchant Name:<br />
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_merchant','id'=>'show_merchant','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_merchant'] ));?> Show in delivery slip</span>
+                                </td>
+                                <td>
+                                    <?php print $main_info['merchant'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Online Store:<br />
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_shop'] ));?> Show in delivery slip</span>                                    
+                                </td>
+                                <td>
+                                    <?php print $main_info['app_name'];?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Transaction ID:</td>

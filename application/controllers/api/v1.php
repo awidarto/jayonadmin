@@ -115,6 +115,14 @@ class V1 extends Application
 				$order['delivery_type'] = $in->delivery_type;				
 				$order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;				
 
+				if(isset($in->show_shop)){
+					$order['show_shop'] = $in->show_shop;	
+				}
+
+				if(isset($in->show_merchant)){
+					$order['show_merchant'] = $in->show_merchant;				
+				}
+
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
 				$sequence = $this->db->insert_id();
 

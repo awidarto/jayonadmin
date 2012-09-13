@@ -444,7 +444,9 @@ class Ajax extends Application
 			'height' => $this->input->post('height'),
 			'length' => $this->input->post('length'),
 			'weight' => $this->input->post('weight'),
-			'delivery_type' => $this->input->post('delivery_type')
+			'delivery_type' => $this->input->post('delivery_type'),
+			'show_merchant' => $this->input->post('show_merchant'),
+			'show_shop' => $this->input->post('show_shop')
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
@@ -460,6 +462,21 @@ class Ajax extends Application
 
 	}
 
+	public function toggle()
+	{
+		$field = $this->input->post('field');
+		$id = $this->input->post('id');
+		$setsw = $this->input->post('switchto');
+		$toggle = ($setsw == 'On')?1:0;
+		
+		$dataset[$field] = $toggle;
+
+		if($this->db->where('delivery_id',$id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+			print json_encode(array('result'=>'ok','state'=>$setsw));
+		}else{
+			print json_encode(array('result'=>'failed'));
+		}
+	}
 
 	public function saveweight(){
 		$delivery_id = $this->input->post('delivery_id');

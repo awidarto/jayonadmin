@@ -206,19 +206,23 @@
 							<tr>
 								<td colspan="2"><strong>Merchant Info</strong></td>
 							</tr>
-							<tr>
-								<td>Merchant Name<hr /><span class="fine">Nama Penjual</span></td>
-								<td>
-									<?php print $main_info['merchant'].'</span>';?>
-								</td>
-							</tr>
-							<tr>
-								<td>Store Name<hr /><span class="fine">Nama Toko</span></td>
-								<td>
-									<?php //print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_name'].'</span>';?>
-									<?php print $main_info['app_name'].'</span>';?>
-								</td>
-							</tr>
+							<?php if($main_info['show_merchant']):?>
+								<tr>
+									<td>Merchant Name<hr /><span class="fine">Nama Penjual</span></td>
+									<td>
+										<?php print $main_info['merchant'].'</span>';?>
+									</td>
+								</tr>
+							<?php endif;?>
+							<?php if($main_info['show_shop']):?>
+								<tr>
+									<td>Store Name<hr /><span class="fine">Nama Toko</span></td>
+									<td>
+										<?php //print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_name'].'</span>';?>
+										<?php print $main_info['app_name'].'</span>';?>
+									</td>
+								</tr>
+							<?php endif;?>
 							<tr>
 								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
 								<td><?php print $main_info['merchant_trans_id'];?></td>
