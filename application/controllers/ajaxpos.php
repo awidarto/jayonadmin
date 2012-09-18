@@ -28,6 +28,8 @@ class Ajaxpos extends CI_Controller
 
 		$paths = array();
 
+		$pathdummy = array();
+
 		foreach($devices as $d){
 
 			$mapcolor = get_device_color($d->identifier);
@@ -68,13 +70,19 @@ class Ajaxpos extends CI_Controller
 								$lat,
 								$lng
 							);
+						$pathdummy[] = array(
+								$l->identifier,
+								$l->timestamp,
+								$lat,
+								$lng
+							);
 					}
 				}
 				$paths[]=array('color'=>$mapcolor,'poly'=>$path);
 			}
 		}
 
-		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths));
+		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy));
 
 	}
 

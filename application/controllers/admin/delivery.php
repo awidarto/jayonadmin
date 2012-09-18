@@ -165,6 +165,7 @@ class Delivery extends Application
 				//$app['domain'],
 				$key['buyer'],
 				$key['shipping_address'],
+				$key['directions'],
 				$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
@@ -207,6 +208,7 @@ class Delivery extends Application
 			//'App Domain',
 			'Buyer',
 			'Shipping Address',
+			'Directions',
 			'Phone',
 			'Status',
 			'Reference',
@@ -369,6 +371,7 @@ class Delivery extends Application
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
 				//$app['application_name'],
 				//$app['domain'],
+				colorizetype($key['delivery_type']),
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
@@ -407,6 +410,7 @@ class Delivery extends Application
 			'Delivery ID',
 			//'App Name',
 			//'App Domain',
+			'Type',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
@@ -424,6 +428,7 @@ class Delivery extends Application
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			'',
 			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
 			);
 
@@ -1160,6 +1165,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'],
 				$app['application_name'],
 				//$app['domain'],
+				colorizetype($key['delivery_type']),
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
@@ -1200,6 +1206,7 @@ class Delivery extends Application
 			'Delivery City',
 			'Delivery Zone',
 			'App Name',
+			'Type',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
@@ -1662,17 +1669,22 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_4'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -1708,12 +1720,14 @@ class Delivery extends Application
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				colorizetype($key['delivery_type']),
+				$key['device'],
+				$key['courier'],
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
-				$key['courier'],
 				$key['shipping_address'],
 				$thumbnail,
+				$key['delivery_note'],
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
@@ -1746,12 +1760,14 @@ class Delivery extends Application
 			'Delivery ID',
 			//'Application ID',
 			'Type',
+			'Device',
+			'Courier',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
-			'Courier',
 			'Shipping Address',
-			'Receiver',
+			'Receiver Photo',
+			'Receiver / Note',
 			'Phone',
 			'Status',
 			'Reschedule Ref',
@@ -1764,9 +1780,10 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'',
+			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
+			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
-			'',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
@@ -1813,17 +1830,22 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_4'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -1858,12 +1880,14 @@ class Delivery extends Application
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				colorizetype($key['delivery_type']),
+				$key['device'],
+				$key['courier'],
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
-				$key['courier'],
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
+				$key['delivery_note'],
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
@@ -1896,12 +1920,14 @@ class Delivery extends Application
 			'Delivery ID',
 			//'Application ID',
 			'Type',
+			'Device',
+			'Courier',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
-			'Courier',
 			'Shipping Address',
 			'Addressee',
+			'Note',
 			'Phone',
 			'Status',
 			'Reschedule Ref',
@@ -1914,9 +1940,10 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'',
+			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
+			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
-			'',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
@@ -1965,19 +1992,25 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_4'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
 		if($search){
 			$this->db->and_();
 		}
@@ -2013,12 +2046,14 @@ class Delivery extends Application
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				colorizetype($key['delivery_type']),
+				$key['device'],
+				$key['courier'],
 				$key['buyer'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
-				$key['courier'],
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
+				$key['delivery_note'],
 				$key['phone'],
 				colorizestatus($key['status']),
 				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog
@@ -2049,12 +2084,14 @@ class Delivery extends Application
 			'Delivery ID',
 			//'Application ID',
 			'Type',
+			'Device',
+			'Courier',
 			'Buyer',
 			'Merchant',
 			'Merchant Trans ID',
-			'Courier',
 			'Shipping Address',
 			'Receiver',
+			'Note',
 			'Phone',
 			'Status',
 			'Action'
@@ -2068,9 +2105,10 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'',
+			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
+			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
-			'',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
@@ -2262,6 +2300,7 @@ class Delivery extends Application
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
 			'<input type="text" name="search_shipping" id="search_shipping" value="Search shipping address" class="search_init" />',
+			'',
 			'<input type="text" name="search_phone" id="search_phone" value="Search phone" class="search_init" />'
 			//form_button('do_archive','Archive Selection','id="doArchive"')
 			);
