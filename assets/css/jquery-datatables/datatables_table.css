@@ -70,6 +70,8 @@
 	float: left;
 }
 
+/* Pagination nested 
+
 .dataTables_paginate {
 	width: 44px;
 	* width: 50px;
@@ -77,7 +79,6 @@
 	text-align: right;
 }
 
-/* Pagination nested */
 .paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
 	height: 19px;
 	width: 19px;
@@ -101,7 +102,7 @@
 	background-image: url('../../images/forward_enabled.jpg');
 }
 
-
+*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display
@@ -292,7 +293,7 @@ td.details {
 }
 
 .paging_full_numbers {
-	width: 400px;
+	/*width: 400px;*/
 	height: 22px;
 	line-height: 22px;
 }

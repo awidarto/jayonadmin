@@ -2,7 +2,11 @@
 	$(document).ready(function() {
 	    $('.dataTable').dataTable(
 			{
-
+				"sPaginationType": "full_numbers",
+				"sDom": 'T<"clear">lfrtip',
+				"oTableTools": {
+					"sSwfPath": "<?php print base_url();?>assets/swf/copy_csv_xls_pdf.swf"
+				},
 			}
 		);
 	} );
