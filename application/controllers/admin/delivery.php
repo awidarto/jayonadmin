@@ -161,6 +161,9 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
+				$key['width'].' x '.$key['height'].' x '.$key['length'],
+				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				get_weight_range($key['weight'],$key['application_id']),				
 				$key['merchant'],
 				//$app['domain'],
 				$key['buyer'],
@@ -204,6 +207,9 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Type',
 			'App Name',
+			'W x H x L',
+			'Volume',
+			'Weight Range',
 			'Merchant',
 			//'App Domain',
 			'Buyer',
@@ -287,22 +293,22 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('assignment_date',$this->input->post('sSearch_0'));
+			$this->db->like($this->config->item('incoming_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('buyerdeliverycity',$this->input->post('sSearch_1'));
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_1'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_2'));
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_3'));
+			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
@@ -372,7 +378,10 @@ class Delivery extends Application
 				//$app['application_name'],
 				//$app['domain'],
 				colorizetype($key['delivery_type']),
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['width'].' x '.$key['height'].' x '.$key['length'],
+				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				get_weight_range($key['weight'],$key['application_id']),				
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
@@ -412,6 +421,9 @@ class Delivery extends Application
 			//'App Domain',
 			'Type',
 			'Buyer',
+			'W x H x L',
+			'Volume',
+			'Weight Range',
 			'Merchant',
 			'Merchant Trans ID',
 			'Shipping Address',
@@ -1166,7 +1178,10 @@ class Delivery extends Application
 				$app['application_name'],
 				//$app['domain'],
 				colorizetype($key['delivery_type']),
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['width'].' x '.$key['height'].' x '.$key['length'],
+				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				get_weight_range($key['weight'],$key['application_id']),				
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
@@ -1208,6 +1223,9 @@ class Delivery extends Application
 			'App Name',
 			'Type',
 			'Buyer',
+			'W x H x L',
+			'Volume',
+			'Weight Range',
 			'Merchant',
 			'Merchant Trans ID',
 			'Shipping Address',
@@ -1463,12 +1481,12 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_3'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
@@ -1478,22 +1496,26 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like('merchant_trans_id',$this->input->post('sSearch_5'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_6') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_6'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_7') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_7'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyer_name',$this->input->post('sSearch_7'));
+			$search = true;
+		}
+		if($this->input->post('sSearch_8') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.recipient_name',$this->input->post('sSearch_8'));
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_8') != ''){
-			$this->db->like('shipping_address',$this->input->post('sSearch_8'));
+		if($this->input->post('sSearch_9') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_9'));
 			$search = true;
 		}
 
@@ -1561,12 +1583,16 @@ class Delivery extends Application
 				$devicefield,
 				$courierfield,
 				colorizetype($key['delivery_type']),
+				$key['width'].' x '.$key['height'].' x '.$key['length'],
+				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				get_weight_range($key['weight'],$key['application_id']),				
 				$cityfield,
 				$zonefield,
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['recipient_name'],
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
@@ -1603,12 +1629,16 @@ class Delivery extends Application
 			'Device',
 			'Courier',
 			'Type',
+			'W x H x L',
+			'Volume',
+			'Weight Range',
 			'City',
 			'Zone',
 			'Merchant',
 			'Merchant Trans ID',
 			'Delivery ID',
 			'Buyer',
+			'Delivered To',
 			'Shipping Address',
 			'Phone',
 			'Status',
@@ -1621,12 +1651,16 @@ class Delivery extends Application
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'',
 			'',
+			'',
+			'',
+			'',
 			'<input type="text" name="search_city" id="search_city" value="Search City" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
 			'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'<input type="text" name="search_recipient" id="search_recipient" value="Search Recipient" class="search_init" />',
 			'<input type="text" name="search_shipping" id="search_shipping" value="Search Address" class="search_init" />'
 			);
 
@@ -1674,7 +1708,7 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyer_name',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
@@ -1722,7 +1756,8 @@ class Delivery extends Application
 				colorizetype($key['delivery_type']),
 				$key['device'],
 				$key['courier'],
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['recipient_name'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
@@ -1763,6 +1798,7 @@ class Delivery extends Application
 			'Device',
 			'Courier',
 			'Buyer',
+			'Delivered To',
 			'Merchant',
 			'Merchant Trans ID',
 			'Shipping Address',
@@ -1783,6 +1819,7 @@ class Delivery extends Application
 			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
@@ -1882,7 +1919,8 @@ class Delivery extends Application
 				colorizetype($key['delivery_type']),
 				$key['device'],
 				$key['courier'],
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['recipient_name'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
@@ -1923,6 +1961,7 @@ class Delivery extends Application
 			'Device',
 			'Courier',
 			'Buyer',
+			'Delivered To',
 			'Merchant',
 			'Merchant Trans ID',
 			'Shipping Address',
@@ -1943,6 +1982,7 @@ class Delivery extends Application
 			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
@@ -2048,7 +2088,8 @@ class Delivery extends Application
 				colorizetype($key['delivery_type']),
 				$key['device'],
 				$key['courier'],
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['recipient_name'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
@@ -2087,6 +2128,7 @@ class Delivery extends Application
 			'Device',
 			'Courier',
 			'Buyer',
+			'Delivered To',
 			'Merchant',
 			'Merchant Trans ID',
 			'Shipping Address',
@@ -2108,6 +2150,7 @@ class Delivery extends Application
 			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
+			'',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
 			'',
 			'<input type="text" name="search_shipping_address" id="search_shipping_address" value="Search Shipping Address" class="search_init" />',
@@ -2239,7 +2282,8 @@ class Delivery extends Application
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
-				$key['buyer'],
+				$key['buyer_name'],
+				$key['recipient_name'],
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['device'],
@@ -2276,6 +2320,7 @@ class Delivery extends Application
 			'Delivery ID',
 			//'Application ID',
 			'Buyer',
+			'Delivered To',
 			'Merchant',
 			'Merchant Trans ID',
 			'Device',
@@ -2295,6 +2340,7 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search buyer" class="search_init" />',
+			'',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search merchant" class="search_init" />',
 			'<input type="text" name="search_transid" id="search_transid" value="Search merchant trx id" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',

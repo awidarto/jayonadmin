@@ -20,7 +20,7 @@
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
 				"aoColumnDefs": [ 
-				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
+				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
