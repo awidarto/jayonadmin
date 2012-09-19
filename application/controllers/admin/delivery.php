@@ -1667,7 +1667,7 @@ class Delivery extends Application
 			'<input type="text" name="search_city" id="search_city" value="Search City" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
-			'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
+			//'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			'<input type="text" name="search_recipient" id="search_recipient" value="Search Recipient" class="search_init" />',
