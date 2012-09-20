@@ -71,6 +71,7 @@ $config['trans_status_mobile_delivered'] = 'delivered';
 $config['trans_status_mobile_revoked'] = 'revoked';
 $config['trans_status_mobile_noshow'] = 'noshow';
 $config['trans_status_mobile_keyrequest'] = 'keyrequest';
+$config['trans_status_mobile_syncnote'] = 'syncnote';
 
 $config['trans_status_admin_zoned'] = 'zone_assigned';
 $config['trans_status_admin_dated'] = 'date_assigned';
