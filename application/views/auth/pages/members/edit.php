@@ -84,6 +84,14 @@
 			Mobile Number:<br />
 			<input type="text" name="mc_mobile" size="50" class="form" value="<?php echo set_value('mc_mobile',$user['mc_mobile']); ?>" /><?php echo form_error('mc_mobile'); ?><br /><br />
 
+			<?php echo form_checkbox('mc_unlimited_time', '1', $user['mc_unlimited_time']);?> Unlimited Order Time<br /><br />
+
+			First Order Time:<br />
+			<input type="text" name="mc_first_order" size="50" class="form" value="<?php echo set_value('mc_first_order',$user['mc_first_order']); ?>" /><?php echo form_error('mc_first_order'); ?><br /><br />
+
+			Last Order Time:<br />
+			<input type="text" name="mc_last_order" size="50" class="form" value="<?php echo set_value('mc_last_order',$user['mc_last_order']); ?>" /><?php echo form_error('mc_last_order'); ?><br /><br />
+
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Update" name="register" />

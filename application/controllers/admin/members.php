@@ -856,6 +856,10 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
+		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_unlimited_time', 'Mobile Number', 'trim|xss_clean');
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
@@ -895,6 +899,10 @@ class Members extends Application
 			$mc_phone= set_value('mc_phone');
 			$mc_mobile= set_value('mc_mobile');
 
+			$mc_first_order = set_value('mc_first_order');
+			$mc_last_order = set_value('mc_last_order');
+			$mc_unlimited_time = set_value('mc_unlimited_time');
+
 			$group_id = set_value('group_id');
 
 			$dataset = array(
@@ -924,6 +932,10 @@ class Members extends Application
 				'mc_zip' =>$mc_zip,
 				'mc_phone'=>$mc_phone,
 				'mc_mobile'=>$mc_mobile,
+
+				'mc_first_order' => $mc_first_order,
+				'mc_last_order' => $mc_last_order,
+				'mc_unlimited_time' => $mc_unlimited_time,
 
 				'group_id'=>$group_id,
 				'created'=> date('Y-m-d h:i:s',time())
@@ -1002,6 +1014,10 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
+		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_unlimited_time', 'Mobile Number', 'trim|xss_clean');
+
 		$user = $this->get_user($id);
 		$data['user'] = $user;
 
@@ -1043,6 +1059,10 @@ class Members extends Application
 			$dataset['mc_zip'] = set_value('mc_zip');
 			$dataset['mc_phone'] = set_value('mc_phone');
 			$dataset['mc_mobile'] = set_value('mc_mobile');
+
+			$dataset['mc_first_order'] = set_value('mc_first_order');
+			$dataset['mc_last_order'] = set_value('mc_last_order');
+			$dataset['mc_unlimited_time'] = set_value('mc_unlimited_time');
 
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
