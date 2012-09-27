@@ -130,6 +130,22 @@ table#recon_select td {
 	</div>
 </div>
 <div>
+	<h3>City Distribution - All Status - 2012-04-01 To <?php print date('Y-m-d',time());?></h3>
+		<table>
+			<tbody>
+				<tr>
+					<td colspan="2">
+						<div id="statistics"  style="width:100%;height:100%;">
+							<span>City Distribution - All Status - 2012-04-01 To <?php print date('Y-m-d',time());?></span>
+							<div id="incoming_monthly" class="stat_box" style="text-align:center">
+								<img src="<?php print base_url();?>admin/graphs/citydistgraph/all/2012-04-01/<?php print date('Y-m-d',time());?>" alt="monthly_all" />
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 	<h3><?php print $period; ?></h3>
 		<table>
 			<tbody>
@@ -143,7 +159,8 @@ table#recon_select td {
 						</div>
 					</td>
 				</tr>
--->				<tr>
+-->				
+				<tr>
 					<td colspan="2">
 						<div id="statistics"  style="width:100%;height:100%;">
 							<span>City Distribution - All Status</span>

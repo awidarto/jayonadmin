@@ -88,7 +88,7 @@ table#recon_select td {
 
 ?>
 
-<div id="form">
+<div id="form" style="width:525px;float:left;">
 	<div class="form_box">
 		<form method="get">
 			<table style="width:500px;" id="recon_select" cellspacing="0">
@@ -129,6 +129,51 @@ table#recon_select td {
 		</form>
 	</div>
 </div>
+<div  style="width:525px;float:left;">
+	<table style="width:500px;" id="recon_select" cellspacing="0">
+		<tr>
+			<td colspan="2"><strong>Summary</strong></td>
+		</tr>
+		<tr class="dark">
+			<td>Total Transaction to Date</td>
+			<td><?php print $total_to_date;?></td>
+		</tr>
+		<tr>
+			<td>DO</td>
+			<td><?php print $total_to_date_do;?></td>
+		</tr>
+		<tr>
+			<td>COD</td>
+			<td><?php print $total_to_date_cod;?></td>
+		</tr>
+		<tr class="dark">
+			<td>Total Transaction to From <?php print $from ;?> to <?php print $to ;?></td>
+			<td><?php print $total_in_period;?></td>
+		</tr>
+		<tr>
+			<td>DO</td>
+			<td><?php print $total_in_period_do;?></td>
+		</tr>
+		<tr>
+			<td>COD</td>
+			<td><?php print $total_in_period_cod;?></td>
+		</tr>
+		<tr class="dark">
+			<td>Note :</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Expect slight innacuracies for orders prior to 01 August 2012 due to :<br />
+				Changes in business model from COD only ordering to Delivery Only and COD delivery, all orders prior to that date are considered COD by default.<br />
+				Promotional period with FOC deliveries for certain merchants.
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="clear"></div>
+
 <div>
 	<h3><?php print $period; ?></h3>
 		<table>

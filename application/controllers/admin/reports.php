@@ -449,6 +449,27 @@ class Reports extends Application
 			$data['week'] = 1;
 		}
 
+		$data['total_to_date'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where('delivery_type','COD');
+		$data['total_to_date_cod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where('delivery_type','Delivery Only');
+		$data['total_to_date_do'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$daterange = sprintf("ordertime BETWEEN '%s%%' AND '%s%%'",$from,$to);
+		$this->db->where($daterange, NULL, FALSE); 
+		$data['total_in_period'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where($daterange, NULL, FALSE);
+		$this->db->where('delivery_type','COD');
+		$data['total_in_period_cod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where($daterange, NULL, FALSE);
+		$this->db->where('delivery_type','Delivery Only');
+		$data['total_in_period_do'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+
 		$data['year'] = $year;
 		$data['from'] = $from;
 		$data['to'] = $to;
