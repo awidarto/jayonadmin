@@ -2,8 +2,18 @@
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
 	var rescheduled_id = 0;
-	
+
+
 	$(document).ready(function() {
+
+		$('#assign_all').click(function(){
+			if($('#assign_all').is(':checked')){
+				$('.assign_check').attr('checked', true);
+			}else{
+				$('.assign_check').attr('checked', false);
+			}
+		});
+
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -497,7 +507,6 @@
 			}
 		});
 
-
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -510,10 +519,10 @@
 	
 	
 </script>
-
 <div class="button_nav">
 	<span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
 </div>
+<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
 
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
