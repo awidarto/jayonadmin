@@ -149,6 +149,12 @@ class Delivery extends Application
 				$reference = $key['revoke_ref'];
 			}
 
+			if($key['status'] == $this->config->item('trans_status_canceled')){
+				$delivery_check = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+			}else{
+				$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+			}
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -157,7 +163,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				$delivery_check,
 				//$key['merchant_trans_id'],
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
