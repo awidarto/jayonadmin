@@ -261,21 +261,6 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 						</tbody>
 					</table>
-					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
-						<tbody>
-							<tr>
-								<td colspan="2"><strong>Package Info</strong></td>
-							</tr>
-							<tr>
-								<td class="row_label">Dimension <span class="fine">( L x W x H )</span></td>
-								<td><?php print $main_info['length'].' cm x '.$main_info['width'].' cm x '.$main_info['height'];?> cm</td>
-							</tr>
-							<tr>
-								<td>Weight</td>
-								<td><?php print get_weight_range($main_info['weight']);?></td>
-							</tr>
-						</tbody>
-					</table>
 				</td>
 				<td id="order_detail">
 					<table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
@@ -379,8 +364,22 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 						</tbody>
 					</table>
-
-
+					<table width="100%" cellpadding="4" cellspacing="0" >
+						<tbody>
+							<tr>
+								<td colspan="2"><strong>Package Info</strong></td>
+							</tr>
+							<tr>
+								<td>Dimension<br />
+									<span class="fine">( L x W x H , in cm )</span></td>
+								<td><?php print $main_info['length'].' x '.$main_info['width'].' x '.$main_info['height'];?></td>
+							</tr>
+							<tr>
+								<td>Weight</td>
+								<td><?php print get_weight_range($main_info['weight']);?></td>
+							</tr>
+						</tbody>
+					</table>
 				</td>
 			</tr>
 		</tbody>
