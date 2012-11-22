@@ -25,7 +25,12 @@ function get_device_color($identifier){
 		->where('identifier',$identifier)
 		->get($CI->config->item('jayon_devices_table'))->row();
 
-	return $col->color;
+	if($col){
+		return $col->color;
+	}else{
+		return '#FF0000';
+	}
+
 }
 
 function get_yearly_sequence()
