@@ -1482,7 +1482,7 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_0') != ''){
+		if($this->input->post('sSearch_0') != '' && !preg_match('/^sel_*/', $this->input->post('sSearch_0'))){
 			$this->db->like($this->config->item('assigned_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
 			$search = true;
 		}
@@ -1493,22 +1493,29 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_3'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -1530,6 +1537,20 @@ class Delivery extends Application
 			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_9'));
 			$search = true;
 		}
+
+		/* handle pulldown type filter , hacky thing but should work for now */
+
+		if($this->input->post('sSearch_0') != '' && preg_match('/^sel_*/', $this->input->post('sSearch_0'))){
+			$search = false;
+			if($this->input->post('sSearch_0') == 'sel_DO'){
+				$this->db->where($this->config->item('assigned_delivery_table').'.delivery_type','Delivery Only');
+				$search = true;
+			}else if($this->input->post('sSearch_0') == 'sel_COD'){
+				$this->db->where($this->config->item('assigned_delivery_table').'.delivery_type','COD');
+				$search = true;
+			}
+		}
+
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -1668,7 +1689,7 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'',
-			'',
+			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'',
 			'',
 			'',

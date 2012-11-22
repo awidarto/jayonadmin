@@ -40,6 +40,11 @@
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		} );
 
+		$('tfoot select').change( function () {
+			/* Filter on the column (the index) of this element */
+			oTable.fnFilter( this.value, $('tfoot select').index(this) );
+		} );
+
 		/*
 		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
 		 * the footer
