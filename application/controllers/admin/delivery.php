@@ -1745,22 +1745,35 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
+
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.buyer_name',$this->input->post('sSearch_3'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.buyer_name',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
@@ -1863,7 +1876,7 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'',
+			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'',
 			'',
 			'',
@@ -1918,22 +1931,34 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
@@ -2029,7 +2054,7 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'',
+			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
@@ -2083,22 +2108,34 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
@@ -2113,6 +2150,8 @@ class Delivery extends Application
 		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
+
+		//print $this->db->last_query();
 
 		$result = $data->result_array();
 
@@ -2197,7 +2236,7 @@ class Delivery extends Application
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'',
+			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
 			'',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
@@ -2264,39 +2303,50 @@ class Delivery extends Application
 			$search = true;
 		}
 
-
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('b.fullname',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_3'));
+			$this->db->like('b.fullname',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_5'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_6') != ''){
-			$this->db->like('c.fullname',$this->input->post('sSearch_6'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_7') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_7'));
+			$this->db->like('c.fullname',$this->input->post('sSearch_7'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_8') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.phone',$this->input->post('sSearch_8'));
+			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_8'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_9') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.phone',$this->input->post('sSearch_9'));
 			$search = true;
 		}
 		if($search){
@@ -2333,6 +2383,7 @@ class Delivery extends Application
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').$key['delivery_id'],
 				//$key['application_id'],
+				colorizetype($key['delivery_type']),
 				$key['buyer_name'],
 				$key['recipient_name'],
 				$key['merchant'],
@@ -2369,6 +2420,7 @@ class Delivery extends Application
 			'#',
 			'Delivery Time',
 			'Delivery ID',
+			'Type',
 			//'Application ID',
 			'Buyer',
 			'Delivered To',
@@ -2390,10 +2442,11 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'<input type="text" name="search_buyer" id="search_buyer" value="Search buyer" class="search_init" />',
 			'',
 			'<input type="text" name="search_merchant" id="search_merchant" value="Search merchant" class="search_init" />',
-			'<input type="text" name="search_transid" id="search_transid" value="Search merchant trx id" class="search_init" />',
+			'<input type="text" name="search_transid" id="search_transid" value="Search trx id" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
 			'<input type="text" name="search_shipping" id="search_shipping" value="Search shipping address" class="search_init" />',
@@ -2441,30 +2494,41 @@ class Delivery extends Application
 			$search = true;
 		}
 
-
 		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
+			if($this->input->post('sSearch_2') == 'DO'){
+				$term = 'Delivery Only';
+			}else if($this->input->post('sSearch_2') == 'COD') {
+				$term = 'COD';
+			}else{
+				$term = $this->input->post('sSearch_2');
+			}
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
+			$this->db->like('delivery_id',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('c.fullname',$this->input->post('sSearch_4'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
+			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_6') != ''){
 			if($search){
 				$this->db->and_();
 			}
 			$this->db->group_start();
-			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
-			$this->db->or_like('m.fullname',$this->input->post('sSearch_5'));
-			$this->db->or_like('u.fullname',$this->input->post('sSearch_5'));
+			$this->db->like('c.fullname',$this->input->post('sSearch_6'));
+			$this->db->or_like('m.fullname',$this->input->post('sSearch_6'));
+			$this->db->or_like('u.fullname',$this->input->post('sSearch_7'));
 			$this->db->group_end();
 			$search = true;
 		}
