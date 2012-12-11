@@ -43,10 +43,10 @@ class Delivery extends Application
 		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
 
 		$count_display_all = $this->db
-			->where('status',$this->config->item('trans_status_new'))
-			->or_where('status',$this->config->item('trans_status_confirmed'))
-			->or_where('status',$this->config->item('trans_status_cancelled'))
-			->not_like('status','assigned','before')
+			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
+			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
+			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
+			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
