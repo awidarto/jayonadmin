@@ -1729,12 +1729,10 @@ class Delivery extends Application
 		$limit_offset = $this->input->post('iDisplayStart');
 
 		// get total count result
-		$count_all = $this->db
-			->where('status',$this->config->item('trans_status_mobile_delivered'))
-			->count_all($this->config->item('delivered_delivery_table'));
+		$count_all = $this->db->count_all($this->config->item('delivered_delivery_table'));
 
 		$count_display_all = $this->db
-			->where('status',$this->config->item('trans_status_mobile_delivered'))
+			->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -1804,7 +1802,7 @@ class Delivery extends Application
 		}
 
 		$this->db->group_start()
-			->where('status',$this->config->item('trans_status_mobile_delivered'))
+			->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
 			->group_end();
 
 		$data = $this->db->limit($limit_count, $limit_offset)
