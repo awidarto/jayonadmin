@@ -1096,7 +1096,6 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_admin_devassigned'))
 			->count_all($this->config->item('assigned_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
 
 		$search = false;
 
@@ -1150,6 +1149,11 @@ class Delivery extends Application
 		//print $this->db->last_query();
 
 		$result = $data->result_array();
+
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_admin_devassigned'))
+			->count_all_results($this->config->item('assigned_delivery_table'));
+
 
 		$aadata = array();
 
@@ -1468,7 +1472,6 @@ class Delivery extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
 
 		$search = false;
 
@@ -1578,6 +1581,13 @@ class Delivery extends Application
 			->get($this->config->item('assigned_delivery_table'));
 
 		//print $this->db->last_query();
+
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_admin_courierassigned'))
+			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+			->count_all_results($this->config->item('assigned_delivery_table'));
+
 
 		$result = $data->result_array();
 
@@ -1723,7 +1733,9 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
 			->count_all($this->config->item('delivered_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_mobile_delivered'))
+			->count_all_results($this->config->item('delivered_delivery_table'));
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -1925,7 +1937,10 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
 			->count_all($this->config->item('delivered_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_mobile_revoked'))
+			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
+			->count_all_results($this->config->item('delivered_delivery_table'));	
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -2102,7 +2117,9 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
 			->count_all($this->config->item('delivered_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
+			->count_all_results($this->config->item('delivered_delivery_table'));
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -2282,7 +2299,9 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
 			->count_all($this->config->item('delivered_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('delivered_delivery_table'));
+		$count_display_all = $this->db
+			->where('status',$this->config->item('trans_status_archived'))
+			->count_all_results($this->config->item('delivered_delivery_table'));
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');

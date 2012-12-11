@@ -326,6 +326,7 @@ class Members extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
 
+		$this->db->where('group_id',$group_id);
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
 
 		//$this->db->select('*,g.description as groupname');
@@ -549,6 +550,7 @@ class Members extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
 
+		$this->db->where('group_id',$group_id);
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
 
 		//$this->db->select('*,g.description as groupname');
