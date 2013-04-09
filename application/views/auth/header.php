@@ -57,9 +57,9 @@
 	
 	</head>
 	<body>
-		<? if($this->oi->has_messages('')):?>  
-	        <div id="flash_message" ><? echo $this->oi->messages(NULL)?></div>
-		<? endif?>
+		<?php if($this->oi->has_messages('')):?>  
+	        <div id="flash_message" ><?php echo $this->oi->messages(NULL)?></div>
+		<?php endif?>
 		<div id="header">
 			<div id="logo">
 				&nbsp;

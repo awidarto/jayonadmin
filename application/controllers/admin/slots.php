@@ -90,7 +90,7 @@ class Slots extends Application
 		$page['ajaxurl'] = 'admin/slots/ajaxmanage';
 		$page['add_button'] = array('link'=>'admin/slots/add','label'=>'Add New Slot');
 		$page['page_title'] = 'Manage timeslots';
-		$this->ag_auth->view('districtajaxlistview',$page); // Load the view
+		$this->ag_auth->view('slotajaxlistview',$page); // Load the view
 	}
 
 	public function ajaxtoggle()
@@ -135,28 +135,33 @@ class Slots extends Application
 	
 	public function add()
 	{
-		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		//'id', 'seq', 'time_from', 'time_to', 'slot_no', 'is_on'
+		$this->breadcrumb->add_crumb('Time Slots','admin/slots/manage');
+		$this->breadcrumb->add_crumb('Add','admin/slots/add');
+
+		$this->form_validation->set_rules('seq', 'Sequence', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('time_from', 'Time From', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('time_to', 'Time To', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('slot_no', 'Slot No', 'required|trim|xss_clean');
 				
 		if($this->form_validation->run() == FALSE)
 		{	
-			$data['page_title'] = 'Add Zone';
-			$this->ag_auth->view('timeslots/add',$data);
+			$data['page_title'] = 'Add Time Slot';
+			$this->ag_auth->view('slots/add',$data);
 		}
 		else
 		{
-			$dataset['district'] = set_value('district');
-			$dataset['city'] = set_value('city');
-			$dataset['province'] = set_value('province');
-			$dataset['country'] = set_value('country');
+			$dataset['seq'] = set_value('seq');
+			$dataset['time_to'] = set_value('time_to');
+			$dataset['time_from'] = set_value('time_from');
+			$dataset['slot_no'] = set_value('slot_no');
+			$dataset['is_on'] = 1;
 			
 			if($this->db->insert($this->config->item('jayon_timeslots_table'),$dataset) === TRUE)
 			{
 				$data['message'] = "The zone has now been set.";
 				$data['page_title'] = 'Add Zone';
-				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
+				$data['back_url'] = anchor('admin/slots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -164,7 +169,7 @@ class Slots extends Application
 			{
 				$data['message'] = "The zone can not be set.";
 				$data['page_title'] = 'Add Zone Error';
-				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
+				$data['back_url'] = anchor('admin/slots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 			}
 
@@ -174,32 +179,35 @@ class Slots extends Application
 
 	public function edit($id)
 	{
-		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		$this->breadcrumb->add_crumb('Time Slots','admin/slots/manage');
+		$this->breadcrumb->add_crumb('Add','admin/slots/edit/'.$id);
+
+		$this->form_validation->set_rules('seq', 'Sequence', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('time_from', 'Time From', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('time_to', 'Time To', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('slot_no', 'Slot No', 'required|trim|xss_clean');
 		
 		$user = $this->get_zones($id);
 		$data['user'] = $user;
 				
 		if($this->form_validation->run() == FALSE)
 		{
-			$data['page_title'] = 'Edit Zone';
-			$this->ag_auth->view('timeslots/edit',$data);
+			$data['page_title'] = 'Edit Time Slot';
+			$this->ag_auth->view('slots/edit',$data);
 		}
 		else
 		{
-			$dataset['district'] = set_value('district');
-			$dataset['city'] = set_value('city');
-			$dataset['province'] = set_value('province');
-			$dataset['country'] = set_value('country');
+			$dataset['seq'] = set_value('seq');
+			$dataset['time_to'] = set_value('time_to');
+			$dataset['time_from'] = set_value('time_from');
+			$dataset['slot_no'] = set_value('slot_no');
 			
 			if($this->db->where('id',$id)->update($this->config->item('jayon_timeslots_table'),$dataset) == TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
 				$data['message'] = "The zone has now updated.";
 				$data['page_title'] = 'Edit Zone';
-				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
+				$data['back_url'] = anchor('admin/slots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
@@ -207,7 +215,7 @@ class Slots extends Application
 			{
 				$data['message'] = "The zone can not be updated.";
 				$data['page_title'] = 'Edit Zone Error';
-				$data['back_url'] = anchor('admin/timeslots/manage','Back to list');
+				$data['back_url'] = anchor('admin/slots/manage','Back to list');
 				$this->ag_auth->view('message', $data);
 			}
 
