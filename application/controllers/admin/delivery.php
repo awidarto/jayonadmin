@@ -16,6 +16,11 @@ class Delivery extends Application
 
 	}
 
+	public function __destruct()
+	{
+    	$this->db->close();
+	}
+
 	public function ajaxincoming(){
 
 		$limit_count = $this->input->post('iDisplayLength');
