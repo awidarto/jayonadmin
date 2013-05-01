@@ -11,6 +11,11 @@ class V1 extends Application
 		$this->accessor_ip = $_SERVER['REMOTE_ADDR'];
 	}
 
+	public function __destruct()
+	{
+    	$this->db->close();
+	}
+
 	/**
 	*	transaction posting function
 	*	required field is buyer email, since this function will try to extract it to check and authenticate
