@@ -151,6 +151,11 @@
 
 			if ($(e.target).is('.changestatus')) {
 				var delivery_id = e.target.id;
+				var device_id = e.target.dev_id;
+
+				console.log(e.target);
+
+				$('#changedev_id').val(device_id);
 				$('#change_id').html(delivery_id);
 				$('#changestatus_dialog').dialog('open');
 			}
@@ -243,6 +248,7 @@
 			buttons: {
 				"Confirm Delivery Orders": function() {
 					var delivery_id = $('#change_id').html();
+					var device_id = $('#changedev_id').val();
 
 					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
 						'delivery_id':delivery_id,
@@ -340,6 +346,7 @@
 
 					$actor = $this->config->item('actors_title');
 
+					print form_hidden('changedev_id','','id="changedev_id"');
 
 					print 'Actor <br />';
 					print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';

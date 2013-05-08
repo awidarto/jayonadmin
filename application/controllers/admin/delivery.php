@@ -16,11 +16,6 @@ class Delivery extends Application
 
 	}
 
-	public function __destruct()
-	{
-    	$this->db->close();
-	}
-
 	public function ajaxincoming(){
 
 		$limit_count = $this->input->post('iDisplayLength');
@@ -90,8 +85,15 @@ class Delivery extends Application
 			$search = true;
 		}
 
+		/*
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+		*/
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
@@ -250,6 +252,15 @@ class Delivery extends Application
 			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			//'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
 			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
 			form_button('do_confirm','Confirm Selection','id="doConfirm"'),
 			form_button('do_cancel','Cancel Selection','id="doCancel"')
@@ -1945,7 +1956,7 @@ class Delivery extends Application
 			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
 			->count_all_results($this->config->item('delivered_delivery_table'));	
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,d.id as device_id,c.fullname as courier');
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
@@ -2019,7 +2030,7 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
-			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$aadata[] = array(
 				$num,
@@ -2204,6 +2215,7 @@ class Delivery extends Application
 			$proceed = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$aadata[] = array(
 				$num,
@@ -2223,7 +2235,7 @@ class Delivery extends Application
 				$key['delivery_note'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog
+				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog.' '.$changestatus
 				//$key['reschedule_ref'],
 				//$key['revoke_ref']
 			);
@@ -2845,6 +2857,7 @@ class Delivery extends Application
 
 	public function ajaxchangestatus(){
 		$delivery_id = $this->input->post('delivery_id');
+		$device_id = $this->input->post('device_id');
 		$dataset['status'] = $this->input->post('new_status');
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
 
@@ -2868,12 +2881,12 @@ class Delivery extends Application
 					'timestamp'=>date('Y-m-d H:i:s',time()),
 					'report_timestamp'=>date('Y-m-d H:i:s',time()),
 					'delivery_id'=>$delivery_id,
-					'device_id'=>'',
-					'courier_id'=>'',
+					'device_id'=>$device_id,
+					'courier_id'=>0,
 					'actor_type'=>$this->input->post('actor'),
 					'actor_id'=>$this->session->userdata('userid'),
-					'latitude'=>'',
-					'longitude'=>'',
+					'latitude'=>0.000000,
+					'longitude'=>0.000000,
 					'status'=>$this->input->post('new_status'),
 					'api_event'=>'admin_change_status',
 					'notes'=>$order_exist

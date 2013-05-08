@@ -676,7 +676,7 @@
 
             //console.log(current_app);
 
-            if(delivery_type == 'COD'){
+            if(delivery_type == 'COD' || delivery_type == 'CCOD'){
                 $.post('<?php print site_url('ajax/getcoddata');?>',
                     { app_key: current_app }, 
                     function(data) {
@@ -734,6 +734,8 @@
             pdata.auto_confirm = true; //true
             pdata.email = $('#buyer_email').val();
             pdata.zip = $('#buyerdeliveryzip').val();
+            pdata.mobile1 = $('#mobile1').val();
+            pdata.mobile2 = $('#mobile2').val();
             pdata.phone = $('#phone').val();
             pdata.total_price = $('#total_price').val();
             pdata.total_discount = $('#total_discount').val();
@@ -1144,6 +1146,16 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
+                                <td id="delivery_tab_data">
+                                    <ul>
+                                        <li>Delivery Fee :</li>
+                                        <li>COD / CCOD Surcharges:</li>
+                                    </ul>
+                                    <?php // print $weighttable;?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
                                 <td id="delivery_tab_data">
                                     <?php // print $weighttable;?>
@@ -1201,6 +1213,18 @@
                                 <td>How to Get There<hr /><span class="fine">Petunjuk Jalan</span></td>
                                 <td>
                                     <textarea id="direction"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mobile 1<hr /><span class="fine">Mobile 1</span></td>
+                                <td>
+                                    <input type="text" id="mobile1" name="mobile1" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mobile 2<hr /><span class="fine">Mobile 2</span></td>
+                                <td>
+                                    <input type="text" id="mobile2" name="mobile2" value="" />
                                 </td>
                             </tr>
                             <tr>

@@ -40,6 +40,7 @@ class Order extends Application
 		$delivery_type = array(
 			'0'=>'Select delivery type',
 			'COD'=>'COD',
+			'CCOD'=>'Credit Card On Delivery',
 			'Delivery Only'=>'Delivery Only'
 		);
 
