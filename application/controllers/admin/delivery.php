@@ -2533,40 +2533,28 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_2') != ''){
-			if($this->input->post('sSearch_2') == 'DO'){
-				$term = 'Delivery Only';
-			}else if($this->input->post('sSearch_2') == 'COD') {
-				$term = 'COD';
-			}else{
-				$term = $this->input->post('sSearch_2');
-			}
-			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
+			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_3'));
+			$this->db->like('d.identifier',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_4'));
+			$this->db->like('c.fullname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
-			$search = true;
-		}
-
-		if($this->input->post('sSearch_6') != ''){
 			if($search){
 				$this->db->and_();
 			}
 			$this->db->group_start();
-			$this->db->like('c.fullname',$this->input->post('sSearch_6'));
-			$this->db->or_like('m.fullname',$this->input->post('sSearch_6'));
-			$this->db->or_like('u.fullname',$this->input->post('sSearch_7'));
+			$this->db->like('c.fullname',$this->input->post('sSearch_5'));
+			$this->db->or_like('m.fullname',$this->input->post('sSearch_5'));
+			$this->db->or_like('u.fullname',$this->input->post('sSearch_5'));
 			$this->db->group_end();
 			$search = true;
 		}
