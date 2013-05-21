@@ -234,7 +234,9 @@ class Prints extends Application
 			$delivery_type = array(
 				'0'=>'Select delivery type',
 				'COD'=>'COD',
-				'Delivery Only'=>'Delivery Only'
+				'CCOD'=>'Credit Card On Delivery',
+				'Delivery Only'=>'Delivery Only',
+				'PR'=>'Pick Up Return'
 			);
 
 			$typeselect = form_dropdown('delivery_type',$delivery_type,$data['main_info']['delivery_type'],'id="delivery_type_select"');

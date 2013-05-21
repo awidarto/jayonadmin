@@ -59,8 +59,15 @@ class Admin extends Application
 			$this->login();
 		}
 	}
-	
 
+	public function uichanges(){
+		$last = $this->input->post('lastupdate');
+		$total_changed = $this->db->where('created > ', abs($last))
+			->count_all_results($this->config->item('incoming_delivery_table'));
+
+		print json_encode(array('total_changed'=>$total_changed));
+	}
+	
 	public function testmail(){
 		$subject = 'Processed order';
 		$to = 'andy.awidarto@gmail.com';

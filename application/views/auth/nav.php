@@ -39,9 +39,9 @@
 		{
 		?>
 			<li class="<?php print set_hilite('admin\/dashboard')?>" ><?php echo anchor('admin/dashboard', 'Dashboard'); ?></li>
-			<li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Orders'); } ?>
+			<li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Orders <span class="badge" id="total_changed"></span>'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Incoming Orders'); } ?></li>
+					<li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Incoming Orders <span class="badge" id="total_changed_incoming"></span>'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/zoning')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/zoning', 'Device Zone Assignment'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/assigned')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/courierassign', 'Courier Assignment'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/dispatched', 'In Progress Orders'); } ?></li>
@@ -107,4 +107,20 @@
 	
 	?>
 	</ul>
+	<script type="text/javascript">
+	$(document).ready(function(){
+
+		var seconds = new Date().getTime() / 1000;
+		function getChanges(){
+			$.post('<?php print base_url() ?>admin/uichanges',{ lastupdate: seconds },function(data){
+				$('#total_changed').html(data.total_changed);
+				seconds = new Date().getTime() / 1000;
+			}, 'json');
+		}
+		
+		getChanges();
+
+		self.setInterval(function(){ getChanges();},20000);
+	});
+	</script>
 <div class="clear"></div>

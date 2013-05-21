@@ -218,3 +218,11 @@ fieldset legend {
 	margin: auto;
 }
 
+.badge{
+	background-color: white;
+	font-weight: normal;
+	padding: 2px;
+	font-size: 11px;
+	color: maroon;
+}
+

@@ -64,6 +64,8 @@ $route['admin/members/merchant/edit/(:num)'] = "admin/members/edit/$1";
 $route['admin/members/buyer/add'] = "admin/members/add";
 $route['admin/members/buyer/edit/(:num)'] = "admin/members/edit/$1";
 
+$route['admin/uichanges'] = "admin/admin/uichanges";
+
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */
