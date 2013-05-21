@@ -833,6 +833,10 @@ function colorizetype($type){
 
 	if($type == 'COD'){
 		$class = 'brown';
+	}else if($type == 'CCOD'){
+		$class = 'maroon';
+	}else if($type == 'PR'){
+		$class = 'green';
 	}else{
 		$class = 'red';
 		$type = 'DO';
