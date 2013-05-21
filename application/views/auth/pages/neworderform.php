@@ -754,6 +754,9 @@
             pdata.show_shop = ($('#show_shop').is(':checked'))?1:0;
             pdata.show_merchant = ($('#show_merchant').is(':checked'))?1:0;
 
+            pdata.bearer_cod = $('#cod_surcharge_bearer').val();
+            pdata.bearer_delivery = $('#delivery_bearer').val();
+
             var udescs = [];
             var uqtys = [];
             var uprices = [];
@@ -1147,12 +1150,18 @@
                             </tr>
                             <tr>
                                 <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
-                                <td id="delivery_tab_data">
-                                    <ul>
-                                        <li>Delivery Fee :</li>
-                                        <li>COD / CCOD Surcharges:</li>
-                                    </ul>
-                                    <?php // print $weighttable;?>
+                                <td>
+                                    <label for"delivery_bearer">Delivery Fee :</label><br />
+                                    <select id="delivery_bearer">
+                                        <option value="merchant">Merchant</option>
+                                        <option value="buyer">Buyer</option>
+                                    </select>
+                                    <br />
+                                    <label for="cod_surcharge_bearer">COD / CCOD Surcharges:</label><br />
+                                    <select id="cod_surcharge_bearer">
+                                        <option value="merchant">Merchant</option>
+                                        <option value="buyer">Buyer</option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>

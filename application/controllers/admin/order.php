@@ -41,7 +41,8 @@ class Order extends Application
 			'0'=>'Select delivery type',
 			'COD'=>'COD',
 			'CCOD'=>'Credit Card On Delivery',
-			'Delivery Only'=>'Delivery Only'
+			'Delivery Only'=>'Delivery Only',
+			'PR'=>'Pick Up Return'
 		);
 
 		$typeselect = form_dropdown('delivery_type',$delivery_type,null,'id="delivery_type"');

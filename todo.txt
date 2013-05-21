@@ -9,3 +9,5 @@ Buyers
 
 PDF print slip
 
+Pickup Module
+

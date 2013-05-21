@@ -446,7 +446,9 @@ class Ajax extends Application
 			'weight' => $this->input->post('weight'),
 			'delivery_type' => $this->input->post('delivery_type'),
 			'show_merchant' => $this->input->post('show_merchant'),
-			'show_shop' => $this->input->post('show_shop')
+			'show_shop' => $this->input->post('show_shop'),
+			'cod_bearer' => $this->input->post('bearer_cod'),
+			'delivery_bearer' => $this->input->post('bearer_delivery')
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());

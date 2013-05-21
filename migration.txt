@@ -1,0 +1,5 @@
+ALTER TABLE  `delivery_order_active` ADD  `mobile1` VARCHAR( 40 ) NULL AFTER  `phone` ,
+ADD  `mobile2` VARCHAR( 40 ) NULL AFTER  `mobile1` ;
+
+ALTER TABLE  `delivery_order_active` ADD  `delivery_bearer` VARCHAR( 15 ) NOT NULL AFTER  `chargeable_amount` ,
+ADD  `cod_bearer` VARCHAR( 15 ) NOT NULL AFTER  `delivery_bearer` ;
