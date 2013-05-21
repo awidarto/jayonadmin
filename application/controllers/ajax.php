@@ -429,6 +429,8 @@ class Ajax extends Application
 			'email'=>$this->input->post('email'),
 			'zip' => $this->input->post('zip'),
 			'phone' => $this->input->post('phone'),
+			'mobile1' => $this->input->post('mobile1'),
+			'mobile2' => $this->input->post('mobile2'),
 			'total_price'=>$this->input->post('total_price'),
 			'total_discount'=>$this->input->post('total_discount'),
 			'total_tax'=>$this->input->post('total_tax'),

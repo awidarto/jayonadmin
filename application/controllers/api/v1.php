@@ -63,6 +63,8 @@ class V1 extends Application
 					$dataset['username'] = $buyer_username;
 					$dataset['email'] = $in->email;
 					$dataset['phone'] = $in->phone;
+					$dataset['mobile1'] = $in->mobile1;
+					$dataset['mobile2'] = $in->mobile2;
 					$dataset['fullname'] = $in->buyer_name;
 					$password = random_string('alnum', 8);
 					$dataset['password'] = $this->ag_auth->salt($password);
@@ -111,6 +113,8 @@ class V1 extends Application
 				$order['shipping_address'] = $in->shipping_address;
 				$order['shipping_zip'] = $in->zip;
 				$order['phone'] = $in->phone;
+				$order['mobile1'] = $in->mobile1;
+				$order['mobile2'] = $in->mobile2;
 				$order['status'] = $in->status;
 
 				$order['width'] = $in->width;
