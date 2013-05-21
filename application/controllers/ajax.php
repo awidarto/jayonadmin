@@ -458,7 +458,11 @@ class Ajax extends Application
 
 		$url = base_url().'api/v1/post/'.$api_key.'/'.$trx_id;
 
+		//print $url;
+
 		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
+
+		file_put_contents('curl.txt', $result);
 		
 		print $result;
 

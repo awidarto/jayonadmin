@@ -120,8 +120,8 @@ class V1 extends Application
 				$order['delivery_type'] = $in->delivery_type;				
 				$order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;
 
-				$order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
-				$order['delivery_bearer'] = (isset($in->delivery_bearer))?$in->delivery_bearer:'merchant';
+				//$order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
+				//$order['delivery_bearer'] = (isset($in->delivery_bearer))?$in->delivery_bearer:'merchant';
 
 				if(isset($in->show_shop)){
 					$order['show_shop'] = $in->show_shop;	
