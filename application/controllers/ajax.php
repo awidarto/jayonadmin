@@ -462,7 +462,7 @@ class Ajax extends Application
 
 		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
 
-		file_put_contents('curl.txt', $result);
+		//file_put_contents('curl.txt', $result);
 		
 		print $result;
 
