@@ -362,6 +362,21 @@
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
 
+        $('#delivery_type').change(function(){
+            if($('#delivery_type').val() == 'PS'){
+                $('#buyer_name_label').html('Supplier Name<hr /><span class="fine">Nama Supplier</span>');
+                $('#buyer_email_label').html('Supplier Email<hr /><span class="fine">Alamat Email Supplier</span>');
+                $('#buyer_delivered_to_label').html('Supplier Personnel<hr /><span class="fine">Petugas Supplier<br />harap sebutkan jabatan dan titel jika ada</span>');
+                $('#buyer_shipping_label').html('Pick Up Address<hr /><span class="fine">Alamat Pengambilan<br />harap sebutkan nama gedung dan lantai jika ada.</span>');
+            }else{
+                $('#buyer_name_label').html('Buyer Name<hr /><span class="fine">Nama Pembeli</span>');
+                $('#buyer_email_label').html('Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span>');
+                $('#buyer_delivered_to_label').html('Delivered To<hr /><span class="fine">Nama Penerima<br />harap sebutkan jabatan dan titel jika ada</span>');
+                $('#buyer_shipping_label').html('Shipping Address<hr /><span class="fine">Alamat Pengiriman<br />harap sebutkan nama gedung dan lantai jika ada.</span>');
+            }
+            getweightandcod();
+        });        
+
         $('#buyerdeliverydate').datepicker({
             numberOfMonths: 2,
             showButtonPanel: true,
@@ -1192,28 +1207,28 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Buyer Name<hr /><span class="fine">Nama Pembeli</span></td>
+                                <td class="row_label" id="buyer_name_label">Buyer Name<hr /><span class="fine">Nama Pembeli</span></td>
                                 <td>
-                                    Buyer ID : <span id="buyer_id_txt"></span><br />
+                                    ID : <span id="buyer_id_txt"></span><br />
                                     <input type="hidden" value="" id="buyer_id" name="buyer_id" />
                                     <input type="text" id="buyer_name" name="buyer_name" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span></td>
+                                <td class="row_label" id="buyer_email_label">Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span></td>
                                 <td>
                                     <input type="text" id="buyer_email" name="buyer_email" value="" />
                                     <?php // print form_button(array('name'=>'add_buyer','content'=>'Create New Buyer','id'=>'create_user'));?>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Delivered To<hr /><span class="fine">Nama Penerima<br />harap sebutkan jabatan dan titel jika ada</span></td>
+                                <td class="row_label" id="buyer_delivered_to_label">Delivered To<hr /><span class="fine">Nama Penerima<br />harap sebutkan jabatan dan titel jika ada</span></td>
                                 <td>
                                     <input type="text" id="recipient_name" name="recipient_name" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Shipping Address<hr /><span class="fine">Alamat Pengiriman<br />harap sebutkan nama gedung dan lantai jika ada.</span></td>
+                                <td id="buyer_shipping_label">Shipping Address<hr /><span class="fine">Alamat Pengiriman<br />harap sebutkan nama gedung dan lantai jika ada.</span></td>
                                 <td>
                                     <textarea id="shipping_address"></textarea>
                                 </td>

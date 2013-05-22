@@ -62,10 +62,11 @@ class Admin extends Application
 
 	public function uichanges(){
 		$last = $this->input->post('lastupdate');
-		$total_changed = $this->db->where('created > ', abs($last))
+		$last = date('Y-m-d H:i:s',abs($last));
+		$total_changed = $this->db->where('created > ', $last)
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		print json_encode(array('total_changed'=>$total_changed));
+		print json_encode(array('total_changed'=>$total_changed,'query'=>$this->db->last_query() ));
 	}
 	
 	public function testmail(){
