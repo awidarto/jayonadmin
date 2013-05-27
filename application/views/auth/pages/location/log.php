@@ -21,7 +21,9 @@
 			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
 				{
 					'device_identifier':$('#search_device').val(),
-					'timestamp':$('#search_deliverytime').val()
+					'timestamp':$('#search_deliverytime').val(),
+					'courier':$('#search_courier').val(),
+					'status':$('#search_status').val()
 				}, 
 				function(data) {
 					if(data.result == 'ok'){

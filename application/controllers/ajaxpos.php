@@ -10,9 +10,13 @@ class Ajaxpos extends CI_Controller
 
 		$device_name = $this->input->post('device_identifier');
 		$timestamp = $this->input->post('timestamp');
+		$courier = $this->input->post('courier');
+		$status = $this->input->post('status');
 
 		$device_name = ($device_name == 'Search device')?'':$device_name;
 		$timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
+		$courier = ($courier == 'Search courier')?'':$courier;
+		$status = ($status == 'Search status')?'':$status;
 
 		$this->db->distinct();
 		$this->db->select('identifier');
@@ -43,6 +47,11 @@ class Ajaxpos extends CI_Controller
 			}else{
 				$this->db->like('timestamp',$timestamp,'after');	
 			}
+
+			if($status == ''){
+				$this->db->like('status',$status);
+			}
+
 				//->like('timestamp','2012-09-03','after')				
 				//->limit(10,0)
 			$loc = $this->db
