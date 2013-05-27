@@ -45,6 +45,8 @@
 						$.each(data.locations,function(){
 							if(this.data.status == 'loc_update'){
 								icon =  null;
+							}else if(this.data.status == 'delivered'){
+								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
 							}else{
 								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
 							}
