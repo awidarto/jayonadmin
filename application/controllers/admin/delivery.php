@@ -89,11 +89,18 @@ class Delivery extends Application
 			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
 			$search = true;
 		}
-
+		/*
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
 			$search = true;
 		}
+		*/
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
 
 		if($search){
 			$this->db->and_();
@@ -250,6 +257,15 @@ class Delivery extends Application
 			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			//'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
 			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
 			form_button('do_confirm','Confirm Selection','id="doConfirm"'),
 			form_button('do_cancel','Cancel Selection','id="doCancel"')
