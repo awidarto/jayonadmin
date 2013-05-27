@@ -131,6 +131,9 @@ class Ajaxpos extends CI_Controller
 			$this->db->like('c.courier',$this->input->post('sSearch_2'));
 		}
 
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
+		}
 
 		$this->db->select('*,d.identifier as identifier,c.fullname as courier');
 		$this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');

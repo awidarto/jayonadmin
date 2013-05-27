@@ -106,6 +106,9 @@ class Location extends Application
 			$this->db->like('c.courier',$this->input->post('sSearch_2'));
 		}
 
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
+		}
 
 		$this->db->select('*,d.identifier as identifier,c.fullname as courier');
 		$this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
@@ -143,7 +146,8 @@ class Location extends Application
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
+			'aaData'=>$aadata,
+			'q'=>$this->db->last_query()
 		);
 
 		print json_encode($result);
@@ -233,7 +237,10 @@ class Location extends Application
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
-			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />'
+			'<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+			'',
+			'',
+			'<input type="text" name="search_status" id="search_status" value="Search status" class="search_init" />'
 			);
 
 
