@@ -835,7 +835,7 @@ function colorizetype($type){
 		$class = 'brown';
 	}else if($type == 'CCOD'){
 		$class = 'maroon';
-	}else if($type == 'PR'){
+	}else if($type == 'PS'){
 		$class = 'green';
 	}else{
 		$class = 'red';

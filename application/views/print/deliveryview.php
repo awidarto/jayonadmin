@@ -612,6 +612,18 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
 
+
+                        <?php if($main_info['delivery_type'] == 'PS'):?>
+                            <tr>
+                                <td class="row_label">Picked Up From</td>
+                                <td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
+                            </tr>
+                            <tr>
+                                <td>Pick Up Address</td>
+                                <td><?php print $main_info['shipping_address'];?></td>
+                            </tr>
+                        <?php else: ?>
+
                             <tr>
                                 <td class="row_label">Delivered To:</td>
                                 <td><?php print form_input('recipient_name',($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'],'id="recipient_name"');?></td>
@@ -622,6 +634,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     <?php print form_textarea('shipping_address',$main_info['shipping_address'],'id="shipping_address"');?>
                                 </td>
                             </tr>
+                        <?php endif; ?>
                             <tr>
                                 <td>How to Get There:</td>
                                 <td>

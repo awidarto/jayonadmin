@@ -21,10 +21,18 @@
 			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
 				{
 					'device_identifier':$('#search_device').val(),
-					'timestamp':$('#search_deliverytime').val()
+					'timestamp':$('#search_deliverytime').val(),
+					'courier':$('#search_courier').val(),
+					'status':$('#search_status').val()
 				}, 
 				function(data) {
 					if(data.result == 'ok'){
+
+						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
+						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
+						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
+
 						$('#map').gmap3({
 							action:'clear'
 						});
@@ -45,15 +53,17 @@
 						$.each(data.locations,function(){
 							if(this.data.status == 'loc_update'){
 								icon =  null;
+							}else if(this.data.status == 'delivered'){
+								icon = icon_yellow;								
 							}else{
-								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+								icon = icon_green;								
 							}
 							$('#map').gmap3({
 								action:'addMarker',
 								latLng:[this.data.lat, this.data.lng],
 								marker: {
 									options: {
-										//icon:icon
+										icon:icon
 										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
 									},
 									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},

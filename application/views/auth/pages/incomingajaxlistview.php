@@ -239,6 +239,12 @@
 		});
 		//put all action link functions here
 		$('table.dataTable').click(function(e){
+			if ($(e.target).is('.changestatus')) {
+				var delivery_id = e.target.id;
+				$('#change_id').html(delivery_id);
+				$('#changestatus_dialog').dialog('open');
+			}
+						
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
 				var answer = confirm("Are you sure you want to cancel this order ?");
@@ -460,6 +466,37 @@
 			}
 		});
 
+		$('#changestatus_dialog').dialog({
+			autoOpen: false,
+			height: 250,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Confirm Delivery Orders": function() {
+					var delivery_id = $('#change_id').html();
+
+					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
+						'delivery_id':delivery_id,
+						'new_status': $('#new_status').val(),
+						'actor': $('#actor').val()
+					}, function(data) {
+						if(data.result == 'ok'){
+							//redraw table
+							oTable.fnDraw();
+							$('#changestatus_dialog').dialog( "close" );
+						}
+					},'json');
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				//allFields.val( "" ).removeClass( "ui-state-error" );
+				$('#confirm_list').html('');
+			}
+		});
+
 		$('#view_dialog').dialog({
 			autoOpen: false,
 			height: 600,
@@ -548,6 +585,34 @@
 			<td style="border:0;margin:0;">
 				<input id="assign_deliverytime" type="text" value=""><br />
 				<div id="date_display"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div id="changestatus_dialog" title="Change Delivery Orders">
+	<table style="width:100%;border:0;margin:0;">
+		<tr>
+			<td style="width:250px;vertical-align:top">
+				<strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
+				<?php
+					$status_list = $this->config->item('status_colors');
+					$status_list = array_keys($status_list);
+
+					$sl = array();
+					foreach($status_list as $s){
+						$sl[$s]=$s;
+					}
+
+					$actor = $this->config->item('actors_title');
+
+
+					print 'Actor <br />';
+					print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
+					print ' New Status<br />';
+					print form_dropdown('new_status',$sl,'','id="new_status"');
+
+				?>
 			</td>
 		</tr>
 	</table>

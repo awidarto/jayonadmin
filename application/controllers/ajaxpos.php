@@ -10,9 +10,13 @@ class Ajaxpos extends CI_Controller
 
 		$device_name = $this->input->post('device_identifier');
 		$timestamp = $this->input->post('timestamp');
+		$courier = $this->input->post('courier');
+		$status = $this->input->post('status');
 
 		$device_name = ($device_name == 'Search device')?'':$device_name;
 		$timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
+		$courier = ($courier == 'Search courier')?'':$courier;
+		$status = ($status == 'Search status')?'':$status;
 
 		$this->db->distinct();
 		$this->db->select('identifier');
@@ -43,6 +47,11 @@ class Ajaxpos extends CI_Controller
 			}else{
 				$this->db->like('timestamp',$timestamp,'after');	
 			}
+
+			if($status != ''){
+				$this->db->like('status',$status,'after');
+			}
+
 				//->like('timestamp','2012-09-03','after')				
 				//->limit(10,0)
 			$loc = $this->db
@@ -131,6 +140,9 @@ class Ajaxpos extends CI_Controller
 			$this->db->like('c.courier',$this->input->post('sSearch_2'));
 		}
 
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
+		}
 
 		$this->db->select('*,d.identifier as identifier,c.fullname as courier');
 		$this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
