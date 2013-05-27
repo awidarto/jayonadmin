@@ -28,8 +28,12 @@
 				function(data) {
 					if(data.result == 'ok'){
 
-						var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
-						var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
+						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
+						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
+						//var icon_yellow = new google.maps.Icon({url:'http://maps.gstatic.com/mapfiles/icon_yellow.png'});								
+						//var icon_green = new google.maps.Icon({url:'http://maps.gstatic.com/mapfiles/icon_green.png'});								
 
 
 						$('#map').gmap3({
@@ -62,7 +66,7 @@
 								latLng:[this.data.lat, this.data.lng],
 								marker: {
 									options: {
-										//icon:icon
+										icon:icon
 										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
 									},
 									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},

@@ -48,8 +48,8 @@ class Ajaxpos extends CI_Controller
 				$this->db->like('timestamp',$timestamp,'after');	
 			}
 
-			if($status == ''){
-				$this->db->like('status',$status);
+			if($status != ''){
+				$this->db->like('status',$status,'after');
 			}
 
 				//->like('timestamp','2012-09-03','after')				
@@ -91,7 +91,7 @@ class Ajaxpos extends CI_Controller
 			}
 		}
 
-		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy));
+		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy, 'q'=>$this->db->last_query() ));
 
 	}
 
