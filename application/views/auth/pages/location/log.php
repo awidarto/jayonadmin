@@ -25,6 +25,11 @@
 				}, 
 				function(data) {
 					if(data.result == 'ok'){
+
+						var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
+						var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+
+
 						$('#map').gmap3({
 							action:'clear'
 						});
@@ -46,9 +51,9 @@
 							if(this.data.status == 'loc_update'){
 								icon =  null;
 							}else if(this.data.status == 'delivered'){
-								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
+								icon = icon_yellow;								
 							}else{
-								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+								icon = icon_green;								
 							}
 							$('#map').gmap3({
 								action:'addMarker',
