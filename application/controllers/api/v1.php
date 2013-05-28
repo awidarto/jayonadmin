@@ -127,6 +127,9 @@ class V1 extends Application
 				$order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
 				$order['delivery_bearer'] = (isset($in->delivery_bearer))?$in->delivery_bearer:'merchant';
 
+				$order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
+				$order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
+
 				if(isset($in->show_shop)){
 					$order['show_shop'] = $in->show_shop;	
 				}

@@ -50,6 +50,7 @@
 					<li class="<?php print set_hilite('admin\/delivery\/revoked')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/revoked', 'Revoked Orders'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/rescheduled')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/rescheduled', 'Rescheduled Orders'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/archived')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/archived', 'Order Archive'); } ?></li>
+					<li class="<?php print set_hilite('admin\/delivery\/running')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/running', 'Last 30 Days'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/log', 'Delivery Log'); } ?></li>
 				</ul>
 			</li>

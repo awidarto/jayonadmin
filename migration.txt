@@ -3,3 +3,6 @@ ADD  `mobile2` VARCHAR( 40 ) NULL AFTER  `mobile1` ;
 
 ALTER TABLE  `delivery_order_active` ADD  `delivery_bearer` VARCHAR( 15 ) NOT NULL AFTER  `chargeable_amount` ,
 ADD  `cod_bearer` VARCHAR( 15 ) NOT NULL AFTER  `delivery_bearer` ;
+
+ALTER TABLE  `delivery_order_active` ADD  `cod_method` VARCHAR( 15 ) NULL AFTER  `cod_bearer` ,
+ADD  `ccod_method` VARCHAR( 15 ) NULL AFTER  `cod_method` ;

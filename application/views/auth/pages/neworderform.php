@@ -368,12 +368,28 @@
                 $('#buyer_email_label').html('Supplier Email<hr /><span class="fine">Alamat Email Supplier</span>');
                 $('#buyer_delivered_to_label').html('Supplier Personnel<hr /><span class="fine">Petugas Supplier<br />harap sebutkan jabatan dan titel jika ada</span>');
                 $('#buyer_shipping_label').html('Pick Up Address<hr /><span class="fine">Alamat Pengambilan<br />harap sebutkan nama gedung dan lantai jika ada.</span>');
+                $('#delivery_tariff_label').html('Pickup Tariff<hr /><span class="fine">Tarif Pengambilan</span>');
             }else{
                 $('#buyer_name_label').html('Buyer Name<hr /><span class="fine">Nama Pembeli</span>');
                 $('#buyer_email_label').html('Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span>');
                 $('#buyer_delivered_to_label').html('Delivered To<hr /><span class="fine">Nama Penerima<br />harap sebutkan jabatan dan titel jika ada</span>');
                 $('#buyer_shipping_label').html('Shipping Address<hr /><span class="fine">Alamat Pengiriman<br />harap sebutkan nama gedung dan lantai jika ada.</span>');
+                $('#delivery_tariff_label').html('Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span>');
             }
+
+            if($('#delivery_type').val() == 'COD'){
+                $('#sub_cod').show();
+                $('#sub_ccod').hide();
+
+            }else if($('#delivery_type').val() == 'CCOD'){
+                $('#sub_cod').hide();
+                $('#sub_ccod').show();
+            }else{
+                $('#sub_cod').hide();
+                $('#sub_ccod').hide();
+            }
+
+
             getweightandcod();
         });        
 
@@ -709,12 +725,24 @@
                 $('#cod_cost').val(0);
             }
 
-            $.post('<?php print site_url('ajax/getweightdata');?>',
-                { app_key: current_app }, 
-                function(data) {
-                    $('#delivery_tab_data').html(data.data.table);
-                    $('#weight_selection').html(data.data.selector);
-                },'json');
+            if(delivery_type == 'PS'){
+                $.post('<?php print site_url('ajax/getpickupdata');?>',
+                    { app_key: current_app }, 
+                    function(data) {
+                        $('#delivery_tab_data').html(data.data.table);
+                        $('#weight_selection').html(data.data.selector);
+                    },'json');
+
+            }else{
+                $.post('<?php print site_url('ajax/getweightdata');?>',
+                    { app_key: current_app }, 
+                    function(data) {
+                        $('#delivery_tab_data').html(data.data.table);
+                        $('#weight_selection').html(data.data.selector);
+                    },'json');
+
+            }
+
         }
 
         function getzone(city){
@@ -771,6 +799,9 @@
 
             pdata.bearer_cod = $('#cod_surcharge_bearer').val();
             pdata.bearer_delivery = $('#delivery_bearer').val();
+
+            pdata.cod_method = $('#sub_cod').val();
+            pdata.ccod_method = $('#sub_ccod').val();
 
             var udescs = [];
             var uqtys = [];
@@ -1180,7 +1211,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
+                                <td id="delivery_tariff_label">Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
                                 <td id="delivery_tab_data">
                                     <?php // print $weighttable;?>
                                 </td>
@@ -1203,7 +1234,15 @@
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
                                 <td id="type_select">
-                                    <?php print $typeselect;?>
+                                    <?php print $typeselect;?> 
+                                    <select name="sub_cod" id ="sub_cod" style="display:none">
+                                        <option value="cash">Tunai</option>
+                                        <option value="debit">Debit</option>
+                                    </select>
+                                    <select name="sub_ccod" id="sub_ccod" style="display:none">
+                                        <option value="full">Pembayaran Penuh</option>
+                                        <option value="installment">Cicilan</option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>

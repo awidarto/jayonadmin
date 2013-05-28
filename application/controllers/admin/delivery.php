@@ -205,6 +205,264 @@ class Delivery extends Application
 		print json_encode($result);
 	}
 
+	public function running()
+	{
+		$this->breadcrumb->add_crumb('Orders','admin/delivery/running');
+		$this->breadcrumb->add_crumb('Last 30 Days','admin/delivery/running');
+
+		$this->table->set_heading(
+			'#',
+			'Timestamp',
+			'Requested Delivery Date',
+			'Requested Time Slot',
+			'Zone',
+			'City',
+			'ZIP',
+			'Delivery ID',
+			//'Merchant Trans ID',
+			'Type',
+			'App Name',
+			'W x H x L',
+			'Volume',
+			'Weight Range',
+			'Delivery Fee',
+			'COD Surcharge',
+			'COD Value',
+			'Merchant',
+			//'App Domain',
+			'Buyer',
+			'Shipping Address',
+			'Directions',
+			'Phone',
+			'Status',
+			'Reference',
+			//'Reschedule Ref',
+			//'Revoke Ref',
+			'Actions'
+			); // Setting headings for the table
+
+		$this->table->set_footing(
+			'',
+			'',
+			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'',
+			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+			'',
+			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+			//'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
+			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
+			form_button('do_confirm','Confirm Selection','id="doConfirm"'),
+			form_button('do_cancel','Cancel Selection','id="doCancel"')
+			);
+
+		$page['sortdisable'] = '0,2';
+		$page['ajaxurl'] = 'admin/delivery/ajaxrunning';
+		$page['page_title'] = 'Last 30 Days Orders';
+		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
+	}
+
+	public function ajaxrunning(){
+
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+
+		$columns = array(
+			'buyerdeliverytime',
+			'buyerdeliveryzone',
+			'buyerdeliverycity',
+			'zip',
+			'delivery_id',
+			'merchant_trans_id',
+			'app_name',
+			'merchant',
+			'buyer',
+			'shipping_address',
+			'phone',
+			'status'
+			);
+
+		// get total count result
+		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
+
+		$count_display_all = $this->db
+			->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
+		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+
+		$search = false;
+				//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			//$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverytime',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_2') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_2'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
+			$search = true;
+		}
+
+		/*
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+		*/
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+			$search = true;
+		}
+
+		if($search){
+			//$this->db->and_();
+		}else{
+			//$this->db->
+		}
+
+		/*
+		$this->db->group_start()
+			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
+			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
+			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
+			->group_end();
+		*/
+		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by($this->config->item('incoming_delivery_table').'.id','desc')
+			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
+			->order_by('buyerdeliverytime','desc')
+			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+
+		//print $this->db->last_query();
+
+		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
+
+		$result = $data->result_array();
+
+		$last = $this->db->last_query();
+
+		$aadata = array();
+
+		$num = $limit_offset;
+
+		foreach($result as $value => $key)
+		{
+			$num++;
+
+			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
+			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
+			$reschedule = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reschedule</span>';
+			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
+			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
+			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+
+			$app = $this->get_app_info($key['application_key']);
+
+			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (get_option('auto_lock_hours')*60*60))?true:false;
+			$lessday = ($key['buyerdeliverytime'] === '0000-00-00 00:00:00')?false:$lessday;
+
+			if($lessday){
+				$reqdate = '<span class="red">'.$key['buyerdeliverytime'].'</span>';
+			}else{
+				$reqdate = $key['buyerdeliverytime'];
+			}
+
+			$reference = '';
+
+			if($key['reschedule_ref'] != ''){
+				$reference = $key['reschedule_ref'];
+			}
+			if($key['revoke_ref'] != ''){
+				$reference = $key['revoke_ref'];
+			}
+
+			if($key['status'] == $this->config->item('trans_status_canceled')){
+				$delivery_check = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+			}else{
+				$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+			}
+
+			$aadata[] = array(
+				$num,
+				$key['ordertime'],
+				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
+				get_slot_range($key['buyerdeliveryslot']),
+				$key['buyerdeliveryzone'],
+				$key['buyerdeliverycity'],
+				$key['shipping_zip'],
+				$delivery_check,
+				//$key['merchant_trans_id'],
+				colorizetype($key['delivery_type']),
+				$app['application_name'],
+				$key['width'].' x '.$key['height'].' x '.$key['length'],
+				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				get_weight_range($key['weight'],$key['application_id']),				
+				$key['delivery_cost'],
+				($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
+				$key['merchant'],
+				//$app['domain'],
+				$key['buyer'],
+				$key['shipping_address'],
+				$key['directions'],
+				$key['phone'],
+				colorizestatus($key['status']),
+				$reference,
+				$reschedule.'<br />'.$changestatus,
+				//$key['reschedule_ref'],
+				//$key['revoke_ref'],
+				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
+			);
+
+		}
+
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata,
+			'q'=>$last
+		);
+
+		print json_encode($result);
+	}
+
 	public function incoming()
 	{
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');

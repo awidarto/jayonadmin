@@ -345,6 +345,21 @@ function get_delivery_charge_table($app_id){
 
 }
 
+function get_pickup_charge_table($app_id){
+	$CI =& get_instance();
+
+	$CI->db->where('app_id',$app_id);
+	$CI->db->order_by('seq','asc');
+	$result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
+
+	if($result->num_rows() > 0){
+		return $result->result();
+	}else{
+		return false;
+	}
+
+}
+
 function get_slot_max(){
 
 	$CI =& get_instance();
