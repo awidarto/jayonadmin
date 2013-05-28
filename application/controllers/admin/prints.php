@@ -122,8 +122,11 @@ class Prints extends Application
 
 
 				$this->table->add_row(
+					array('data'=>'Dibayar oleh '.$data['main_info']['delivery_bearer'],
+						'colspan'=>2,
+						'class'=>'lsums'
+						),	
 					array('data'=>'Delivery Charge',
-						'colspan'=>3,
 						'class'=>'lsums'
 						),	
 					array('data'=>number_format($dc,2,',','.'),
@@ -133,8 +136,11 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
+					array('data'=>'Dibayar oleh '.$data['main_info']['cod_bearer'],
+						'colspan'=>2,
+						'class'=>'lsums'
+						),	
 					array('data'=>'COD Surcharge',
-						'colspan'=>3,
 						'class'=>'lsums'
 						),		
 					array('data'=>number_format($cod,2,',','.'),

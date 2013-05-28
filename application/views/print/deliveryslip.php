@@ -270,7 +270,24 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr>
 								<td class="row_label">Delivery Type</td>
-								<td><?php print $main_info['delivery_type'];?></td>
+								<td>
+									<?php print $main_info['delivery_type'];?> 
+									<?php if($main_info['delivery_type'] == 'CCOD'):?>
+										<?php if($main_info['ccod_method'] == '' || $main_info['ccod_method'] == 'full'): ?>
+											- Pembayaran Penuh
+										<?php elseif($main_info['ccod_method'] == 'installment'): ?>
+											- Cicilan
+										<?php endif;?>
+									<?php endif;?>
+
+									<?php if($main_info['delivery_type'] == 'COD'):?>
+										<?php if($main_info['cod_method'] == '' || $main_info['cod_method'] == 'cash'): ?>
+											- Tunai
+										<?php elseif($main_info['cod_method'] == 'debit'): ?>
+											- Debit
+										<?php endif;?>
+									<?php endif;?>
+								</td>
 							</tr>
 							<tr>
 								<td class="row_label">Delivery Number</td>
