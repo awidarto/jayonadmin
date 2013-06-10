@@ -855,7 +855,7 @@
             pdata.utotals = utotals;
 
             if($('#trx_result').html() != 'Transaction Success'){
-                $('#loader').show();
+                //$('#loader').show();
                 $.post('<?php print site_url('ajax/neworder');?>',
                     pdata, 
                     function(data) {
@@ -1111,7 +1111,7 @@
 
         total_charges = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax) + parseInt(delivery_cost);
 
-        if($('#delivery_type').val() == 'COD'){
+        if($('#delivery_type').val() == 'COD' || $('#delivery_type').val() == 'CCOD'){
             cod_cost = parseInt(getCODcharge(parseInt(total_value)));
             total_charges += cod_cost;
         }else{
