@@ -6,3 +6,36 @@ ADD  `cod_bearer` VARCHAR( 15 ) NOT NULL AFTER  `delivery_bearer` ;
 
 ALTER TABLE  `delivery_order_active` ADD  `cod_method` VARCHAR( 15 ) NULL AFTER  `cod_bearer` ,
 ADD  `ccod_method` VARCHAR( 15 ) NULL AFTER  `cod_method` ;
+
+
+delete FROM `pickup_tariff` WHERE `seq` > 3;
+
+UPDATE `pickup_tariff` SET 
+`kg_from` = 0.1,
+`kg_to` = 1.1,
+`calculated_kg` = 1,
+`tariff_kg` =  6500,
+`total` = 6500, 
+`period_from` = '2012-08-01',
+`period_to` = '2012-08-01'
+WHERE  `pickup_tariff`.`seq` = 1;
+
+UPDATE `pickup_tariff` SET 
+`kg_from` = 1.2,
+`kg_to` = 2.1,
+`calculated_kg` = 2,
+`tariff_kg` =  6500,
+`total` = 13000, 
+`period_from` = '2012-08-01',
+`period_to` = '2012-08-01'
+WHERE  `pickup_tariff`.`seq` = 2;
+
+UPDATE `pickup_tariff` SET 
+`kg_from` = 2.2,
+`kg_to` = 3.1,
+`calculated_kg` = 3,
+`tariff_kg` =  6500,
+`total` = 19500, 
+`period_from` = '2012-08-01',
+`period_to` = '2012-08-01'
+WHERE  `pickup_tariff`.`seq` = 3;

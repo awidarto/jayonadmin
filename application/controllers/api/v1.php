@@ -7,6 +7,7 @@ class V1 extends Application
 	{
 		parent::__construct();
 		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
+		date_default_timezone_set('Asia/Jakarta');
 
 		$this->accessor_ip = $_SERVER['REMOTE_ADDR'];
 	}

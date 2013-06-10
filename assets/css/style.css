@@ -226,3 +226,14 @@ fieldset legend {
 	color: maroon;
 }
 
+#sendingorder, #sendingstatus{
+	position: absolute;
+	top: 50%;
+	right: 50%;
+	display: block;
+	padding: 10px;
+	background-color: white;
+	border: thin solid #ccc;	
+}
+
+

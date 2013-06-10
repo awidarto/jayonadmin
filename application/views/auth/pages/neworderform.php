@@ -859,11 +859,17 @@
                 $.post('<?php print site_url('ajax/neworder');?>',
                     pdata, 
                     function(data) {
-                        $('#loader').hide();
+                        //$('#loader').hide();
+                        $('#sendingorder', window.parent.document).hide();
                         if(data.status == 'OK:ORDERPOSTED'){
                             //alert('Transaction Success');
-                            $('#trx_result').html('Transaction Success');
-                            $('#neworder_dialog').dialog( "close" );
+                            $('#sendingstatus', window.parent.document).html('Transaction Success');
+                            $('#sendingstatus', window.parent.document).show();
+                            //$('#trx_result').html('Transaction Success');
+                            //$('#neworder_dialog', window.parent.document).dialog( "close" );
+                        }else{
+                            $('#sendingstatus', window.parent.document).html('Transaction Failed');
+                            $('#sendingstatus', window.parent.document).show();                            
                         }
                         //alert(data.status);
                     },'json');
