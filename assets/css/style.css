@@ -228,12 +228,12 @@ fieldset legend {
 
 #sendingorder, #sendingstatus{
 	position: absolute;
-	top: 50%;
-	right: 50%;
+	display: block;
+	bottom: 0px;
+	right:0px;
 	display: block;
 	padding: 10px;
 	background-color: white;
-	border: thin solid #ccc;	
+	border-top: thin solid #ccc;
+	border-left: thin solid #ccc;
 }
-
-

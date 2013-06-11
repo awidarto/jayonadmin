@@ -114,7 +114,8 @@
 
 		var seconds = new Date().getTime() / 1000;
 		function getChanges(){
-			$.post('<?php print base_url() ?>admin/uichanges',{ lastupdate: seconds },function(data){
+			var times = new Date().getTime();
+			$.post('<?php print base_url() ?>admin/uichanges?'+ times,{ lastupdate: seconds },function(data){
 				$('#total_changed').html(data.total_changed);
 				seconds = new Date().getTime() / 1000;
 			}, 'json');
