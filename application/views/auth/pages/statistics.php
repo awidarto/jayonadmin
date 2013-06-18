@@ -146,6 +146,14 @@ table#recon_select td {
 			<td>COD</td>
 			<td><?php print $total_to_date_cod;?></td>
 		</tr>
+		<tr>
+			<td>CCOD</td>
+			<td><?php print $total_to_date_ccod;?></td>
+		</tr>
+		<tr>
+			<td>PS</td>
+			<td><?php print $total_to_date_ps;?></td>
+		</tr>
 		<tr class="dark">
 			<td>Total Transaction to From <?php print $from ;?> to <?php print $to ;?></td>
 			<td><?php print $total_in_period;?></td>
@@ -157,6 +165,14 @@ table#recon_select td {
 		<tr>
 			<td>COD</td>
 			<td><?php print $total_in_period_cod;?></td>
+		</tr>
+		<tr>
+			<td>CCOD</td>
+			<td><?php print $total_in_period_ccod;?></td>
+		</tr>
+		<tr>
+			<td>PS</td>
+			<td><?php print $total_in_period_ps;?></td>
 		</tr>
 		<tr class="dark">
 			<td>Note :</td>

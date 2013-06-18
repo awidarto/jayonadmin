@@ -588,7 +588,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Type:</td>
-                                <td><span id="delivery_type"><?php print $main_info['delivery_type'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <td>
+                                    <span id="delivery_type"><?php print $main_info['delivery_type'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery type</span>
                                     <div id="delivery_option" style="display:none">
                                         <?php print $typeselect; ?>&nbsp;&nbsp;&nbsp;&nbsp;<span id="save_delivery" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -608,6 +609,39 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     <?php print form_input('buyerdeliveryzone',$main_info['buyerdeliveryzone'],'id="buyerdeliveryzone"');?>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
+                                <td>
+
+                                    <label for"delivery_bearer">Delivery Fee :</label>
+                                    <span id="delivery_bearer_type"><?php print ucfirst($main_info['delivery_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery bearer</span>
+                                    <div id="delivery_bearer_option" style="display:none">
+                                        <select id="delivery_bearer">
+                                            <option value="merchant">Merchant</option>
+                                            <option value="buyer">Buyer</option>
+                                        </select>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span id="save_delivery_bearer" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="cancel_delivery_bearer" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+
+                                    <br />
+
+                                    <label for"cod_bearer">COD / CCOD Surcharge Fee :</label>
+                                    <span id="cod_bearer_type"><?php print ucfirst($main_info['cod_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set COD bearer</span>
+                                    <div id="cod_bearer_option" style="display:none">
+                                        <select id="cod_surcharge_bearer">
+                                            <option value="merchant">Merchant</option>
+                                            <option value="buyer">Buyer</option>
+                                        </select>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span id="save_cod_bearer" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="cancel_cod_bearer" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>

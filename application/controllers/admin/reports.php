@@ -454,6 +454,12 @@ class Reports extends Application
 		$this->db->where('delivery_type','COD');
 		$data['total_to_date_cod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
 
+		$this->db->where('delivery_type','CCOD');
+		$data['total_to_date_ccod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where('delivery_type','PS');
+		$data['total_to_date_ps'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
 		$this->db->where('delivery_type','Delivery Only');
 		$data['total_to_date_do'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
 
@@ -464,6 +470,14 @@ class Reports extends Application
 		$this->db->where($daterange, NULL, FALSE);
 		$this->db->where('delivery_type','COD');
 		$data['total_in_period_cod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where($daterange, NULL, FALSE);
+		$this->db->where('delivery_type','CCOD');
+		$data['total_in_period_ccod'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->where($daterange, NULL, FALSE);
+		$this->db->where('delivery_type','PS');
+		$data['total_in_period_ps'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$this->db->where($daterange, NULL, FALSE);
 		$this->db->where('delivery_type','Delivery Only');

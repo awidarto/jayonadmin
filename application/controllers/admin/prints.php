@@ -120,6 +120,12 @@ class Prints extends Application
 					number_format($tax,2,',','.')
 				);
 
+				/*
+				if($data['main_info']['delivery_bearer'] == 'merchant'){
+					$chg -= $dc;
+					$dc = 0;
+				}
+				*/
 
 				$this->table->add_row(
 					array('data'=>'Dibayar oleh '.$data['main_info']['delivery_bearer'],
@@ -135,6 +141,13 @@ class Prints extends Application
 					)		
 				);
 
+				/*
+				if($data['main_info']['cod_bearer'] == 'merchant'){
+					$chg -= $cod;
+					$cod = 0;
+				}
+				*/
+				
 				$this->table->add_row(
 					array('data'=>'Dibayar oleh '.$data['main_info']['cod_bearer'],
 						'colspan'=>2,

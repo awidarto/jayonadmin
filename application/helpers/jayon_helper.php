@@ -1144,11 +1144,75 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 
 		$countcod = $CI->db->count_all_results();
 
+
+		// CCOD count
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+
+
+		$CI->db->where('delivery_type','CCOD');
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$countccod = $CI->db->count_all_results();
+
+
+		// PS count
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+
+
+		$CI->db->where('delivery_type','PS');
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$countps = $CI->db->count_all_results();
+
+		// DO count
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}		
+
+		$CI->db->where('delivery_type','Delivery Only');
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$countdo = $CI->db->count_all_results();
+
 		//print $CI->db->last_query();
 
 		//$timestamp = strtotime($date);
 		//$timestamp = (double)$timestamp;
-		$series[] = array($date,$countcod,$count - $countcod);
+		$series[] = array($date,$countcod,$countccod,$countps,$countdo);
 	}
 
 	//$series = str_replace('"', '', json_encode($series)) ;

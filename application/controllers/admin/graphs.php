@@ -56,7 +56,7 @@ class Graphs extends Application
 	}
 
 	public function rangegraph($status = null,$from = null, $to = null){
-		$lineplot = $this->plot->plot(500,350);
+		$lineplot = $this->plot->plot(500,450);
 
 		$year = date('Y',time());
 		$month = date('m',time());
@@ -85,15 +85,15 @@ class Graphs extends Application
 
 		$lineplot->SetYTickIncrement(1);
 		$lineplot->SetPrecisionY(0);
-		$lineplot->SetLegend(array('COD','Delivery Only'));
+		$lineplot->SetLegend(array('COD','CCOD','PS','Delivery Only'));
 
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
 		$lineplot->SetXDataLabelAngle(90);
 		$lineplot->SetYDataLabelPos('plotstack');
-		$lineplot->SetMarginsPixels(null,null,70,null);
-		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->SetMarginsPixels(null,null,90,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-15,5);
 		$lineplot->setLegendReverse(true);
 
 		//Draw it
