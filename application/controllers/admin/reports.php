@@ -1035,8 +1035,11 @@ class Reports extends Application
 		$sfrom = date('Y-m-d',strtotime($from));
 		$sto = date('Y-m-d',strtotime($to));
 
+
+
+
 		$this->db->distinct();
-		$this->db->select('assignment_date,status,cod_cost,delivery_cost,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost, sum(((total_price-total_discount)+total_tax)) as package_value');
+		$this->db->select('assignment_date,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -1051,13 +1054,13 @@ class Reports extends Application
 
 		$this->db->and_();
 			$this->db->group_start();
-				$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+				$this->db->where('status',	 $this->config->item('trans_status_mobile_delivered'));
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
 			$this->db->group_end();
 
-		$this->db->group_by('assignment_date,cod_cost');
+		$this->db->group_by('assignment_date,delivery_type');
 
 		$rows = $this->db->get();
 
@@ -1069,104 +1072,131 @@ class Reports extends Application
 			)	
 		);
 
+		$trans = array();
+		foreach($rows->result_array() as $r){
+			//print_r($r);
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['count'] = $r['count'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['cod_cost'] = $r['cod_cost'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['delivery_cost'] = $r['delivery_cost'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['total_price'] = $r['total_price'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['package_value'] = $r['package_value'];
+		}
+
+		$status_array = array(
+			$this->config->item('trans_status_mobile_delivered'),
+			$this->config->item('trans_status_mobile_revoked'),
+			$this->config->item('trans_status_mobile_noshow'),
+			$this->config->item('trans_status_mobile_rescheduled')
+		);
+
+		$type_array = array(
+			'COD',
+			'CCOD',
+			'Delivery Only',
+			'PS'
+		);
+
+		foreach ($trans as $key => $value) {
+
+			foreach($type_array as $t){
+
+				foreach($status_array as $s){
+
+					if(!isset($trans[$key][$t][$s])){
+						$trans[$key][$t][$s]['count'] = 0;
+						$trans[$key][$t][$s]['cod_cost'] = 0;
+						$trans[$key][$t][$s]['delivery_cost'] = 0;
+						$trans[$key][$t][$s]['total_price'] = 0;
+						$trans[$key][$t][$s]['package_value'] = 0;
+					}
+
+				}
+
+			}
+		}
+
+
+		//print_r($trans);
 
 		$this->table->set_heading(
+			'',		 	 	
+			'',
+			
+			array('data'=>'DO','colspan'=>'2'),		
+			array('data'=>'COD','colspan'=>'3'),		
+			array('data'=>'CCOD','colspan'=>'3'),		
+			array('data'=>'PS','colspan'=>'2'),		
+
+			array('data'=>'Status','colspan'=>'3'),		
+			
+			''		
+		); // Setting headings for the table			
+
+
+		$this->table->set_subheading(
 			'No.',		 	 	
 			'Date',
-			'Packet Value',
-			'COD Count',
-			'COD Packet Value',
-			'COD Surcharge',
-			'Delivery Only',
-			'Delivery Fee',
+			
+			'count',
+			'dcost',
+
+			'count',
+			'dcost',
+			'sur',
+
+			'count',
+			'dcost',
+			'sur',
+
+			'count',
+			'pfee',
+
 			'Delivered',
 			'No Show',
 			'Rescheduled',
+
 			'Delivery Count'
 		); // Setting headings for the table			
 
-		$seq = 0;
-		$rowdate = '';
-		$tarray = array();
-		foreach($rows->result() as $r){
-			if($rowdate == ''){
-				$rowdate = $r->assignment_date;
-				$tarray[$seq]['cod_package_value'] = 0;
-				$tarray[$seq]['package_value'] = 0;
-			}
+		$counter  = 1;
 
-			if($r->assignment_date != $rowdate){
-				$seq++;
-				$rowdate = $r->assignment_date;
-				$tarray[$seq]['cod_package_value'] = 0;
-				$tarray[$seq]['package_value'] = 0;
-			}
+		$total = array();
+		foreach($trans as $k=>$v){
 
-			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
-			$tarray[$seq]['assignment_date'] = $r->assignment_date;
-			$tarray[$seq][$r->status] = $r->count;
-			$tarray[$seq]['cod_count'] = ($r->cod_cost > 0 )?$r->count:0;
-			$tarray[$seq]['do_count'] = ($r->cod_cost > 0 )?0:$r->count;
-
-			$tarray[$seq]['cod_cost'] = $r->cod_cost;
-			$tarray[$seq]['do_cost'] = $r->delivery_cost;
-			$tarray[$seq]['package_value'] += $r->package_value;
-			$tarray[$seq]['cod_package_value'] += ($r->cod_cost > 0 )?$r->package_value:0;
-
-		}
-
-		$seq = 1;
-		$aseq = 0;
-
-
-		$tdl = 0;
-		$tns = 0;
-		$trs = 0;
-		$tcod = 0;
-		$tdo = 0;
-		$tcodc = 0;
-		$tdoc = 0;
-		$tpv = 0;
-		$tcpv = 0;
-
-		foreach ($tarray as $r) {
-
-			$dl = (isset($r['delivered']))?$r['delivered']:0;
-			$ns = (isset($r['noshow']))?$r['noshow']:0;
-			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
-
-			$tdl += $dl;
-			$tns += $ns;
-			$trs += $rs;
-			$tcod += $r['cod_count'];
-			$tdo += $r['do_count'];
-
-			$tcodc += $r['cod_cost'];
-			$tdoc += $r['do_cost'];
-			$tpv += $r['package_value'];
-			$tcpv += $r['cod_package_value'];
+			$r = $this->_makerow($v);
 
 			$this->table->add_row(
-				$seq,		
-				date('d M Y',strtotime($r['assignment_date'])),		
-				array('data'=>number_format((int)str_replace('.','',$r['package_value']),2,',','.'),'class'=>'right'),
-				$r['cod_count'],
-				array('data'=>number_format((int)str_replace('.','',$r['cod_package_value']),2,',','.'),'class'=>'right'),
-				array('data'=>number_format((int)str_replace('.','',$r['cod_cost']),2,',','.'),'class'=>'right'),
-				$r['do_count'],
-				array('data'=>number_format((int)str_replace('.','',$r['do_cost']),2,',','.'),'class'=>'right'),
-				$dl,
-				$ns,
-				$rs,
-				$dl + $ns + $rs
-			);				
+				$counter,
+				date('d-m-Y',strtotime($k)),
 
-			$seq++;
-			$aseq++;
+				$r['Delivery Only']['count'],
+				$r['Delivery Only']['dcost'],
+
+				$r['COD']['count'],
+				$r['COD']['dcost'],
+				$r['COD']['sur'],
+
+				$r['CCOD']['count'],
+				$r['CCOD']['dcost'],
+				$r['CCOD']['sur'],
+
+				$r['PS']['count'],
+				$r['PS']['pfee'],
+
+				$r['delivered']['count'],
+				$r['noshow']['count'],
+				$r['rescheduled']['count'],
+
+				$r['total_delivery_count']
+			);
+
+			$total[] = $r;
+
+			$counter++;
 		}
 
-		$gt = $tdl + $tns + $trs;
 
+		/*
 		$this->table->add_row(
 			'',		
 			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
@@ -1181,6 +1211,7 @@ class Reports extends Application
 			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
 			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
 		);				
+		*/
 
 		$recontab = $this->table->generate();
 		$data['recontab'] = $recontab;
@@ -1203,6 +1234,34 @@ class Reports extends Application
 		}else{
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
 		}		
+	}
+
+	private function _makerow($v){
+		
+		$r = array();
+
+		$r['COD']['count'] = $v['COD']['delivered']['count'] + $v['COD']['revoked']['count'] + $v['COD']['noshow']['count'] + $v['COD']['rescheduled']['count'];
+		$r['CCOD']['count'] = $v['CCOD']['delivered']['count'] + $v['CCOD']['revoked']['count'] + $v['CCOD']['noshow']['count'] + $v['CCOD']['rescheduled']['count'];
+		$r['Delivery Only']['count'] = $v['Delivery Only']['delivered']['count'] + $v['Delivery Only']['revoked']['count'] + $v['Delivery Only']['noshow']['count'] + $v['Delivery Only']['rescheduled']['count'];
+		$r['PS']['count'] = $v['PS']['delivered']['count'] + $v['PS']['revoked']['count'] + $v['PS']['noshow']['count'] + $v['PS']['rescheduled']['count'];
+
+		$r['COD']['dcost'] = $v['COD']['delivered']['delivery_cost'] + $v['COD']['revoked']['delivery_cost'] + $v['COD']['noshow']['delivery_cost'] + $v['COD']['rescheduled']['delivery_cost'];
+		$r['CCOD']['dcost'] = $v['CCOD']['delivered']['delivery_cost'] + $v['CCOD']['revoked']['delivery_cost'] + $v['CCOD']['noshow']['delivery_cost'] + $v['CCOD']['rescheduled']['delivery_cost'];
+		
+		$r['COD']['sur'] = $v['COD']['delivered']['cod_cost'] + $v['COD']['revoked']['cod_cost'] + $v['COD']['noshow']['cod_cost'] + $v['COD']['rescheduled']['cod_cost'];
+		$r['CCOD']['sur'] = $v['CCOD']['delivered']['cod_cost'] + $v['CCOD']['revoked']['cod_cost'] + $v['CCOD']['noshow']['cod_cost'] + $v['CCOD']['rescheduled']['cod_cost'];
+		
+		$r['Delivery Only']['dcost'] = $v['Delivery Only']['delivered']['delivery_cost'] + $v['Delivery Only']['revoked']['delivery_cost'] + $v['Delivery Only']['noshow']['delivery_cost'] + $v['Delivery Only']['rescheduled']['delivery_cost'];
+		$r['PS']['pfee'] = $v['PS']['delivered']['delivery_cost'] + $v['PS']['revoked']['delivery_cost'] + $v['PS']['noshow']['delivery_cost'] + $v['PS']['rescheduled']['delivery_cost'];
+
+		$r['delivered']['count'] = $v['COD']['delivered']['count'] + $v['CCOD']['delivered']['count'] + $v['Delivery Only']['delivered']['count'] + $v['PS']['delivered']['count'];
+		$r['noshow']['count'] = $v['COD']['noshow']['count'] + $v['CCOD']['noshow']['count'] + $v['Delivery Only']['noshow']['count'] + $v['PS']['noshow']['count'];
+		$r['revoked']['count'] = $v['COD']['revoked']['count'] + $v['CCOD']['revoked']['count'] + $v['Delivery Only']['revoked']['count'] + $v['PS']['revoked']['count'];
+		$r['rescheduled']['count'] = $v['COD']['rescheduled']['count'] + $v['CCOD']['rescheduled']['count'] + $v['Delivery Only']['rescheduled']['count'] + $v['PS']['rescheduled']['count'];
+
+		$r['total_delivery_count'] = $r['delivered']['count'] + $r['noshow']['count'] + $r['revoked']['count'] + $r['rescheduled']['count'];
+
+		return $r;
 	}
 
 	public function courierrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){

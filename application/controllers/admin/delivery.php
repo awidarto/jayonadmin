@@ -114,6 +114,8 @@ class Delivery extends Application
 
 		//print $this->db->last_query();
 
+			$last_query = $this->db->last_query();
+
 		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
 
 		$result = $data->result_array();
@@ -199,7 +201,8 @@ class Delivery extends Application
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
+			'aaData'=>$aadata,
+			'lastquery'=>$last_query
 		);
 
 		print json_encode($result);

@@ -29,7 +29,7 @@ class MY_Table extends CI_Table {
   function set_footing()
   {
     $args = func_get_args();
-	$this->footing = $this->_prep_args($args);
+	  $this->footing = $this->_prep_args($args);
   }
 
   // --------------------------------------------------------------------
@@ -46,7 +46,7 @@ class MY_Table extends CI_Table {
   function set_subheading()
   {
     $args = func_get_args();
-	$this->subheading = $this->_prep_args($args);
+	  $this->subheading = $this->_prep_args($args);
   }
 
   // --------------------------------------------------------------------
@@ -131,6 +131,7 @@ class MY_Table extends CI_Table {
 			$out .= $this->template['thead_close'];
 			$out .= $this->newline;
 		}
+
 
 		// Is there a table footing to display?
 		if (count($this->footing) > 0)
