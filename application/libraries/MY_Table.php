@@ -132,7 +132,6 @@ class MY_Table extends CI_Table {
 			$out .= $this->newline;
 		}
 
-
 		// Is there a table footing to display?
 		if (count($this->footing) > 0)
 		{

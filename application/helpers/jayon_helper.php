@@ -1,5 +1,9 @@
 <?php
 
+function idr($in){
+	return number_format((double) $in,2,',','.');
+}
+
 function get_delivery_id($sequence,$merchant_id){
 	$CI =& get_instance();
 	$year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);

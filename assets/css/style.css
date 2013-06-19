@@ -237,3 +237,19 @@ fieldset legend {
 	border-top: thin solid #ccc;
 	border-left: thin solid #ccc;
 }
+
+td.total{
+	border-top:thin solid #222;
+}
+
+td.count{
+	text-align: center;
+}
+
+td.currency{
+	text-align: right;
+}
+
+.reportTable th{
+	text-align: center;	
+}
