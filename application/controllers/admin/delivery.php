@@ -183,7 +183,7 @@ class Delivery extends Application
 				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
 				$key['merchant'],
 				//$app['domain'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['directions'],
 				$key['phone'],
