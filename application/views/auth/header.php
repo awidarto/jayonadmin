@@ -29,6 +29,7 @@
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
 		<?php echo $this->ag_asset->load_script('jquery.fancybox.pack.js','fancybox');?>
 		<?php echo $this->ag_asset->load_script('jquery.simple-color.js');?>
+		<?php echo $this->ag_asset->load_script('stickyheader.jquery.js');?>
 
 		<?php echo $this->ag_asset->load_script('d3.min.js','vendor');?>
 		<?php echo $this->ag_asset->load_script('d3.layout.min.js','vendor');?>

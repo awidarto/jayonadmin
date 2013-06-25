@@ -39,7 +39,7 @@
 			}
 		);
 
-
+		//$("#toClone thead").sticky({topSpacing:0});
 
 	});
 
@@ -74,6 +74,24 @@ table#recon_select td {
 	text-align: right;
 }
 
+.floatingHeader {
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+}
+
+#toClone{
+	margin-top: 0px;
+}
+
+.hide {
+        display:none;
+    }
+div.stickyHeader {
+    top:0;
+    position:fixed;
+    _position:absolute;
+}
 
 </style>
 
@@ -141,6 +159,7 @@ table#recon_select td {
 		</form>
 	</div>
 </div>
+
 <div>
 	<h3><?php print $type.' '.$period; ?></h3>
 	<?php print $recontab; ?>
