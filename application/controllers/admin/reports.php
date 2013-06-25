@@ -1039,11 +1039,11 @@ class Reports extends Application
 
 
 		$this->db->distinct();
-		if($id == 'noid'){
+/*		if($id == 'noid'){
 			$this->db->select('assignment_date,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
 		}else{
-			$this->db->select('assignment_date,merchant_id,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
-		}
+*/			$this->db->select('assignment_date,merchant_id,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+//		}
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -1064,30 +1064,30 @@ class Reports extends Application
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
 			$this->db->group_end();
 
-		if($id == 'noid'){
+/*		if($id == 'noid'){
 			$this->db->group_by('assignment_date,delivery_type');
 		}else{
-			$this->db->group_by('assignment_date,merchant_id,delivery_type');
-		}
+*/			$this->db->group_by('assignment_date,merchant_id,delivery_type');
+//		}
 
 
 		$rows = $this->db->get();
 
 		$result = $rows->result_array();
-		//$this->db->last_query();
+		//print $this->db->last_query();
 
 		$trans = array();
 
 
 		foreach($result as $r){
 			//print_r($r);
-			if($id == 'noid'){
+/*			if($id == 'noid'){
 				$mid = 'noid';
 			}else{
-				//print_r($result);
+*/				//print_r($result);
 				$mid = $r['merchant_id'];
 				//$mid = 'mid';
-			}
+//			}
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['count'] = $r['count'];
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['cod_cost'] = $r['cod_cost'];
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['delivery_cost'] = $r['delivery_cost'];
@@ -1141,7 +1141,7 @@ class Reports extends Application
 		$this->table->set_heading(
 			'',		 	 	
 			'',
-			
+			'',
 			array('data'=>'DO','colspan'=>'3'),		
 			array('data'=>'COD','colspan'=>'4'),		
 			array('data'=>'CCOD','colspan'=>'4'),		
@@ -1154,7 +1154,8 @@ class Reports extends Application
 		$this->table->set_subheading(
 			'No.',		 	 	
 			'Date',
-			
+			'Merchant',
+
 			'count',
 			'dcost',
 			'pval',
@@ -1201,70 +1202,70 @@ class Reports extends Application
 		$total['total_delivery_count']  = 0;
 		$total['total_package_value']  = 0;
 
+		$lastdate = '';
+
 		foreach($trans as $key=>$val){
 
 			foreach ($val as $k => $v) {
 
-				$r[$key] = $this->_makerevrow($v);
-
-				//print $key;
-				//print_r($r[$key]);
-
-			
+				$r[$key][$k] = $this->_makerevrow($v);
 
 				$this->table->add_row(
 					$counter,
-					date('d-m-Y',strtotime($key)),
+					($lastdate == $key)?'':date('d-m-Y',strtotime($key)),
+					$cs[$k],
+					array('data'=>$r[$key][$k]['Delivery Only']['count'],'class'=>'count'),
+					array('data'=>idr($r[$key][$k]['Delivery Only']['dcost']),'class'=>'currency'),		
+					array('data'=>idr($r[$key][$k]['Delivery Only']['pval']),'class'=>'currency'),		
 
-					array('data'=>$r[$key]['Delivery Only']['count'],'class'=>'count'),
-					array('data'=>idr($r[$key]['Delivery Only']['dcost']),'class'=>'currency'),		
-					array('data'=>idr($r[$key]['Delivery Only']['pval']),'class'=>'currency'),		
+					array('data'=>$r[$key][$k]['COD']['count'],'class'=>'count'),
+					array('data'=>idr($r[$key][$k]['COD']['dcost']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['COD']['sur']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['COD']['pval']),'class'=>'currency'),
 
-					array('data'=>$r[$key]['COD']['count'],'class'=>'count'),
-					array('data'=>idr($r[$key]['COD']['dcost']),'class'=>'currency'),
-					array('data'=>idr($r[$key]['COD']['sur']),'class'=>'currency'),
-					array('data'=>idr($r[$key]['COD']['pval']),'class'=>'currency'),
+					array('data'=>$r[$key][$k]['CCOD']['count'],'class'=>'count'),
+					array('data'=>idr($r[$key][$k]['CCOD']['dcost']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['CCOD']['sur']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['CCOD']['pval']),'class'=>'currency'),
 
-					array('data'=>$r[$key]['CCOD']['count'],'class'=>'count'),
-					array('data'=>idr($r[$key]['CCOD']['dcost']),'class'=>'currency'),
-					array('data'=>idr($r[$key]['CCOD']['sur']),'class'=>'currency'),
-					array('data'=>idr($r[$key]['CCOD']['pval']),'class'=>'currency'),
+					array('data'=>$r[$key][$k]['PS']['count'],'class'=>'count'),
+					array('data'=>idr($r[$key][$k]['PS']['pfee']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['PS']['pval']),'class'=>'currency'),
 
-					array('data'=>$r[$key]['PS']['count'],'class'=>'count'),
-					array('data'=>idr($r[$key]['PS']['pfee']),'class'=>'currency'),
-					array('data'=>idr($r[$key]['PS']['pval']),'class'=>'currency'),
-
-					array('data'=>$r[$key]['total_delivery_count'],'class'=>'count'),
-					array('data'=>idr($r[$key]['total_package_value']),'class'=>'currency')
+					array('data'=>$r[$key][$k]['total_delivery_count'],'class'=>'count'),
+					array('data'=>idr($r[$key][$k]['total_package_value']),'class'=>'currency')
 
 				);
 
-					$total['Delivery Only']['count'] +=	$r[$key]['Delivery Only']['count'];
-					$total['Delivery Only']['dcost'] +=	$r[$key]['Delivery Only']['dcost'];
-					$total['Delivery Only']['pval'] += $r[$key]['Delivery Only']['pval'];
-					$total['COD']['count'] += $r[$key]['COD']['count'];
-					$total['COD']['dcost'] += $r[$key]['COD']['dcost'];
-					$total['COD']['sur'] +=	$r[$key]['COD']['sur'];
-					$total['COD']['pval'] += $r[$key]['COD']['pval'];
-					$total['CCOD']['count'] += $r[$key]['CCOD']['count'];
-					$total['CCOD']['dcost'] += $r[$key]['CCOD']['dcost'];
-					$total['CCOD']['sur'] += $r[$key]['CCOD']['sur'];
-					$total['CCOD']['pval'] += $r[$key]['CCOD']['pval'];
-					$total['PS']['count'] += $r[$key]['PS']['count'];
-					$total['PS']['pfee'] +=	$r[$key]['PS']['pfee'];
-					$total['PS']['pval'] +=	$r[$key]['PS']['pval'];
-					$total['total_delivery_count'] += $r[$key]['total_delivery_count'];
-					$total['total_package_value'] += $r[$key]['total_package_value'];
+					$lastdate = $key;
 
-				
+					$total['Delivery Only']['count'] +=	$r[$key][$k]['Delivery Only']['count'];
+					$total['Delivery Only']['dcost'] +=	$r[$key][$k]['Delivery Only']['dcost'];
+					$total['Delivery Only']['pval'] += $r[$key][$k]['Delivery Only']['pval'];
+					$total['COD']['count'] += $r[$key][$k]['COD']['count'];
+					$total['COD']['dcost'] += $r[$key][$k]['COD']['dcost'];
+					$total['COD']['sur'] +=	$r[$key][$k]['COD']['sur'];
+					$total['COD']['pval'] += $r[$key][$k]['COD']['pval'];
+					$total['CCOD']['count'] += $r[$key][$k]['CCOD']['count'];
+					$total['CCOD']['dcost'] += $r[$key][$k]['CCOD']['dcost'];
+					$total['CCOD']['sur'] += $r[$key][$k]['CCOD']['sur'];
+					$total['CCOD']['pval'] += $r[$key][$k]['CCOD']['pval'];
+					$total['PS']['count'] += $r[$key][$k]['PS']['count'];
+					$total['PS']['pfee'] +=	$r[$key][$k]['PS']['pfee'];
+					$total['PS']['pval'] +=	$r[$key][$k]['PS']['pval'];
+					$total['total_delivery_count'] += $r[$key][$k]['total_delivery_count'];
+					$total['total_package_value'] += $r[$key][$k]['total_package_value'];
+
+				$counter++;			
 
 			}
 
-			$counter++;
 		}
 
 			$this->table->add_row(
 				'',
+				'',
+
 				array('data'=>'Total','class'=>'total'),		
 
 				array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
@@ -1295,7 +1296,7 @@ class Reports extends Application
 
 		/* end copy */
 
-		$this->breadcrumb->add_crumb('Merchant Reconciliations','admin/reports/reconciliation');
+		$this->breadcrumb->add_crumb('Revenue','admin/reports/reconciliation');
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Merchant Reconciliations';
