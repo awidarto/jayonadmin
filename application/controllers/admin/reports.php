@@ -1039,11 +1039,9 @@ class Reports extends Application
 
 
 		$this->db->distinct();
-/*		if($id == 'noid'){
-			$this->db->select('assignment_date,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
-		}else{
-*/			$this->db->select('assignment_date,merchant_id,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
-//		}
+
+		$this->db->select('assignment_date,merchant_id,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -1064,11 +1062,7 @@ class Reports extends Application
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
 			$this->db->group_end();
 
-/*		if($id == 'noid'){
-			$this->db->group_by('assignment_date,delivery_type');
-		}else{
-*/			$this->db->group_by('assignment_date,merchant_id,delivery_type');
-//		}
+			$this->db->group_by('assignment_date,merchant_id,delivery_type,cod_cost,delivery_cost');
 
 
 		$rows = $this->db->get();
@@ -1080,14 +1074,9 @@ class Reports extends Application
 
 
 		foreach($result as $r){
-			//print_r($r);
-/*			if($id == 'noid'){
-				$mid = 'noid';
-			}else{
-*/				//print_r($result);
-				$mid = $r['merchant_id'];
-				//$mid = 'mid';
-//			}
+
+			$mid = $r['merchant_id'];
+
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['count'] = $r['count'];
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['cod_cost'] = $r['cod_cost'];
 			$trans[$r['assignment_date']][$mid][$r['delivery_type']]['delivery_cost'] = $r['delivery_cost'];
@@ -1147,7 +1136,7 @@ class Reports extends Application
 			array('data'=>'CCOD','colspan'=>'4'),		
 			array('data'=>'PS','colspan'=>'3'),		
 			
-			array('data'=>'Total','colspan'=>'2')	
+			array('data'=>'Total','colspan'=>'3')	
 		); // Setting headings for the table			
 
 
@@ -1174,6 +1163,7 @@ class Reports extends Application
 			'pfee',
 			'pval',
 
+			'Revenue',
 			'Delivery Count',
 			'Package Value'
 		); // Setting headings for the table			
@@ -1199,6 +1189,7 @@ class Reports extends Application
 		$total['delivered']['count'] = 0;  
 		$total['noshow']['count']  = 0;
 		$total['rescheduled']['count']  = 0;
+		$total['jex']['revenue'] = 0;
 		$total['total_delivery_count']  = 0;
 		$total['total_package_value']  = 0;
 
@@ -1209,6 +1200,9 @@ class Reports extends Application
 			foreach ($val as $k => $v) {
 
 				$r[$key][$k] = $this->_makerevrow($v);
+
+				$revtotal = ( $r[$key][$k]['Delivery Only']['dcost'] + $r[$key][$k]['COD']['dcost'] + $r[$key][$k]['COD']['sur'] + $r[$key][$k]['CCOD']['dcost'] + $r[$key][$k]['CCOD']['sur'] + $r[$key][$k]['PS']['pfee']);
+
 
 				$this->table->add_row(
 					$counter,
@@ -1232,6 +1226,7 @@ class Reports extends Application
 					array('data'=>idr($r[$key][$k]['PS']['pfee']),'class'=>'currency'),
 					array('data'=>idr($r[$key][$k]['PS']['pval']),'class'=>'currency'),
 
+					array('data'=>idr($revtotal),'class'=>'currency'),
 					array('data'=>$r[$key][$k]['total_delivery_count'],'class'=>'count'),
 					array('data'=>idr($r[$key][$k]['total_package_value']),'class'=>'currency')
 
@@ -1253,6 +1248,8 @@ class Reports extends Application
 					$total['PS']['count'] += $r[$key][$k]['PS']['count'];
 					$total['PS']['pfee'] +=	$r[$key][$k]['PS']['pfee'];
 					$total['PS']['pval'] +=	$r[$key][$k]['PS']['pval'];
+
+					$total['jex']['revenue'] += $revtotal;
 					$total['total_delivery_count'] += $r[$key][$k]['total_delivery_count'];
 					$total['total_package_value'] += $r[$key][$k]['total_package_value'];
 
@@ -1266,7 +1263,7 @@ class Reports extends Application
 				'',
 				'',
 
-				array('data'=>'Total','class'=>'total'),		
+				array('data'=>'Totals','class'=>'total'),		
 
 				array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
 				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),		
@@ -1286,9 +1283,39 @@ class Reports extends Application
 				array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
 				array('data'=>idr($total['PS']['pval']),'class'=>'total currency'),
 
+				array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
 				array('data'=>$total['total_delivery_count'],'class'=>'total count'),
 				array('data'=>idr($total['total_package_value']),'class'=>'total currency')
 
+			);
+
+			$this->table->add_row(
+				'',
+				'',
+
+				array('data'=>'Percentage (%)','class'=>'total'),		
+
+				array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
+				array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr($total['Delivery Only']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),		
+				array('data'=>($total['Delivery Only']['pval'] == 0)?idr(0):idr($total['Delivery Only']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),		
+
+				array('data'=>($total['COD']['count'] == 0)?idr(0):idr($total['COD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+				array('data'=>($total['COD']['dcost'] == 0)?idr(0):idr($total['COD']['dcost'] / $total['jex']['revenue'] * 100 ),'class'=>'total currency c-maroon'),
+				array('data'=>($total['COD']['sur'] == 0)?idr(0):idr($total['COD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+				array('data'=>($total['COD']['pval'] == 0)?idr(0):idr($total['COD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+				array('data'=>($total['CCOD']['count'] == 0)?idr(0):idr($total['CCOD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+				array('data'=>($total['CCOD']['dcost'] == 0)?idr(0):idr($total['CCOD']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+				array('data'=>($total['CCOD']['sur'] == 0)?idr(0):idr($total['CCOD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+				array('data'=>($total['CCOD']['pval'] == 0)?idr(0):idr($total['CCOD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+				array('data'=>($total['PS']['count'] == 0)?idr(0):idr($total['PS']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+				array('data'=>($total['PS']['pfee'] == 0)?idr(0):idr($total['PS']['pfee'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+				array('data'=>($total['PS']['pval'] == 0)?idr(0):idr($total['PS']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+				'',
+				'',
+				''
 			);
 
 		$recontab = $this->table->generate();
