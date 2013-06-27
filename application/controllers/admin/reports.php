@@ -1348,7 +1348,7 @@ class Reports extends Application
 				array('data'=>'Summary','class'=>'total'),		
 
 				array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
-				array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost'] + $total['PS']['pfee']),'class'=>'total currency'),		
+				array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),		
 				array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),		
 
 				'',
@@ -1362,7 +1362,7 @@ class Reports extends Application
 				'',
 
 				'',
-				'',
+				array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
 				'',
 
 				array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
