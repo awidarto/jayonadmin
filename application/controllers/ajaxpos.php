@@ -91,7 +91,7 @@ class Ajaxpos extends CI_Controller
 			}
 		}
 
-		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy));
+		print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy, 'q'=>$this->db->last_query() ));
 
 	}
 
