@@ -89,7 +89,7 @@
 		#order_detail,#merchant_detail,#sign_boxes{
 			vertical-align:top;
 			padding-top:0px;
-			
+
 		}
 
 		#order_detail{
@@ -192,7 +192,7 @@
 					<table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
 						<tbody>
 							<tr><h2>DELIVERY NOTE</h2><br />
-								<td id="jayon_logo"><?php 
+								<td id="jayon_logo"><?php
 										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
 										<?php print get_option('jex_hq_address');?>
 								</td>
@@ -227,7 +227,7 @@
 								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
 								<td><?php print $main_info['merchant_trans_id'];?></td>
 							</tr>
-<?php 
+<?php
 /*
     [mc_email] => ganti@bajuresmi.net.com.id
     [mc_street] => 2345678
@@ -252,7 +252,7 @@ $merchant_info .= ($main_info['m_country']=='')?$main_info['mc_country'].'<br />
 $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone']:'Phone : '.$main_info['m_phone'];
 
 
-?>							
+?>
 							<tr>
 								<td colspan="2">Store Detail</td>
 							</tr>
@@ -271,7 +271,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							<tr>
 								<td class="row_label">Delivery Type</td>
 								<td>
-									<?php print $main_info['delivery_type'];?> 
+									<?php print $main_info['delivery_type'];?>
 									<?php if($main_info['delivery_type'] == 'CCOD'):?>
 										<?php if($main_info['ccod_method'] == '' || $main_info['ccod_method'] == 'full'): ?>
 											- Pembayaran Penuh
@@ -325,7 +325,13 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 						<?php endif; ?>
 							<tr>
 								<td>Phone</td>
-								<td><?php print $main_info['phone'];?></td>
+								<td>
+                                    <?php
+                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?$main_info['phone'].'<br />':'';
+                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?$main_info['mobile1'].'<br />':'';
+                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?$main_info['mobile2'].'<br />':'';
+                                    ?>
+                                </td>
 							</tr>
 
 							<tr>
@@ -341,7 +347,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 					<?php echo $this->table->generate(); ?>
 				</td>
-				
+
 				<td id="sign_boxes">
 					<table border="0" cellpadding="4" cellspacing="0" id="signBox">
 						<tbody>
