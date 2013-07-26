@@ -31,16 +31,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -53,7 +53,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -75,9 +75,9 @@
 				this.value = asInitVals[$('tfoot input').index(this)];
 			}
 		} );
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -114,7 +114,7 @@
 			},
 			beforeShowDay:getBlocking
 		});
-		
+
 		function getBlocking(d){
 			/*
 				$.datepicker.formatDate('yy-mm-dd', d);
@@ -122,7 +122,7 @@
 			var curr_date = d.getDate();
 			var curr_month = d.getMonth() + 1; //months are zero based
 			var curr_year = d.getFullYear();
-		
+
 			curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
 			curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
 			var indate = curr_year + '-' + curr_month + '-' + curr_date;
@@ -130,7 +130,7 @@
 			var select = 1;
 			var css = 'open';
 			var popup = 'working day';
-			
+
 			if(window.dateBlock[indate] == 'weekend'){
 				select = 0;
 				css = 'weekend';
@@ -154,7 +154,7 @@
 			}
 			return [select,css,popup];
 		}
-		
+
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 
@@ -164,7 +164,7 @@
 			$('#neworder_frame').attr('src',src);
 			$('#neworder_dialog').dialog('open');
 		});
-		
+
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -174,7 +174,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#trans_list').html(assigns);
 				$('#assign_dialog').dialog('open');
@@ -192,7 +192,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -210,7 +210,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#confirm_list').html(assigns);
 				$('#confirm_dialog').dialog('open');
@@ -229,7 +229,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#cancel_list').html(assigns);
 				$('#cancel_dialog').dialog('open');
@@ -244,7 +244,7 @@
 				$('#change_id').html(delivery_id);
 				$('#changestatus_dialog').dialog('open');
 			}
-						
+
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
 				var answer = confirm("Are you sure you want to cancel this order ?");
@@ -313,7 +313,7 @@
 
 
 		});
-		
+
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
@@ -324,7 +324,7 @@
 				},'json');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 400,
@@ -340,7 +340,7 @@
 						$('.assign_check:checked').each(function(){
 							delivery_ids[i] = $(this).val();
 							i++;
-						}); 
+						});
 						$.post('<?php print site_url('admin/delivery/ajaxassigndate');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
@@ -372,7 +372,7 @@
 					$('.assign_check:checked').each(function(){
 						delivery_ids[i] = $(this).val();
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxconfirm');?>',
 						{ assignment_date: $('#assign_deliverytime').val(),
 							'delivery_id[]':delivery_ids,
@@ -409,7 +409,7 @@
 					$('.assign_check:checked').each(function(){
 						delivery_ids[i] = $(this).val();
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',
 						{ assignment_date: $('#assign_deliverytime').val(),
 							'delivery_id[]':delivery_ids,
@@ -475,7 +475,7 @@
 				"Confirm Delivery Orders": function() {
 					var delivery_id = $('#change_id').html();
 
-					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
+					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
 						'delivery_id':delivery_id,
 						'new_status': $('#new_status').val(),
 						'actor': $('#actor').val()
@@ -507,19 +507,19 @@
 					var nframe = document.getElementById('view_frame');
 					var nframeWindow = nframe.contentWindow;
 					nframeWindow.submitorder();
-				}, 
+				},
 				Print: function(){
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 
@@ -533,7 +533,7 @@
 					var nframe = document.getElementById('neworder_frame');
 					var nframeWindow = nframe.contentWindow;
 					nframeWindow.submitorder();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
@@ -543,7 +543,7 @@
 			},
 			close: function() {
 				$('#sendingorder').hide();
-				$('#sendingstatus').hide();				
+				$('#sendingstatus').hide();
 			}
 		});
 
@@ -556,8 +556,8 @@
 		refresh();
 		*/
 	} );
-	
-	
+
+
 </script>
 <div class="button_nav">
 	<span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
@@ -571,6 +571,15 @@
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
 
+<div style="text-align:right;margin-top:12px;">
+<?php
+
+    print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
+    form_button('do_confirm','Confirm Selection','id="doConfirm"').
+    form_button('do_cancel','Cancel Selection','id="doCancel"');
+
+?>
+</div>
 <div id="assign_dialog" title="Assign Delivery Date to Selection">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
