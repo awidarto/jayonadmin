@@ -250,12 +250,12 @@ class Delivery extends Application
 			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
 			$search = true;
 		}
-		*/
 
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
+        */
 
 		if($search){
 			$this->db->and_();
