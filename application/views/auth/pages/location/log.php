@@ -1,11 +1,35 @@
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+ <!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+ <![endif]-->
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
 <?php echo $this->ag_asset->load_script('gmap3.min.js');?>
 
 <script>
 	var asInitVals = new Array();
 	//var locdata = <?php //print $locdata;?>;
-	
+
+    CM_ATTRIB = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+
+    CM_URL = 'http://{s}.tile.cloudmade.com/bc43265d42be42e3bfd603f12a8bf0e9/997/256/{z}/{x}/{y}.png';
+
+    OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
 	$(document).ready(function() {
+
+        var map = L.map('map').setView([-6.17742,106.828308], 13);
+
+
+        L.tileLayer(CM_URL, {
+            attribution: CM_ATTRIB,
+            maxZoom: 18
+        }).addTo(map);
+
+        /*
 		$('#map').gmap3({
 			action:'init',
 			options:{
@@ -13,6 +37,7 @@
 			      zoom: 11
 			    }
 		});
+        */
 
 		function refreshMap(){
 			var currtime = new Date();
@@ -24,10 +49,11 @@
 					'timestamp':$('#search_deliverytime').val(),
 					'courier':$('#search_courier').val(),
 					'status':$('#search_status').val()
-				}, 
+				},
 				function(data) {
 					if(data.result == 'ok'){
 
+<<<<<<< HEAD
 						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
 						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
 						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
@@ -38,6 +64,12 @@
 						//var icon_green = new google.maps.Icon({url:'http://maps.gstatic.com/mapfiles/icon_green.png'});								
 
 >>>>>>> a5fcdacf85e6eb205661d2fb95757f8f06d5bcb1
+=======
+						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');
+						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');
+						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';
+						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';
+>>>>>>> 0f02bc2dcb4c2286aabe6a96dbc9d84ae15a6e87
 
 						$('#map').gmap3({
 							action:'clear'
@@ -60,9 +92,9 @@
 							if(this.data.status == 'loc_update'){
 								icon =  null;
 							}else if(this.data.status == 'delivered'){
-								icon = icon_yellow;								
+								icon = icon_yellow;
 							}else{
-								icon = icon_green;								
+								icon = icon_green;
 							}
 							$('#map').gmap3({
 								action:'addMarker',
@@ -96,7 +128,7 @@
 											$(this).gmap3({action:'clear', name:'overlay'});
 										}
 									}
-								}								
+								}
 							});
 
 						});
@@ -153,7 +185,7 @@
 				}
 			}
 			*/
-		
+
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -167,16 +199,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -190,7 +222,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -220,7 +252,7 @@
 			setTimeout(refresh, <?php print get_option('map_refresh_rate');?> * 1000);
 		}
 
-		refresh();		
+		refresh();
 
 
 
@@ -231,7 +263,7 @@
 			select:function(event,ui){
 				$('#assign_courier_id').val(ui.item.id);
 				$('#assign_courier_id_txt').html(ui.item.id);
-				
+
 			}
 		});
 
@@ -241,9 +273,9 @@
 			minLength: 2
 		});
 
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 			refreshMap();
@@ -257,7 +289,7 @@
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#doDispatch').click(function(){
 			if($('.device_id:checked').val() == undefined || $(".assign_date:checked").val() == undefined ){
 				alert('Please specify Date AND Device.');
@@ -275,7 +307,7 @@
 				$('#assign_dialog').dialog('open');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 200,
@@ -312,10 +344,10 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-		
+
 	} );
-	
-	
+
+
 </script>
 
 

@@ -1,37 +1,13 @@
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
- <!--[if lte IE 8]>
-     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
- <![endif]-->
-<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
-
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjAbrYRF0v4nd5DeWPhbVObRwF_cbcE1A&sensor=false">
+</script>
+<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
 
 <script>
 
 	var locdata = <?php print $locdata;?>;
 
-    CM_ATTRIB = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="http://cloudmade.com">CloudMade</a>';
-
-    CM_URL = 'http://{s}.tile.cloudmade.com/bc43265d42be42e3bfd603f12a8bf0e9/997/256/{z}/{x}/{y}.png';
-
-    OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
 	$(document).ready(function() {
 
-
-
-        var map = L.map('map').setView([-6.17742,106.828308], 11);
-
-
-        L.tileLayer(OSM_URL, {
-            attribution: OSM_ATTRIB,
-            maxZoom: 18
-        }).addTo(map);
-
-        var marker = L.marker([locdata]).addTo(map);
-        /*
 		$('#map').gmap3(
 			{ action:'init',
 				options:{
@@ -71,7 +47,7 @@
 				}
 			}
 		);
-        */
+
 
 	});
 
