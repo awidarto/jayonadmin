@@ -700,10 +700,7 @@ class Delivery extends Application
 			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
 			$search = true;
 		}
-<<<<<<< HEAD
 
-=======
->>>>>>> a5fcdacf85e6eb205661d2fb95757f8f06d5bcb1
 		/*
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
@@ -715,10 +712,6 @@ class Delivery extends Application
 			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
 			$search = true;
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> a5fcdacf85e6eb205661d2fb95757f8f06d5bcb1
 
 		if($search){
 			$this->db->and_();

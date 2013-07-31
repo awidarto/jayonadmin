@@ -109,10 +109,7 @@ class Location extends Application
 		if($this->input->post('sSearch_3') != ''){
 			$this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
 		}
-<<<<<<< HEAD
 
-=======
->>>>>>> a5fcdacf85e6eb205661d2fb95757f8f06d5bcb1
 
 		$this->db->select('*,d.identifier as identifier,c.fullname as courier');
 		$this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
