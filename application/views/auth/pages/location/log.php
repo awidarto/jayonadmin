@@ -101,16 +101,6 @@
 				function(data) {
 					if(data.result == 'ok'){
 
-<<<<<<< HEAD
-                        /*
-
-						$('#map').gmap3({
-							action:'clear'
-						});
-=======
-                        console.log(markers.length);
->>>>>>> 028736e821f0085e33f6f9fb0d7d650d32492d7f
-
 
                         if(paths.length > 0){
 
