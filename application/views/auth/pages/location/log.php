@@ -96,20 +96,8 @@
 				function(data) {
 					if(data.result == 'ok'){
 
-						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
-						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
-						//var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
-						//var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
-						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');
-						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');
-<<<<<<< HEAD
-						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';
-						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';
-
-
-=======
                         /*
->>>>>>> 7a8fb8ada0ac6524d0f9200d036806ec168f5fbc
+
 						$('#map').gmap3({
 							action:'clear'
 						});
