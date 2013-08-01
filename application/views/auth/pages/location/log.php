@@ -266,6 +266,10 @@
 			refreshMap();
 		});
 
+        $('#showLocUpdate').click(function(){
+            refreshMap();
+        });
+
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
