@@ -53,23 +53,15 @@
 				function(data) {
 					if(data.result == 'ok'){
 
-<<<<<<< HEAD
 						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
 						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
-						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
-						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
-<<<<<<< HEAD
-=======
-						//var icon_yellow = new google.maps.Icon({url:'http://maps.gstatic.com/mapfiles/icon_yellow.png'});								
-						//var icon_green = new google.maps.Icon({url:'http://maps.gstatic.com/mapfiles/icon_green.png'});								
-
->>>>>>> a5fcdacf85e6eb205661d2fb95757f8f06d5bcb1
-=======
+						//var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
+						//var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
 						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');
 						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');
 						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';
 						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';
->>>>>>> 0f02bc2dcb4c2286aabe6a96dbc9d84ae15a6e87
+
 
 						$('#map').gmap3({
 							action:'clear'
