@@ -2,9 +2,22 @@
  <!--[if lte IE 8]>
      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
  <![endif]-->
+
+<?php echo $this->ag_asset->load_css('font-awesome.min.css');?>
+<?php echo $this->ag_asset->load_css('leaflet.awesome-markers.css');?>
+
 <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
-<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
+<?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
+
+<style type="text/css">
+.awesome-marker i {
+    color: #333;
+    margin-top: 2px;
+    display: inline-block;
+    font-size: 10px;
+}
+</style>
 
 <script>
 	var asInitVals = new Array();
@@ -21,14 +34,18 @@
 
 	$(document).ready(function() {
 
-        var map = L.map('map').setView([-6.17742,106.828308], 13);
+        var map = L.map('map').setView([-6.17742,106.828308], 12);
 
 
-        L.tileLayer(CM_URL, {
-            attribution: CM_ATTRIB,
+        L.tileLayer(OSM_URL, {
+            attribution: OSM_ATTRIB,
             maxZoom: 18
         }).addTo(map);
 
+        var lg;
+        var icsize = new L.Point(19,47);
+        var icanchor = new L.Point(11,47);
+        var shanchor = new L.Point(11,30);
         /*
 		$('#map').gmap3({
 			action:'init',
@@ -39,9 +56,35 @@
 		});
         */
 
+        var markers = [];
+        var lg;
+
 		function refreshMap(){
 			var currtime = new Date();
+
 			//console.log(currtime.getTime());
+
+            var icon_yellow = L.AwesomeMarkers.icon({
+                icon: 'icon-gift',
+                color: 'yellow',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
+            var icon_green = L.AwesomeMarkers.icon({
+                icon: 'icon-location-arrow',
+                color: 'green',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
+            var icon_red = L.AwesomeMarkers.icon({
+                icon: 'icon-exchange',
+                color: 'red',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
 
 			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
 				{
@@ -55,9 +98,7 @@
 
 						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');
 						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');
-						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';
-						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';
-
+                        /*
 						$('#map').gmap3({
 							action:'clear'
 						});
@@ -74,51 +115,46 @@
 							});
 
 						});
+                        */
+                        console.log(markers.length);
+
+                        if(markers.length > 0){
+
+                            for(m = 0; m < markers.length; m++){
+                                map.removeLayer(markers[m]);
+                            }
+                            //console.log(lg.getLayers());
+
+                            //lg.removeLayer(markers);
+
+                            markers = [];
+
+                        }
+
 
 						$.each(data.locations,function(){
+
 							if(this.data.status == 'loc_update'){
-								icon =  null;
+								icon =  icon_red;
 							}else if(this.data.status == 'delivered'){
 								icon = icon_yellow;
 							}else{
 								icon = icon_green;
 							}
-							$('#map').gmap3({
-								action:'addMarker',
-								latLng:[this.data.lat, this.data.lng],
-								marker: {
-									options: {
-										icon:icon
-										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
-									},
-									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},
-									events:{
-										mouseover: function(marker,event,data){
-											//console.log(data);
-											$(this).gmap3(
-												{action:'clear',name:'overlay'},
-												{action:'addOverlay',
-													latLng:marker.getPosition(),
-													content:
-														'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
-															'<div class="bg"></div>' +
-															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '<br />' + data.status + '</div>' +
-														'</div>',
-													offset: {
-														x:-46,
-														y:-73
-													}
-												}
-											);
-										},
-										mouseout: function(){
-											$(this).gmap3({action:'clear', name:'overlay'});
-										}
-									}
-								}
-							});
+
+                            var content = '<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
+                                '<div class="bg"></div>' +
+                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
+                            '</div>';
+
+
+                            if(this.data.status != 'loc_update'){
+                                var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
+                                markers.push(m);
+                            }
 
 						});
+
 					}
 				},'json');
 
