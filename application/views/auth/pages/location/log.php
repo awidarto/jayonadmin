@@ -143,7 +143,7 @@
                                 icon =  icon_red;
 							}
 
-                            var content = '<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
+                            var content = '<div style="background-color:white;padding:3px;width:150px;">' +
                                 '<div class="bg"></div>' +
                                 '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
                             '</div>';
