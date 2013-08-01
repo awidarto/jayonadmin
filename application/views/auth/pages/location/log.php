@@ -9,6 +9,8 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
 <?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
+<?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
+
 
 <style type="text/css">
 .awesome-marker i {
@@ -44,8 +46,8 @@
 
         var lg;
         var icsize = new L.Point(19,47);
-        var icanchor = new L.Point(11,47);
-        var shanchor = new L.Point(11,30);
+        var icanchor = new L.Point(9,20);
+        var shanchor = new L.Point(4,5);
         /*
 		$('#map').gmap3({
 			action:'init',
@@ -57,6 +59,8 @@
         */
 
         var markers = [];
+        var paths = [];
+
         var lg;
 
 		function refreshMap(){
@@ -66,7 +70,7 @@
 
             var icon_yellow = L.AwesomeMarkers.icon({
                 icon: 'icon-gift',
-                color: 'yellow',
+                color: 'blue',
                 iconSize: icsize,
                 iconAnchor: icanchor,
                 shadowAnchor: shanchor
@@ -93,52 +97,60 @@
 					'courier':$('#search_courier').val(),
 					'status':$('#search_status').val()
 				},
+
 				function(data) {
 					if(data.result == 'ok'){
 
+<<<<<<< HEAD
                         /*
 
 						$('#map').gmap3({
 							action:'clear'
 						});
-
-						$.each(data.paths,function(){
-							$('#map').gmap3({
-								action:'addPolyline',
-								options:{
-									strokeColor: this.color,
-									strokeOpacity: 1.0,
-									strokeWeight: 2
-								},
-								path: this.poly
-							});
-
-						});
-                        */
+=======
                         console.log(markers.length);
+>>>>>>> 028736e821f0085e33f6f9fb0d7d650d32492d7f
+
+
+                        if(paths.length > 0){
+
+                            for(m = 0; m < paths.length; m++){
+                                map.removeLayer(paths[m]);
+                            }
+
+                            paths = [];
+
+                        }
 
                         if(markers.length > 0){
 
                             for(m = 0; m < markers.length; m++){
                                 map.removeLayer(markers[m]);
                             }
-                            //console.log(lg.getLayers());
-
-                            //lg.removeLayer(markers);
 
                             markers = [];
 
                         }
 
+                        $.each(data.paths, function(){
+                            var polyline = L.polyline( this.poly,
+                                {
+                                    color: this.color,
+                                    weight: 2
+                                } ).addTo(map);
+
+                            paths.push(polyline);
+                        });
+
 
 						$.each(data.locations,function(){
 
 							if(this.data.status == 'loc_update'){
-								icon =  icon_red;
+                                icon = icon_green;
 							}else if(this.data.status == 'delivered'){
 								icon = icon_yellow;
 							}else{
-								icon = icon_green;
+                                icon =  icon_red;
 							}
 
                             var content = '<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
@@ -146,10 +158,15 @@
                                 '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
                             '</div>';
 
-
-                            if(this.data.status != 'loc_update'){
+                            if($('#showLocUpdate').is(':checked')){
                                 var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
                                 markers.push(m);
+
+                            }else{
+                                if(this.data.status != 'loc_update'){
+                                    var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
+                                    markers.push(m);
+                                }
                             }
 
 						});
@@ -158,55 +175,6 @@
 				},'json');
 
 		}
-
-
-
-
-
-
-
-	    /*
-		$('#map').gmap3({
-			action:'init',
-			options:{
-			      center:[-6.17742,106.828308],
-			      zoom: 11
-			    }
-			},
-			<?php //print $pathcmd;?>
-			,
-			{ action:'addMarkers',
-				radius:100,
-				markers: locdata,
-				marker: {
-					options: {
-						//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
-					},
-					events:{
-						mouseover: function(marker,event,data){
-							$(this).gmap3(
-								{action:'clear',name:'overlay'},
-								{action:'addOverlay',
-									latLng:marker.getPosition(),
-									content:
-										'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
-											'<div class="bg"></div>' +
-											'<div class="text">' + data.identifier + '<br />' + data.timestamp + '</div>' +
-										'</div>',
-									offset: {
-										x:-46,
-										y:-73
-									}
-								}
-							);
-						},
-						mouseout: function(){
-							$(this).gmap3({action:'clear', name:'overlay'});
-						}
-					}
-				}
-			}
-			*/
 
 	    var oTable = $('.dataTable').dataTable(
 			{
@@ -372,7 +340,9 @@
 
 </script>
 
-
+    <div>
+        <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point
+    </div>
 	<div id="tracker" >
 		<table style="padding:0px;margin:0px;">
 			<tr>
