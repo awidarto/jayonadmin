@@ -694,7 +694,7 @@ class Ajax extends Application
 
                 }else{
 
-                    if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
+                    if($in->email == '' || $in->email == '-' || !isset($in->email) || $in->email == 'noemail'){
 
                         $in->email = 'noemail';
                         $is_new = true;
@@ -1020,6 +1020,19 @@ class Ajax extends Application
             return false;
         }
     }
+
+    private function check_phone($phone, $mobile1, $mobile2){
+        $em = $this->db->like('phone',$phone)
+                ->or_like('mobile1',$mobile1)
+                ->or_like('mobile2',$mobile2)
+                ->get($this->config->item('jayon_members_table'));
+        if($em->num_rows() > 0){
+            return $em->row_array();
+        }else{
+            return false;
+        }
+    }
+
 
     private function register_buyer($dataset){
         $dataset['group_id'] = 5;

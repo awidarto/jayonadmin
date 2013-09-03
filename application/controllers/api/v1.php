@@ -57,7 +57,7 @@ class V1 extends Application
                 $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
 
 
-				if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
+				if($in->email == '' || $in->email == '-' || !isset($in->email) || $in->email == 'noemail'){
                     $in->email = 'noemail';
                     $is_new = true;
                     if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
