@@ -491,13 +491,17 @@ class Ajax extends Application
 
 		$api_key = $this->input->post('api_key');
 		$trx_id = $trx['transaction_id'];
+        $trx = json_encode($trx);
 
+        /*
         $result = $this->jexclient
                     ->base($this->config->item('api_url'))
                     ->endpoint('order/key/'.$api_key.'/trx/'.$trx_id)
                     ->data($trx)
                     ->format('json')
                     ->send();
+        */
+        $result = $this->order_save($trx,$api_key,$trx_id);
         print $result;
 
 	}
@@ -648,6 +652,427 @@ class Ajax extends Application
 
 		print str_replace('"', '', $locjson);
 	}
+
+    // worker functions
+
+    public function order_save($indata,$api_key,$transaction_id)
+    {
+        $args = '';
+
+        //$api_key = $this->get('key');
+        //$transaction_id = $this->get('trx');
+
+        if(is_null($api_key)){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            return $result;
+        }else{
+            $app = $this->get_key_info(trim($api_key));
+
+            if($app == false){
+                $result = json_encode(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()));
+                return $result;
+            }else{
+                //$in = $this->input->post('transaction_detail');
+                //$in = file_get_contents('php://input');
+                $in = $indata;
+
+                $args = 'p='.$in;
+
+                $in = json_decode($in);
+
+                $is_new = false;
+
+                $in->phone = ( isset( $in->phone ) && $in->phone != '')?normalphone( $in->phone ):'';
+                $in->mobile1 = ( isset( $in->mobile1 ) && $in->mobile1 != '' )?normalphone( $in->mobile1 ):'';
+                $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
+
+
+                if(isset($in->buyer_id) && $in->buyer_id != '' && $in->buyer_id > 1){
+
+                    $buyer_id = $in->buyer_id;
+                    $is_new = false;
+
+                }else{
+
+                    if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
+
+                        $in->email = 'noemail';
+                        $is_new = true;
+                        if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
+                            if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+                                $buyer_id = $buyer['id'];
+                                $is_new = false;
+                            }
+                        }
+
+                    }else if($buyer = $this->check_email($in->email)){
+
+                        $buyer_id = $buyer['id'];
+                        $is_new = false;
+
+                    }else if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+
+                        $buyer_id = $buyer['id'];
+                        $is_new = false;
+
+                    }
+
+                }
+
+                if(isset($in->transaction_id) && $in->transaction_id != ""){
+                    $transaction_id = $in->transaction_id;
+                }
+
+
+                if($is_new){
+                    $buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
+                    $dataset['username'] = $buyer_username;
+                    $dataset['email'] = $in->email;
+                    $dataset['phone'] = $in->phone;
+                    $dataset['mobile1'] = $in->mobile1;
+                    $dataset['mobile2'] = $in->mobile2;
+                    $dataset['fullname'] = $in->buyer_name;
+                    $password = random_string('alnum', 8);
+                    $dataset['password'] = $this->ag_auth->salt($password);
+                    $dataset['created'] = date('Y-m-d H:i:s',time());
+
+                    /*
+                    $dataset['province'] =
+                    $dataset['mobile']
+                    */
+
+                    $dataset['street'] = $in->shipping_address;
+                    $dataset['district'] = $in->buyerdeliveryzone;
+                    $dataset['city'] = $in->buyerdeliverycity;
+                    $dataset['country'] = 'Indonesia';
+                    $dataset['zip'] = $in->zip;
+
+                    $buyer_id = $this->register_buyer($dataset);
+                    $is_new = true;
+                }
+
+                $order['created'] = date('Y-m-d H:i:s',time());
+                $order['ordertime'] = date('Y-m-d H:i:s',time());
+                $order['application_id'] = $app->id;
+                $order['application_key'] = $app->key;
+                $order['buyer_id'] = $buyer_id;
+                $order['merchant_id'] = $app->merchant_id;
+                $order['merchant_trans_id'] = trim($transaction_id);
+
+                $order['buyer_name'] = $in->buyer_name;
+                $order['recipient_name'] = $in->recipient_name;
+                $order['email'] = $in->email;
+                $order['directions'] = $in->directions;
+                //$order['dir_lat'] = $in->dir_lat;
+                //$order['dir_lon'] = $in->dir_lon;
+                $order['buyerdeliverytime'] = $in->buyerdeliverytime;
+                $order['buyerdeliveryslot'] = $in->buyerdeliveryslot;
+                $order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
+                $order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Jakarta':$in->buyerdeliverycity;
+
+                $order['currency'] = $in->currency;
+                $order['total_price'] = (isset($in->total_price))?$in->total_price:0;
+                $order['total_discount'] = (isset($in->total_discount))?$in->total_discount:0;
+                $order['total_tax'] = (isset($in->total_tax))?$in->total_tax:0;
+                $order['cod_cost'] = $in->cod_cost;
+                $order['chargeable_amount'] = (isset($in->chargeable_amount))?$in->chargeable_amount:0;
+
+                $order['shipping_address'] = $in->shipping_address;
+                $order['shipping_zip'] = $in->zip;
+                $order['phone'] = $in->phone;
+                $order['mobile1'] = $in->mobile1;
+                $order['mobile2'] = $in->mobile2;
+                $order['status'] = $in->status;
+
+                $order['width'] = $in->width;
+                $order['height'] = $in->height;
+                $order['length'] = $in->length;
+                $order['weight'] = (isset($in->weight))?$in->weight:0;
+                $order['delivery_type'] = $in->delivery_type;
+                $order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;
+
+                $order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
+                $order['delivery_bearer'] = (isset($in->delivery_bearer))?$in->delivery_bearer:'merchant';
+
+                $order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
+                $order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
+
+                if(isset($in->show_shop)){
+                    $order['show_shop'] = $in->show_shop;
+                }
+
+                if(isset($in->show_merchant)){
+                    $order['show_merchant'] = $in->show_merchant;
+                }
+
+                $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
+                $sequence = $this->db->insert_id();
+
+                $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+
+                $nedata['fullname'] = $in->buyer_name;
+                $nedata['merchant_trx_id'] = trim($transaction_id);
+                $nedata['delivery_id'] = $delivery_id;
+                $nedata['merchantname'] = $app->application_name;
+                $nedata['app'] = $app;
+
+                $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
+
+                    $this->table_tpl = array(
+                        'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
+                    );
+                    $this->table->set_template($this->table_tpl);
+
+
+                    $this->table->set_heading(
+                        'No.',
+                        'Description',
+                        'Quantity',
+                        'Total'
+                        ); // Setting headings for the table
+
+                    $d = 0;
+                    $gt = 0;
+
+
+                if($in->trx_detail){
+                    $seq = 0;
+
+                    foreach($in->trx_detail as $it){
+                        $item['ordertime'] = $order['ordertime'];
+                        $item['delivery_id'] = $delivery_id;
+                        $item['unit_sequence'] = $seq++;
+                        $item['unit_description'] = $it->unit_description;
+                        $item['unit_price'] = $it->unit_price;
+                        $item['unit_quantity'] = $it->unit_quantity;
+                        $item['unit_total'] = $it->unit_total;
+                        $item['unit_discount'] = $it->unit_discount;
+
+                        $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+
+                        $this->table->add_row(
+                            (int)$item['unit_sequence'] + 1,
+                            $item['unit_description'],
+                            $item['unit_quantity'],
+                            $item['unit_total']
+                        );
+
+                        $u_total = str_replace(array(',','.'), '', $item['unit_total']);
+                        $u_discount = str_replace(array(',','.'), '', $item['unit_discount']);
+                        $gt += (int)$u_total;
+                        $d += (int)$u_discount;
+
+                    }
+
+                    $total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
+                    $total = str_replace(array(',','.'), '', $total);
+                    $total = (int)$total;
+                    $gt = ($total < $gt)?$gt:$total;
+
+                    $disc = (isset($in->total_discount))?$in->total_discount:0;
+                    $tax = (isset($in->total_tax))?$in->total_tax:0;
+                    $cod = (isset($in->cod_cost))?$in->cod_cost:'Paid by merchant';
+
+                    $disc = str_replace(array(',','.'), '', $disc);
+                    $tax = str_replace(array(',','.'), '',$tax);
+                    $cod = str_replace(array(',','.'), '',$cod);
+
+                    $disc = (int)$disc;
+                    $tax = (int)$tax;
+                    $cod = (int)$cod;
+
+                    $chg = ($gt - $disc) + $tax + $cod;
+
+                    $this->table->add_row(
+                        '',
+                        '',
+                        'Total Price',
+                        number_format($gt,2,',','.')
+                    );
+
+                    $this->table->add_row(
+                        '',
+                        '',
+                        'Total Discount',
+                        number_format($disc,2,',','.')
+                    );
+
+                    $this->table->add_row(
+                        '',
+                        '',
+                        'Total Tax',
+                        number_format($tax,2,',','.')
+                    );
+
+
+                    if($cod == 0){
+                        $this->table->add_row(
+                            '',
+                            '',
+                            'COD Charges',
+                            'Paid by Merchant'
+                        );
+                    }else{
+                        $this->table->add_row(
+                            '',
+                            '',
+                            'COD Charges',
+                            number_format($cod,2,',','.')
+                        );
+                    }
+
+
+                    $this->table->add_row(
+                        '',
+                        '',
+                        'Total Charges',
+                        number_format($chg,2,',','.')
+                    );
+
+                    $nedata['detail'] = $this->table;
+
+                    $result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+
+                    return $result;
+                }else{
+                    $nedata['detail'] = false;
+
+                    $result = json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+
+                    return $result;
+                }
+
+                //print_r($app);
+
+                if($app->notify_on_new_order == 1){
+                    send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
+                }
+
+                if($is_new == true){
+                    $edata['fullname'] = $dataset['fullname'];
+                    $edata['username'] = $buyer_username;
+                    $edata['password'] = $password;
+                    if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
+                        send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+                    }
+
+                }
+
+            }
+        }
+
+        $this->log_access($api_key, __METHOD__ ,$result,$args);
+    }
+
+    //private supporting functions
+
+    private function get_key_info($key){
+        if(!is_null($key)){
+            $this->db->where('key',$key);
+            $result = $this->db->get($this->config->item('applications_table'));
+            if($result->num_rows() > 0){
+                $row = $result->row();
+                return $row;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    private function get_dev_info($key){
+        if(!is_null($key)){
+            $this->db->where('key',$key);
+            $result = $this->db->get($this->config->item('jayon_devices_table'));
+            if($result->num_rows() > 0){
+                $row = $result->row();
+                return $row;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    private function get_dev_info_by_id($identifier){
+        if(!is_null($identifier)){
+            $this->db->where('identifier',$identifier);
+            $result = $this->db->get($this->config->item('jayon_devices_table'));
+            if($result->num_rows() > 0){
+                $row = $result->row();
+                return $row;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+
+    private function check_email($email){
+        $em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));
+        if($em->num_rows() > 0){
+            return $em->row_array();
+        }else{
+            return false;
+        }
+    }
+
+    private function register_buyer($dataset){
+        $dataset['group_id'] = 5;
+
+        if($this->db->insert($this->config->item('jayon_members_table'),$dataset)){
+            return $this->db->insert_id();
+        }else{
+            return 0;
+        }
+    }
+
+    private function get_device($key){
+        $dev = $this->db->where('key',$key)->get($this->config->item('jayon_mobile_table'));
+        print_r($dev);
+        print $this->db->last_query();
+        return $dev->row_array();
+    }
+
+    private function get_group(){
+        $this->db->select('id,description');
+        $result = $this->db->get($this->ag_auth->config['auth_group_table']);
+        foreach($result->result_array() as $row){
+            $res[$row['id']] = $row['description'];
+        }
+        return $res;
+    }
+
+    private function log_access($api_key,$query,$result,$args = null){
+        $data['timestamp'] = date('Y-m-d H:i:s',time());
+        $data['accessor_ip'] = $this->accessor_ip;
+        $data['api_key'] = (is_null($api_key))?'':$api_key;
+        $data['query'] = $query;
+        $data['result'] = $result;
+        $data['args'] = (is_null($args))?'':$args;
+
+        access_log($data);
+    }
+
+    private function admin_auth($username = null,$password = null){
+        if(is_null($username) || is_null($password)){
+            return false;
+        }
+
+        $password = $this->ag_auth->salt($password);
+        $result = $this->db->where('username',$username)->where('password',$password)->get($this->ag_auth->config['auth_user_table']);
+
+        if($result->num_rows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 
 }
