@@ -172,7 +172,7 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
 	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
 	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
-    $config['api_url'] = 'http://127.0.0.1/beta2/jayonapi/v2';
+    $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
 }
 
 ?>
