@@ -84,7 +84,7 @@
         #order_detail,#merchant_detail{
             vertical-align:top;
             padding-top:0px;
-            
+
         }
 
         #order_detail h2{
@@ -289,7 +289,7 @@
         }
 
         table.tariff * td{
-            text-align: left;            
+            text-align: left;
         }
 
         table.tariff{
@@ -298,7 +298,7 @@
 
         .fine{
             font-size: 11px;
-        }  
+        }
 
         td.overquota, td.overquota .ui-state-default, td.full .ui-state-default{
             background-image: none;
@@ -335,7 +335,7 @@
     <?php echo $this->ag_asset->load_script('jquery.jeditable.mini.js');?>
     <?php echo $this->ag_asset->load_script('jquery.ui.timepicker.js');?>
 
-    
+
     <script>
 
     var dateBlock = <?php print getdateblock();?>;
@@ -354,7 +354,7 @@
 
     var lastorder = <?php print get_option('auto_lock_hours')*60*60*1000;?>;
 
-    var cod_surcharge_table = <?php print $codhash; ?>;    
+    var cod_surcharge_table = <?php print $codhash; ?>;
 
     var current_app = 0;
     var delivery_fee = 0;
@@ -391,7 +391,7 @@
 
 
             getweightandcod();
-        });        
+        });
 
         $('#buyerdeliverydate').datepicker({
             numberOfMonths: 2,
@@ -427,7 +427,7 @@
             onSelect: function(time, inst) {
                 $('#'+ inst.id).val('');
                 //console.log('onSelect triggered with time : ' + time + ' for instance id : ' + inst.id);
-                
+
                 var buyerdate = $('#buyerdeliverydate').val();
 
                 //console.log(buyerdate);
@@ -509,7 +509,7 @@
             var curr_date = d.getDate();
             var curr_month = d.getMonth() + 1; //months are zero based
             var curr_year = d.getFullYear();
-        
+
             curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
             curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
             var indate = curr_year + '-' + curr_month + '-' + curr_date;
@@ -517,7 +517,7 @@
             var select = 1;
             var css = 'open';
             var popup = 'working day';
-            
+
             if(window.dateBlock[indate] == 'weekend'){
                 select = 0;
                 css = 'weekend';
@@ -552,10 +552,10 @@
             minLength: 2,
             select:function(event,ui){
                 $('#merchant_id').val(ui.item.id);
-                $('#merchant_id_txt').html(ui.item.id);                
-                $('#merchant_fullname').val(ui.item.fullname);                
-                $('#merchant_email').val(ui.item.email); 
-                getapp(ui.item.id);               
+                $('#merchant_id_txt').html(ui.item.id);
+                $('#merchant_fullname').val(ui.item.fullname);
+                $('#merchant_email').val(ui.item.email);
+                getapp(ui.item.id);
             }
         });
 
@@ -577,7 +577,7 @@
             minLength: 2,
             select:function(event,ui){
                 $('#buyer_id').val(ui.item.id);
-                $('#buyer_id_txt').html(ui.item.id);                
+                $('#buyer_id_txt').html(ui.item.id);
                 $('#buyer_email').val(ui.item.email);
                 $('#shipping_address').val(ui.item.shipping);
                 $('#phone').val(ui.item.phone);
@@ -611,7 +611,7 @@
 
         function getapp(merchant_id){
             $.post('<?php print site_url('ajax/getappselect');?>',
-                { merchant_id: merchant_id,delivery_type:$('#delivery_type').val() }, 
+                { merchant_id: merchant_id,delivery_type:$('#delivery_type').val() },
                 function(data) {
                     $('#application_id').html(data.data);
                 },'json');
@@ -675,7 +675,7 @@
             if(city != 0){
                 $('#zone_select').html('Loading zones...');
                 $.post('<?php print site_url('ajax/getzoneselect');?>',
-                    { city: city }, 
+                    { city: city },
                     function(data) {
                         $('#zone_select').html(data.data);
                     },'json');
@@ -694,7 +694,7 @@
             delivery_fee = $(e.target).val();
             $('#delivery_cost_txt').html(delivery_fee);
             $('#delivery_cost').val(delivery_fee);
-            calculate();            
+            calculate();
         });
 
         $('#delivery_type').change(function(){
@@ -709,7 +709,7 @@
 
             if(delivery_type == 'COD' || delivery_type == 'CCOD'){
                 $.post('<?php print site_url('ajax/getcoddata');?>',
-                    { app_key: current_app }, 
+                    { app_key: current_app },
                     function(data) {
                         $('#cod_tab_data').html(data.data.table);
                         cod_surcharge_table = $.parseJSON(data.data.codhash);
@@ -727,7 +727,7 @@
 
             if(delivery_type == 'PS'){
                 $.post('<?php print site_url('ajax/getpickupdata');?>',
-                    { app_key: current_app }, 
+                    { app_key: current_app },
                     function(data) {
                         $('#delivery_tab_data').html(data.data.table);
                         $('#weight_selection').html(data.data.selector);
@@ -735,7 +735,7 @@
 
             }else{
                 $.post('<?php print site_url('ajax/getweightdata');?>',
-                    { app_key: current_app }, 
+                    { app_key: current_app },
                     function(data) {
                         $('#delivery_tab_data').html(data.data.table);
                         $('#weight_selection').html(data.data.selector);
@@ -747,7 +747,7 @@
 
         function getzone(city){
             $.post('<?php print site_url('ajax/getzoneselect');?>',
-                { city: city }, 
+                { city: city },
                 function(data) {
                     $('#zone_select').html(data.data);
                 },'json');
@@ -800,7 +800,7 @@
             if($('#cod_surcharge_bearer').is(':checked')){
                 pdata.bearer_cod = 'buyer';
             }else{
-                pdata.bearer_cod = 'merchant';                
+                pdata.bearer_cod = 'merchant';
             }
 
             if($('#delivery_bearer').is(':checked')){
@@ -824,13 +824,13 @@
             $('.item_desc').each(function(){
                 udescs[i] = $(this).val();
                 i++;
-            }); 
+            });
 
             i = 0;
             $('.item_qty').each(function(){
                 uqtys[i] = $(this).val();
                 i++;
-            }); 
+            });
 
             i = 0;
             $('.item_unit_price').each(function(){
@@ -866,8 +866,9 @@
 
             if($('#trx_result').html() != 'Transaction Success'){
                 //$('#loader').show();
+                $('#sendingorder', window.parent.document).show();
                 $.post('<?php print site_url('ajax/neworder');?>',
-                    pdata, 
+                    pdata,
                     function(data) {
                         //$('#loader').hide();
                         $('#sendingorder', window.parent.document).hide();
@@ -879,7 +880,7 @@
                             //$('#neworder_dialog', window.parent.document).dialog( "close" );
                         }else{
                             $('#sendingstatus', window.parent.document).html('Transaction Failed');
-                            $('#sendingstatus', window.parent.document).show();                            
+                            $('#sendingstatus', window.parent.document).show();
                         }
                         //alert(data.status);
                     },'json');
@@ -1001,7 +1002,7 @@
             var tslot = slotmax[timeslot];
 
             if(tslot == 0){
-                validisplay += 'Time Slot Unspecified\r\n';                
+                validisplay += 'Time Slot Unspecified\r\n';
             }else{
                 var delidate = $('#buyerdeliverydate').val() + ' ' + tslot;
 
@@ -1012,7 +1013,7 @@
 
                 var leeway = then.getTime() - now.getTime();
                 if(leeway < 0){
-                    validisplay += 'Please do not specify past date\r\n';                
+                    validisplay += 'Please do not specify past date\r\n';
                 }else{
                     if(leeway < lastorder){
                         validisplay += 'Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another date & time.\r\n';
@@ -1041,7 +1042,7 @@
         $('.item_qty').each(function(){
             qtys[i] = $(this).val();
             i++;
-        }); 
+        });
 
         i = 0;
         $('.item_unit_price').each(function(){
@@ -1073,9 +1074,9 @@
         $('.item_nom_disc').each(function(){
             if($(this).val() === 'undefined' || $(this).val() == '' || $(this).val() == 0 || $(this).val() == null || $(this).val() === 'NaN'){
                 if(upct[i] === 'undefined' || upct[i] == '' || upct[i] == 0 || upct[i] == null || upct[i] === 'NaN'){
-                    var disc = 0;                            
+                    var disc = 0;
                 }else{
-                    var disc = utotal[i] * (upct[i]/100);            
+                    var disc = utotal[i] * (upct[i]/100);
                 }
                 unom[i] = disc;
             }else{
@@ -1133,7 +1134,7 @@
 
         $('#total_price').val(total_price);
         $('#total_discount').val(total_discount);
-        $('#total_charges').val(total_charges);        
+        $('#total_charges').val(total_charges);
 
     }
 
@@ -1245,7 +1246,7 @@
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
                                 <td id="type_select">
-                                    <?php print $typeselect;?> 
+                                    <?php print $typeselect;?>
                                     <select name="sub_cod" id ="sub_cod" style="display:none">
                                         <option value="cash">Tunai</option>
                                         <option value="debit">Debit</option>
@@ -1312,7 +1313,7 @@
                                 <td>
                                     Width / Lebar : <input class="short" type="text" id="package_width" name="package_width" value="" /> cm ( max <?php print get_option('max_width');?> cm )<br />
                                     Height / Tinggi : <input class="short" type="text" id="package_height" name="package_height" value="" /> cm ( max <?php print get_option('max_height');?> cm )<br />
-                                    Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm ( max <?php print get_option('max_length');?> cm ) 
+                                    Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm ( max <?php print get_option('max_length');?> cm )
                                 </td>
                             </tr>
                             <tr>
@@ -1364,7 +1365,7 @@
                                         <li>
                                                 Fill in item description, quantity, unit price and discount ( if any ) into the appropriate form field above, then click "Add" button<hr />
                                             <span class="fine">
-                                                Masukkan nama barang, jumlah, harga per unit dan diskon ( jika ada ), kemudian klik "Add" untuk menambahkan ke daftar order 
+                                                Masukkan nama barang, jumlah, harga per unit dan diskon ( jika ada ), kemudian klik "Add" untuk menambahkan ke daftar order
                                             </span>
                                         </li>
                                         <li>
@@ -1374,7 +1375,7 @@
                                             </span>
                                         </li>
                                         <li>
-                                            
+
                                                 Deleting a row of item can be done by clicking "Del" button, and will automatically recalculate the price<hr />
                                             <span class="fine">
                                                 Untuk menghapus barang dari daftar order, klik "Del" di bagian paling kanan baris yang barang bersangkutan, dan secara otomatis akan dilakukan perhitungan ulang
@@ -1412,7 +1413,7 @@
             <td style="width:50%;border:0;margin:0;vertical-align:top">
                 Full Name:<br />
                 <input type="text" name="fullname" class="form" value="" /><br />
-                
+
                 Email:<br />
                 <input type="text" name="email" class="form" value="" /><br />
 
