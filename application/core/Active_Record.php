@@ -5,8 +5,8 @@
  * Provides extensions to the Active Record library allowing grouped where clauses
  *
  * @package		CodeIgniter
- * @author		Charilaos Thomos - based on work of EllisLab, Inc.
- * @copyright	Copyright 2011, EllisLab, Inc.
+ * @author		Harry Thomos - based on work of EllisLab, Inc.
+ * @copyright	Copyright 2012, EllisLab, Inc.
  * @license		GPL
  * @link		http://www.webrevised.com/189-extending-code-igniter-active-record-class/
  */
@@ -173,5 +173,55 @@ class custom_active_record extends CI_DB_active_record
 		}
 		return $this;
 	}
+	
+	/**
+	 * Where_in
+	 *
+	 * Called by where_in, where_in_or, where_not_in, where_not_in_or
+	 *
+	 * @param	string	The field to search
+	 * @param	array	The values searched on
+	 * @param	boolean	If the statement would be IN or NOT IN
+	 * @param	string
+	 * @return	object
+	 */
+	protected function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ')
+	{
+		if ($key === NULL OR $values === NULL)
+		{
+			return;
+		}
 
+		if ( ! is_array($values))
+		{
+			$values = array($values);
+		}
+
+		$not = ($not) ? ' NOT' : '';
+
+		foreach ($values as $value)
+		{
+			$this->ar_wherein[] = $this->escape($value);
+		}
+
+		$prefix = (count($this->ar_where) == 0) ? '' : $type;
+
+		//Fix the prefix for our group elements
+		if (($prefix)&&(count($this->ar_where))&&($this->ar_where[count($this->ar_where)-1]=="("))
+			$prefix = "";
+		
+		$where_in = $prefix . $this->_protect_identifiers($key) . $not . " IN (" . implode(", ", $this->ar_wherein) . ") ";
+
+		$this->ar_where[] = $where_in;
+		if ($this->ar_caching === TRUE)
+		{
+			$this->ar_cache_where[] = $where_in;
+			$this->ar_cache_exists[] = 'where';
+		}
+
+		// reset the array for multiple calls
+		$this->ar_wherein = array();
+		return $this;
+	}
+	
 }

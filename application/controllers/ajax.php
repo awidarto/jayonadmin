@@ -17,8 +17,8 @@ class Ajax extends Application
 		$q = $this->input->get('term');
 		$zones = ajax_find_cities($q,'city');
 		print json_encode($zones);
-	}                       
-	
+	}
+
 	public function getprovinces(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_provinces($q,'province');
@@ -70,7 +70,7 @@ class Ajax extends Application
 		$delivery_id = trim(str_replace('r_', '', $delivery_id));
 
 		$this->load->library('image_lib');
-		
+
 		$config['image_library'] = 'imagemagick';
 		$config['library_path'] = '/usr/bin/';
 		$config['rotation_angle'] = '90';
@@ -83,7 +83,7 @@ class Ajax extends Application
 
 		chmod($config['source_image'],0777);
 
-		$this->image_lib->initialize($config); 
+		$this->image_lib->initialize($config);
 
 		if ( $this->image_lib->rotate())
 		{
@@ -147,14 +147,14 @@ class Ajax extends Application
 			if($timestamp == ''){
 				$this->db->like('timestamp',date('Y-m-d',time()),'after');
 			}else{
-				$this->db->like('timestamp',$timestamp,'after');	
+				$this->db->like('timestamp',$timestamp,'after');
 			}
-				//->like('timestamp','2012-09-03','after')				
+				//->like('timestamp','2012-09-03','after')
 				//->limit(10,0)
 			$loc = $this->db
 				->order_by('timestamp','desc')
 				->get($this->config->item('location_log_table'));
-	
+
 			if($loc->num_rows() > 0){
 				$path = array();
 				$loc = $loc->result();
@@ -286,11 +286,11 @@ class Ajax extends Application
 			}
 		}
 
-		$codhash = json_encode($dctable);			
+		$codhash = json_encode($dctable);
 		$codselect = $dctable;
 		$codtable = $this->table->generate();
 
-		print json_encode(array('result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));		
+		print json_encode(array('result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));
 	}
 
 	public function getweighttable(){
@@ -301,7 +301,7 @@ class Ajax extends Application
 	}
 
 	public function getcodtable(){
-		
+
 	}
 
 	function reassign(){
@@ -397,7 +397,7 @@ class Ajax extends Application
 		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="buyerdeliveryzone"');
 
 		print json_encode(array('result'=>'ok','data'=>$select));
-	}	
+	}
 
 	public function getslotselect(){
 
@@ -416,7 +416,7 @@ class Ajax extends Application
 		$select = form_dropdown('buyerdeliverytime',$slot,null,'id="buyerdeliverytime"');
 
 		print json_encode(array('result'=>'ok','data'=>$select));
-	}	
+	}
 
 	public function neworder(){
 
@@ -445,7 +445,7 @@ class Ajax extends Application
 
 
 		$merchant_id = $this->input->post('merchant_id');
-		$buyer_id = $this->input->post('buyer_id');		
+		$buyer_id = $this->input->post('buyer_id');
 
 		$trx = array(
 			'api_key'=>$this->input->post('api_key'),
@@ -467,9 +467,9 @@ class Ajax extends Application
 			'total_discount'=>$this->input->post('total_discount'),
 			'total_tax'=>$this->input->post('total_tax'),
 			'chargeable_amount'=>$this->input->post('chargeable_amount'),
-			'delivery_cost' => $this->input->post('delivery_cost'), 		
-			'cod_cost' => $this->input->post('cod_cost'), 		
-			'currency' => $this->input->post('currency'), 	
+			'delivery_cost' => $this->input->post('delivery_cost'),
+			'cod_cost' => $this->input->post('cod_cost'),
+			'currency' => $this->input->post('currency'),
 			'status'=>$this->input->post('status'),
 			'merchant_id'=>$this->input->post('merchant_id'),
 			'buyer_id'=>$this->input->post('buyer_id'),
@@ -492,15 +492,13 @@ class Ajax extends Application
 		$api_key = $this->input->post('api_key');
 		$trx_id = $trx['transaction_id'];
 
-		$url = base_url().'api/v1/post/'.$api_key.'/'.$trx_id;
-
-		//print $url;
-
-		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
-
-		//file_put_contents('curl.txt', $result);
-		
-		print $result;
+        $result = $this->jexclient
+                    ->base($this->config->item('api_url'))
+                    ->endpoint('order/key/'.$api_key.'/trx/'.$trx_id)
+                    ->data($trx)
+                    ->format('json')
+                    ->send();
+        print $result;
 
 	}
 
@@ -510,7 +508,7 @@ class Ajax extends Application
 		$id = $this->input->post('id');
 		$setsw = $this->input->post('switchto');
 		$toggle = ($setsw == 'On')?1:0;
-		
+
 		$dataset[$field] = $toggle;
 
 		if($this->db->where('delivery_id',$id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
@@ -608,26 +606,26 @@ class Ajax extends Application
 
 	public function getdateblock($month = null){
 		print getdateblock($month);
-	}	
-	
+	}
+
 	public function incomingmonthly(){
-		
+
 	}
 
 	public function deliveredmonthly(){
-		
+
 	}
 
 	public function rescheduledmonthly(){
-		
+
 	}
 
 	public function revokedmonthly(){
-		
+
 	}
 
 	public function getlastfiveloc(){
-		
+
 		$locs = $this->db->select('timestamp,identifier,latitude as lat,longitude as lng')
 			->limit(5,0)
 			->order_by('timestamp','desc')

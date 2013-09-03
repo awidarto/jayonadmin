@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('ag_asset','table','breadcrumb','oi','gc_qrcode');
+$autoload['libraries'] = array('ag_asset','table','breadcrumb','oi','gc_qrcode','jexclient');
 
 
 /*

@@ -51,13 +51,28 @@ class V1 extends Application
 				}
 
 				$is_new = false;
+
+                $in->phone = ( isset( $in->phone ) && $in->phone != '')?normalphone( $in->phone ):'';
+                $in->mobile1 = ( isset( $in->mobile1 ) && $in->mobile1 != '' )?normalphone( $in->mobile1 ):'';
+                $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
+
+
 				if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
-					$in->email = 'noemail';
-					$is_new = true;
+                    $in->email = 'noemail';
+                    $is_new = true;
+                    if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
+                        if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+                            $buyer_id = $buyer['id'];
+                            $is_new = false;
+                        }
+                    }
 				}else if($buyer = $this->check_email($in->email)){
 					$buyer_id = $buyer['id'];
 					$is_new = false;
-				}
+				}else if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+                    $buyer_id = $buyer['id'];
+                    $is_new = false;
+                }
 
 				if($is_new){
 					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
@@ -72,14 +87,14 @@ class V1 extends Application
 					$dataset['created'] = date('Y-m-d H:i:s',time());
 
 					/*
-					$dataset['province'] = 		 	 	 	 	 	 	 
-					$dataset['mobile']		 	 	 	 	 	 	 
+					$dataset['province'] =
+					$dataset['mobile']
 					*/
-					
-					$dataset['street'] = $in->shipping_address;	 	 	 	 	 	 
-					$dataset['district'] = $in->buyerdeliveryzone; 
-					$dataset['city'] = $in->buyerdeliverycity;	 	 	 	 	 	 	 
-					$dataset['country']	= 'Indonesia';	 	 	 	 	 	 	 
+
+					$dataset['street'] = $in->shipping_address;
+					$dataset['district'] = $in->buyerdeliveryzone;
+					$dataset['city'] = $in->buyerdeliverycity;
+					$dataset['country']	= 'Indonesia';
 					$dataset['zip'] = $in->zip;
 
 					$buyer_id = $this->register_buyer($dataset);
@@ -120,9 +135,9 @@ class V1 extends Application
 
 				$order['width'] = $in->width;
 				$order['height'] = $in->height;
-				$order['length'] = $in->length;				
-				$order['weight'] = (isset($in->weight))?$in->weight:0;				
-				$order['delivery_type'] = $in->delivery_type;				
+				$order['length'] = $in->length;
+				$order['weight'] = (isset($in->weight))?$in->weight:0;
+				$order['delivery_type'] = $in->delivery_type;
 				$order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;
 
 				$order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
@@ -132,11 +147,11 @@ class V1 extends Application
 				$order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
 				if(isset($in->show_shop)){
-					$order['show_shop'] = $in->show_shop;	
+					$order['show_shop'] = $in->show_shop;
 				}
 
 				if(isset($in->show_merchant)){
-					$order['show_merchant'] = $in->show_merchant;				
+					$order['show_merchant'] = $in->show_merchant;
 				}
 
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
@@ -159,10 +174,10 @@ class V1 extends Application
 
 
 					$this->table->set_heading(
-						'No.',		 	 	
-						'Description',	 	 	 	 	 	 	 
-						'Quantity',		
-						'Total'			
+						'No.',
+						'Description',
+						'Quantity',
+						'Total'
 						); // Setting headings for the table
 
 					$d = 0;
@@ -185,19 +200,19 @@ class V1 extends Application
 						$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 
 						$this->table->add_row(
-							(int)$item['unit_sequence'] + 1,		 	 	
-							$item['unit_description'],	 	 	 	 	 	 	 
-							$item['unit_quantity'],		
-							$item['unit_total']			
+							(int)$item['unit_sequence'] + 1,
+							$item['unit_description'],
+							$item['unit_quantity'],
+							$item['unit_total']
 						);
 
 						$u_total = str_replace(array(',','.'), '', $item['unit_total']);
-						$u_discount = str_replace(array(',','.'), '', $item['unit_discount']);						
+						$u_discount = str_replace(array(',','.'), '', $item['unit_discount']);
 						$gt += (int)$u_total;
 						$d += (int)$u_discount;
 
 					}
-					
+
 					$total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
 					$total = str_replace(array(',','.'), '', $total);
 					$total = (int)$total;
@@ -218,23 +233,23 @@ class V1 extends Application
 					$chg = ($gt - $disc) + $tax + $cod;
 
 					$this->table->add_row(
-						'',		
-						'',		
-						'Total Price',		
+						'',
+						'',
+						'Total Price',
 						number_format($gt,2,',','.')
 					);
 
 					$this->table->add_row(
-						'',		
-						'',		
-						'Total Discount',		
+						'',
+						'',
+						'Total Discount',
 						number_format($disc,2,',','.')
 					);
 
 					$this->table->add_row(
-						'',		
-						'',		
-						'Total Tax',		
+						'',
+						'',
+						'Total Tax',
 						number_format($tax,2,',','.')
 					);
 
@@ -248,18 +263,18 @@ class V1 extends Application
 						);
 					}else{
 						$this->table->add_row(
-							'',		
-							'',		
-							'COD Charges',		
+							'',
+							'',
+							'COD Charges',
 							number_format($cod,2,',','.')
 						);
 					}
 
 
 					$this->table->add_row(
-						'',		
-						'',		
-						'Total Charges',		
+						'',
+						'',
+						'Total Charges',
 						number_format($chg,2,',','.')
 					);
 
@@ -281,7 +296,7 @@ class V1 extends Application
 				if($app->notify_on_new_order == 1){
 					send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
 				}
-				
+
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
 					$edata['username'] = $buyer_username;
@@ -527,7 +542,7 @@ class V1 extends Application
 			if($api_key == $this->config->item('master_key')){
 
 				if(isset($_POST['req'])){
-					
+
 					$in = json_decode($_POST['req']);
 
 					//$in->user = 'administrator';
@@ -573,12 +588,12 @@ class V1 extends Application
 						print $result;
 					}
 
-				
+
 				}else{
 					$result = json_encode(array('status'=>'NOK:NODATASENT','timestamp'=>now()));
 					print $result;
 				}
-				
+
 			}else{
 				$result = json_encode(array('status'=>'NOK:INVALIDKEY','timestamp'=>now()));
 				print $result;
@@ -682,7 +697,7 @@ class V1 extends Application
 							d.recipient_name as rec_name,
 							d.undersign as rec_sign,
 							d.total_price as tot_price,
-							d.total_discount as tot_disc,	
+							d.total_discount as tot_disc,
 							d.total_tax	as tot_tax,
 							d.chargeable_amount as chg_amt,
 							d.cod_cost as cod_cost,
@@ -725,7 +740,7 @@ class V1 extends Application
 					{
 
 						$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-						$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+						$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
 						$gt += (int)$u_total;
 						$d += (int)$u_discount;
 					}
@@ -744,10 +759,10 @@ class V1 extends Application
 
 					$chg = ($gt - $dsc) + $tax + $cod;
 
-		            //$o['tot_price'] => 
-		            //$o['tot_disc'] => 
-		            //$o['tot_tax'] => 
-		            //$o['chg_amt'] => 
+		            //$o['tot_price'] =>
+		            //$o['tot_disc'] =>
+		            //$o['tot_tax'] =>
+		            //$o['chg_amt'] =>
 					$o['cod_cost'] = number_format($chg,2,',','.');
 					$output[] = $o;
 				}
@@ -796,7 +811,7 @@ class V1 extends Application
 				$config['width']	 = 100;
 				$config['height']	= 75;
 
-				$this->load->library('image_lib', $config); 
+				$this->load->library('image_lib', $config);
 
 				$this->image_lib->resize();
 
@@ -1020,6 +1035,18 @@ class V1 extends Application
 			return false;
 		}
 	}
+
+    private function check_phone($phone, $mobile1, $mobile2){
+        $em = $this->db->like('phone',$phone)
+                ->or_like('mobile1',$mobile1)
+                ->or_like('mobile2',$mobile2)
+                ->get($this->config->item('jayon_members_table'));
+        if($em->num_rows() > 0){
+            return $em->row_array();
+        }else{
+            return false;
+        }
+    }
 
 	private function register_buyer($dataset){
 		$dataset['group_id'] = 5;

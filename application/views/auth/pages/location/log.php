@@ -38,11 +38,16 @@
 
         var map = L.map('map').setView([-6.17742,106.828308], 12);
 
+        var lineWeight = 4;
 
         L.tileLayer(OSM_URL, {
             attribution: OSM_ATTRIB,
             maxZoom: 18
         }).addTo(map);
+
+        $('#lineWeight').on('change',function(){
+            refreshMap();
+        });
 
         var lg;
         var icsize = new L.Point(19,47);
@@ -61,11 +66,9 @@
         var markers = [];
         var paths = [];
 
-        var lg;
-
 		function refreshMap(){
 			var currtime = new Date();
-
+            lineWeight = $('#lineWeight').val();
 			//console.log(currtime.getTime());
 
             var icon_yellow = L.AwesomeMarkers.icon({
@@ -126,7 +129,7 @@
                             var polyline = L.polyline( this.poly,
                                 {
                                     color: this.color,
-                                    weight: 2
+                                    weight: lineWeight
                                 } ).addTo(map);
 
                             paths.push(polyline);
@@ -335,7 +338,16 @@
 </script>
 
     <div>
-        <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point
+        <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point |
+        Track Line Weight <select name="line" id="lineWeight">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected >4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
     </div>
 	<div id="tracker" >
 		<table style="padding:0px;margin:0px;">

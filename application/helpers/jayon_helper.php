@@ -1,5 +1,48 @@
 <?php
 
+function normalphone($number){
+    $numbers = explode('/',$number);
+    if(is_array($numbers)){
+        $nums = array();
+        foreach($numbers as $number){
+
+            $number = str_replace(array('-',' ','(',')','[',']','{','}'), '', $number);
+
+            if(preg_match('/^\+/', $number)){
+                if( preg_match('/^\+62/', $number)){
+                    $number = preg_replace('/^\+62|^620/', '62', $number);
+                }else{
+                    $number = preg_replace('/^\+/', '', $number);
+                }
+            }else if(preg_match('/^62/', $number)){
+                $number = preg_replace('/^620/', '62', $number);
+            }else if(preg_match('/^0/', $number)){
+                $number = preg_replace('/^0/', '62', $number);
+            }
+
+            $nums[] = $number;
+        }
+        $number = implode('/',$nums);
+    }else{
+
+        $number = str_replace(array('-',' ','(',')'), '', $number);
+
+        if(preg_match('/^\+/', $number)){
+            if( preg_match('/^\+62/', $number)){
+                $number = preg_replace('/^\+62|^620/', '62', $number);
+            }else{
+                $number = preg_replace('/^\+/', '', $number);
+            }
+        }else if(preg_match('/^62/', $number)){
+            $number = preg_replace('/^620/', '62', $number);
+        }else if(preg_match('/^0/', $number)){
+            $number = preg_replace('/^0/', '62', $number);
+        }
+    }
+
+    return $number;
+}
+
 function idr($in){
 	return number_format((double) $in,2,',','.');
 }
@@ -69,11 +112,11 @@ function get_zones($col = '*',$flatten = true){
 function get_courier($id = null,$flatten = true){
 	$CI =& get_instance();
 	if(!is_null($id)){
-		 $CI->db->where('id',$id);	
+		 $CI->db->where('id',$id);
 	}
 
 	$q = $CI->db->select(array('id','fullname'))->get('couriers');
-	
+
 	if($flatten){
 		foreach($q->result_array() as $val){
 			$result[$val['id']] = $val['fullname'];
@@ -89,10 +132,10 @@ function get_courier($id = null,$flatten = true){
 function get_merchant($id = null,$flatten = true){
 	$CI =& get_instance();
 	if(!is_null($id)){
-		 $CI->db->where('id',$id);	
+		 $CI->db->where('id',$id);
 	}
 
-	$CI->db->where('group_id',user_group_id('merchant'));	
+	$CI->db->where('group_id',user_group_id('merchant'));
 
 	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
 	if($flatten){
@@ -216,7 +259,8 @@ function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id',$merchant_id = nu
 	}else{
 
 		$CI->db->distinct();
-		$CI->db->where('m.merchant_id',$merchant_id)->and_()
+		$CI->db->where('m.merchant_id',$merchant_id);
+        $CI->db->and_()
 			->group_start()->like('members.fullname',$zone)
 			->or_like('members.merchantname',$zone)
 			->or_like('members.username',$zone)
@@ -287,7 +331,7 @@ function get_weight_range($tariff,$app_id = null){
 		$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
 		if($result->num_rows() > 0){
 			$row = $result->row();
-			return $row->kg_from.' kg - '.$row->kg_to.' kg';		
+			return $row->kg_from.' kg - '.$row->kg_to.' kg';
 		}else{
 			return 0;
 		}
@@ -312,7 +356,7 @@ function get_cod_tariff($total_price,$app_id = null){
 		$CI->db->where('from_price <= ',$total_price);
 		$CI->db->where('to_price >= ',$total_price);
 		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
-		$row = $result->row();			
+		$row = $result->row();
 	}
 
 	return $row->surcharge;
@@ -413,7 +457,7 @@ function get_slot_range($slot){
 		$CI->db->where('is_on',1);
 		$result = $CI->db->get($CI->config->item('jayon_timeslots_table'));
 		$row = $result->row();
-		return $row->time_from.':00 - '.$row->time_to.':00';		
+		return $row->time_from.':00 - '.$row->time_to.':00';
 	}else{
 		return 0;
 	}
@@ -530,7 +574,7 @@ function overquota($date){
 		return false;
 	}else{
 		return true;
-	}	
+	}
 }
 
 function getholidays(){
@@ -597,7 +641,7 @@ function get_thumbnail($delivery_id){
 	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
 		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
 			$thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
-			$thumbnail = sprintf('<img style="cursor:pointer;" class="thumb" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);					
+			$thumbnail = sprintf('<img style="cursor:pointer;" class="thumb" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
 		}else{
 			$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
 		}
@@ -611,8 +655,8 @@ function get_thumbnail($delivery_id){
 function delivery_log($data,$upsert = false){
 	$CI =& get_instance();
 	if($upsert == true){
-		$CI->db->where('sync_id = ',$data['sync_id']);	
-		$CI->db->where('device_id = ',$data['device_id']);	
+		$CI->db->where('sync_id = ',$data['sync_id']);
+		$CI->db->where('device_id = ',$data['device_id']);
 		$CI->db->where('timestamp = ',$data['timestamp']);
 		$CI->db->from($CI->config->item('delivery_log_table'));
 
@@ -704,7 +748,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 		$log['to'] = implode(';',$to);
 	}else{
 		$CI->email->to($to);
-		$log['to'] = $to;			
+		$log['to'] = $to;
 	}
 
 	if(!is_null($cc) && $cc != ''){
@@ -715,7 +759,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-			$log['cc'] = $cc;			
+			$log['cc'] = $cc;
 		}
 	}
 
@@ -726,8 +770,8 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 			}
 			$log['att'] = implode(';',$attachment);
 		}else{
-			$CI->email->attach($attachment);			
-			$log['att'] = $attachment;			
+			$CI->email->attach($attachment);
+			$log['att'] = $attachment;
 		}
 	}
 
@@ -786,7 +830,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 		$log['to'] = implode(';',$to);
 	}else{
 		$CI->email->to($to);
-		$log['to'] = $to;			
+		$log['to'] = $to;
 	}
 
 	if(!is_null($cc)){
@@ -797,7 +841,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-			$log['cc'] = $cc;			
+			$log['cc'] = $cc;
 		}
 	}
 
@@ -808,8 +852,8 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 			}
 			$log['att'] = implode(';',$attachment);
 		}else{
-			$CI->email->attach($attachment);			
-			$log['att'] = $attachment;			
+			$CI->email->attach($attachment);
+			$log['att'] = $attachment;
 		}
 	}
 
@@ -939,7 +983,7 @@ function getmonthlydatacountarray($year,$month,$where = null,$merchant_id = null
 		}
 		*/
 
-		$CI->db->like('ordertime', $date, 'after');		
+		$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1009,7 +1053,7 @@ function getmonthlydatacounttypearray($year,$month,$where = null,$merchant_id = 
 		}
 		*/
 
-		$CI->db->like('ordertime', $date, 'after');		
+		$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1025,7 +1069,7 @@ function getmonthlydatacounttypearray($year,$month,$where = null,$merchant_id = 
 
 		// get cod
 
-		$CI->db->like('ordertime', $date, 'after');		
+		$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1114,7 +1158,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1132,7 +1176,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1153,7 +1197,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1175,7 +1219,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1196,7 +1240,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -1204,7 +1248,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 
 		if(!is_null($merchant_id)){
 			$CI->db->where('merchant_id', $merchant_id);
-		}		
+		}
 
 		$CI->db->where('delivery_type','Delivery Only');
 
@@ -1222,5 +1266,5 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 	//$series = str_replace('"', '', json_encode($series)) ;
 	return $series;
 }
-	
+
 ?>
