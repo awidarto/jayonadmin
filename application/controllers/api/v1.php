@@ -57,7 +57,7 @@ class V1 extends Application
                 $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
 
 
-				if($in->email == '' || $in->email == '-' || !isset($in->email) || $in->email == 'noemail'){
+				if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
                     $in->email = 'noemail';
                     $is_new = true;
                     if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
@@ -514,7 +514,7 @@ class V1 extends Application
 							$edata['status'] = ucwords(str_replace('_', '', $in->status));
 
 							//send_notification($subject,$to,$cc = null,$reply_to = null,$template = 'default',$data = null,$attachment = null)
-							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->buyer_email,$ord->merchant_email,null,'status_update',$edata,null);
+							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->email,$ord->merchant_email,null,'status_update',$edata,null);
 						}
 
 					}
@@ -1099,6 +1099,20 @@ class V1 extends Application
 			return false;
 		}
 	}
+
+    public function testquery(){
+
+        $this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,b.email as buyer_email,b.fullname as buyer_name,m.email as merchant_email,a.application_name as app_name');
+        $this->db->from($this->config->item('incoming_delivery_table'));
+        $this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+        $this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+        $this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+
+        $ord = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get();
+
+        print $this->db->last_query();
+    }
+
 }
 
 ?>
