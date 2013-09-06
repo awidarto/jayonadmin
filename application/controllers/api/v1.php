@@ -1102,13 +1102,15 @@ class V1 extends Application
 
     public function testquery(){
 
-        $this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,b.email as buyer_email,b.fullname as buyer_name,m.email as merchant_email,a.application_name as app_name');
-        $this->db->from($this->config->item('incoming_delivery_table'));
-        $this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
-        $this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
-        $this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+        $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+        $this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+        $this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+        $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+        $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+        $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
-        $ord = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get();
+        $ord = $this->db->get();
+        //$ord = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get();
 
         print $this->db->last_query();
     }

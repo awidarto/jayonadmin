@@ -39,6 +39,7 @@ $config['jayon_pickup_fee_table'] = 'pickup_tariff';
 
 $config['jayon_prepaid_table'] = 'prepaid_delivery';
 
+$config['jayon_buyers_table'] = 'buyers';
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_holidays_table'] = 'holidays';

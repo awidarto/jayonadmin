@@ -25,7 +25,7 @@ class Members extends Application
 		$this->load->library('table');
 
 		$this->table->set_heading(
-			'Username', 
+			'Username',
 			'Email',
 			'Full Name',
 			//'Merchant Name',
@@ -180,7 +180,7 @@ class Members extends Application
 
 		if($search){
 			//$this->db->and_();
-		}		
+		}
 
 
 		$data = $this->db
@@ -206,7 +206,7 @@ class Members extends Application
 			}
 			$edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['username']); // Build detail links
-			
+
 			$aadata[] = array(
 				$detail,
 			 	$key['email'],
@@ -246,7 +246,7 @@ class Members extends Application
 		$this->load->library('table');
 
 		$this->table->set_heading(
-			'Username', 
+			'Username',
 			'Email',
 			'Full Name',
 			//'Merchant Name',
@@ -404,7 +404,7 @@ class Members extends Application
 
 		if($search){
 			//$this->db->and_();
-		}		
+		}
 
 
 		$data = $this->db
@@ -431,7 +431,7 @@ class Members extends Application
 			}
 			$edit = anchor("admin/members/merchant/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
-			
+
 			$aadata[] = array(
 				$detail,
 			 	$key['email'],
@@ -462,7 +462,7 @@ class Members extends Application
 		print json_encode($result);
 	}
 
-	public function buyer()
+	public function __buyer()
 	{
 
 		$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
@@ -470,7 +470,7 @@ class Members extends Application
 		$this->load->library('table');
 
 		$this->table->set_heading(
-			'Username', 
+			'Username',
 			'Email',
 			'Full Name',
 			//'Merchant Name',
@@ -628,7 +628,7 @@ class Members extends Application
 
 		if($search){
 			//$this->db->and_();
-		}		
+		}
 
 		$data = $this->db
 			->where('group_id',$group_id)
@@ -654,7 +654,7 @@ class Members extends Application
 			}
 			$edit = anchor("admin/members/buyer/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
-			
+
 			$aadata[] = array(
 				$detail,
 			 	$key['email'],
@@ -684,6 +684,382 @@ class Members extends Application
 
 		print json_encode($result);
 	}
+
+    public function buyer()
+    {
+
+        $this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
+
+        $this->load->library('table');
+
+        $this->table->set_heading(
+            'Buyer Name',
+            'Zone',
+            'City',
+            'Address',
+            'Phone',
+            'Mobile1',
+            'Mobile2',
+            'Email',
+            'Recipient',
+            'ZIP',
+            'Created',
+            'Actions'); // Setting headings for the table
+
+        $this->table->set_footing(
+            '<input type="text" name="search_buyer_name" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_buyerdeliveryzone" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_buyerdeliverycity" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_shipping_address" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_phone" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_mobile1" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_mobile2" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_email" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_recipient_name" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_shipping_zip" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />'
+            );
+
+        $page['sortdisable'] = '';
+        $page['ajaxurl'] = 'admin/members/ajaxbuyers';
+        $page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
+        $page['page_title'] = 'Manage Buyers';
+        $this->ag_auth->view('memberajaxlistview',$page); // Load the view
+    }
+
+    public function ajaxbuyers(){
+
+        $limit_count = $this->input->post('iDisplayLength');
+        $limit_offset = $this->input->post('iDisplayStart');
+
+        $sort_col = $this->input->post('iSortCol_0');
+        $sort_dir = $this->input->post('sSortDir_0');
+
+        $group_id = user_group_id('buyer');
+
+        $columns = array(
+            'buyer_name
+            ,buyerdeliveryzone
+            ,buyerdeliverycity
+            ,shipping_address
+            ,phone
+            ,mobile1
+            ,mobile2
+            ,recipient_name
+            ,shipping_zip
+            ,email
+            ,delivery_id
+            ,delivery_cost
+            ,cod_cost
+            ,delivery_type
+            ,currency
+            ,total_price
+            ,chargeable_amount
+            ,delivery_bearer
+            ,cod_bearer
+            ,cod_method
+            ,ccod_method
+            ,application_id
+            ,buyer_id
+            ,merchant_id
+            ,merchant_trans_id
+            ,courier_id
+            ,device_id
+            ,directions
+            ,dir_lat
+            ,dir_lon
+            ,delivery_note
+            ,latitude
+            ,longitude
+            ,created'
+        );
+
+        //restart query
+        /*
+            ,delivery_id
+            ,delivery_cost
+            ,cod_cost
+            ,delivery_type
+            ,currency
+            ,total_price
+            ,chargeable_amount
+            ,delivery_bearer
+            ,cod_bearer
+            ,cod_method
+            ,ccod_method
+            ,application_id
+            ,buyer_id
+            ,merchant_id
+            ,merchant_trans_id
+            ,courier_id
+            ,device_id
+            ,directions
+            ,dir_lat
+            ,dir_lon
+            ,delivery_note
+            ,latitude
+            ,longitude
+        */
+
+        $this->db->distinct();
+        $this->db->select(
+            'buyer_name
+            ,buyerdeliveryzone
+            ,buyerdeliverycity
+            ,shipping_address
+            ,phone
+            ,mobile1
+            ,mobile2
+            ,recipient_name
+            ,shipping_zip
+            ,email
+            ,created');
+        $this->db->from($this->config->item('jayon_buyers_table'));
+        $this->db->group_by(
+            'buyer_name
+            ,buyerdeliveryzone
+            ,buyerdeliverycity
+            ,shipping_address
+            ,phone
+            ,mobile1
+            ,mobile2
+            ,email
+            ,recipient_name
+            ,shipping_zip'
+        );
+
+        $search = false;
+                //search column
+        if($this->input->post('sSearch') != ''){
+            $srch = $this->input->post('sSearch');
+            //$this->db->like('buyerdeliveryzone',$srch);
+            //$this->db->or_like('buyerdeliverytime',$srch);
+            //$this->db->or_like('delivery_id',$srch);
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_0') != ''){
+            $this->db->like('buyer_name',$this->input->post('sSearch_0'));
+            $search = true;
+        }
+
+
+        if($this->input->post('sSearch_1') != ''){
+            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like('shipping_address',$this->input->post('sSearch_3'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like('phone',$this->input->post('sSearch_4'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_5') != ''){
+            $this->db->like('mobile1',$this->input->post('sSearch_5'));
+            $search = true;
+        }
+        if($this->input->post('sSearch_6') != ''){
+            $this->db->like('mobile2',$this->input->post('sSearch_6'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like('email',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like('recipient_name',$this->input->post('sSearch_8'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like('shipping_zip',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like('created',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            $this->db->like('created',$this->input->post('sSearch_11'));
+            $search = true;
+        }
+
+        $display = $this->db->get();
+
+        $count_all = count($display->result_array());
+
+        $this->db->distinct();
+        $this->db->select(
+            'buyer_name
+            ,buyerdeliveryzone
+            ,buyerdeliverycity
+            ,shipping_address
+            ,phone
+            ,mobile1
+            ,mobile2
+            ,recipient_name
+            ,shipping_zip
+            ,email
+            ,created');
+        $this->db->from($this->config->item('jayon_buyers_table'));
+        $this->db->group_by(
+            'buyer_name
+            ,buyerdeliveryzone
+            ,buyerdeliverycity
+            ,shipping_address
+            ,phone
+            ,mobile1
+            ,mobile2
+            ,email
+            ,recipient_name
+            ,shipping_zip'
+        );
+
+        $search = false;
+                //search column
+        if($this->input->post('sSearch') != ''){
+            $srch = $this->input->post('sSearch');
+            //$this->db->like('buyerdeliveryzone',$srch);
+            //$this->db->or_like('buyerdeliverytime',$srch);
+            //$this->db->or_like('delivery_id',$srch);
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_0') != ''){
+            $this->db->like('buyer_name',$this->input->post('sSearch_0'));
+            $search = true;
+        }
+
+
+        if($this->input->post('sSearch_1') != ''){
+            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like('shipping_address',$this->input->post('sSearch_3'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like('phone',$this->input->post('sSearch_4'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_5') != ''){
+            $this->db->like('mobile1',$this->input->post('sSearch_5'));
+            $search = true;
+        }
+        if($this->input->post('sSearch_6') != ''){
+            $this->db->like('mobile2',$this->input->post('sSearch_6'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like('email',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like('recipient_name',$this->input->post('sSearch_8'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like('shipping_zip',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like('created',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            $this->db->like('created',$this->input->post('sSearch_11'));
+            $search = true;
+        }
+
+        if($search){
+            //$this->db->and_();
+        }
+
+        $data = $this->db
+            ->limit($limit_count, $limit_offset)
+            ->order_by($columns[$sort_col],$sort_dir)
+            ->get();
+
+        //print $this->db->last_query();
+
+        $result = $data->result_array();
+
+        $count_display_all = count($result);
+
+        $aadata = array();
+
+
+        foreach($result as $value => $key)
+        {
+            /*
+            $delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
+            $editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
+            if($key['group_id'] === group_id('merchant')){
+                $addapp = anchor("admin/members/merchantmanage/".$key['id']."/", "Applications"); // Build actions links
+            }else{
+                $addapp = '&nbsp'; // Build actions links
+            }
+            */
+            $delete = '';
+            $edit = '';
+            //$edit = anchor("admin/members/buyer/edit/".$key['id']."/", "Edit"); // Build actions links
+            //$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
+
+            $aadata[] = array(
+                $key['buyer_name'],
+                $key['buyerdeliveryzone'],
+                $key['buyerdeliverycity'],
+                $key['shipping_address'],
+                $key['phone'],
+                $key['mobile1'],
+                $key['mobile2'],
+                $key['email'],
+                $key['recipient_name'],
+                $key['shipping_zip'],
+                $key['created'],
+                $edit.' '.$delete
+            ); // Adding row to table
+
+        }
+
+        $result = array(
+            'sEcho'=> $this->input->post('sEcho'),
+            'iTotalRecords'=>$count_all,
+            'iTotalDisplayRecords'=> $count_display_all,
+            'aaData'=>$aadata
+        );
+
+        print json_encode($result);
+    }
+
 
 	function details($id){
 		$this->load->library('table');
@@ -762,7 +1138,7 @@ class Members extends Application
 	public function ajaxdelete()
 	{
 		$id = $this->input->post('id');
-		
+
 		if($this->db->where('id', $id)->delete($this->config->item('jayon_members_table'))){
 			print json_encode(array('result'=>'ok'));
 		}else{
@@ -825,7 +1201,7 @@ class Members extends Application
 			$success_url = 'admin/members/buyer';
 			$error_url = 'admin/members/buyer/add';
 
-			$utype = 'Buyer';			
+			$utype = 'Buyer';
 		}
 
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');

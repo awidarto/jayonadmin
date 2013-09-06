@@ -676,6 +676,8 @@ class Ajax extends Application
                 //$in = file_get_contents('php://input');
                 $in = $indata;
 
+                $buyer_id = 1;
+
                 $args = 'p='.$in;
 
                 $in = json_decode($in);
@@ -815,6 +817,9 @@ class Ajax extends Application
                 $nedata['delivery_id'] = $delivery_id;
                 $nedata['merchantname'] = $app->application_name;
                 $nedata['app'] = $app;
+
+                $order['delivery_id'] = $delivery_id;
+                $this->save_buyer($order);
 
                 $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
@@ -1038,6 +1043,50 @@ class Ajax extends Application
         $dataset['group_id'] = 5;
 
         if($this->db->insert($this->config->item('jayon_members_table'),$dataset)){
+            return $this->db->insert_id();
+        }else{
+            return 0;
+        }
+    }
+
+    private function save_buyer($ds){
+
+        $bd['buyer_name']  =  $ds['buyer_name'];
+        $bd['buyerdeliveryzone']  =  $ds['buyerdeliveryzone'];
+        $bd['buyerdeliverycity']  =  $ds['buyerdeliverycity'];
+        $bd['shipping_address']  =  $ds['shipping_address'];
+        $bd['phone']  =  $ds['phone'];
+        $bd['mobile1']  =  $ds['mobile1'];
+        $bd['mobile2']  =  $ds['mobile2'];
+        $bd['recipient_name']  =  $ds['recipient_name'];
+        $bd['shipping_zip']  =  $ds['shipping_zip'];
+        $bd['email']  =  $ds['email'];
+        $bd['delivery_id']  =  $ds['delivery_id'];
+        $bd['delivery_cost']  =  $ds['delivery_cost'];
+        $bd['cod_cost']  =  $ds['cod_cost'];
+        $bd['delivery_type']  =  $ds['delivery_type'];
+        $bd['currency']  =  $ds['currency'];
+        $bd['total_price']  =  $ds['total_price'];
+        $bd['chargeable_amount']  =  $ds['chargeable_amount'];
+        $bd['delivery_bearer']  =  $ds['delivery_bearer'];
+        $bd['cod_bearer']  =  $ds['cod_bearer'];
+        $bd['cod_method']  =  $ds['cod_method'];
+        $bd['ccod_method']  =  $ds['ccod_method'];
+        $bd['application_id']  =  $ds['application_id'];
+        //$bd['buyer_id']  =  $ds['buyer_id'];
+        $bd['merchant_id']  =  $ds['merchant_id'];
+        $bd['merchant_trans_id']  =  $ds['merchant_trans_id'];
+        //$bd['courier_id']  =  $ds['courier_id'];
+        //$bd['device_id']  =  $ds['device_id'];
+        $bd['directions']  =  $ds['directions'];
+        //$bd['dir_lat']  =  $ds['dir_lat'];
+        //$bd['dir_lon']  =  $ds['dir_lon'];
+        //$bd['delivery_note']  =  $ds['delivery_note'];
+        //$bd['latitude']  =  $ds['latitude'];
+        //$bd['longitude']  =  $ds['longitude'];
+        $bd['created']  =  $ds['created'];
+
+        if($this->db->insert($this->config->item('jayon_buyers_table'),$bd)){
             return $this->db->insert_id();
         }else{
             return 0;
