@@ -893,11 +893,6 @@ class Members extends Application
             $search = true;
         }
 
-        if($this->input->post('sSearch_11') != ''){
-            $this->db->like('created',$this->input->post('sSearch_11'));
-            $search = true;
-        }
-
         $display = $this->db->get();
 
         $count_all = count($display->result_array());
