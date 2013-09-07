@@ -1102,7 +1102,7 @@ class V1 extends Application
 
     public function testquery(){
 
-        $this->db->select($this->config->item('incoming_delivery_table').'.buyer_name,m.merchantname as merchant,m.email as merchant_email,a.application_name as app_name');
+        $this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,m.email as merchant_email,a.application_name as app_name');
         $this->db->from($this->config->item('incoming_delivery_table'));
         $this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
         $this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
