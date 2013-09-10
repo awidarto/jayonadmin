@@ -532,6 +532,8 @@
 				Save: function(){
 					var nframe = document.getElementById('neworder_frame');
 					var nframeWindow = nframe.contentWindow;
+                    $('#sendingorder').hide();
+                    $('#sendingstatus').hide();
 					nframeWindow.submitorder();
 				},
 				Close: function() {

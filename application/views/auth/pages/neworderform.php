@@ -876,6 +876,10 @@
                             //alert('Transaction Success');
                             $('#sendingstatus', window.parent.document).html('Transaction Success');
                             $('#sendingstatus', window.parent.document).show();
+
+                            //$('#neworder_dialog', window.parent.document).dialog('close');
+
+                            parent.$('#neworder_dialog').dialog('close');
                             //$('#trx_result').html('Transaction Success');
                             //$('#neworder_dialog', window.parent.document).dialog( "close" );
                         }else{

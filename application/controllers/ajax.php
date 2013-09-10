@@ -491,7 +491,6 @@ class Ajax extends Application
 
 		$api_key = $this->input->post('api_key');
 		$trx_id = $trx['transaction_id'];
-        $trx = json_encode($trx);
 
         /*
         $result = $this->jexclient
@@ -501,6 +500,8 @@ class Ajax extends Application
                     ->format('json')
                     ->send();
         */
+
+        $trx = json_encode($trx);
         $result = $this->order_save($trx,$api_key,$trx_id);
         print $result;
 
