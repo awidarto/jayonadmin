@@ -495,14 +495,18 @@ class Ajax extends Application
         /*
         $result = $this->jexclient
                     ->base($this->config->item('api_url'))
-                    ->endpoint('order/key/'.$api_key.'/trx/'.$trx_id)
+                    ->endpoint('order')
+                    ->addparam('key',$api_key)
+                    ->addparam('trx',$trx_id)
                     ->data($trx)
+                    ->setmethod('POST')
                     ->format('json')
                     ->send();
         */
 
         $trx = json_encode($trx);
         $result = $this->order_save($trx,$api_key,$trx_id);
+
         print $result;
 
 	}
