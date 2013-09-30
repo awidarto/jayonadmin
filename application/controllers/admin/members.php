@@ -462,7 +462,7 @@ class Members extends Application
 		print json_encode($result);
 	}
 
-	public function __buyer()
+	public function buyer()
 	{
 
 		$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
@@ -685,7 +685,7 @@ class Members extends Application
 		print json_encode($result);
 	}
 
-    public function buyer()
+    public function __buyer()
     {
 
         $this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
@@ -721,7 +721,7 @@ class Members extends Application
             );
 
         $page['sortdisable'] = '';
-        $page['ajaxurl'] = 'admin/members/ajaxbuyers';
+        $page['ajaxurl'] = 'admin/members/ajaxbuyer';
         $page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
         $page['page_title'] = 'Manage Buyers';
         $this->ag_auth->view('memberajaxlistview',$page); // Load the view
