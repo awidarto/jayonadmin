@@ -297,7 +297,7 @@ class Prints extends Application
 
 			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
 			$total = (int)$total;
-			$gt = ($total < $gt)?$gt:$total;
+			//$gt = ($total < $gt)?$gt:$total;
 			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
 			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
 			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
