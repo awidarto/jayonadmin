@@ -176,11 +176,11 @@ class Location extends Application
 			$loc = $this->db
 				->select('identifier,timestamp,latitude as lat,longitude as lng')
 				->where('identifier',$d->identifier)
-				->like('timestamp',date('Y-m-d',time()),'after')				
+				->like('timestamp',date('Y-m-d',time()),'after')
 				//->limit(10,0)
 				->order_by('timestamp','desc')
 				->get($this->config->item('location_log_table'));
-	
+
 			if($loc->num_rows() > 0){
 				$loc = $loc->result();
 				foreach($loc as $l){
@@ -252,6 +252,47 @@ class Location extends Application
 		$this->ag_auth->view('location/log',$page); // Load the view
 
 	}
+
+    public function router()
+    {
+
+        $this->breadcrumb->add_crumb('Location','admin/location');
+        $this->breadcrumb->add_crumb('Router','admin/location/router');
+
+        $this->table->set_heading(
+            'Timestamp',
+            'Device Identifier',
+            'Courier',
+            'Latitude',
+            'Longitude',
+            'Status'
+            ); // Setting headings for the table
+
+        $devs = array();
+        $devs['Search device'] = '-';
+        foreach (get_devices() as $dev) {
+            $devs[$dev->identifier] = $dev->identifier;
+        }
+
+        $dev_search = form_dropdown('search_device',$devs,'Search device','id="search_device"');
+
+        $this->table->set_footing(
+            '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
+            '<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+            '<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+            '',
+            '',
+            '<input type="text" name="search_status" id="search_status" value="Search status" class="search_init" />'
+            );
+
+
+
+        $page['sortdisable'] = '';
+        $page['ajaxurl'] = 'ajaxpos/ajaxlog';
+        $page['page_title'] = 'Router';
+        $this->ag_auth->view('location/log',$page); // Load the view
+
+    }
 
 
 	public function delete($id)

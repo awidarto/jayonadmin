@@ -259,7 +259,7 @@ class Members extends Application
 			'ZIP',
 			'Mobile',
 			'Phone',
-			//'Group',
+			'Group',
 			'Created',
 			'Actions'); // Setting headings for the table
 
@@ -275,6 +275,7 @@ class Members extends Application
 			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_mobile" value="Search mobile" class="search_init" />',
 			'<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '',
 			'<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />',
 			form_button('do_setgroup','Set Group','id="doSetGroup"')
 			);
@@ -295,6 +296,7 @@ class Members extends Application
 		$sort_dir = $this->input->post('sSortDir_0');
 
 		$group_id = user_group_id('merchant');
+        $pending_group_id = user_group_id('pendingmerchant');
 
 		$columns = array(
 			'username',
@@ -310,12 +312,12 @@ class Members extends Application
 			'zip',
 			'mobile',
 			'phone',
-			'groupname',
+            'group_id',
 			'created',
 			'bank',
 			'account_number',
 			'account_name',
-			'group_id',
+            'groupname',
 			'token',
 			'identifier',
 			'merchant_request',
@@ -326,7 +328,9 @@ class Members extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
 
-		$this->db->where('group_id',$group_id);
+		$this->db->where('group_id',$group_id)
+            ->or_where('group_id',$pending_group_id);
+
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
 
 		//$this->db->select('*,g.description as groupname');
@@ -406,10 +410,14 @@ class Members extends Application
 			//$this->db->and_();
 		}
 
+        //$group_ids = array(group_id('merchant'),group_id('pendingmerchant'));
 
 		$data = $this->db
-			->where('group_id',$group_id)
+			->where_in('group_id',$group_id)
+            ->or_where('group_id',$pending_group_id)
 			->limit($limit_count, $limit_offset)
+            ->order_by('created','desc')
+            ->order_by('group_id','desc')
 			->order_by($columns[$sort_col],$sort_dir)
 			->get($this->config->item('jayon_members_table'));
 
@@ -432,6 +440,8 @@ class Members extends Application
 			$edit = anchor("admin/members/merchant/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 
+            $groupname = ($key['group_id'] == group_id('pendingmerchant'))?sprintf('<span class="red">%s</span>',user_group_desc($key['group_id']) ):user_group_desc($key['group_id']);
+
 			$aadata[] = array(
 				$detail,
 			 	$key['email'],
@@ -446,6 +456,7 @@ class Members extends Application
 			 	//$key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],
 			 	$key['mobile'],
 			 	$key['phone'],
+                $groupname,
 			 	$key['created'],
 			 	$addapp.' '.$edit.' '.$editpass.' '.$delete
 			); // Adding row to table
@@ -462,7 +473,7 @@ class Members extends Application
 		print json_encode($result);
 	}
 
-	public function buyer()
+	public function __buyer()
 	{
 
 		$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
@@ -685,7 +696,7 @@ class Members extends Application
 		print json_encode($result);
 	}
 
-    public function __buyer()
+    public function buyer()
     {
 
         $this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
@@ -693,10 +704,13 @@ class Members extends Application
         $this->load->library('table');
 
         $this->table->set_heading(
+            'Parent',
+            'Child',
+            'Cluster',
             'Buyer Name',
-            'Zone',
-            'City',
             'Address',
+            'City',
+            'Zone',
             'Phone',
             'Mobile1',
             'Mobile2',
@@ -707,10 +721,13 @@ class Members extends Application
             'Actions'); // Setting headings for the table
 
         $this->table->set_footing(
+            '',
+            '',
+            '',
             '<input type="text" name="search_buyer_name" id="search_username" value="Search delivery time" class="search_init" />',
-            '<input type="text" name="search_buyerdeliveryzone" id="search_username" value="Search delivery time" class="search_init" />',
-            '<input type="text" name="search_buyerdeliverycity" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_shipping_address" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_buyerdeliverycity" id="search_username" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_buyerdeliveryzone" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_phone" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_mobile1" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_mobile2" id="search_username" value="Search delivery time" class="search_init" />',
@@ -720,8 +737,8 @@ class Members extends Application
             '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />'
             );
 
-        $page['sortdisable'] = '';
-        $page['ajaxurl'] = 'admin/members/ajaxbuyer';
+        $page['sortdisable'] = '0';
+        $page['ajaxurl'] = 'admin/members/ajaxbuyers';
         $page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
         $page['page_title'] = 'Manage Buyers';
         $this->ag_auth->view('memberajaxlistview',$page); // Load the view
@@ -738,40 +755,40 @@ class Members extends Application
         $group_id = user_group_id('buyer');
 
         $columns = array(
-            'buyer_name
-            ,buyerdeliveryzone
-            ,buyerdeliverycity
-            ,shipping_address
-            ,phone
-            ,mobile1
-            ,mobile2
-            ,recipient_name
-            ,shipping_zip
-            ,email
-            ,delivery_id
-            ,delivery_cost
-            ,cod_cost
-            ,delivery_type
-            ,currency
-            ,total_price
-            ,chargeable_amount
-            ,delivery_bearer
-            ,cod_bearer
-            ,cod_method
-            ,ccod_method
-            ,application_id
-            ,buyer_id
-            ,merchant_id
-            ,merchant_trans_id
-            ,courier_id
-            ,device_id
-            ,directions
-            ,dir_lat
-            ,dir_lon
-            ,delivery_note
-            ,latitude
-            ,longitude
-            ,created'
+            'buyer_name'
+            ,'shipping_address'
+            ,'buyerdeliverycity'
+            ,'buyerdeliveryzone'
+            ,'phone'
+            ,'mobile1'
+            ,'mobile2'
+            ,'recipient_name'
+            ,'shipping_zip'
+            ,'email'
+            ,'delivery_id'
+            ,'delivery_cost'
+            ,'cod_cost'
+            ,'delivery_type'
+            ,'currency'
+            ,'total_price'
+            ,'chargeable_amount'
+            ,'delivery_bearer'
+            ,'cod_bearer'
+            ,'cod_method'
+            ,'ccod_method'
+            ,'application_id'
+            ,'buyer_id'
+            ,'merchant_id'
+            ,'merchant_trans_id'
+            ,'courier_id'
+            ,'device_id'
+            ,'directions'
+            ,'dir_lat'
+            ,'dir_lon'
+            ,'delivery_note'
+            ,'latitude'
+            ,'longitude'
+            ,'created'
         );
 
         //restart query
@@ -801,12 +818,13 @@ class Members extends Application
             ,longitude
         */
 
-        $this->db->distinct();
+        //$this->db->distinct();
         $this->db->select(
-            'buyer_name
-            ,buyerdeliveryzone
-            ,buyerdeliverycity
+            'cluster_id,
             ,shipping_address
+            ,buyer_name
+            ,buyerdeliverycity
+            ,buyerdeliveryzone
             ,phone
             ,mobile1
             ,mobile2
@@ -814,19 +832,14 @@ class Members extends Application
             ,shipping_zip
             ,email
             ,created');
-        $this->db->from($this->config->item('jayon_buyers_table'));
+        /*
         $this->db->group_by(
-            'buyer_name
-            ,buyerdeliveryzone
-            ,buyerdeliverycity
-            ,shipping_address
-            ,phone
-            ,mobile1
-            ,mobile2
-            ,email
-            ,recipient_name
-            ,shipping_zip'
+            'cluster_id'
+            //'shipping_address
+            //,buyer_name'
         );
+        */
+        $this->db->from($this->config->item('jayon_buyers_table'));
 
         $search = false;
                 //search column
@@ -843,11 +856,11 @@ class Members extends Application
             $search = true;
         }
 
-
         if($this->input->post('sSearch_1') != ''){
-            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
+            $this->db->like('shipping_address',$this->input->post('sSearch_1'));
             $search = true;
         }
+
 
         if($this->input->post('sSearch_2') != ''){
             $this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
@@ -855,7 +868,7 @@ class Members extends Application
         }
 
         if($this->input->post('sSearch_3') != ''){
-            $this->db->like('shipping_address',$this->input->post('sSearch_3'));
+            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_3'));
             $search = true;
         }
 
@@ -897,12 +910,13 @@ class Members extends Application
 
         $count_all = count($display->result_array());
 
-        $this->db->distinct();
+        //$this->db->distinct();
         $this->db->select(
-            'buyer_name
-            ,buyerdeliveryzone
-            ,buyerdeliverycity
+            'cluster_id,
             ,shipping_address
+            ,buyer_name
+            ,buyerdeliverycity
+            ,buyerdeliveryzone
             ,phone
             ,mobile1
             ,mobile2
@@ -910,19 +924,32 @@ class Members extends Application
             ,shipping_zip
             ,email
             ,created');
-        $this->db->from($this->config->item('jayon_buyers_table'));
+        /*
         $this->db->group_by(
-            'buyer_name
-            ,buyerdeliveryzone
+            'cluster_id'
+            //'shipping_address
+            //,buyer_name'
+        );
+        */
+        $this->db->order_by(
+            'shipping_address
+            ,buyer_name
             ,buyerdeliverycity
-            ,shipping_address
+            ,buyerdeliveryzone
             ,phone
             ,mobile1
-            ,mobile2
-            ,email
-            ,recipient_name
-            ,shipping_zip'
+            ,mobile2'
+
+            );
+
+        $this->db->from($this->config->item('jayon_buyers_table'));
+
+        /*
+        $this->db->group_by(
+            'shipping_address
+            ,buyer_name'
         );
+        */
 
         $search = false;
                 //search column
@@ -939,11 +966,11 @@ class Members extends Application
             $search = true;
         }
 
-
         if($this->input->post('sSearch_1') != ''){
-            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
+            $this->db->like('shipping_address',$this->input->post('sSearch_1'));
             $search = true;
         }
+
 
         if($this->input->post('sSearch_2') != ''){
             $this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
@@ -951,7 +978,7 @@ class Members extends Application
         }
 
         if($this->input->post('sSearch_3') != ''){
-            $this->db->like('shipping_address',$this->input->post('sSearch_3'));
+            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_3'));
             $search = true;
         }
 
@@ -989,11 +1016,6 @@ class Members extends Application
             $search = true;
         }
 
-        if($this->input->post('sSearch_11') != ''){
-            $this->db->like('created',$this->input->post('sSearch_11'));
-            $search = true;
-        }
-
         if($search){
             //$this->db->and_();
         }
@@ -1003,7 +1025,7 @@ class Members extends Application
             ->order_by($columns[$sort_col],$sort_dir)
             ->get();
 
-        //print $this->db->last_query();
+        $last_query = $this->db->last_query();
 
         $result = $data->result_array();
 
@@ -1029,10 +1051,13 @@ class Members extends Application
             //$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 
             $aadata[] = array(
+                '<input type="radio" name="parent_check" class="parent_check" id="'.$key['cluster_id'].'" value="'.$key['cluster_id'].'" />',
+                '<input type="checkbox" name="child_select" class="child_select" id="'.$key['cluster_id'].'" value="'.$key['cluster_id'].'" />',
+                $key['cluster_id'],
                 $key['buyer_name'],
+                $key['shipping_address'],
                 $key['buyerdeliveryzone'],
                 $key['buyerdeliverycity'],
-                $key['shipping_address'],
                 $key['phone'],
                 $key['mobile1'],
                 $key['mobile2'],
@@ -1049,7 +1074,8 @@ class Members extends Application
             'sEcho'=> $this->input->post('sEcho'),
             'iTotalRecords'=>$count_all,
             'iTotalDisplayRecords'=> $count_display_all,
-            'aaData'=>$aadata
+            'aaData'=>$aadata,
+            'q'=>$last_query
         );
 
         print json_encode($result);
@@ -1236,6 +1262,7 @@ class Members extends Application
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
+                group_id('pendingmerchant')=>group_desc('pendingmerchant'),
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
@@ -1397,6 +1424,7 @@ class Members extends Application
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
+                group_id('pendingmerchant')=>group_desc('pendingmerchant'),
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);

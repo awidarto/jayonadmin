@@ -2,7 +2,7 @@
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
 	var rescheduled_id = 0;
-
+    var refreshTab;
 
 	$(document).ready(function() {
 
@@ -46,6 +46,10 @@
 		        }
 			}
 		);
+
+        refreshTab = function(){
+            oTable.fnDraw();
+        };
 
 		$('tfoot input').keyup( function () {
 			/* Filter on the column (the index) of this element */
@@ -562,7 +566,8 @@
 
 </script>
 <div class="button_nav">
-	<span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
+    <a class="button add" id="import" style="cursor:pointer;" href="<?php echo site_url('/admin/import') ?>">Import</a>
+    <span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
 </div>
 <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
 

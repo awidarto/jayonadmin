@@ -406,6 +406,60 @@
                 $('#delivery_option').hide();
             });
 
+            // set delivery bearer
+            $('#set_delivery_bearer').click(function(){
+                $('#delivery_bearer_option').show();
+            });
+
+            $('#save_delivery_bearer').click(function(){
+                $('#loader').show();
+                $.post('<?php print site_url('ajax/savedeliverybearer');?>',
+                { delivery_id: $('#delivery_id').val(),delivery_bearer_type:$('#delivery_bearer_select').val()},
+                function(data) {
+                    $('#loader').hide();
+                    if(data.status == 'OK'){
+                        $('#delivery_bearer_type').html(data.delivery_bearer_type);
+                        $('#delivery_bearer_option').hide();
+                        alert('Delivery bearer updated.')
+                    }else if(data.status == 'ERR'){
+                        $('#delivery_bearer_option').hide();
+                        alert('Failed to update delivery bearer.')
+                    }
+                },'json');
+            });
+
+            $('#cancel_delivery_bearer').click(function(){
+                $('#delivery_bearer_option').hide();
+            });
+
+            // set cod bearer
+            $('#set_cod_bearer').click(function(){
+                $('#cod_bearer_option').show();
+            });
+
+            // set cod bearer
+            $('#save_cod_bearer').click(function(){
+                $('#loader').show();
+                $.post('<?php print site_url('ajax/savecodbearer');?>',
+                { delivery_id: $('#delivery_id').val(),cod_bearer_type:$('#cod_surcharge_bearer_select').val()},
+                function(data) {
+                    $('#loader').hide();
+                    if(data.status == 'OK'){
+                        $('#cod_bearer_type').html(data.cod_bearer_type);
+                        $('#cod_bearer_option').hide();
+                        alert('COD surcharge bearer updated.')
+                    }else if(data.status == 'ERR'){
+                        $('#cod_bearer_option').hide();
+                        alert('Failed to update COD bearer.')
+                    }
+                },'json');
+            });
+
+            $('#cancel_cod_bearer').click(function(){
+                $('#cod_bearer_option').hide();
+            });
+
+
         });
 
         function validate(){
@@ -617,9 +671,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
                                     <label for"delivery_bearer">Delivery Fee :</label>
                                     <span id="delivery_bearer_type"><?php print ucfirst($main_info['delivery_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery bearer</span>
+                                    <span id="set_delivery_bearer" style="cursor:pointer;text-decoration: underline;">set delivery bearer</span>
                                     <div id="delivery_bearer_option" style="display:none">
-                                        <select id="delivery_bearer">
+                                        <select id="delivery_bearer_select">
                                             <option value="merchant">Merchant</option>
                                             <option value="buyer">Buyer</option>
                                         </select>
@@ -631,9 +685,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
                                     <label for"cod_bearer">COD / CCOD Surcharge Fee :</label>
                                     <span id="cod_bearer_type"><?php print ucfirst($main_info['cod_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set COD bearer</span>
+                                    <span id="set_cod_bearer" style="cursor:pointer;text-decoration: underline;">set COD bearer</span>
                                     <div id="cod_bearer_option" style="display:none">
-                                        <select id="cod_surcharge_bearer">
+                                        <select id="cod_surcharge_bearer_select">
                                             <option value="merchant">Merchant</option>
                                             <option value="buyer">Buyer</option>
                                         </select>
@@ -681,9 +735,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td>Phone:</td>
                                 <td>
                                     <?php
-                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?form_input('phone',$main_info['phone'],'id="phone"').'<br />':'';
-                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?form_input('mobile1',$main_info['mobile1'],'id="mobile1"').'<br />':'';
-                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?form_input('mobile2',$main_info['mobile2'],'id="mobile2"').'<br />':'';
+                                        print form_input('phone',$main_info['phone'],'id="phone"').'<br />';
+                                        print form_input('mobile1',$main_info['mobile1'],'id="mobile1"').'<br />';
+                                        print form_input('mobile2',$main_info['mobile2'],'id="mobile2"').'<br />';
                                     ?>
                                 </td>
                             </tr>

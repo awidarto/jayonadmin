@@ -565,6 +565,38 @@ class Ajax extends Application
 
 	}
 
+    public function savedeliverybearer(){
+        $delivery_id = $this->input->post('delivery_id');
+        $delivery_bearer_type = $this->input->post('delivery_bearer_type');
+
+        $newdata = array('delivery_bearer'=>$delivery_bearer_type);
+
+        $this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+        if($this->db->affected_rows() > 0){
+            print json_encode(array('status'=>'OK','delivery_bearer_type'=>$delivery_bearer_type));
+        }else{
+            print json_encode(array('status'=>'ERR','delivery_bearer_type'=>0));
+        }
+
+    }
+
+    public function savecodbearer(){
+        $delivery_id = $this->input->post('delivery_id');
+        $cod_bearer_type = $this->input->post('cod_bearer_type');
+
+        $newdata = array('cod_bearer'=>$cod_bearer_type);
+
+        $this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+        if($this->db->affected_rows() > 0){
+            print json_encode(array('status'=>'OK','cod_bearer_type'=>$cod_bearer_type));
+        }else{
+            print json_encode(array('status'=>'ERR','cod_bearer_type'=>0));
+        }
+
+    }
+
 	public function savedeliverytype(){
 		$delivery_id = $this->input->post('delivery_id');
         $delivery_type = $this->input->post('delivery_type');
@@ -754,7 +786,7 @@ class Ajax extends Application
                     $dataset['country'] = 'Indonesia';
                     $dataset['zip'] = $in->zip;
 
-                    $buyer_id = $this->register_buyer($dataset);
+                    //$buyer_id = $this->register_buyer($dataset);
                     $is_new = true;
                 }
 
@@ -824,6 +856,7 @@ class Ajax extends Application
                 $nedata['app'] = $app;
 
                 $order['delivery_id'] = $delivery_id;
+
                 $this->save_buyer($order);
 
                 $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
@@ -1090,6 +1123,8 @@ class Ajax extends Application
         //$bd['latitude']  =  $ds['latitude'];
         //$bd['longitude']  =  $ds['longitude'];
         $bd['created']  =  $ds['created'];
+
+        $bd['cluster_id'] = substr(md5(uniqid(rand(), true)), 0, 20 );
 
         if($this->db->insert($this->config->item('jayon_buyers_table'),$bd)){
             return $this->db->insert_id();

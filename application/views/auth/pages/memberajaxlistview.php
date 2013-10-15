@@ -20,16 +20,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -42,7 +42,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -101,7 +101,7 @@
 		});
 
 		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_timestamp').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -116,7 +116,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value +' - '+ uname+'</strong></li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#setgroup_dialog').dialog('open');
@@ -137,9 +137,9 @@
 					$('.assign_check:checked').each(function(){
 						user_ids[i] = $(this).val();
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/members/ajaxsetgroup');?>',
-						{ set_group: $('#set_group').val(),'users[]':user_ids}, 
+						{ set_group: $('#set_group').val(),'users[]':user_ids},
 						function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -164,9 +164,12 @@
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
 <?php endif;?>
+
+<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
+
 <?php echo $this->table->generate(); ?>
 
-<?php 
+<?php
 	$group_array = array(
 		user_group_id('merchant')=>'merchant',
 		user_group_id('buyer')=>'buyer'

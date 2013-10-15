@@ -2,7 +2,7 @@
 
 class Prints extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -11,9 +11,9 @@ class Prints extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
-	    
+
 	}
-	
+
 	public function deliveryslip($delivery_id,$pdf = false)
 	{
 			$main = $this->db
@@ -55,10 +55,10 @@ class Prints extends Application
 			$details = $details->result_array();
 
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Description',	 	 	 	 	 	 	 
-				'Quantity',		
-				'Total ('.$data['main_info']['currency'].')'		
+				'No.',
+				'Description',
+				'Quantity',
+				'Total ('.$data['main_info']['currency'].')'
 				); // Setting headings for the table
 
 			$d = 0;
@@ -68,14 +68,14 @@ class Prints extends Application
 			{
 
 				$this->table->add_row(
-					(int)$key['unit_sequence'] + 1,		 	 	
-					$key['unit_description'],	 	 	 	 	 	 	 
-					$key['unit_quantity'],		
-					number_format($key['unit_total'],2,',','.')			
+					(int)$key['unit_sequence'] + 1,
+					$key['unit_description'],
+					$key['unit_quantity'],
+					number_format($key['unit_total'],2,',','.')
 				);
 
 				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
 				$gt += (int)$u_total;
 				$d += (int)$u_discount;
 
@@ -83,7 +83,7 @@ class Prints extends Application
 
 			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
 			$total = (int)$total;
-			$gt = ($total < $gt)?$gt:$total;
+			//$gt = ($total < $gt)?$gt:$total;
 			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
 			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
 			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
@@ -100,7 +100,7 @@ class Prints extends Application
 					array('data'=>'Total Price',
 						'colspan'=>3,
 						'class'=>'lsums'
-						),									
+						),
 				number_format($gt,2,',','.')
 			);
 
@@ -108,7 +108,7 @@ class Prints extends Application
 					array('data'=>'Total Discount',
 						'colspan'=>3,
 						'class'=>'lsums'
-						),										
+						),
 					number_format($dsc,2,',','.')
 				);
 
@@ -116,7 +116,7 @@ class Prints extends Application
 					array('data'=>'Total Tax',
 						'colspan'=>3,
 						'class'=>'lsums'
-						),	
+						),
 					number_format($tax,2,',','.')
 				);
 
@@ -131,14 +131,14 @@ class Prints extends Application
 					array('data'=>'Dibayar oleh '.$data['main_info']['delivery_bearer'],
 						'colspan'=>2,
 						'class'=>'lsums'
-						),	
+						),
 					array('data'=>'Delivery Charge',
 						'class'=>'lsums'
-						),	
+						),
 					array('data'=>number_format($dc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'delivery_cost'
-					)		
+					)
 				);
 
 				/*
@@ -147,26 +147,26 @@ class Prints extends Application
 					$cod = 0;
 				}
 				*/
-				
+
 				$this->table->add_row(
 					array('data'=>'Dibayar oleh '.$data['main_info']['cod_bearer'],
 						'colspan'=>2,
 						'class'=>'lsums'
-						),	
+						),
 					array('data'=>'COD Surcharge',
 						'class'=>'lsums'
-						),		
+						),
 					array('data'=>number_format($cod,2,',','.'),
 						'class'=>'editable',
 						'id'=>'cod_cost'
-					)		
+					)
 				);
 
 				$this->table->add_row(
 					array('data'=>'Total Charges',
 						'colspan'=>3,
 						'class'=>'lsums'
-						),		
+						),
 					number_format($chg,2,',','.')
 				);
 
@@ -192,7 +192,7 @@ class Prints extends Application
 			if($pdf){
 				$html = $this->load->view('print/deliveryslip',$data,true);
 				//print $html; // Load the view
-				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
 			}else{
 				$this->load->view('print/deliveryslip',$data); // Load the view
 			}
@@ -269,10 +269,10 @@ class Prints extends Application
 			$details = $details->result_array();
 
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Description',	 	 	 	 	 	 	 
-				'Quantity',		
-				'Total ('.$data['main_info']['currency'].')'		
+				'No.',
+				'Description',
+				'Quantity',
+				'Total ('.$data['main_info']['currency'].')'
 				); // Setting headings for the table
 
 			$d = 0;
@@ -282,14 +282,14 @@ class Prints extends Application
 			{
 
 				$this->table->add_row(
-					(int)$key['unit_sequence'] + 1,		 	 	
-					$key['unit_description'],	 	 	 	 	 	 	 
-					$key['unit_quantity'],		
-					number_format($key['unit_total'],2,',','.')			
+					(int)$key['unit_sequence'] + 1,
+					$key['unit_description'],
+					$key['unit_quantity'],
+					number_format($key['unit_total'],2,',','.')
 				);
 
 				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
+				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
 				$gt += (int)$u_total;
 				$d += (int)$u_discount;
 
@@ -311,61 +311,61 @@ class Prints extends Application
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
-				'&nbsp;',		
-				'&nbsp;',		
-				'Total Price',		
+				'&nbsp;',
+				'&nbsp;',
+				'Total Price',
 				array('data'=>number_format($gt,2,',','.'),
 					'id'=>'total_price'
-				)		
+				)
 
 			);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
+					'&nbsp;',
+					'&nbsp;',
 					'Total Discount',
 					array('data'=>number_format($dsc,2,',','.'),
 						'id'=>'total_discount'
-					)		
+					)
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Tax',		
+					'&nbsp;',
+					'&nbsp;',
+					'Total Tax',
 					array('data'=>number_format($tax,2,',','.'),
 						'id'=>'total_tax'
-					)		
+					)
 				);
 
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Delivery Charge',		
+					'&nbsp;',
+					'&nbsp;',
+					'Delivery Charge',
 					array('data'=>number_format($dc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'delivery_cost'
-					)		
+					)
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'COD Surcharge',		
+					'&nbsp;',
+					'&nbsp;',
+					'COD Surcharge',
 					array('data'=>number_format($cod,2,',','.'),
 						'class'=>'editable',
 						'id'=>'cod_cost'
-					)		
+					)
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Charges',		
+					'&nbsp;',
+					'&nbsp;',
+					'Total Charges',
 					array('data'=>number_format($chg,2,',','.'),
 						'id'=>'total_charges'
-					)		
+					)
 
 				);
 
@@ -391,7 +391,7 @@ class Prints extends Application
 			if($pdf){
 				$html = $this->load->view('print/deliveryview',$data,true);
 				//print $html; // Load the view
-				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
 			}else{
 				$this->load->view('print/deliveryview',$data); // Load the view
 			}
@@ -460,14 +460,14 @@ class Prints extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'13'
-			)	
+			)
 		);
 
 
 		if($type == 'Merchant' || $type == 'Global'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
@@ -477,23 +477,23 @@ class Prints extends Application
 				'Disc',
 				'Tax',
 				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
+				'COD Surchg',
+				'Payable Value'
 			); // Setting headings for the table
 
 		}else if($type == 'Courier'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
 				'Delivery Date',
 				'Status',
 				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
-			); // Setting headings for the table			
+				'COD Surchg',
+				'Payable Value'
+			); // Setting headings for the table
 		}
 
 
@@ -524,7 +524,7 @@ class Prints extends Application
 			if($r->status == $this->config->item('trans_status_mobile_delivered')){
 				if($type == 'Merchant' || $type == 'Global'){
 					$payable = ($total - $dsc) + $tax;
-					// + $dc + $cod;				
+					// + $dc + $cod;
 				}else if($type == 'Courier'){
 					$payable = ($dc + $cod) * 0.1;
 				}
@@ -534,7 +534,7 @@ class Prints extends Application
 				$r->status == $this->config->item('trans_status_mobile_rescheduled') ||
 				$r->status == $this->config->item('trans_status_mobile_noshow'))
 			{
-				//TBA	
+				//TBA
 			}
 
 			$total_delivery += (int)str_replace('.','',$dc);
@@ -542,8 +542,8 @@ class Prints extends Application
 
 			if($type == 'Merchant' || $type == 'Global'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
@@ -552,24 +552,24 @@ class Prints extends Application
 					number_format((int)str_replace('.','',$total),2,',','.'),
 					number_format((int)str_replace('.','',$dsc),2,',','.'),
 					number_format((int)str_replace('.','',$tax),2,',','.'),
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$dc),2,',','.'),
 					number_format((int)str_replace('.','',$cod),2,',','.'),
 					number_format((int)str_replace('.','',$payable),2,',','.')
 				);
 
 			}else if($type == 'Courier'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
 					$r->assignment_date,
 					$r->status,
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$dc),2,',','.'),
 					number_format((int)str_replace('.','',$cod),2,',','.'),
 					number_format((int)str_replace('.','',$payable),2,',','.')
-				);				
+				);
 			}
 
 			$seq++;
@@ -623,7 +623,7 @@ class Prints extends Application
 		if($pdf){
 			$html = $this->load->view('print/reconciliation',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else{
 			$this->load->view('print/reconciliation',$data); // Load the view
 		}

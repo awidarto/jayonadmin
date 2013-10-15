@@ -32,14 +32,14 @@ class Delivery extends Application
             'Delivery ID',
             //'Merchant Trans ID',
             'Type',
-            'App Name',
-            'W x H x L',
-            'Volume',
+            'Merchant / App Name',
+            'W x H x L = V',
+            //'Volume',
             'Weight Range',
             'Delivery Fee',
             'COD Surcharge',
             'COD Value',
-            'Merchant',
+            //'Merchant',
             //'App Domain',
             'Buyer',
             'Shipping Address',
@@ -64,13 +64,14 @@ class Delivery extends Application
             //'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
-            '',
+            //'',
             '',
             '',
             '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
             '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
-            '<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
+            //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
+            '',
             '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             '<input type="text" name="search_shipping_address" value="Search merchant" class="search_init" />',
             '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
@@ -116,10 +117,10 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
+		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left');
 
 		$search = false;
 				//search column
@@ -196,7 +197,10 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_8') != ''){
+            $this->db->group_start();
             $this->db->like('a.application_name',$this->input->post('sSearch_8'));
+            $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
+            $this->db->group_end();
             $search = true;
         }
 
@@ -324,6 +328,8 @@ class Delivery extends Application
 				$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 			}
 
+            $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -335,19 +341,19 @@ class Delivery extends Application
 				$delivery_check,
 				//$key['merchant_trans_id'],
 				colorizetype($key['delivery_type']),
-				$app['application_name'],
-				$key['width'].' x '.$key['height'].' x '.$key['length'],
-				(double)$key['width']*(double)$key['height']*(double)$key['length'],
+				'<b>'.$key['merchant'].'</b><br />'.$app['application_name'],
+				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+				//(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
 				$key['delivery_cost'],
 				($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
 				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
-				$key['merchant'],
+				//$key['merchant'],
 				//$app['domain'],
 				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['directions'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$reference,
 				$reschedule.'<br />'.$changestatus,
@@ -464,10 +470,10 @@ class Delivery extends Application
 		$count_display_all = $this->db
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
+		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left');
 
 		$search = false;
 				//search column
@@ -607,10 +613,10 @@ class Delivery extends Application
 				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
 				$key['merchant'],
 				//$app['domain'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['directions'],
-				$key['phone'],
+                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$reference,
 				$reschedule.'<br />'.$changestatus,
@@ -665,10 +671,10 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
-		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
+		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left');
 
 		$search = false;
 				//search column
@@ -796,10 +802,10 @@ class Delivery extends Application
 				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
 				$key['merchant'],
 				//$app['domain'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['directions'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$reference,
 				($key['status'] == 'canceled')?$purge:$reschedule,
@@ -956,10 +962,10 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
+		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left');
 
 
 		if($search){
@@ -1028,7 +1034,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -1756,10 +1762,10 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 
 
@@ -1832,7 +1838,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -1955,7 +1961,7 @@ class Delivery extends Application
 
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
@@ -2021,7 +2027,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -2186,10 +2192,10 @@ class Delivery extends Application
 		}
 
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
@@ -2247,7 +2253,10 @@ class Delivery extends Application
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
 			$devicefield = ($bardev == $key['device'])?'':$key['device'];
-			$courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$key['courier'];
+
+            $courierlink = '<span class="change_courier" id="'.$key['assignment_date'].'_'.$key['device_id'].'_'.$key['courier_id'].'" style="cursor:pointer;text-decoration:underline;" >'.$key['courier'].'</span>';
+
+			$courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$courierlink;
 			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
 			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
 
@@ -2271,7 +2280,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['recipient_name'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
@@ -2366,10 +2375,10 @@ class Delivery extends Application
 			->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
@@ -2474,7 +2483,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$thumbnail,
 				$key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
@@ -2571,10 +2580,10 @@ class Delivery extends Application
 			->or_where('status',$this->config->item('trans_status_mobile_noshow'))
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,d.id as device_id,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,d.id as device_id,c.fullname as courier');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
@@ -2662,7 +2671,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
@@ -2750,10 +2759,10 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
@@ -2848,7 +2857,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog.' '.$changestatus
 				//$key['reschedule_ref'],
@@ -2933,10 +2942,10 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_archived'))
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
-		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
@@ -3057,7 +3066,7 @@ class Delivery extends Application
 				$key['courier'],
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],

@@ -4,17 +4,17 @@
         return ($hilite)?'nav_current':'';
     }
 ?>
-	<script> 
+	<script>
 		$(document).ready(function() {
 			$('#nav li').hover(
 			        function () {
 			            //show its submenu
 			            $('ul', this).slideDown(100);
 
-			        }, 
+			        },
 			        function () {
 			            //hide its submenu
-			            $('ul', this).slideUp(100);         
+			            $('ul', this).slideUp(100);
 			        }
 			    );
 			/*
@@ -22,12 +22,12 @@
 		        function () {
 					$(this).css('background','white');
 					$(this).css('color','black');
-		        }, 
+		        },
 		        function () {
 					$(this).css('background','transparent');
 					$(this).css('color','white');
 		        }
-				
+
 			);
 			*/
 		});
@@ -56,6 +56,7 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Locations'); } ?>
 				<ul>
+                    <li class="<?php print set_hilite('admin\/location\/router')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/router', 'Router'); } ?></li>
 					<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Location Log'); } ?></li>
 				</ul>
 			</li>
@@ -106,7 +107,7 @@
 		<?php
 			/*<li class="<?php print set_hilite('register')?>"><?php echo anchor('register', 'Register'); ?></li>*/
 		}
-	
+
 	?>
 	</ul>
 	<script type="text/javascript">
@@ -120,7 +121,7 @@
 				seconds = new Date().getTime() / 1000;
 			}, 'json');
 		}
-		
+
 		getChanges();
 
 		self.setInterval(function(){ getChanges();},20000);

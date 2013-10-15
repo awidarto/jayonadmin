@@ -880,6 +880,7 @@
                             //$('#neworder_dialog', window.parent.document).dialog('close');
 
                             parent.$('#neworder_dialog').dialog('close');
+                            parent.refreshTab();
                             //$('#trx_result').html('Transaction Success');
                             //$('#neworder_dialog', window.parent.document).dialog( "close" );
                         }else{
