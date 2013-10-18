@@ -304,6 +304,31 @@ class Ajax extends Application
 
 	}
 
+    public function handover(){
+        $prev_courier = $this->input->post('prev_courier');
+        $new_courier = $this->input->post('new_courier');
+
+        $prev = explode('_',$prev_courier);
+        $date = $prev[0];
+        $device_id = $prev[1];
+        $prev_courier = $prev[2];
+
+        $this->db->where('courier_id',$prev_courier);
+        $this->db->where('assignment_date',$date);
+        $this->db->where('device_id',$device_id);
+
+        $dataset = array('courier_id'=>$new_courier);
+
+        if($this->db->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK:REASSIGNED','timestamp'=>now(),'new_courier_id'=>$new_courier,'courier_id'=>$prev_courier));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NOREASSIGN','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
 	function reassign(){
 		$delivery_id = $this->input->post('delivery_id');
 		$courier_id = $this->input->post('courier_id');
