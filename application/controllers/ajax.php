@@ -694,6 +694,8 @@ class Ajax extends Application
         $parent = $this->input->post('parent');
         $children = $this->input->post('children');
 
+        $parent = (int)$parent;
+
         $chdata = array('is_parent'=>0, 'is_child_of'=>$parent);
         $this->db->where_in('id',$children)->update($this->config->item('jayon_buyers_table'),$chdata);
 
@@ -707,7 +709,7 @@ class Ajax extends Application
 
         $group_count += 1;
 
-        $pardata = array('is_parent'=>1, 'is_child_of'=>'', 'group_count'=>$group_count);
+        $pardata = array('is_parent'=>1, 'is_child_of'=>0, 'group_count'=>$group_count);
         $this->db->where('id',$parent)->update($this->config->item('jayon_buyers_table'),$pardata);
 
         if($num_children > 0){
