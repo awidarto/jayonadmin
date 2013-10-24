@@ -165,8 +165,12 @@
 	</div>
 <?php endif;?>
 
-<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
-
+<div class="button_nav" style="text-align:left;">
+    <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
+    <?php if(isset($group_button) && $group_button == true):?>
+        <span class="button" id="import" style="cursor:pointer;" href="<?php echo site_url('/admin/import') ?>">Group Selected Buyers</span>
+    <?php endif;?>
+</div>
 <?php echo $this->table->generate(); ?>
 
 <?php

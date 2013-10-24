@@ -10,32 +10,38 @@ ADD  `ccod_method` VARCHAR( 15 ) NULL AFTER  `cod_method` ;
 
 delete FROM `pickup_tariff` WHERE `seq` > 3;
 
-UPDATE `pickup_tariff` SET 
+UPDATE `pickup_tariff` SET
 `kg_from` = 0.1,
 `kg_to` = 1.1,
 `calculated_kg` = 1,
 `tariff_kg` =  6500,
-`total` = 6500, 
+`total` = 6500,
 `period_from` = '2012-08-01',
 `period_to` = '2012-08-01'
 WHERE  `pickup_tariff`.`seq` = 1;
 
-UPDATE `pickup_tariff` SET 
+UPDATE `pickup_tariff` SET
 `kg_from` = 1.2,
 `kg_to` = 2.1,
 `calculated_kg` = 2,
 `tariff_kg` =  6500,
-`total` = 13000, 
+`total` = 13000,
 `period_from` = '2012-08-01',
 `period_to` = '2012-08-01'
 WHERE  `pickup_tariff`.`seq` = 2;
 
-UPDATE `pickup_tariff` SET 
+UPDATE `pickup_tariff` SET
 `kg_from` = 2.2,
 `kg_to` = 3.1,
 `calculated_kg` = 3,
 `tariff_kg` =  6500,
-`total` = 19500, 
+`total` = 19500,
 `period_from` = '2012-08-01',
 `period_to` = '2012-08-01'
 WHERE  `pickup_tariff`.`seq` = 3;
+
+24 Oct 2013
++++++++++++++++++++
+
+ALTER TABLE  `buyers` ADD  `is_parent` BIGINT UNSIGNED NULL DEFAULT  '0' AFTER  `id` ;
+ALTER TABLE  `buyers` ADD  `is_child_of` BIGINT UNSIGNED NULL DEFAULT  '0' AFTER  `is_parent` ;

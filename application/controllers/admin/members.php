@@ -283,6 +283,7 @@ class Members extends Application
 		$page['sortdisable'] = '';
 		$page['ajaxurl'] = 'admin/members/ajaxmerchant';
 		$page['add_button'] = array('link'=>'admin/members/merchant/add','label'=>'Add New Member');
+        $page['group_button'] = false;
 		$page['page_title'] = 'Manage Merchants';
 		$this->ag_auth->view('memberajaxlistview',$page); // Load the view
 	}
@@ -740,6 +741,7 @@ class Members extends Application
         $page['sortdisable'] = '0';
         $page['ajaxurl'] = 'admin/members/ajaxbuyers';
         $page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
+        $page['group_button'] = true;
         $page['page_title'] = 'Manage Buyers';
         $this->ag_auth->view('memberajaxlistview',$page); // Load the view
     }
@@ -820,7 +822,8 @@ class Members extends Application
 
         //$this->db->distinct();
         $this->db->select(
-            'cluster_id,
+            'id
+            ,cluster_id
             ,shipping_address
             ,buyer_name
             ,buyerdeliverycity
@@ -912,7 +915,8 @@ class Members extends Application
 
         //$this->db->distinct();
         $this->db->select(
-            'cluster_id,
+            'id
+            ,cluster_id
             ,shipping_address
             ,buyer_name
             ,buyerdeliverycity
@@ -1051,8 +1055,8 @@ class Members extends Application
             //$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 
             $aadata[] = array(
-                '<input type="radio" name="parent_check" class="parent_check" id="'.$key['cluster_id'].'" value="'.$key['cluster_id'].'" />',
-                '<input type="checkbox" name="child_select" class="child_select" id="'.$key['cluster_id'].'" value="'.$key['cluster_id'].'" />',
+                '<input type="radio" name="parent_check" class="parent_check" id="'.$key['id'].'" value="'.$key['id'].'" />',
+                '<input type="checkbox" name="child_select" class="child_select" id="'.$key['id'].'" value="'.$key['id'].'" />',
                 $key['cluster_id'],
                 $key['buyer_name'],
                 $key['shipping_address'],

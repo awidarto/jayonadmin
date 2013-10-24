@@ -424,6 +424,9 @@ class V1 extends Application
 
 				if($dev = $this->get_dev_info($in->key)){
 
+                    $in->lat = (isset($in->lat))?$in->lat:'';
+                    $in->lon = (isset($in->lon))?$in->lon:'';
+
 					if($in->status == $this->config->item('trans_status_mobile_syncnote')){
 						$dataset['delivery_note'] = $in->notes;
 						$dataset['latitude'] = $in->lat;
@@ -441,12 +444,18 @@ class V1 extends Application
 					if(isset($in->delivery_id) && $in->delivery_id != ""){
 						$delivery_id = $in->delivery_id;
 						$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
+
+
+                        if($in->status == $this->config->item('trans_status_mobile_delivered')){
+                            $locdata['dir_lat'] = $in->lat;
+                            $locdata['dir_lon'] = $in->lon;
+                            $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
+                        }
+
 					}else{
 						$delivery_id = "N/A";
 					}
 
-					$in->lat = (isset($in->lat))?$in->lat:'';
-					$in->lon = (isset($in->lon))?$in->lon:'';
 
 					$data = array(
 						'timestamp'=>date('Y-m-d H:i:s',strtotime($in->capture_time)),

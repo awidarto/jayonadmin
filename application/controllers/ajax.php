@@ -690,6 +690,12 @@ class Ajax extends Application
 
 	}
 
+    public function addbuyerchild(){
+        $parent = $this->input->post('parent');
+        $children = $this->input->post('children');
+
+    }
+
 	public function getlastfiveloc(){
 
 		$locs = $this->db->select('timestamp,identifier,latitude as lat,longitude as lng')
