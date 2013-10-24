@@ -705,7 +705,7 @@ class Ajax extends Application
             $num_children = count($children);
         }
 
-        $group_count = $this->db->where('is_child_of',$parent)->count_all_results();
+        $group_count = $this->db->from($this->config->item('jayon_buyers_table'))->where('is_child_of',$parent)->count_all_results();
 
         $group_count += 1;
 
