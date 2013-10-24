@@ -107,21 +107,35 @@
 		});
 
 
-		$('#doSetGroup').click(function(){
-			var assigns = '';
+		$('#setgroup').click(function(){
+			var parent = '';
+            parent = $('input:radio[name=parent_check]:checked').val();
 			var count = 0;
-			$('.assign_check:checked').each(function(){
-
-				var uname = $('#un_'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value +' - '+ uname+'</strong></li>';
+            var children = [];
+			$('.child_select:checked').each(function(){
+                children.push($(this).val());
 				count++;
 			});
 
-			if(count > 0){
-				$('#archive_list').html(assigns);
-				$('#setgroup_dialog').dialog('open');
+            console.log(parent);
+            console.log(children);
+
+
+			if(count > 0 && typeof(parent) != 'undefined'){
+                var answer = confirm("Grouped buyers will be merged into one record, are you sure ?");
+                if (answer){
+                    $.post('<?php print site_url('ajax/setbuyergroup');?>',{'parent':parent, 'children':children}, function(data) {
+                        if(data.result == 'OK'){
+                            //redraw table
+                            oTable.fnDraw();
+                            alert("Buyers succesfully grouped");
+                        }
+                    },'json');
+                }else{
+                    alert("Buyers not grouped");
+                }
 			}else{
-				alert('Please select one or more user');
+				alert('Please select one or more user, and set one user to become parent record');
 			}
 		});
 
@@ -168,7 +182,7 @@
 <div class="button_nav" style="text-align:left;">
     <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
     <?php if(isset($group_button) && $group_button == true):?>
-        <span class="button" id="import" style="cursor:pointer;" href="<?php echo site_url('/admin/import') ?>">Group Selected Buyers</span>
+        <span class="button" id="setgroup" style="cursor:pointer;" >Group Selected Buyers</span>
     <?php endif;?>
 </div>
 <?php echo $this->table->generate(); ?>

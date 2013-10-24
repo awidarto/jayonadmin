@@ -690,10 +690,29 @@ class Ajax extends Application
 
 	}
 
-    public function addbuyerchild(){
+    public function setbuyergroup(){
         $parent = $this->input->post('parent');
         $children = $this->input->post('children');
 
+        $chdata = array('is_parent'=>0, 'is_child_of'=>$parent);
+        $this->db->where_in('id',$children)->update($this->config->item('jayon_buyers_table'),$chdata);
+
+        if(in_array($parent,$children)){
+            $num_children = count($children) - 1;
+        }else{
+            $num_children = count($children);
+        }
+
+        $group_count = $num_children + 1;
+        $pardata = array('is_parent'=>1, 'is_child_of'=>'', 'group_count'=>$group_count);
+        $this->db->where('id',$parent)->update($this->config->item('jayon_buyers_table'),$pardata);
+
+
+        if($num_children > 0){
+            print json_encode(array('result'=>'OK','children'=>$num_children, 'group'=>$group_count ));
+        }else{
+            print json_encode(array('result'=>'ERR','delivery_type'=>0));
+        }
     }
 
 	public function getlastfiveloc(){

@@ -707,7 +707,7 @@ class Members extends Application
         $this->table->set_heading(
             'Parent',
             'Child',
-            'Cluster',
+            'Buying Freq.',
             'Buyer Name',
             'Address',
             'City',
@@ -909,6 +909,8 @@ class Members extends Application
             $search = true;
         }
 
+        $this->db->where('is_child_of',0);
+
         $display = $this->db->get();
 
         $count_all = count($display->result_array());
@@ -916,6 +918,9 @@ class Members extends Application
         //$this->db->distinct();
         $this->db->select(
             'id
+            ,is_parent,
+            ,is_child_of
+            ,group_count
             ,cluster_id
             ,shipping_address
             ,buyer_name
@@ -1025,6 +1030,7 @@ class Members extends Application
         }
 
         $data = $this->db
+            ->where('is_child_of',0)
             ->limit($limit_count, $limit_offset)
             ->order_by($columns[$sort_col],$sort_dir)
             ->get();
@@ -1053,11 +1059,15 @@ class Members extends Application
             $edit = '';
             //$edit = anchor("admin/members/buyer/edit/".$key['id']."/", "Edit"); // Build actions links
             //$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
-
+            if($key['is_parent'] == 1){
+                $child_selector = '<span class="view_group" id="'.$key['id'].'" >View cluster</span>';
+            }else{
+                $child_selector = '<input type="checkbox" name="child_select" class="child_select" id="'.$key['id'].'" value="'.$key['id'].'" />';
+            }
             $aadata[] = array(
                 '<input type="radio" name="parent_check" class="parent_check" id="'.$key['id'].'" value="'.$key['id'].'" />',
-                '<input type="checkbox" name="child_select" class="child_select" id="'.$key['id'].'" value="'.$key['id'].'" />',
-                $key['cluster_id'],
+                $child_selector,
+                $key['group_count'],
                 $key['buyer_name'],
                 $key['shipping_address'],
                 $key['buyerdeliveryzone'],

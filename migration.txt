@@ -45,3 +45,4 @@ WHERE  `pickup_tariff`.`seq` = 3;
 
 ALTER TABLE  `buyers` ADD  `is_parent` BIGINT UNSIGNED NULL DEFAULT  '0' AFTER  `id` ;
 ALTER TABLE  `buyers` ADD  `is_child_of` BIGINT UNSIGNED NULL DEFAULT  '0' AFTER  `is_parent` ;
+ALTER TABLE  `buyers` ADD  `group_count` INT NULL DEFAULT  '0' AFTER  `is_child_of` ;
