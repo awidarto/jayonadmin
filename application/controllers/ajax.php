@@ -703,10 +703,12 @@ class Ajax extends Application
             $num_children = count($children);
         }
 
-        $group_count = $num_children + 1;
+        $group_count = $this->db->where('is_child_of',$parent)->count_all_results();
+
+        $group_count += 1;
+
         $pardata = array('is_parent'=>1, 'is_child_of'=>'', 'group_count'=>$group_count);
         $this->db->where('id',$parent)->update($this->config->item('jayon_buyers_table'),$pardata);
-
 
         if($num_children > 0){
             print json_encode(array('result'=>'OK','children'=>$num_children, 'group'=>$group_count ));
