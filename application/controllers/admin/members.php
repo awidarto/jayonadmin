@@ -738,7 +738,7 @@ class Members extends Application
             '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />'
             );
 
-        $page['sortdisable'] = '0';
+        $page['sortdisable'] = '0,1';
         $page['ajaxurl'] = 'admin/members/ajaxbuyers';
         $page['add_button'] = array('link'=>'admin/members/buyer/add','label'=>'Add New Member');
         $page['group_button'] = true;
@@ -757,16 +757,18 @@ class Members extends Application
         $group_id = user_group_id('buyer');
 
         $columns = array(
-            'buyer_name'
+            'group_count'
+            ,'buyer_name'
             ,'shipping_address'
             ,'buyerdeliverycity'
             ,'buyerdeliveryzone'
             ,'phone'
             ,'mobile1'
             ,'mobile2'
+            ,'email'
             ,'recipient_name'
             ,'shipping_zip'
-            ,'email'
+            ,'created'
             ,'delivery_id'
             ,'delivery_cost'
             ,'cod_cost'
@@ -790,7 +792,6 @@ class Members extends Application
             ,'delivery_note'
             ,'latitude'
             ,'longitude'
-            ,'created'
         );
 
         //restart query
@@ -940,16 +941,6 @@ class Members extends Application
             //,buyer_name'
         );
         */
-        $this->db->order_by(
-            'shipping_address
-            ,buyer_name
-            ,buyerdeliverycity
-            ,buyerdeliveryzone
-            ,phone
-            ,mobile1
-            ,mobile2'
-
-            );
 
         $this->db->from($this->config->item('jayon_buyers_table'));
 
@@ -1029,10 +1020,22 @@ class Members extends Application
             //$this->db->and_();
         }
 
+        $this->db->order_by($columns[$sort_col],$sort_dir);
+
+        $this->db->order_by(
+            'created
+            ,shipping_address
+            ,buyer_name
+            ,buyerdeliverycity
+            ,buyerdeliveryzone
+            ,phone
+            ,mobile1
+            ,mobile2'
+            );
+
         $data = $this->db
             ->where('is_child_of',0)
             ->limit($limit_count, $limit_offset)
-            ->order_by($columns[$sort_col],$sort_dir)
             ->get();
 
         $last_query = $this->db->last_query();

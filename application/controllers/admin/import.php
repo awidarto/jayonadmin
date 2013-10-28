@@ -24,6 +24,11 @@ class Import extends Application
         $this->ag_auth->view('import/upload',$page); // Load the view
     }
 
+    public function upload()
+    {
+
+    }
+
 }
 
 ?>
