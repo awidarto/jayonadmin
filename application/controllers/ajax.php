@@ -47,7 +47,7 @@ class Ajax extends Application
 		$q = $this->input->post('term');
 		$merchant_id = $this->input->post('merchant_id');
 		$merchant_id = ($merchant_id == '')?null:$merchant_id;
-		$merchants = ajax_find_buyer($q,'fullname','id',$merchant_id);
+		$merchants = ajax_find_buyer($q,'buyer_name','id',$merchant_id);
 		print json_encode($merchants);
 	}
 
@@ -1141,7 +1141,15 @@ class Ajax extends Application
         }
     }
 
+
     private function save_buyer($ds){
+
+        if(isset($ds['buyer_id']) && $ds['buyer_id'] != '' && $ds['buyer_id'] > 1){
+            if($pid = $this->get_parent_buyer($ds['buyer_id'])){
+                $bd['is_child_of'] = $pid;
+                $this->update_group_count($pid);
+            }
+        }
 
         $bd['buyer_name']  =  $ds['buyer_name'];
         $bd['buyerdeliveryzone']  =  $ds['buyerdeliveryzone'];
@@ -1185,6 +1193,46 @@ class Ajax extends Application
         }else{
             return 0;
         }
+    }
+
+    private function get_parent_buyer($id){
+        $this->db->where('id',$id);
+        $by = $this->db->get($this->config->item('jayon_buyers_table'));
+
+        if($by->num_rows() > 0){
+
+            $buyer = $by->row_array();
+            if($buyer['is_parent'] == 1){
+                $pid = $buyer['id'];
+            }elseif($buyer['is_child_of'] > 0 && $buyer['is_parent'] == 0){
+                $pid = $buyer['is_child_of'];
+            }else{
+                $pid = false;
+            }
+
+            return $pid;
+
+        }else{
+            return false;
+        }
+
+    }
+
+    private function update_group_count($id){
+
+        $this->db->where('is_child_of',$id);
+        $groupcount = $this->db->count_all_results($this->config->item('jayon_buyers_table'));
+
+        $dataup = array('group_count'=>($groupcount + 1) );
+
+        $this->db->where('id',$id);
+
+        if($res = $this->db->update($this->config->item('jayon_buyers_table'),$dataup) ){
+            return $res;
+        }else{
+            return false;
+        }
+
     }
 
     private function get_device($key){

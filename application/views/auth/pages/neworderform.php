@@ -581,6 +581,8 @@
                 $('#buyer_email').val(ui.item.email);
                 $('#shipping_address').val(ui.item.shipping);
                 $('#phone').val(ui.item.phone);
+                $('#mobile1').val(ui.item.mobile1);
+                $('#mobile2').val(ui.item.mobile2);
             }
         });
 
