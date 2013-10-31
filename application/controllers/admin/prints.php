@@ -235,7 +235,13 @@ class Prints extends Application
 
 			$this->db->select('seq,kg_from,kg_to,calculated_kg,tariff_kg,total');
 			$this->db->order_by('seq','asc');
-			$weights = $this->db->get($this->config->item('jayon_delivery_fee_table'));
+            $this->db->where('app_id',$data['main_info']['application_id']);
+
+            if($data['main_info']['delivery_type'] == 'PS'){
+                $weights = $this->db->get($this->config->item('jayon_pickup_fee_table'));
+            }else{
+                $weights = $this->db->get($this->config->item('jayon_delivery_fee_table'));
+            }
 
 			if($weights->num_rows() > 0){
 				$weight[0] = 'Select weight range';
