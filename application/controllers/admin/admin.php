@@ -6,7 +6,7 @@ class Admin extends Application
 	{
 		parent::__construct();
 	}
-	
+
 	public function index()
 	{
 		if(logged_in())
@@ -28,7 +28,7 @@ class Admin extends Application
 				$loc = $this->db
 					->select('identifier,timestamp,latitude as lat,longitude as lng')
 					->where('identifier',$d->identifier)
-					->like('timestamp',date('Y-m-d',time()),'after')				
+					->like('timestamp',date('Y-m-d',time()),'after')
 					->limit(1,0)
 					->order_by('timestamp','desc')
 					->get($this->config->item('location_log_table'));
@@ -43,8 +43,8 @@ class Admin extends Application
 								'timestamp'=>$loc->timestamp,
 								'identifier'=>$loc->identifier
 							)
-						);					
-				}		
+						);
+				}
 			}
 
 			$page['locdata'] = json_encode($locations);
@@ -68,7 +68,7 @@ class Admin extends Application
 
 		print json_encode(array('total_changed'=>$total_changed,'query'=>$this->db->last_query() ));
 	}
-	
+
 	public function testmail(){
 		$subject = 'Processed order';
 		$to = 'andy.awidarto@gmail.com';
@@ -80,6 +80,30 @@ class Admin extends Application
 			print "failed to send notification";
 		}
 	}
+
+    public function geoinsert(){
+
+        set_time_limit(0);
+
+        $delis = $this->db->where('status','delivered')
+            ->select('delivery_id,latitude,longitude')
+            ->get($this->config->item('delivery_log_table'));
+
+        $delis = $delis->result();
+
+        foreach ($delis as $o) {
+            $geodata = array(
+                'latitude'=>$o->latitude,
+                'longitude'=>$o->longitude,
+                'dir_lat'=>$o->latitude,
+                'dir_lon'=>$o->longitude
+                );
+
+            $this->db->where('delivery_id',$o->delivery_id)
+                ->update($this->config->item('jayon_buyers_table'),$geodata);
+        }
+
+    }
 
 	public function monthlygraph($status = null){
 		$this->load->library('plot');
@@ -104,7 +128,7 @@ class Admin extends Application
 
 		# With Y data labels, we don't need Y ticks or their labels, so turn them off.
 		//$lineplot->SetYTickLabelPos('none');
-		//$lineplot->SetYTickPos('none');		
+		//$lineplot->SetYTickPos('none');
 
 		$lineplot->SetYTickIncrement(1);
 		$lineplot->SetPrecisionY(0);
@@ -156,7 +180,7 @@ class Admin extends Application
 		$id = $this->session->userdata('userid');
 		$user = $this->get_user($id);
 		$data['user'] = $user;
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = $this->get_group();
@@ -166,14 +190,14 @@ class Admin extends Application
 		else
 		{
 			$result = TRUE;
-			
+
 			$dataset['password'] = $this->ag_auth->salt(set_value('password'));
 
 			if( $result = $this->update_user($id,$dataset))
 			{
 				$this->oi->add_success('Your password is now updated');
 				redirect('admin/dashboard');
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -182,7 +206,7 @@ class Admin extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -202,7 +226,7 @@ class Admin extends Application
 		}else{
 			return false;
 		}
-	}	
+	}
 
 	private function get_group(){
 		$this->db->select('id,description');
@@ -211,12 +235,12 @@ class Admin extends Application
 			$res[$row['id']] = $row['description'];
 		}
 		return $res;
-	}	
+	}
 
 	private function update_user($id,$data){
 		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
 		return $result;
-	}	
+	}
 
 }
 

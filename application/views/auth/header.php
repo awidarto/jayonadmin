@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		
+
 		<style type="text/css">
 		</style>
 
@@ -16,9 +16,9 @@
 		<?php echo $this->ag_asset->load_css('1.9_full_numbers.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('TableTools.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
-		<?php echo $this->ag_asset->load_css('rickshaw.min.css');?>
+		<?php // echo $this->ag_asset->load_css('rickshaw.min.css');?>
 
-		
+
 		<?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
 		<?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_script('TableTools.min.js','jquery-datatables');?>
@@ -47,7 +47,7 @@
 				function openPhoto(delivery_id,title){
 					$.fancybox.open([
 					        {
-					            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',                
+					            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',
 					            title : title
 					        }
 					    ]);
@@ -55,10 +55,10 @@
 
 			});
 		</script>
-	
+
 	</head>
 	<body>
-		<?php if($this->oi->has_messages('')):?>  
+		<?php if($this->oi->has_messages('')):?>
 	        <div id="flash_message" ><?php echo $this->oi->messages(NULL)?></div>
 		<?php endif?>
 		<div id="header">
@@ -82,4 +82,3 @@
 				</div>
 			</div>
 		<?php endif;?>
-		

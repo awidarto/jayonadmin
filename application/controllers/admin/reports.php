@@ -2,7 +2,7 @@
 
 class Reports extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -14,7 +14,7 @@ class Reports extends Application
 
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 		$this->breadcrumb->add_crumb('Reports','admin/reports');
-		
+
 	}
 
 	public function index(){
@@ -41,7 +41,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -70,7 +70,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -84,7 +84,7 @@ class Reports extends Application
 
 		$cs = array('noid'=>'All');
 		foreach ($clist as $ckey) {
-			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];	
+			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];
 		}
 
 		$data['merchants'] = $cs;
@@ -112,7 +112,7 @@ class Reports extends Application
 		$sto = date('Y-m-d',strtotime($to));
 
 
-		//get ALL DELIVERY  
+		//get ALL DELIVERY
 
 		$this->db->select('assignment_date,m.merchantname as merchant,delivery_type,status,cod_cost,delivery_cost,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost, sum(((total_price-total_discount)+total_tax)) as package_value');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
@@ -142,7 +142,7 @@ class Reports extends Application
 
 		//print $this->db->last_query();
 
-		//get COD DELIVERY  
+		//get COD DELIVERY
 
 		$this->db->select('assignment_date,m.merchantname as merchant,status,cod_cost,delivery_cost,delivery_type,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost, sum(((total_price-total_discount)+total_tax)) as package_value');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
@@ -170,13 +170,13 @@ class Reports extends Application
 
 		$this->db->group_by('assignment_date,merchant,status');
 
-		$crows = $this->db->get()->result_array();		
+		$crows = $this->db->get()->result_array();
 
 		//print $this->db->last_query();
 
 
 		$this->table->set_heading(
-			'No.',		 	 	
+			'No.',
 			'Date',
 			'Merchant',
 			//'Delivery Type',
@@ -235,10 +235,10 @@ class Reports extends Application
 
 			if($r['cod_count'] > 0){
 				$r['cod_pct'] = number_format((($r['cod_count'] / $r['count'])*100),2,',','.').'%';
-				$r['do_pct'] = number_format((($r['do_count'] / $r['count'])*100),2,',','.').'%';				
+				$r['do_pct'] = number_format((($r['do_count'] / $r['count'])*100),2,',','.').'%';
 			}else{
 				$r['cod_pct'] = '';
-				$r['do_pct'] = number_format((($r['do_count'] / $r['count'])*100),2,',','.').'%';				
+				$r['do_pct'] = number_format((($r['do_count'] / $r['count'])*100),2,',','.').'%';
 			}
 
 			$tdc += $r['count'];
@@ -249,9 +249,9 @@ class Reports extends Application
 
 			$this->table->add_row(
 				$seq,
-				$datefield,		
+				$datefield,
 				$r['merchant'],
-				//$r['delivery_type'],		
+				//$r['delivery_type'],
 				$r['count'],
 				array('data'=>number_format((int)str_replace('.','',$r['package_value']),2,',','.'),'class'=>'right'),
 				$r['cod_count'],
@@ -262,7 +262,7 @@ class Reports extends Application
 				$r['do_pct'],
 				array('data'=>number_format((int)str_replace('.','',$r['delivery_cost']),2,',','.'),'class'=>'right'),
 				$r['status']
-			);				
+			);
 
 			$bardate = $r['assignment_date'];
 
@@ -275,21 +275,21 @@ class Reports extends Application
 			$tdo_pct = number_format((($tdo / $tdc)*100),2,',','.').'%';
 
 			$this->table->add_row(
-				array('data'=>'','style'=>'border-top:thin solid grey'),		
+				array('data'=>'','style'=>'border-top:thin solid grey'),
 				array('data'=>'','style'=>'border-top:thin solid grey'),
 				array('data'=>'','style'=>'border-top:thin solid grey'),
 				//array('data'=>'','style'=>'border-top:thin solid grey'),
-				array('data'=>$tdc,'style'=>'border-top:thin solid grey'),		
-				array('data'=>number_format((int)str_replace('.','',$tpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+				array('data'=>$tdc,'style'=>'border-top:thin solid grey'),
+				array('data'=>number_format((int)str_replace('.','',$tpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),
 				array('data'=>$tcod,'style'=>'border-top:thin solid grey'),
 				array('data'=>$tcod_pct,'style'=>'border-top:thin solid grey'),
-				array('data'=>number_format((int)str_replace('.','',$tcpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
-				array('data'=>number_format((int)str_replace('.','',$tcodc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
+				array('data'=>number_format((int)str_replace('.','',$tcpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),
+				array('data'=>number_format((int)str_replace('.','',$tcodc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),
 				array('data'=>$tdo,'style'=>'border-top:thin solid grey'),
-				array('data'=>$tdo_pct,'style'=>'border-top:thin solid grey'),	
+				array('data'=>$tdo_pct,'style'=>'border-top:thin solid grey'),
 				array('data'=>number_format((int)str_replace('.','',$tdoc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),
-				array('data'=>'','style'=>'border-top:thin solid grey')		
-			);				
+				array('data'=>'','style'=>'border-top:thin solid grey')
+			);
 
 		}else{
 			$this->table->add_row(
@@ -315,12 +315,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/merchantrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/merchantrecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
-		}		
+		}
 	}
 
 	public function _revenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
@@ -340,7 +340,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -369,7 +369,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -389,7 +389,7 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/revenue',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/revenue',$data); // Load the view
 		}else{
@@ -414,7 +414,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -443,7 +443,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -464,7 +464,7 @@ class Reports extends Application
 		$data['total_to_date_do'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$daterange = sprintf("ordertime BETWEEN '%s%%' AND '%s%%'",$from,$to);
-		$this->db->where($daterange, NULL, FALSE); 
+		$this->db->where($daterange, NULL, FALSE);
 		$data['total_in_period'] = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$this->db->where($daterange, NULL, FALSE);
@@ -498,7 +498,7 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/statistics',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/statistics',$data); // Load the view
 		}else{
@@ -523,7 +523,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -564,7 +564,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -587,7 +587,7 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/dist',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/dist',$data); // Load the view
 		}else{
@@ -609,7 +609,7 @@ class Reports extends Application
 
 		$page['page_title'] = 'Weekly Report';
 		$this->ag_auth->view('reports/weekly',$page); // Load the view
-		
+
 	}
 
 	public function monthly(){
@@ -617,7 +617,7 @@ class Reports extends Application
 
 		$page['page_title'] = 'Monthly Report';
 		$this->ag_auth->view('reports/monthly',$page); // Load the view
-		
+
 	}
 
 	public function reconciliation($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
@@ -629,7 +629,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -658,7 +658,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -731,14 +731,14 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'13'
-			)	
+			)
 		);
 
 
 		if($type == 'Merchant' || $type == 'Global'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
@@ -748,23 +748,23 @@ class Reports extends Application
 				'Disc',
 				'Tax',
 				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
+				'COD Surchg',
+				'Payable Value'
 			); // Setting headings for the table
 
 		}else if($type == 'Courier'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
 				'Delivery Date',
 				'Status'
 				//'Delivery Chg',
-				//'COD Surchg',		
-				//'Payable Value'		
-			); // Setting headings for the table			
+				//'COD Surchg',
+				//'Payable Value'
+			); // Setting headings for the table
 		}
 
 
@@ -795,7 +795,7 @@ class Reports extends Application
 			if($r->status == $this->config->item('trans_status_mobile_delivered')){
 				if($type == 'Merchant' || $type == 'Global'){
 					$payable = ($total - $dsc) + $tax;
-					// + $dc + $cod;				
+					// + $dc + $cod;
 				}else if($type == 'Courier'){
 					$payable = ($dc + $cod) * 0.1;
 				}
@@ -805,7 +805,7 @@ class Reports extends Application
 				$r->status == $this->config->item('trans_status_mobile_rescheduled') ||
 				$r->status == $this->config->item('trans_status_mobile_noshow'))
 			{
-				//TBA	
+				//TBA
 			}
 
 			$total_delivery += (int)str_replace('.','',$dc);
@@ -813,8 +813,8 @@ class Reports extends Application
 
 			if($type == 'Merchant' || $type == 'Global'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
@@ -823,24 +823,24 @@ class Reports extends Application
 					number_format((int)str_replace('.','',$total),2,',','.'),
 					number_format((int)str_replace('.','',$dsc),2,',','.'),
 					number_format((int)str_replace('.','',$tax),2,',','.'),
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$dc),2,',','.'),
 					number_format((int)str_replace('.','',$cod),2,',','.'),
 					number_format((int)str_replace('.','',$payable),2,',','.')
 				);
 
 			}else if($type == 'Courier'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
 					$r->assignment_date,
 					$r->status
-					//number_format((int)str_replace('.','',$dc),2,',','.'),			
+					//number_format((int)str_replace('.','',$dc),2,',','.'),
 					//number_format((int)str_replace('.','',$cod),2,',','.'),
 					//number_format((int)str_replace('.','',$payable),2,',','.')
-				);				
+				);
 			}
 
 			$seq++;
@@ -903,12 +903,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/reconciliation',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/reconciliation',$data); // Load the view
 		}else{
 			$this->ag_auth->view('reconciliation',$data); // Load the view
-		}		
+		}
 	}
 
 	public function ajaxreconciliation($type = null){
@@ -954,7 +954,6 @@ class Reports extends Application
 		print json_encode($result); // Load the view
 	}
 
-
 	public function revenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
@@ -965,7 +964,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -994,7 +993,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -1008,7 +1007,7 @@ class Reports extends Application
 
 		$cs = array('noid'=>'All');
 		foreach ($clist as $ckey) {
-			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];	
+			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];
 		}
 
 		$data['merchants'] = $cs;
@@ -1093,7 +1092,7 @@ class Reports extends Application
 			$this->db->where('delivery_type',$r['delivery_type']);
 			$this->db->where('status',$r['status']);
 
-			
+
 			$irows = $this->db->get()->result_array();
 			*/
 
@@ -1150,20 +1149,20 @@ class Reports extends Application
 		//exit();
 
 		$this->table->set_heading(
-			'',		 	 	
 			'',
 			'',
-			array('data'=>'DO','colspan'=>'3'),		
-			array('data'=>'COD','colspan'=>'4'),		
-			array('data'=>'CCOD','colspan'=>'4'),		
-			array('data'=>'PS','colspan'=>'3'),		
-			
-			array('data'=>'Total','colspan'=>'3')	
-		); // Setting headings for the table			
+			'',
+			array('data'=>'DO','colspan'=>'3'),
+			array('data'=>'COD','colspan'=>'4'),
+			array('data'=>'CCOD','colspan'=>'4'),
+			array('data'=>'PS','colspan'=>'3'),
+
+			array('data'=>'Total','colspan'=>'3')
+		); // Setting headings for the table
 
 
 		$this->table->set_subheading(
-			'No.',		 	 	
+			'No.',
 			'Date',
 			'Merchant',
 
@@ -1188,7 +1187,7 @@ class Reports extends Application
 			'Revenue',
 			'Delivery Count',
 			'Package Value'
-		); // Setting headings for the table			
+		); // Setting headings for the table
 
 		$counter  = 1;
 
@@ -1196,10 +1195,10 @@ class Reports extends Application
 
 		$total['Delivery Only']['count'] = 0;
 		$total['Delivery Only']['dcost'] = 0;
-		$total['Delivery Only']['pval'] = 0; 
-		$total['COD']['count'] = 0; 
-		$total['COD']['dcost'] = 0; 
-		$total['COD']['sur'] = 0; 
+		$total['Delivery Only']['pval'] = 0;
+		$total['COD']['count'] = 0;
+		$total['COD']['dcost'] = 0;
+		$total['COD']['sur'] = 0;
 		$total['COD']['pval']  = 0;
 		$total['CCOD']['count']  = 0;
 		$total['CCOD']['dcost']  = 0;
@@ -1208,7 +1207,7 @@ class Reports extends Application
 		$total['PS']['count']  = 0;
 		$total['PS']['pfee']  = 0;
 		$total['PS']['pval']  = 0;
-		$total['delivered']['count'] = 0;  
+		$total['delivered']['count'] = 0;
 		$total['noshow']['count']  = 0;
 		$total['rescheduled']['count']  = 0;
 		$total['jex']['revenue'] = 0;
@@ -1231,8 +1230,8 @@ class Reports extends Application
 					($lastdate == $key)?'':date('d-m-Y',strtotime($key)),
 					$cs[$k],
 					array('data'=>$r[$key][$k]['Delivery Only']['count'],'class'=>'count'),
-					array('data'=>idr($r[$key][$k]['Delivery Only']['dcost']),'class'=>'currency'),		
-					array('data'=>idr($r[$key][$k]['Delivery Only']['pval']),'class'=>'currency'),		
+					array('data'=>idr($r[$key][$k]['Delivery Only']['dcost']),'class'=>'currency'),
+					array('data'=>idr($r[$key][$k]['Delivery Only']['pval']),'class'=>'currency'),
 
 					array('data'=>$r[$key][$k]['COD']['count'],'class'=>'count'),
 					array('data'=>idr($r[$key][$k]['COD']['dcost']),'class'=>'currency'),
@@ -1275,7 +1274,7 @@ class Reports extends Application
 					$total['total_delivery_count'] += $r[$key][$k]['total_delivery_count'];
 					$total['total_package_value'] += $r[$key][$k]['total_package_value'];
 
-				$counter++;			
+				$counter++;
 
 			}
 
@@ -1285,11 +1284,11 @@ class Reports extends Application
 				'',
 				'',
 
-				array('data'=>'Totals','class'=>'total'),		
+				array('data'=>'Totals','class'=>'total'),
 
 				array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
-				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),		
-				array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),		
+				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),
+				array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),
 
 				array('data'=>$total['COD']['count'],'class'=>'total count'),
 				array('data'=>idr($total['COD']['dcost']),'class'=>'total currency'),
@@ -1315,11 +1314,11 @@ class Reports extends Application
 				'',
 				'',
 
-				array('data'=>'Percentage (%)','class'=>'total'),		
+				array('data'=>'Percentage (%)','class'=>'total'),
 
 				array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
-				array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr($total['Delivery Only']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),		
-				array('data'=>($total['Delivery Only']['pval'] == 0)?idr(0):idr($total['Delivery Only']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),		
+				array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr($total['Delivery Only']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+				array('data'=>($total['Delivery Only']['pval'] == 0)?idr(0):idr($total['Delivery Only']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
 
 				array('data'=>($total['COD']['count'] == 0)?idr(0):idr($total['COD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
 				array('data'=>($total['COD']['dcost'] == 0)?idr(0):idr($total['COD']['dcost'] / $total['jex']['revenue'] * 100 ),'class'=>'total currency c-maroon'),
@@ -1345,11 +1344,11 @@ class Reports extends Application
 				'',
 				'',
 
-				array('data'=>'Summary','class'=>'total'),		
+				array('data'=>'Summary','class'=>'total'),
 
 				array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
-				array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),		
-				array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),		
+				array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),
+				array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),
 
 				'',
 				'',
@@ -1387,18 +1386,474 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/revenue',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/merchantrecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
-		}		
+		}
 	}
+
+    public function zonerevenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+        $type = (is_null($type))?'Global':$type;
+        $id = (is_null($type))?'noid':$type;
+
+        $id = str_replace('%20',' ', $id);
+
+        if(is_null($scope)){
+            $id = 'noid';
+            $scope = 'month';
+            $year = date('Y',time());
+            $par1 = date('m',time());
+        }
+
+        $pdf = null;
+
+        if($scope == 'month'){
+            $days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+            $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+            $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+            $pdf = $par2;
+
+            $data['month'] = $par1;
+            $data['week'] = 1;
+        }else if($scope == 'week'){
+            $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+            $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+            $pdf = $par2;
+
+            $data['month'] = 1;
+            $data['week'] = $par1;
+        }else if($scope == 'date'){
+            $from = $par1;
+            $to = $par2;
+            $pdf = $par3;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }else{
+            $from = date('Y-m-d',time());
+            $to = date('Y-m-d',time());
+            $pdf = null;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }
+
+        $data['year'] = $year;
+        $data['from'] = $from;
+        $data['to'] = $to;
+
+
+        //$clist = get_zones(null,false);
+        $clist = get_zone_options();
+
+        $cs = array('noid'=>'All');
+        $cs = array_merge($cs, $clist);
+        /*
+        foreach ($clist as $ckey) {
+            $cs[$ckey['district']] = $ckey['district'].' - '.$ckey['city'];
+        }
+        */
+
+        //print_r($cs);
+
+        $data['merchants'] = $cs;
+
+        $data['id'] = $id;
+
+        //print $id;
+
+        /* copied from print controller */
+
+        $this->load->library('number_words');
+
+        if($id == 'noid'){
+            $data['type_name'] = '-';
+            $data['bank_account'] = 'n/a';
+            $data['type'] = 'Global';
+        }else{
+            $user = $this->db->where('district',$id)->get($this->config->item('jayon_zones_table'))->row();
+
+            //print $this->db->last_query();
+
+            //print_r($user);
+
+            $data['type'] = $user->district.' - '.$user->city;
+            $data['type_name'] = $user->district;
+            $data['bank_account'] = 'n/a';
+        }
+
+        $data['period'] = $from.' s/d '.$to;
+
+        $sfrom = date('Y-m-d',strtotime($from));
+        $sto = date('Y-m-d',strtotime($to));
+
+        // get assignment_date, merchant_id,delivery_type
+
+        $this->db->distinct();
+
+        $this->db->select('assignment_date,buyerdeliveryzone,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+        //$this->db->select('assignment_date,merchant_id,delivery_type,status');
+
+        $this->db->from($this->config->item('delivered_delivery_table'));
+
+        $column = 'assignment_date';
+        $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+        $this->db->where($daterange, null, false);
+        $this->db->where($column.' != ','0000-00-00');
+
+        if($id != 'noid'){
+            $this->db->where($this->config->item('delivered_delivery_table').'.buyerdeliveryzone',$id);
+        }
+
+        $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
+
+            $this->db->group_by('assignment_date,buyerdeliveryzone,delivery_type,status');
+            //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
+
+
+        $rows = $this->db->get();
+
+        $result = $rows->result_array();
+        //print $this->db->last_query();
+
+
+        //print_r($result);
+
+        //exit();
+
+        $trans = array();
+
+
+        foreach($result as $r){
+
+            /*
+            $this->db->select('count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+
+            $this->db->from($this->config->item('delivered_delivery_table'));
+
+            $this->db->where('assignment_date',$r['assignment_date']);
+            $this->db->where('merchant_id',$r['merchant_id']);
+            $this->db->where('delivery_type',$r['delivery_type']);
+            $this->db->where('status',$r['status']);
+
+
+            $irows = $this->db->get()->result_array();
+            */
+
+            $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['count'] = $r['count'];
+            $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['cod_cost'] = $r['cod_cost'];
+            $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['delivery_cost'] = $r['delivery_cost'];
+            $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['total_price'] = $r['total_price'];
+            $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['package_value'] = $r['package_value'];
+        }
+
+        $status_array = array(
+            $this->config->item('trans_status_mobile_delivered'),
+            $this->config->item('trans_status_mobile_revoked'),
+            $this->config->item('trans_status_mobile_noshow'),
+            $this->config->item('trans_status_mobile_rescheduled')
+        );
+
+        $type_array = array(
+            'COD',
+            'CCOD',
+            'Delivery Only',
+            'PS'
+        );
+
+        //print_r($trans);
+
+        foreach ($trans as $key => $value) {
+
+            foreach($value as $k=>$v){
+
+                foreach($type_array as $t){
+
+                    foreach($status_array as $s){
+
+                        if(!isset($trans[$key][$k][$t][$s])){
+                            $trans[$key][$k][$t][$s]['count'] = 0;
+                            $trans[$key][$k][$t][$s]['cod_cost'] = 0;
+                            $trans[$key][$k][$t][$s]['delivery_cost'] = 0;
+                            $trans[$key][$k][$t][$s]['total_price'] = 0;
+                            $trans[$key][$k][$t][$s]['package_value'] = 0;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        //print_r($trans);
+
+        //exit();
+
+        $this->table->set_heading(
+            '',
+            '',
+            '',
+            array('data'=>'DO','colspan'=>'3'),
+            array('data'=>'COD','colspan'=>'4'),
+            array('data'=>'CCOD','colspan'=>'4'),
+            array('data'=>'PS','colspan'=>'3'),
+
+            array('data'=>'Total','colspan'=>'3')
+        ); // Setting headings for the table
+
+
+        $this->table->set_subheading(
+            'No.',
+            'Date',
+            'Zone',
+
+            'count',
+            'dcost',
+            'pval',
+
+            'count',
+            'dcost',
+            'sur',
+            'pval',
+
+            'count',
+            'dcost',
+            'sur',
+            'pval',
+
+            'count',
+            'pfee',
+            'pval',
+
+            'Revenue',
+            'Delivery Count',
+            'Package Value'
+        ); // Setting headings for the table
+
+        $counter  = 1;
+
+        $total = array();
+
+        $total['Delivery Only']['count'] = 0;
+        $total['Delivery Only']['dcost'] = 0;
+        $total['Delivery Only']['pval'] = 0;
+        $total['COD']['count'] = 0;
+        $total['COD']['dcost'] = 0;
+        $total['COD']['sur'] = 0;
+        $total['COD']['pval']  = 0;
+        $total['CCOD']['count']  = 0;
+        $total['CCOD']['dcost']  = 0;
+        $total['CCOD']['sur']  = 0;
+        $total['CCOD']['pval']  = 0;
+        $total['PS']['count']  = 0;
+        $total['PS']['pfee']  = 0;
+        $total['PS']['pval']  = 0;
+        $total['delivered']['count'] = 0;
+        $total['noshow']['count']  = 0;
+        $total['rescheduled']['count']  = 0;
+        $total['jex']['revenue'] = 0;
+        $total['total_delivery_count']  = 0;
+        $total['total_package_value']  = 0;
+
+        $lastdate = '';
+
+        foreach($trans as $key=>$val){
+
+            foreach ($val as $k => $v) {
+
+                $r[$key][$k] = $this->_makerevrow($v);
+
+                $revtotal = ( $r[$key][$k]['Delivery Only']['dcost'] + $r[$key][$k]['COD']['dcost'] + $r[$key][$k]['COD']['sur'] + $r[$key][$k]['CCOD']['dcost'] + $r[$key][$k]['CCOD']['sur'] + $r[$key][$k]['PS']['pfee']);
+
+
+                $this->table->add_row(
+                    $counter,
+                    ($lastdate == $key)?'':date('d-m-Y',strtotime($key)),
+                    //$cs[$k],
+                    $k,
+                    array('data'=>$r[$key][$k]['Delivery Only']['count'],'class'=>'count'),
+                    array('data'=>idr($r[$key][$k]['Delivery Only']['dcost']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['Delivery Only']['pval']),'class'=>'currency'),
+
+                    array('data'=>$r[$key][$k]['COD']['count'],'class'=>'count'),
+                    array('data'=>idr($r[$key][$k]['COD']['dcost']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['COD']['sur']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['COD']['pval']),'class'=>'currency'),
+
+                    array('data'=>$r[$key][$k]['CCOD']['count'],'class'=>'count'),
+                    array('data'=>idr($r[$key][$k]['CCOD']['dcost']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['CCOD']['sur']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['CCOD']['pval']),'class'=>'currency'),
+
+                    array('data'=>$r[$key][$k]['PS']['count'],'class'=>'count'),
+                    array('data'=>idr($r[$key][$k]['PS']['pfee']),'class'=>'currency'),
+                    array('data'=>idr($r[$key][$k]['PS']['pval']),'class'=>'currency'),
+
+                    array('data'=>idr($revtotal),'class'=>'currency'),
+                    array('data'=>$r[$key][$k]['total_delivery_count'],'class'=>'count'),
+                    array('data'=>idr($r[$key][$k]['total_package_value']),'class'=>'currency')
+
+                );
+
+                    $lastdate = $key;
+
+                    $total['Delivery Only']['count'] += $r[$key][$k]['Delivery Only']['count'];
+                    $total['Delivery Only']['dcost'] += $r[$key][$k]['Delivery Only']['dcost'];
+                    $total['Delivery Only']['pval'] += $r[$key][$k]['Delivery Only']['pval'];
+                    $total['COD']['count'] += $r[$key][$k]['COD']['count'];
+                    $total['COD']['dcost'] += $r[$key][$k]['COD']['dcost'];
+                    $total['COD']['sur'] += $r[$key][$k]['COD']['sur'];
+                    $total['COD']['pval'] += $r[$key][$k]['COD']['pval'];
+                    $total['CCOD']['count'] += $r[$key][$k]['CCOD']['count'];
+                    $total['CCOD']['dcost'] += $r[$key][$k]['CCOD']['dcost'];
+                    $total['CCOD']['sur'] += $r[$key][$k]['CCOD']['sur'];
+                    $total['CCOD']['pval'] += $r[$key][$k]['CCOD']['pval'];
+                    $total['PS']['count'] += $r[$key][$k]['PS']['count'];
+                    $total['PS']['pfee'] += $r[$key][$k]['PS']['pfee'];
+                    $total['PS']['pval'] += $r[$key][$k]['PS']['pval'];
+
+                    $total['jex']['revenue'] += $revtotal;
+                    $total['total_delivery_count'] += $r[$key][$k]['total_delivery_count'];
+                    $total['total_package_value'] += $r[$key][$k]['total_package_value'];
+
+                $counter++;
+
+            }
+
+        }
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Totals','class'=>'total'),
+
+                array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
+                array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['COD']['count'],'class'=>'total count'),
+                array('data'=>idr($total['COD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['COD']['sur']),'class'=>'total currency'),
+                array('data'=>idr($total['COD']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['CCOD']['count'],'class'=>'total count'),
+                array('data'=>idr($total['CCOD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['CCOD']['sur']),'class'=>'total currency'),
+                array('data'=>idr($total['CCOD']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['PS']['count'],'class'=>'total count'),
+                array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+                array('data'=>idr($total['PS']['pval']),'class'=>'total currency'),
+
+                array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
+                array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+                array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
+            );
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Percentage (%)','class'=>'total'),
+
+                array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
+                array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr($total['Delivery Only']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['Delivery Only']['pval'] == 0)?idr(0):idr($total['Delivery Only']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['COD']['count'] == 0)?idr(0):idr($total['COD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['COD']['dcost'] == 0)?idr(0):idr($total['COD']['dcost'] / $total['jex']['revenue'] * 100 ),'class'=>'total currency c-maroon'),
+                array('data'=>($total['COD']['sur'] == 0)?idr(0):idr($total['COD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['COD']['pval'] == 0)?idr(0):idr($total['COD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['CCOD']['count'] == 0)?idr(0):idr($total['CCOD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['CCOD']['dcost'] == 0)?idr(0):idr($total['CCOD']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['CCOD']['sur'] == 0)?idr(0):idr($total['CCOD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['CCOD']['pval'] == 0)?idr(0):idr($total['CCOD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['PS']['count'] == 0)?idr(0):idr($total['PS']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['PS']['pfee'] == 0)?idr(0):idr($total['PS']['pfee'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['PS']['pval'] == 0)?idr(0):idr($total['PS']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                '',
+                '',
+                ''
+            );
+
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Summary','class'=>'total'),
+
+                array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
+                array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),
+
+                '',
+                '',
+                array('data'=>idr($total['COD']['sur'] + $total['CCOD']['sur']),'class'=>'total currency'),
+                '',
+
+                '',
+                '',
+                '',
+                '',
+
+                '',
+                array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+                '',
+
+                array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
+                array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+                array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
+            );
+
+
+        $recontab = $this->table->generate();
+        $data['recontab'] = $recontab;
+
+        /* end copy */
+
+        $this->breadcrumb->add_crumb('Zone Revenue','admin/reports/zonerevenue');
+
+        $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+        $page['page_title'] = 'Zone Revenue';
+
+        $data['controller'] = 'admin/reports/zonerevenue/';
+
+        if($pdf == 'pdf'){
+            $html = $this->load->view('print/revenue',$data,true);
+            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+        }else if($pdf == 'print'){
+            $this->load->view('print/merchantrecon',$data); // Load the view
+        }else{
+            $this->ag_auth->view('merchantrecon',$data); // Load the view
+        }
+    }
+
 
 	private function _makerevrow($v){
 
 		//print_r($v);
-		
+
 		$r = array();
 
 		$r['COD']['count'] = $v['COD']['delivered']['count'];
@@ -1409,7 +1864,7 @@ class Reports extends Application
 		$r['COD']['dcost'] = $v['COD']['delivered']['delivery_cost'];
 
 		$r['CCOD']['dcost'] = $v['CCOD']['delivered']['delivery_cost'];
-		
+
 		$r['COD']['sur'] = $v['COD']['delivered']['cod_cost'];
 		$r['CCOD']['sur'] = $v['CCOD']['delivered']['cod_cost'];
 
@@ -1418,14 +1873,14 @@ class Reports extends Application
 
 		$r['Delivery Only']['pval'] = $v['Delivery Only']['delivered']['package_value'];
 		$r['PS']['pval'] = $v['PS']['delivered']['package_value'];
-		
+
 		$r['Delivery Only']['dcost'] = $v['Delivery Only']['delivered']['delivery_cost'];
 
 		$r['PS']['pfee'] = $v['PS']['delivered']['delivery_cost'];
 
 		$r['total_delivery_count'] = $r['COD']['count'] + $r['CCOD']['count'] + $r['Delivery Only']['count'] + $r['PS']['count'];
 		$r['total_package_value'] = $r['Delivery Only']['pval'] + $r['COD']['pval'] + $r['CCOD']['pval'] + $r['PS']['pval'];
-		
+
 
 		return $r;
 	}
@@ -1441,7 +1896,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -1470,7 +1925,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -1484,7 +1939,7 @@ class Reports extends Application
 
 		$cs = array('noid'=>'All');
 		foreach ($clist as $ckey) {
-			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];	
+			$cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];
 		}
 
 		$data['merchants'] = $cs;
@@ -1525,7 +1980,7 @@ class Reports extends Application
 		$this->db->where($column.' != ','0000-00-00');
 
 		if($id != 'noid'){
-			$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
+			$this->db->where($this->config->item('delivered_delivery_table').'.buyerdeliveryzone',$id);
 		}
 
 		$this->db->and_();
@@ -1545,7 +2000,7 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'4'
-			)	
+			)
 		);
 
 		$trans = array();
@@ -1595,24 +2050,24 @@ class Reports extends Application
 		//print_r($trans);
 
 		$this->table->set_heading(
-			'',		 	 	
 			'',
-			
-			array('data'=>'DO','colspan'=>'3'),		
-			array('data'=>'COD','colspan'=>'4'),		
-			array('data'=>'CCOD','colspan'=>'4'),		
-			array('data'=>'PS','colspan'=>'3'),		
+			'',
 
-			array('data'=>'Status','colspan'=>'3'),		
-			
-			array('data'=>'Total','colspan'=>'2')	
-		); // Setting headings for the table			
+			array('data'=>'DO','colspan'=>'3'),
+			array('data'=>'COD','colspan'=>'4'),
+			array('data'=>'CCOD','colspan'=>'4'),
+			array('data'=>'PS','colspan'=>'3'),
+
+			array('data'=>'Status','colspan'=>'3'),
+
+			array('data'=>'Total','colspan'=>'2')
+		); // Setting headings for the table
 
 
 		$this->table->set_subheading(
-			'No.',		 	 	
+			'No.',
 			'Date',
-			
+
 			'count',
 			'dcost',
 			'pval',
@@ -1637,7 +2092,7 @@ class Reports extends Application
 
 			'Delivery Count',
 			'Package Value'
-		); // Setting headings for the table			
+		); // Setting headings for the table
 
 		$counter  = 1;
 
@@ -1645,10 +2100,10 @@ class Reports extends Application
 
 		$total['Delivery Only']['count'] = 0;
 		$total['Delivery Only']['dcost'] = 0;
-		$total['Delivery Only']['pval'] = 0; 
-		$total['COD']['count'] = 0; 
-		$total['COD']['dcost'] = 0; 
-		$total['COD']['sur'] = 0; 
+		$total['Delivery Only']['pval'] = 0;
+		$total['COD']['count'] = 0;
+		$total['COD']['dcost'] = 0;
+		$total['COD']['sur'] = 0;
 		$total['COD']['pval']  = 0;
 		$total['CCOD']['count']  = 0;
 		$total['CCOD']['dcost']  = 0;
@@ -1657,7 +2112,7 @@ class Reports extends Application
 		$total['PS']['count']  = 0;
 		$total['PS']['pfee']  = 0;
 		$total['PS']['pval']  = 0;
-		$total['delivered']['count'] = 0;  
+		$total['delivered']['count'] = 0;
 		$total['noshow']['count']  = 0;
 		$total['rescheduled']['count']  = 0;
 		$total['total_delivery_count']  = 0;
@@ -1672,8 +2127,8 @@ class Reports extends Application
 				date('d-m-Y',strtotime($k)),
 
 				array('data'=>$r['Delivery Only']['count'],'class'=>'count'),
-				array('data'=>idr($r['Delivery Only']['dcost']),'class'=>'currency'),		
-				array('data'=>idr($r['Delivery Only']['pval']),'class'=>'currency'),		
+				array('data'=>idr($r['Delivery Only']['dcost']),'class'=>'currency'),
+				array('data'=>idr($r['Delivery Only']['pval']),'class'=>'currency'),
 
 				array('data'=>$r['COD']['count'],'class'=>'count'),
 				array('data'=>idr($r['COD']['dcost']),'class'=>'currency'),
@@ -1723,11 +2178,11 @@ class Reports extends Application
 
 			$this->table->add_row(
 				'',
-				array('data'=>'Total','class'=>'total'),		
+				array('data'=>'Total','class'=>'total'),
 
 				array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
-				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),		
-				array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),		
+				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),
+				array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),
 
 				array('data'=>$total['COD']['count'],'class'=>'total count'),
 				array('data'=>idr($total['COD']['dcost']),'class'=>'total currency'),
@@ -1768,12 +2223,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/merchantrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/merchantrecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
-		}		
+		}
 	}
 
 
@@ -1788,7 +2243,7 @@ class Reports extends Application
 
 		$r['COD']['dcost'] = $v['COD']['delivered']['delivery_cost'] + $v['COD']['revoked']['delivery_cost'] + $v['COD']['noshow']['delivery_cost'] + $v['COD']['rescheduled']['delivery_cost'];
 		$r['CCOD']['dcost'] = $v['CCOD']['delivered']['delivery_cost'] + $v['CCOD']['revoked']['delivery_cost'] + $v['CCOD']['noshow']['delivery_cost'] + $v['CCOD']['rescheduled']['delivery_cost'];
-		
+
 		$r['COD']['sur'] = $v['COD']['delivered']['cod_cost'] + $v['COD']['revoked']['cod_cost'] + $v['COD']['noshow']['cod_cost'] + $v['COD']['rescheduled']['cod_cost'];
 		$r['CCOD']['sur'] = $v['CCOD']['delivered']['cod_cost'] + $v['CCOD']['revoked']['cod_cost'] + $v['CCOD']['noshow']['cod_cost'] + $v['CCOD']['rescheduled']['cod_cost'];
 		$r['COD']['pval'] = $v['COD']['delivered']['package_value'] + $v['COD']['revoked']['package_value'] + $v['COD']['noshow']['package_value'] + $v['COD']['rescheduled']['package_value'];
@@ -1797,7 +2252,7 @@ class Reports extends Application
 		$r['Delivery Only']['pval'] = $v['Delivery Only']['delivered']['package_value'] + $v['Delivery Only']['revoked']['package_value'] + $v['Delivery Only']['noshow']['package_value'] + $v['Delivery Only']['rescheduled']['package_value'];
 		$r['PS']['pval'] = $v['PS']['delivered']['package_value'] + $v['PS']['revoked']['package_value'] + $v['PS']['noshow']['package_value'] + $v['PS']['rescheduled']['package_value'];
 
-		
+
 		$r['Delivery Only']['dcost'] = $v['Delivery Only']['delivered']['delivery_cost'] + $v['Delivery Only']['revoked']['delivery_cost'] + $v['Delivery Only']['noshow']['delivery_cost'] + $v['Delivery Only']['rescheduled']['delivery_cost'];
 		$r['PS']['pfee'] = $v['PS']['delivered']['delivery_cost'] + $v['PS']['revoked']['delivery_cost'] + $v['PS']['noshow']['delivery_cost'] + $v['PS']['rescheduled']['delivery_cost'];
 
@@ -1821,7 +2276,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -1850,7 +2305,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -1864,7 +2319,7 @@ class Reports extends Application
 
 		$cs = array('noid'=>'All');
 		foreach ($clist as $ckey) {
-			$cs[$ckey['id']] = $ckey['fullname'];	
+			$cs[$ckey['id']] = $ckey['fullname'];
 		}
 
 		$data['couriers'] = $cs;
@@ -1926,18 +2381,18 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'4'
-			)	
+			)
 		);
 
 
 		$this->table->set_heading(
-			'No.',		 	 	
-			'Date',	 	 	 	 	 	 	 
+			'No.',
+			'Date',
 			'Delivered',
 			'No Show',
 			'Rescheduled',
 			'Delivery Count'
-		); // Setting headings for the table			
+		); // Setting headings for the table
 
 		$seq = 0;
 		$rowdate = '';
@@ -1977,13 +2432,13 @@ class Reports extends Application
 			$trs += $rs;
 
 			$this->table->add_row(
-				$seq,		
-				date('d M Y',strtotime($r['assignment_date'])),		
+				$seq,
+				date('d M Y',strtotime($r['assignment_date'])),
 				$dl,
 				$ns,
 				$rs,
 				$dl + $ns + $rs
-			);				
+			);
 
 			$seq++;
 			$aseq++;
@@ -1992,13 +2447,13 @@ class Reports extends Application
 		$gt = $tdl + $tns + $trs;
 
 		$this->table->add_row(
-			'',		
-			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
-			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
-		);				
+			'',
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),
+			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),
+			array('data'=>$gt,'style'=>'border-top:thin solid grey')
+		);
 
 		/*
 		if($type == 'Merchant' || $type == 'Global'){
@@ -2060,12 +2515,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/courierrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/courierrecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('courierrecon',$data); // Load the view
-		}		
+		}
 	}
 
 
@@ -2079,7 +2534,7 @@ class Reports extends Application
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
-		}		
+		}
 
 		$pdf = null;
 
@@ -2108,7 +2563,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -2124,7 +2579,7 @@ class Reports extends Application
 
 		$cs = array('noid'=>'All');
 		foreach ($clist as $ckey) {
-			$cs[$ckey['id']] = $ckey['identifier'];	
+			$cs[$ckey['id']] = $ckey['identifier'];
 		}
 
 		$data['devices'] = $cs;
@@ -2187,18 +2642,18 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'4'
-			)	
+			)
 		);
 
 
 		$this->table->set_heading(
-			'No.',		 	 	
-			'Date',	 	 	 	 	 	 	 
+			'No.',
+			'Date',
 			'Delivered',
 			'No Show',
 			'Rescheduled',
 			'Delivery Count'
-		); // Setting headings for the table			
+		); // Setting headings for the table
 
 		$seq = 0;
 		$rowdate = '';
@@ -2238,13 +2693,13 @@ class Reports extends Application
 			$trs += $rs;
 
 			$this->table->add_row(
-				$seq,		
-				date('d M Y',strtotime($r['assignment_date'])),		
+				$seq,
+				date('d M Y',strtotime($r['assignment_date'])),
 				$dl,
 				$ns,
 				$rs,
 				$dl + $ns + $rs
-			);				
+			);
 
 			$seq++;
 			$aseq++;
@@ -2253,13 +2708,13 @@ class Reports extends Application
 		$gt = $tdl + $tns + $trs;
 
 		$this->table->add_row(
-			'',		
-			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
-			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
-		);				
+			'',
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),
+			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),
+			array('data'=>$gt,'style'=>'border-top:thin solid grey')
+		);
 
 		$recontab = $this->table->generate();
 		$data['recontab'] = $recontab;
@@ -2276,12 +2731,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/devicerecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/devicerecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('devicerecon',$data); // Load the view
-		}		
+		}
 	}
 
 	public function _devicerecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
@@ -2316,7 +2771,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -2356,7 +2811,7 @@ class Reports extends Application
 		$this->db->select($this->config->item('delivered_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.domain as domain,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
-		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.buyerdeliveryzone=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
@@ -2370,7 +2825,7 @@ class Reports extends Application
 
 		if($id != 'noid'){
 			if($type == 'Merchant'){
-				$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
+				$this->db->where($this->config->item('delivered_delivery_table').'.buyerdeliveryzone',$id);
 			}else if($type == 'Courier'){
 				$this->db->where($this->config->item('delivered_delivery_table').'.courier_id',$id);
 			}
@@ -2391,14 +2846,14 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'13'
-			)	
+			)
 		);
 
 
 		if($type == 'Merchant' || $type == 'Global'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
@@ -2408,23 +2863,23 @@ class Reports extends Application
 				'Disc',
 				'Tax',
 				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
+				'COD Surchg',
+				'Payable Value'
 			); // Setting headings for the table
 
 		}else if($type == 'Courier'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
 				'Delivery Date',
 				'Status'
 				//'Delivery Chg',
-				//'COD Surchg',		
-				//'Payable Value'		
-			); // Setting headings for the table			
+				//'COD Surchg',
+				//'Payable Value'
+			); // Setting headings for the table
 		}
 
 
@@ -2455,7 +2910,7 @@ class Reports extends Application
 			if($r->status == $this->config->item('trans_status_mobile_delivered')){
 				if($type == 'Merchant' || $type == 'Global'){
 					$payable = ($total - $dsc) + $tax;
-					// + $dc + $cod;				
+					// + $dc + $cod;
 				}else if($type == 'Courier'){
 					$payable = ($dc + $cod) * 0.1;
 				}
@@ -2465,7 +2920,7 @@ class Reports extends Application
 				$r->status == $this->config->item('trans_status_mobile_rescheduled') ||
 				$r->status == $this->config->item('trans_status_mobile_noshow'))
 			{
-				//TBA	
+				//TBA
 			}
 
 			$total_delivery += (int)str_replace('.','',$dc);
@@ -2473,8 +2928,8 @@ class Reports extends Application
 
 			if($type == 'Merchant' || $type == 'Global'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
@@ -2483,24 +2938,24 @@ class Reports extends Application
 					number_format((int)str_replace('.','',$total),2,',','.'),
 					number_format((int)str_replace('.','',$dsc),2,',','.'),
 					number_format((int)str_replace('.','',$tax),2,',','.'),
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$dc),2,',','.'),
 					number_format((int)str_replace('.','',$cod),2,',','.'),
 					number_format((int)str_replace('.','',$payable),2,',','.')
 				);
 
 			}else if($type == 'Courier'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
 					$r->assignment_date,
 					$r->status
-					//number_format((int)str_replace('.','',$dc),2,',','.'),			
+					//number_format((int)str_replace('.','',$dc),2,',','.'),
 					//number_format((int)str_replace('.','',$cod),2,',','.'),
 					//number_format((int)str_replace('.','',$payable),2,',','.')
-				);				
+				);
 			}
 
 			$seq++;
@@ -2563,12 +3018,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/devicerecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/devicerecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('devicerecon',$data); // Load the view
-		}		
+		}
 	}
 
 	public function _merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
@@ -2603,7 +3058,7 @@ class Reports extends Application
 		}else{
 			$from = date('Y-m-d',time());
 			$to = date('Y-m-d',time());
-			$pdf = null;			
+			$pdf = null;
 
 			$data['month'] = 1;
 			$data['week'] = 1;
@@ -2643,7 +3098,7 @@ class Reports extends Application
 		$this->db->select($this->config->item('delivered_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.domain as domain,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
-		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.buyerdeliveryzone=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
 		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
@@ -2657,7 +3112,7 @@ class Reports extends Application
 
 		if($id != 'noid'){
 			if($type == 'Merchant'){
-				$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
+				$this->db->where($this->config->item('delivered_delivery_table').'.buyerdeliveryzone',$id);
 			}else if($type == 'Courier'){
 				$this->db->where($this->config->item('delivered_delivery_table').'.courier_id',$id);
 			}
@@ -2678,14 +3133,14 @@ class Reports extends Application
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'13'
-			)	
+			)
 		);
 
 
 		if($type == 'Merchant' || $type == 'Global'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
@@ -2695,23 +3150,23 @@ class Reports extends Application
 				'Disc',
 				'Tax',
 				'Delivery Chg',
-				'COD Surchg',		
-				'Payable Value'		
+				'COD Surchg',
+				'Payable Value'
 			); // Setting headings for the table
 
 		}else if($type == 'Courier'){
 			$this->table->set_heading(
-				'No.',		 	 	
-				'Merchant Trans ID',	 	 	 	 	 	 	 
+				'No.',
+				'Merchant Trans ID',
 				'Delivery ID',
 				'Merchant Name',
 				'Store',
 				'Delivery Date',
 				'Status'
 				//'Delivery Chg',
-				//'COD Surchg',		
-				//'Payable Value'		
-			); // Setting headings for the table			
+				//'COD Surchg',
+				//'Payable Value'
+			); // Setting headings for the table
 		}
 
 
@@ -2742,7 +3197,7 @@ class Reports extends Application
 			if($r->status == $this->config->item('trans_status_mobile_delivered')){
 				if($type == 'Merchant' || $type == 'Global'){
 					$payable = ($total - $dsc) + $tax;
-					// + $dc + $cod;				
+					// + $dc + $cod;
 				}else if($type == 'Courier'){
 					$payable = ($dc + $cod) * 0.1;
 				}
@@ -2752,7 +3207,7 @@ class Reports extends Application
 				$r->status == $this->config->item('trans_status_mobile_rescheduled') ||
 				$r->status == $this->config->item('trans_status_mobile_noshow'))
 			{
-				//TBA	
+				//TBA
 			}
 
 			$total_delivery += (int)str_replace('.','',$dc);
@@ -2760,8 +3215,8 @@ class Reports extends Application
 
 			if($type == 'Merchant' || $type == 'Global'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
@@ -2770,24 +3225,24 @@ class Reports extends Application
 					number_format((int)str_replace('.','',$total),2,',','.'),
 					number_format((int)str_replace('.','',$dsc),2,',','.'),
 					number_format((int)str_replace('.','',$tax),2,',','.'),
-					number_format((int)str_replace('.','',$dc),2,',','.'),			
+					number_format((int)str_replace('.','',$dc),2,',','.'),
 					number_format((int)str_replace('.','',$cod),2,',','.'),
 					number_format((int)str_replace('.','',$payable),2,',','.')
 				);
 
 			}else if($type == 'Courier'){
 				$this->table->add_row(
-					$seq,		
-					$r->merchant_trans_id,		
+					$seq,
+					$r->merchant_trans_id,
 					$r->delivery_id,
 					$r->merchant,
 					$r->app_name.'<hr />'.$r->domain,
 					$r->assignment_date,
 					$r->status
-					//number_format((int)str_replace('.','',$dc),2,',','.'),			
+					//number_format((int)str_replace('.','',$dc),2,',','.'),
 					//number_format((int)str_replace('.','',$cod),2,',','.'),
 					//number_format((int)str_replace('.','',$payable),2,',','.')
-				);				
+				);
 			}
 
 			$seq++;
@@ -2850,12 +3305,12 @@ class Reports extends Application
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/merchantrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true); 
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
 		}else if($pdf == 'print'){
 			$this->load->view('print/merchantrecon',$data); // Load the view
 		}else{
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
-		}		
+		}
 	}
 
 
@@ -2995,7 +3450,7 @@ class Reports extends Application
 
 		if($search){
 			//$this->db->and_();
-		}		
+		}
 
 
 		$data = $this->db
@@ -3027,7 +3482,7 @@ class Reports extends Application
 
 			//$printrecon = '<span class="printslip" id="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
 			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$key['id'].'" title="Merchant" data="'.$key['id'].'" style="cursor:pointer;text-decoration:underline;" >View</span>';
-			
+
 			$aadata[] = array(
 			 	$key['merchantname'],
 			 	$key['email'],
@@ -3066,7 +3521,7 @@ class Reports extends Application
 
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
-		
+
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
 
@@ -3078,16 +3533,16 @@ class Reports extends Application
 		$count_all = $this->db->count_all($this->config->item('jayon_couriers_table'));
 
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_couriers_table'));
-		
+
 		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_couriers_table'));
-		
+
 		//print $this->db->last_query();
-		
+
 		$result = $data->result_array();
-			
+
 		$aadata = array();
-		
-		
+
+
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/couriers/delete/".$key['id']."/", "Delete"); // Build actions links
@@ -3100,14 +3555,14 @@ class Reports extends Application
 
 			$aadata[] = array($detail, $key['email'],$key['fullname'],$key['mobile'],$key['phone'],$printrecon); // Adding row to table
 		}
-		
+
 		$result = array(
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
 			'aaData'=>$aadata
 		);
-		
+
 		print json_encode($result);
 	}
 

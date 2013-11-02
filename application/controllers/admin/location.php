@@ -253,6 +253,48 @@ class Location extends Application
 
 	}
 
+    public function distribution()
+    {
+
+        $this->breadcrumb->add_crumb('Location','admin/location');
+        $this->breadcrumb->add_crumb('Buyer Distribution','admin/location/distribution');
+
+        $this->table->set_heading(
+            'Timestamp',
+            'Device Identifier',
+            'Courier',
+            'Latitude',
+            'Longitude',
+            'Status'
+            ); // Setting headings for the table
+
+        $devs = array();
+        $devs['Search device'] = '-';
+        foreach (get_devices() as $dev) {
+            $devs[$dev->identifier] = $dev->identifier;
+        }
+
+        $dev_search = form_dropdown('search_device',$devs,'Search device','id="search_device"');
+
+        $this->table->set_footing(
+            '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
+            '<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+            '<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+            '',
+            '',
+            '<input type="text" name="search_status" id="search_status" value="Search status" class="search_init" />'
+            );
+
+
+
+        $page['sortdisable'] = '';
+        $page['ajaxurl'] = 'ajaxpos/ajaxdistrib';
+        $page['page_title'] = 'Buyer Distribution';
+        $this->ag_auth->view('location/distrib',$page); // Load the view
+
+    }
+
+
     public function router()
     {
 

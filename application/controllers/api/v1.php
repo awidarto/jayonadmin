@@ -449,6 +449,8 @@ class V1 extends Application
                         if($in->status == $this->config->item('trans_status_mobile_delivered')){
                             $locdata['dir_lat'] = $in->lat;
                             $locdata['dir_lon'] = $in->lon;
+                            $locdata['latitude'] = $in->lat;
+                            $locdata['longitude'] = $in->lon;
                             $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
                         }
 
