@@ -83,6 +83,7 @@
 					<li class="<?php print set_hilite('admin\/reports\/devicerecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/devicerecon', 'Device Reconciliation'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/revenue', 'Revenue Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/zonerevenue')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/zonerevenue', 'Zone Revenue Report'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/location\/distribution')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/distribution', 'Buyer Distributions'); } ?></li>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>

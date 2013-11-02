@@ -6,17 +6,22 @@
 <?php echo $this->ag_asset->load_css('font-awesome.min.css');?>
 <?php echo $this->ag_asset->load_css('leaflet.awesome-markers.css');?>
 <?php echo $this->ag_asset->load_css('MarkerCluster.css');?>
-<?php echo $this->ag_asset->load_css('MarkerCluster.css');?>
 <?php echo $this->ag_asset->load_css('MarkerCluster.Default.css');?>
 <!--[if lte IE 8]>
     <?php echo $this->ag_asset->load_css('MarkerCluster.Default.ie.css');?>
 <![endif]-->
+
+<?php echo $this->ag_asset->load_css('l.geosearch.css');?>
 
 <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
 <?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
 <?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
 <?php echo $this->ag_asset->load_script('leaflet.markercluster.js');?>
+
+<?php echo $this->ag_asset->load_script('lsearch/l.control.geosearch.js');?>
+<?php echo $this->ag_asset->load_script('lsearch/l.geosearch.provider.openstreetmap.js');?>
+<?php echo $this->ag_asset->load_script('lsearch/l.geosearch.provider.google.js');?>
 
 
 <style type="text/css">
@@ -50,6 +55,12 @@
         L.tileLayer(OSM_URL, {
             attribution: OSM_ATTRIB,
             maxZoom: 18
+        }).addTo(map);
+
+        new L.Control.GeoSearch({
+            provider: new L.GeoSearch.Provider.Google(),
+            position: 'topcenter',
+            showMarker: true
         }).addTo(map);
 
         $('#lineWeight').on('change',function(){
@@ -137,6 +148,7 @@
                             markers = [];
 
                         }
+
                         /*
                         $.each(data.paths, function(){
                             var polyline = L.polyline( this.poly,
@@ -299,6 +311,7 @@
 </script>
 
     <div>
+        <!--
         <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point |
         Track Line Weight <select name="line" id="lineWeight">
             <option value="1">1</option>
@@ -309,6 +322,7 @@
             <option value="6">6</option>
             <option value="7">7</option>
         </select>
+        -->
         <label for="">From</label><input id="search_deliverytime_from" class="date">
         <label for="">To</label><input id="search_deliverytime_to" class="date">
     </div>

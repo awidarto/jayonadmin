@@ -256,7 +256,7 @@ class Location extends Application
     public function distribution()
     {
 
-        $this->breadcrumb->add_crumb('Location','admin/location');
+        $this->breadcrumb->add_crumb('Reports','admin/reports/statistics');
         $this->breadcrumb->add_crumb('Buyer Distribution','admin/location/distribution');
 
         $this->table->set_heading(
