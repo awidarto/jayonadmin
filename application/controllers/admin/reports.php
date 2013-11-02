@@ -1390,7 +1390,7 @@ class Reports extends Application
 		}else if($pdf == 'print'){
 			$this->load->view('print/merchantrecon',$data); // Load the view
 		}else{
-			$this->ag_auth->view('zonereport',$data); // Load the view
+			$this->ag_auth->view('merchantrecon',$data); // Load the view
 		}
 	}
 
@@ -1845,7 +1845,7 @@ class Reports extends Application
         }else if($pdf == 'print'){
             $this->load->view('print/merchantrecon',$data); // Load the view
         }else{
-            $this->ag_auth->view('merchantrecon',$data); // Load the view
+            $this->ag_auth->view('zonereport',$data); // Load the view
         }
     }
 
