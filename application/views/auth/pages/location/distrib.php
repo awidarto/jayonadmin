@@ -137,7 +137,7 @@
                             markers = [];
 
                         }
-
+                        /*
                         $.each(data.paths, function(){
                             var polyline = L.polyline( this.poly,
                                 {
@@ -147,7 +147,7 @@
 
                             paths.push(polyline);
                         });
-
+                        */
 
                         $.each(data.locations,function(){
 
