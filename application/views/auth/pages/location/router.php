@@ -5,23 +5,11 @@
 
 <?php echo $this->ag_asset->load_css('font-awesome.min.css');?>
 <?php echo $this->ag_asset->load_css('leaflet.awesome-markers.css');?>
-<?php echo $this->ag_asset->load_css('MarkerCluster.css');?>
-<?php echo $this->ag_asset->load_css('MarkerCluster.Default.css');?>
-<!--[if lte IE 8]>
-    <?php echo $this->ag_asset->load_css('MarkerCluster.Default.ie.css');?>
-<![endif]-->
-
-<?php echo $this->ag_asset->load_css('l.geosearch.css');?>
 
 <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
 <?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
 <?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
-<?php echo $this->ag_asset->load_script('leaflet.markercluster.js');?>
-
-<?php echo $this->ag_asset->load_script('lsearch/l.control.geosearch.js');?>
-<?php echo $this->ag_asset->load_script('lsearch/l.geosearch.provider.openstreetmap.js');?>
-<?php echo $this->ag_asset->load_script('lsearch/l.geosearch.provider.google.js');?>
 
 
 <style type="text/css">
@@ -57,12 +45,6 @@
             maxZoom: 18
         }).addTo(map);
 
-        new L.Control.GeoSearch({
-            provider: new L.GeoSearch.Provider.Google(),
-            position: 'topcenter',
-            showMarker: true
-        }).addTo(map);
-
         $('#lineWeight').on('change',function(){
             refreshMap();
         });
@@ -81,10 +63,6 @@
         });
         */
 
-        var clusters = L.markerClusterGroup({
-            spiderfyOnMaxZoom: true
-        });
-
         var markers = [];
         var paths = [];
 
@@ -93,7 +71,7 @@
             lineWeight = $('#lineWeight').val();
             //console.log(currtime.getTime());
 
-            var icon_blue = L.AwesomeMarkers.icon({
+            var icon_yellow = L.AwesomeMarkers.icon({
                 icon: 'icon-gift',
                 color: 'blue',
                 iconSize: icsize,
@@ -115,11 +93,10 @@
                 shadowAnchor: shanchor
             });
 
-            $.post('<?php print site_url('ajaxpos/getdistmarker');?>/' + currtime.getTime() ,
+            $.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
                 {
                     'device_identifier':$('#search_device').val(),
-                    'timefrom':$('#search_deliverytime_from').val(),
-                    'timeto':$('#search_deliverytime_to').val(),
+                    'timestamp':$('#search_deliverytime').val(),
                     'courier':$('#search_courier').val(),
                     'status':$('#search_status').val()
                 },
@@ -140,18 +117,14 @@
 
                         if(markers.length > 0){
 
-                            map.removeLayer(clusters);
-                            /*
                             for(m = 0; m < markers.length; m++){
                                 map.removeLayer(markers[m]);
                             }
-                            */
 
                             markers = [];
 
                         }
 
-                        /*
                         $.each(data.paths, function(){
                             var polyline = L.polyline( this.poly,
                                 {
@@ -161,7 +134,7 @@
 
                             paths.push(polyline);
                         });
-                        */
+
 
                         $.each(data.locations,function(){
 
@@ -170,22 +143,17 @@
                             }else if(this.data.status == 'delivered'){
                                 icon = icon_yellow;
                             }else{
-                                icon =  icon_green;
+                                icon =  icon_red;
                             }
-
-                            icon =  icon_blue;
 
                             var content = '<div style="background-color:white;padding:3px;width:150px;">' +
                                 '<div class="bg"></div>' +
-                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.address + '<br />Direction : ' + this.data.directions + '<br />Note : ' + this.data.note + '</div>' +
+                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
                             '</div>';
 
-                            var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(clusters).bindPopup(content);
-
-                            markers.push(m);
-
-                            /*
                             if($('#showLocUpdate').is(':checked')){
+                                var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
+                                markers.push(m);
 
                             }else{
                                 if(this.data.status != 'loc_update'){
@@ -193,23 +161,83 @@
                                     markers.push(m);
                                 }
                             }
-                            */
 
                         });
 
-                        clusters.addTo(map);
                     }
                 },'json');
 
         }
 
+        var oTable = $('.dataTable').dataTable(
+            {
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": "<?php print site_url($ajaxurl);?>",
+                "oLanguage": { "sSearch": "Search "},
+                "sPaginationType": "full_numbers",
+            <?php if($this->config->item('infinite_scroll')):?>
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                "sScrollY": "500px",
+            <?php endif; ?>
+            <?php if(isset($sortdisable)):?>
+                "aoColumnDefs": [
+                            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
+                 ],
+            <?php endif;?>
+                "fnServerData": function ( sSource, aoData, fnCallback ) {
+                    $.ajax( {
+                        "dataType": 'json',
+                        "type": "POST",
+                        "url": sSource,
+                        "data": aoData,
+                        "success": fnCallback
+                    } );
+                }
+            }
+        );
+
+        $('tfoot input').keyup( function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter( this.value, $('tfoot input').index(this) );
+            refreshMap();
+        } );
+
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $('tfoot input').each( function (i) {
+            asInitVals[i] = this.value;
+        } );
+
+        $('tfoot input').focus( function () {
+            if ( this.className == 'search_init' )
+            {
+                this.className = '';
+                this.value = '';
+            }
+        } );
+
+        $('tfoot input').blur( function (i) {
+            if ( this.value == '' )
+            {
+                this.className = 'search_init';
+                this.value = asInitVals[$('tfoot input').index(this)];
+            }
+        } );
+
         //Refresh page every x second ( in milis)
         function refresh(){
             refreshMap();
+            oTable.fnDraw();
             setTimeout(refresh, <?php print get_option('map_refresh_rate');?> * 1000);
         }
 
         refresh();
+
+
 
         $( '#assign_courier' ).autocomplete({
             source: '<?php print site_url('ajax/getcourier')?>',
@@ -229,18 +257,15 @@
         });
 
 
-        $('#search_deliverytime_from').datepicker({ dateFormat: 'yy-mm-dd' });
-        $('#search_deliverytime_to').datepicker({ dateFormat: 'yy-mm-dd' });
+        $('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 
-        $('#search_deliverytime_from').change(function(){
-            refreshMap();
-        });
-
-        $('#search_deliverytime_to').change(function(){
+        $('#search_deliverytime').change(function(){
+            oTable.fnFilter( this.value, $('tfoot input').index(this) );
             refreshMap();
         });
 
         $('#search_device').change(function(){
+            oTable.fnFilter( this.value, $('tfoot input').index(this) );
             refreshMap();
         });
 
@@ -313,7 +338,6 @@
 </script>
 
     <div>
-        <!--
         <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point |
         Track Line Weight <select name="line" id="lineWeight">
             <option value="1">1</option>
@@ -324,16 +348,17 @@
             <option value="6">6</option>
             <option value="7">7</option>
         </select>
-        -->
-        <label for="">From</label><input id="search_deliverytime_from" class="date">
-        <label for="">To</label><input id="search_deliverytime_to" class="date">
     </div>
     <div id="tracker" >
         <table style="padding:0px;margin:0px;">
             <tr>
                 <td style="vertical-align: top;">
                     <h3>Position Tracker</h3>
-                    <div id="map" style="width:100%;height:700px;display:block;border:thin solid grey;"></div>
+                    <div id="map" style="width:800px;height:700px;display:block;border:thin solid grey;"></div>
+                </td>
+                <td style="width:100%;height:100%;vertical-align:top;">
+                    <h3>Position Logs</h3>
+                    <?php echo $this->table->generate(); ?>
                 </td>
             </tr>
         </table>

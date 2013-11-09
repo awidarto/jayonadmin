@@ -51,3 +51,8 @@ ALTER TABLE  `buyers` ADD  `group_count` INT NULL DEFAULT  '0' AFTER  `is_child_
 +++++++++++++++++++
 
 ALTER TABLE  `delivery_order_active` ADD  `is_pickup` INT( 1 ) NULL DEFAULT  '0' AFTER  `show_shop` ;
+
+3 Nov 2013
++++++++++++++++++++
+
+ALTER TABLE  `delivery_order_active` ADD  `assignment_seq` INT NULL DEFAULT  '0' AFTER  `assignment_city` ;

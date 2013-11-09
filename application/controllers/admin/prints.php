@@ -14,6 +14,11 @@ class Prints extends Application
 
 	}
 
+    public function mapview($buyer_id){
+        $data['page_title'] = 'Set Location';
+        $this->load->view('auth/pages/setlocation',$data); // Load the view
+    }
+
 	public function deliveryslip($delivery_id,$pdf = false)
 	{
 			$main = $this->db

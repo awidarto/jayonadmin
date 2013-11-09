@@ -280,6 +280,97 @@ class Ajaxpos extends CI_Controller
 		print json_encode($result);
 	}
 
+    public function ajaxrouter(){
+        $limit_count = $this->input->post('iDisplayLength');
+        $limit_offset = $this->input->post('iDisplayStart');
+
+        $sort_col = $this->input->post('iSortCol_0');
+        $sort_dir = $this->input->post('sSortDir_0');
+
+        $columns = array(
+            'timestamp',
+            'device_id',
+            'identifier',
+            'courier_id',
+            'latitude',
+            'longitude',
+            'status',
+            'notes'
+        );
+
+        // get total count result
+        $count_all = $this->db->count_all($this->config->item('location_log_table'));
+
+        $count_display_all = $this->db
+            ->count_all_results($this->config->item('location_log_table'));
+
+        //search column
+        if($this->input->post('sSearch') != ''){
+            $srch = $this->input->post('sSearch');
+            //$this->db->like('buyerdeliveryzone',$srch);
+            $this->db->or_like('buyerdeliverytime',$srch);
+            $this->db->or_like('delivery_id',$srch);
+        }
+
+        if($this->input->post('sSearch_0') != ''){
+            $this->db->like($this->config->item('location_log_table').'.timestamp',$this->input->post('sSearch_0'));
+        }
+
+
+        if($this->input->post('sSearch_1') != ''){
+            $this->db->like('d.identifier',$this->input->post('sSearch_1'));
+        }
+
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like('c.courier',$this->input->post('sSearch_2'));
+        }
+
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
+        }
+
+        $this->db->select('*,d.identifier as identifier,c.fullname as courier');
+        $this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
+        $this->db->join('couriers as c',$this->config->item('location_log_table').'.courier_id=c.id','left');
+
+
+        $data = $this->db
+            ->limit($limit_count, $limit_offset)
+            ->order_by($this->config->item('location_log_table').'.timestamp','desc')
+            ->order_by($columns[$sort_col],$sort_dir)
+            ->get($this->config->item('location_log_table'));
+
+        //print $this->db->last_query();
+
+        //->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
+
+        $result = $data->result_array();
+
+        $aadata = array();
+
+        foreach($result as $value => $key)
+        {
+
+            $aadata[] = array(
+                $key['timestamp'],
+                $key['identifier'],
+                $key['courier'],
+                $key['latitude'],
+                $key['longitude'],
+                $key['status']
+            );
+        }
+
+        $result = array(
+            'sEcho'=> $this->input->post('sEcho'),
+            'iTotalRecords'=>$count_all,
+            'iTotalDisplayRecords'=> $count_display_all,
+            'aaData'=>$aadata
+        );
+
+        print json_encode($result);
+    }
+
     public function ajaxdistrib(){
         $limit_count = $this->input->post('iDisplayLength');
         $limit_offset = $this->input->post('iDisplayStart');

@@ -182,6 +182,23 @@ function get_zone_options(){
 	return $result;
 }
 
+function get_city_options(){
+    $CI =& get_instance();
+    $CI->db->where('is_on',1);
+    $q = $CI->db->select('district,city')->get('districts');
+
+    $result = array();
+
+    $city = '';
+    foreach($q->result_array() as $val){
+        $result[$val['city']] = $val['city'];
+    }
+
+    //print_r($result);
+
+    return $result;
+}
+
 function ajax_find_zones($zone,$col = 'district'){
 	$CI =& get_instance();
 	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->where('is_on',1)->get('districts');

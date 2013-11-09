@@ -330,9 +330,9 @@ class Location extends Application
 
 
         $page['sortdisable'] = '';
-        $page['ajaxurl'] = 'ajaxpos/ajaxlog';
+        $page['ajaxurl'] = 'ajaxpos/ajaxrouter';
         $page['page_title'] = 'Router';
-        $this->ag_auth->view('location/log',$page); // Load the view
+        $this->ag_auth->view('location/router',$page); // Load the view
 
     }
 

@@ -716,9 +716,11 @@ class Members extends Application
             'Mobile1',
             'Mobile2',
             'Email',
-            'Recipient',
-            'ZIP',
+            //'Recipient',
+            //'ZIP',
             'Created',
+            'Latitude',
+            'Longitude',
             'Actions'); // Setting headings for the table
 
         $this->table->set_footing(
@@ -733,8 +735,8 @@ class Members extends Application
             '<input type="text" name="search_mobile1" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_mobile2" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_email" id="search_username" value="Search delivery time" class="search_init" />',
-            '<input type="text" name="search_recipient_name" id="search_username" value="Search delivery time" class="search_init" />',
-            '<input type="text" name="search_shipping_zip" id="search_username" value="Search delivery time" class="search_init" />',
+            //'<input type="text" name="search_recipient_name" id="search_username" value="Search delivery time" class="search_init" />',
+            //'<input type="text" name="search_shipping_zip" id="search_username" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />'
             );
 
@@ -769,6 +771,8 @@ class Members extends Application
             ,'recipient_name'
             ,'shipping_zip'
             ,'created'
+            ,'latitude'
+            ,'longitude'
             ,'delivery_id'
             ,'delivery_cost'
             ,'cod_cost'
@@ -790,131 +794,7 @@ class Members extends Application
             ,'dir_lat'
             ,'dir_lon'
             ,'delivery_note'
-            ,'latitude'
-            ,'longitude'
         );
-
-        //restart query
-        /*
-            ,delivery_id
-            ,delivery_cost
-            ,cod_cost
-            ,delivery_type
-            ,currency
-            ,total_price
-            ,chargeable_amount
-            ,delivery_bearer
-            ,cod_bearer
-            ,cod_method
-            ,ccod_method
-            ,application_id
-            ,buyer_id
-            ,merchant_id
-            ,merchant_trans_id
-            ,courier_id
-            ,device_id
-            ,directions
-            ,dir_lat
-            ,dir_lon
-            ,delivery_note
-            ,latitude
-            ,longitude
-        */
-
-        //$this->db->distinct();
-        $this->db->select(
-            'id
-            ,cluster_id
-            ,shipping_address
-            ,buyer_name
-            ,buyerdeliverycity
-            ,buyerdeliveryzone
-            ,phone
-            ,mobile1
-            ,mobile2
-            ,recipient_name
-            ,shipping_zip
-            ,email
-            ,created');
-        /*
-        $this->db->group_by(
-            'cluster_id'
-            //'shipping_address
-            //,buyer_name'
-        );
-        */
-        $this->db->from($this->config->item('jayon_buyers_table'));
-
-        $search = false;
-                //search column
-        if($this->input->post('sSearch') != ''){
-            $srch = $this->input->post('sSearch');
-            //$this->db->like('buyerdeliveryzone',$srch);
-            //$this->db->or_like('buyerdeliverytime',$srch);
-            //$this->db->or_like('delivery_id',$srch);
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_0') != ''){
-            $this->db->like('buyer_name',$this->input->post('sSearch_0'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_1') != ''){
-            $this->db->like('shipping_address',$this->input->post('sSearch_1'));
-            $search = true;
-        }
-
-
-        if($this->input->post('sSearch_2') != ''){
-            $this->db->like('buyerdeliverycity',$this->input->post('sSearch_2'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_3') != ''){
-            $this->db->like('buyerdeliveryzone',$this->input->post('sSearch_3'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_4') != ''){
-            $this->db->like('phone',$this->input->post('sSearch_4'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_5') != ''){
-            $this->db->like('mobile1',$this->input->post('sSearch_5'));
-            $search = true;
-        }
-        if($this->input->post('sSearch_6') != ''){
-            $this->db->like('mobile2',$this->input->post('sSearch_6'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_7') != ''){
-            $this->db->like('email',$this->input->post('sSearch_7'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_8') != ''){
-            $this->db->like('recipient_name',$this->input->post('sSearch_8'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_9') != ''){
-            $this->db->like('shipping_zip',$this->input->post('sSearch_9'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_10') != ''){
-            $this->db->like('created',$this->input->post('sSearch_10'));
-            $search = true;
-        }
-
-        $this->db->where('is_child_of',0);
-
-        $display = $this->db->get();
-
-        $count_all = count($display->result_array());
 
         //$this->db->distinct();
         $this->db->select(
@@ -933,25 +813,20 @@ class Members extends Application
             ,recipient_name
             ,shipping_zip
             ,email
+            ,latitude
+            ,longitude
             ,created');
-        /*
-        $this->db->group_by(
-            'cluster_id'
-            //'shipping_address
-            //,buyer_name'
-        );
-        */
 
         $this->db->from($this->config->item('jayon_buyers_table'));
 
-        /*
-        $this->db->group_by(
-            'shipping_address
-            ,buyer_name'
-        );
-        */
+        $this->db->where('is_child_of',0);
+
+        $dbca = clone $this->db;
+
+        $count_all = $dbca->count_all_results();
 
         $search = false;
+
                 //search column
         if($this->input->post('sSearch') != ''){
             $srch = $this->input->post('sSearch');
@@ -1033,16 +908,18 @@ class Members extends Application
             ,mobile2'
             );
 
-        $data = $this->db
-            ->where('is_child_of',0)
-            ->limit($limit_count, $limit_offset)
+
+        $dbcr = clone $this->db;
+
+        $count_display_all = $dbcr->count_all_results();
+
+        $data = $this->db->limit($limit_count, $limit_offset)
             ->get();
 
         $last_query = $this->db->last_query();
 
         $result = $data->result_array();
 
-        $count_display_all = count($result);
 
         $aadata = array();
 
@@ -1079,9 +956,11 @@ class Members extends Application
                 $key['mobile1'],
                 $key['mobile2'],
                 $key['email'],
-                $key['recipient_name'],
-                $key['shipping_zip'],
+                //$key['recipient_name'],
+                //$key['shipping_zip'],
                 $key['created'],
+                ($key['latitude'] == 0)? '<span id="'.$key['id'].'" style="cursor:pointer;padding:2px;display:block;" class="locpick">Set Loc</span>':$key['latitude'],
+                ($key['longitude'] == 0)?'':$key['longitude'],
                 $edit.' '.$delete
             ); // Adding row to table
 
