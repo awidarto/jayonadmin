@@ -2286,10 +2286,10 @@ class Reports extends Application
 
         /* end copy */
 
-        $this->breadcrumb->add_crumb('Zone Revenue','admin/reports/zonerevenue');
+        $this->breadcrumb->add_crumb('City Revenue','admin/reports/zonerevenue');
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
-        $page['page_title'] = 'Zone Revenue';
+        $page['page_title'] = 'City Revenue';
 
         $data['controller'] = 'admin/reports/cityrevenue/';
 
