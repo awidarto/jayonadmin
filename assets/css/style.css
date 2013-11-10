@@ -259,3 +259,10 @@ td.currency{
 	background-color: #777;
 	color: white;
 }
+
+.locpick{
+    padding: 2px;
+    background-color: red;
+    cursor: pointer;
+    display: block;
+}
