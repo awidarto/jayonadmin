@@ -895,17 +895,18 @@ class Members extends Application
             //$this->db->and_();
         }
 
+        $this->db->order_by('created','desc');
+
         $this->db->order_by($columns[$sort_col],$sort_dir);
 
         $this->db->order_by(
-            'created
-            ,shipping_address
+            'shipping_address
             ,buyer_name
             ,buyerdeliverycity
             ,buyerdeliveryzone
             ,phone
             ,mobile1
-            ,mobile2'
+            ,mobile2','desc'
             );
 
 
