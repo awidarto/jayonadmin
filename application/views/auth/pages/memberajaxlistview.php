@@ -35,6 +35,7 @@
 
 <script>
 	var asInitVals = new Array();
+    var refreshTab;
 
     CM_ATTRIB = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -176,6 +177,10 @@
 
 		});
 
+        refreshTab = function(){
+            oTable.fnDraw();
+        };
+
 		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
 
 		$('#search_timestamp').change(function(){
@@ -255,9 +260,9 @@
             modal: true,
             buttons: {
                 Save: function(){
-                    var nframe = document.getElementById('view_frame');
+                    var nframe = document.getElementById('map_frame');
                     var nframeWindow = nframe.contentWindow;
-                    nframeWindow.submitorder();
+                    nframeWindow.submitlocation();
                 },
                 Print: function(){
                     var pframe = document.getElementById('print_frame');

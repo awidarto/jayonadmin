@@ -744,6 +744,29 @@ class Ajax extends Application
 		print str_replace('"', '', $locjson);
 	}
 
+    public function setbuyerloc(){
+        $id = $this->input->post('id');
+        $latitude = $this->input->post('latitude');
+        $longitude = $this->input->post('longitude');
+
+        $data = array(
+                    'latitude'=>$latitude,
+                    'longitude'=>$longitude,
+                    'dir_lat'=>$latitude,
+                    'dir_lon'=>$longitude
+                );
+
+        $up = $this->db->where('id',$id)
+            ->update($this->config->item('jayon_buyers_table'),$data);
+
+        if($up){
+            print json_encode(array('result'=>'OK' ));
+        }else{
+            print json_encode(array('result'=>'ERR'));
+        }
+    }
+
+
     // worker functions
 
     public function order_save($indata,$api_key,$transaction_id)

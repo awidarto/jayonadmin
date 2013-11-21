@@ -15,7 +15,25 @@ class Prints extends Application
 	}
 
     public function mapview($buyer_id){
+
+
+
+        $this->db->where('id',$buyer_id);
+        $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
+        $buyer = $this->db->get($this->config->item('jayon_buyers_table'))->row_array();
+
+
         $data['page_title'] = 'Set Location';
+        $data['id'] = $buyer['id'];
+        $data['latitude'] = $buyer['latitude'];
+        $data['longitude'] = $buyer['longitude'];
+
+        unset($buyer['id']);
+        unset($buyer['latitude']);
+        unset($buyer['longitude']);
+
+        $data['buyer'] = $buyer;
+
         $this->load->view('auth/pages/setlocation',$data); // Load the view
     }
 
