@@ -73,11 +73,11 @@
         function setupMap(lat, lon){
 
             var deflat = (lat != null)?lat:-6.17742;
-            var deflon = (lon != null)?lat:106.828308;
+            var deflon = (lon != null)?lon:106.828308;
 
             var new_marker;
 
-            var map = L.map('map').setView([deflat,deflon], 10);
+            var map = L.map('map').setView([deflat,deflon], 13);
 
             var lineWeight = 4;
 
@@ -102,6 +102,19 @@
                 useDMS:false, //optional default false
                 useLatLngOrder: true //ordering of labels, default false-> lng-lat
             }).addTo(map);
+
+
+            if(lat != null && lon != null){
+                new_marker = new L.marker([lat,lon],{ draggable: true});
+                new_marker.on('dragend',function(e){
+                    var marker = e.target;  // you could also simply access the marker through the closure
+                    var result = marker.getLatLng();
+                    console.log(result);
+
+                    $('#latitude').val(result.lat);
+                    $('#longitude').val(result.lng);
+                }).addTo(map);
+            }
 
             map.on('click',function(e){
                 console.log(e.latlng.lat + ',' + e.latlng.lng);
@@ -150,7 +163,12 @@
 
 
         $(document).ready(function(){
-            setupMap();
+
+            <?php if($latitude != '' && $longitude != '') : ?>
+                setupMap(<?php print $latitude;?>,<?php print $longitude;?>);
+            <?php else : ?>
+                setupMap();
+            <?php endif ?>
         });
     </script>
 </head>

@@ -945,6 +945,14 @@ class Members extends Application
             }else{
                 $child_selector = '<input type="checkbox" name="child_select" class="child_select" id="'.$key['id'].'" value="'.$key['id'].'" />';
             }
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $class = ($lat == 'Set Loc')?' red':'';
+
             $aadata[] = array(
                 '<input type="radio" name="parent_check" class="parent_check" id="'.$key['id'].'" value="'.$key['id'].'" />',
                 $child_selector,
@@ -960,8 +968,8 @@ class Members extends Application
                 //$key['recipient_name'],
                 //$key['shipping_zip'],
                 $key['created'],
-                ($key['latitude'] == 0)? '<span id="'.$key['id'].'" style="cursor:pointer;padding:2px;display:block;" class="locpick">Set Loc</span>':$key['latitude'],
-                ($key['longitude'] == 0)?'':$key['longitude'],
+                '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.'</span>',
+                '<span id="'.$key['id'].'" '.$style.' class="locpick">'.$lon.'</span>',
                 $edit.' '.$delete
             ); // Adding row to table
 
