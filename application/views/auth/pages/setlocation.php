@@ -146,7 +146,10 @@
         function submitlocation(){
 
             $.post('<?php print site_url('ajax/setbuyerloc');?>',
-                { id : '<?php print $id;?>', latitude: $('#latitude').val(), longitude: $('#longitude').val() },
+                {   id : '<?php print $id;?>',
+                    latitude: $('#latitude').val(),
+                    longitude: $('#longitude').val(),
+                    type: '<?php print $type;?>' },
                 function(data) {
                     if(data.result == 'OK'){
 

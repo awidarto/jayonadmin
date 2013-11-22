@@ -136,7 +136,7 @@
                 var buyer_id = e.target.id;
                 $('#setloc_dialog').dialog('open');
 
-                var src = '<?php print base_url() ?>admin/prints/mapview/' + buyer_id;
+                var src = '<?php print base_url() ?>admin/prints/mapview/buyer/' + buyer_id;
 
                 $('#map_frame').attr('src',src);
                 $('#setloc_dialog').dialog('open');

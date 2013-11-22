@@ -301,6 +301,16 @@ class Delivery extends Application
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = $key['directions'].'<br />'.
+                '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -323,7 +333,7 @@ class Delivery extends Application
 				//$app['domain'],
 				$key['buyer_name'],
 				$key['shipping_address'],
-				$key['directions'],
+				$direction,
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$reference,

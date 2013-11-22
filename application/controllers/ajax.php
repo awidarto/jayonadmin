@@ -748,6 +748,7 @@ class Ajax extends Application
         $id = $this->input->post('id');
         $latitude = $this->input->post('latitude');
         $longitude = $this->input->post('longitude');
+        $type = $this->input->post('type');
 
         $data = array(
                     'latitude'=>$latitude,
@@ -756,8 +757,14 @@ class Ajax extends Application
                     'dir_lon'=>$longitude
                 );
 
+        if($type == 'buyer'){
+            $table = $this->config->item('jayon_buyers_table');
+        }else{
+            $table = $this->config->item('incoming_delivery_table');
+        }
+
         $up = $this->db->where('id',$id)
-            ->update($this->config->item('jayon_buyers_table'),$data);
+            ->update($table,$data);
 
         if($up){
             print json_encode(array('result'=>'OK' ));
