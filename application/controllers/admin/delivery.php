@@ -2550,6 +2550,8 @@ class Delivery extends Application
 
 		$num = $limit_offset;
 
+
+
 		foreach($result as $value => $key)
 		{
 			$num++;
@@ -2572,6 +2574,16 @@ class Delivery extends Application
 			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
 			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
 
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -2591,7 +2603,7 @@ class Delivery extends Application
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyer_name'],
 				$key['recipient_name'],
-				$key['shipping_address'],
+				$key['shipping_address'].'<br />'.$direction,
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog

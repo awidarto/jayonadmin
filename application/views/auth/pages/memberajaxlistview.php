@@ -264,11 +264,6 @@
                     var nframeWindow = nframe.contentWindow;
                     nframeWindow.submitlocation();
                 },
-                Print: function(){
-                    var pframe = document.getElementById('print_frame');
-                    var pframeWindow = pframe.contentWindow;
-                    pframeWindow.print();
-                },
                 Close: function() {
                     oTable.fnDraw();
                     $( this ).dialog( "close" );
