@@ -1494,7 +1494,7 @@ class Reports extends Application
 
         $this->db->distinct();
 
-        $this->db->select('assignment_date,buyerdeliveryzone,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+        $this->db->select('assignment_date,buyerdeliveryzone,buyerdeliverycity,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
         //$this->db->select('assignment_date,merchant_id,delivery_type,status');
 
         $this->db->from($this->config->item('delivered_delivery_table'));
@@ -1533,6 +1533,7 @@ class Reports extends Application
 
         $trans = array();
 
+        $cities = array();
 
         foreach($result as $r){
 
@@ -1555,6 +1556,9 @@ class Reports extends Application
             $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['delivery_cost'] = $r['delivery_cost'];
             $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['total_price'] = $r['total_price'];
             $trans[$r['assignment_date']][$r['buyerdeliveryzone']][$r['delivery_type']][$r['status']]['package_value'] = $r['package_value'];
+
+            $cities[$r['buyerdeliveryzone']] = $r['buyerdeliverycity'];
+
         }
 
         $status_array = array(
@@ -1606,6 +1610,7 @@ class Reports extends Application
             '',
             '',
             '',
+            '',
             array('data'=>'DO','colspan'=>'3'),
             array('data'=>'COD','colspan'=>'4'),
             array('data'=>'CCOD','colspan'=>'4'),
@@ -1619,6 +1624,7 @@ class Reports extends Application
             'No.',
             'Date',
             'Zone',
+            'City',
 
             'count',
             'dcost',
@@ -1670,6 +1676,11 @@ class Reports extends Application
 
         $lastdate = '';
 
+
+        //print_r($trans);
+
+        //print_r($cities);
+
         foreach($trans as $key=>$val){
 
             foreach ($val as $k => $v) {
@@ -1678,12 +1689,12 @@ class Reports extends Application
 
                 $revtotal = ( $r[$key][$k]['Delivery Only']['dcost'] + $r[$key][$k]['COD']['dcost'] + $r[$key][$k]['COD']['sur'] + $r[$key][$k]['CCOD']['dcost'] + $r[$key][$k]['CCOD']['sur'] + $r[$key][$k]['PS']['pfee']);
 
-
                 $this->table->add_row(
                     $counter,
                     ($lastdate == $key)?'':date('d-m-Y',strtotime($key)),
                     //$cs[$k],
                     $k,
+                    $cities[$k],
                     array('data'=>$r[$key][$k]['Delivery Only']['count'],'class'=>'count'),
                     array('data'=>idr($r[$key][$k]['Delivery Only']['dcost']),'class'=>'currency'),
                     array('data'=>idr($r[$key][$k]['Delivery Only']['pval']),'class'=>'currency'),
@@ -1738,6 +1749,7 @@ class Reports extends Application
             $this->table->add_row(
                 '',
                 '',
+                '',
 
                 array('data'=>'Totals','class'=>'total'),
 
@@ -1768,6 +1780,7 @@ class Reports extends Application
             $this->table->add_row(
                 '',
                 '',
+                '',
 
                 array('data'=>'Percentage (%)','class'=>'total'),
 
@@ -1796,6 +1809,7 @@ class Reports extends Application
 
 
             $this->table->add_row(
+                '',
                 '',
                 '',
 
