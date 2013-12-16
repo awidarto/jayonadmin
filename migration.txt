@@ -56,3 +56,5 @@ ALTER TABLE  `delivery_order_active` ADD  `is_pickup` INT( 1 ) NULL DEFAULT  '0'
 +++++++++++++++++++
 
 ALTER TABLE  `delivery_order_active` ADD  `assignment_seq` INT NULL DEFAULT  '0' AFTER  `assignment_city` ;
+
+ALTER TABLE  `pickup_tariff` ADD  `note` VARCHAR( 256 ) NOT NULL AFTER  `period_to` ;

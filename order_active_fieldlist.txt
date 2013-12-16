@@ -1,0 +1,88 @@
+created                     timestamp
+ordertime                   datetime
+buyerdeliverytime           datetime
+buyerdeliveryslot           int(11)
+buyerdeliveryzone           varchar(128)
+buyerdeliverycity           varchar(128)
+assigntime                  datetime
+deliverytime                datetime
+assignment_date             date
+assignment_timeslot         int(11)
+assignment_zone             varchar(128)
+assignment_city             varchar(255)
+assignment_seq              int(11)
+delivery_id                 varchar(40)
+delivery_cost               varchar(128)
+cod_cost                    varchar(40)
+width                       int(11)
+height                      int(11)
+length                      int(11)
+weight                      float
+actual_weight               varchar(10)
+delivery_type               varchar(40)
+currency                    varchar(8)
+total_price                 varchar(128)
+fixed_discount              int(1)
+total_discount              varchar(128)
+total_tax                   varchar(128)
+chargeable_amount           varchar(128)
+delivery_bearer             varchar(15)
+cod_bearer                  varchar(15)
+cod_method                  varchar(15)
+ccod_method                 varchar(15)
+application_id              bigint(20)
+application_key             varchar(128)
+buyer_id                    bigint(20)
+merchant_id                 bigint(20)
+merchant_trans_id           varchar(128)
+courier_id                  bigint(20)
+device_id                   bigint(11)
+buyer_name                  varchar(255)
+email                       varchar(255)
+recipient_name              varchar(255)
+shipping_address            text
+shipping_zip                varchar(40)
+directions                  varchar(255)
+dir_lat                     decimal(18,12)
+dir_lon                     decimal(18,12)
+phone                       varchar(40)
+mobile1                     varchar(40)
+mobile2                     varchar(40)
+status                      varchar(40)
+laststatus                  varchar(128)
+change_actor                varchar(128)
+actor_history               text
+delivery_note               text
+reciever_name               varchar(128)
+reciever_picture            varchar(128)
+undersign                   varchar(255)
+latitude                    decimal(18,12)
+longitude                   decimal(18,12)
+reschedule_ref              varchar(40)
+revoke_ref                  varchar(40)
+reattemp                    int(11)
+show_merchant               int(1)
+show_shop                   int(1)
+is_pickup
+
+
+public String unit_description;
+public String unit_price;
+public String unit_quantity;
+public String unit_total;
+public Float unit_pct_discount;
+public String unit_discount;
+
+merchant_id                     bigint(20)          No  None        Change Change   Drop Drop
+domain                          varchar(255)    latin1_swedish_ci       No  None        Change Change   Drop Drop
+application_name                varchar(255)    latin1_swedish_ci       No  None        Change Change   Drop Drop
+key
+
+
+public String seq             int(11)         No  None        Change Change   Drop Drop
+public String from            float           No  None        Change Change   Drop Drop
+public String total           float           No  None        Change Change   Drop Drop
+public String calculated      float           No  None        Change Change   Drop Drop
+public String tariff          double          No  None        Change Change   Drop Drop
+public String total           int(11)         No  None        Change Change   Drop Drop
+public String app_id

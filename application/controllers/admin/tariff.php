@@ -30,7 +30,7 @@ class Tariff extends Application
 		$this->breadcrumb->add_crumb('COD Surcharge','admin/tariff/cod');
 
 		//'seq','from_price','to_price','surcharge','app_id','period_from','period_to','is_on'
-		
+
 		$this->table->set_heading(
 			'Sequence',
 			'From Price',
@@ -107,6 +107,7 @@ class Tariff extends Application
 			'Total',
 			'Period From',
 			'Period End',
+            'Note',
 			'Actions'
 			); // Setting headings for the table
 
@@ -144,7 +145,7 @@ class Tariff extends Application
 		$this->form_validation->set_rules('surcharge', 'Surcharge', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-				
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -158,11 +159,11 @@ class Tariff extends Application
 			$dataset['from_price'] = set_value('from_price');
 			$dataset['app_id'] = $app_id;
 			$dataset['to_price'] = set_value('to_price');
-			$dataset['surcharge'] = set_value('surcharge'); 
+			$dataset['surcharge'] = set_value('surcharge');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+
+
 			if($this->db->insert($this->config->item('jayon_cod_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -173,13 +174,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/addcod/'.$app_id;				
+				$error_url = 'admin/tariff/addcod/'.$app_id;
 				$this->oi->add_error('Failed to add COD fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -206,10 +207,10 @@ class Tariff extends Application
 		$this->form_validation->set_rules('surcharge', 'Surcharge', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-		
+
 		$user = $this->get_cod_entry($id);
 		$data['user'] = $user;
-		
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -223,11 +224,11 @@ class Tariff extends Application
 			$dataset['from_price'] = set_value('from_price');
 
 			$dataset['to_price'] = set_value('to_price');
-			$dataset['surcharge'] = set_value('surcharge'); 
+			$dataset['surcharge'] = set_value('surcharge');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_cod_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -238,13 +239,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/editcod/'.$id.'/'.$app_id;				
+				$error_url = 'admin/tariff/editcod/'.$id.'/'.$app_id;
 				$this->oi->add_error('Failed to update COD fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 	public function adddelivery($app_id)
@@ -272,7 +273,7 @@ class Tariff extends Application
 		$this->form_validation->set_rules('total', 'Total', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-				
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -290,9 +291,9 @@ class Tariff extends Application
 			$dataset['tariff_kg'] = set_value('tariff_kg');
 			$dataset['total'] = set_value('total');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+
+
 			if($this->db->insert($this->config->item('jayon_delivery_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -303,13 +304,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/adddelivery/'.$id.'/'.$app_id;				
+				$error_url = 'admin/tariff/adddelivery/'.$id.'/'.$app_id;
 				$this->oi->add_error('Failed to add Delivery fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -338,10 +339,10 @@ class Tariff extends Application
 		$this->form_validation->set_rules('total', 'Total', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-		
+
 		$user = $this->get_delivery_entry($id);
 		$data['user'] = $user;
-		
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -358,9 +359,9 @@ class Tariff extends Application
 			$dataset['tariff_kg'] = set_value('tariff_kg');
 			$dataset['total'] = set_value('total');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_delivery_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -371,13 +372,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/editdelivery/'.$id.'/'.$app_id;				
+				$error_url = 'admin/tariff/editdelivery/'.$id.'/'.$app_id;
 				$this->oi->add_error('Failed to update Delivery fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -406,7 +407,9 @@ class Tariff extends Application
 		$this->form_validation->set_rules('total', 'Total', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-				
+        $this->form_validation->set_rules('note', 'Note', 'trim|xss_clean');
+
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -424,9 +427,10 @@ class Tariff extends Application
 			$dataset['tariff_kg'] = set_value('tariff_kg');
 			$dataset['total'] = set_value('total');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+            $dataset['note'] = set_value('note');
+
+
 			if($this->db->insert($this->config->item('jayon_pickup_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -437,13 +441,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/addpickup/'.$id.'/'.$app_id;				
+				$error_url = 'admin/tariff/addpickup/'.$id.'/'.$app_id;
 				$this->oi->add_error('Failed to add Pickup fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -472,10 +476,11 @@ class Tariff extends Application
 		$this->form_validation->set_rules('total', 'Total', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_from'	, 'Valid From', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('period_to', 'Valid Until', 'required|trim|xss_clean');
-		
+        $this->form_validation->set_rules('note', 'Note', 'trim|xss_clean');
+
 		$user = $this->get_pickup_entry($id);
 		$data['user'] = $user;
-		
+
 		$data['app_id'] = $app_id;
 
 		if($this->form_validation->run() == FALSE)
@@ -492,9 +497,10 @@ class Tariff extends Application
 			$dataset['tariff_kg'] = set_value('tariff_kg');
 			$dataset['total'] = set_value('total');
 			$dataset['period_from'] = set_value('period_from');
-			$dataset['period_to'] = set_value('period_to'); 
-			
-			
+			$dataset['period_to'] = set_value('period_to');
+            $dataset['note'] = set_value('note');
+
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_pickup_fee_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -505,13 +511,13 @@ class Tariff extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$error_url = 'admin/tariff/editpickup/'.$id.'/'.$app_id;				
+				$error_url = 'admin/tariff/editpickup/'.$id.'/'.$app_id;
 				$this->oi->add_error('Failed to update Delivery fee');
 				redirect($error_url);
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -546,7 +552,7 @@ class Tariff extends Application
 
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
-		
+
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
 
@@ -560,20 +566,20 @@ class Tariff extends Application
 		$count_all = $this->db->count_all($this->config->item('jayon_cod_fee_table'));
 
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_cod_fee_table'));
-		
+
 		$this->db->where('app_id', $app_id);
 
 		$this->db->order_by('seq','asc');
 
 		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_cod_fee_table'));
-		
+
 		//print $this->db->last_query();
-		
+
 		$result = $data->result_array();
-			
+
 		$aadata = array();
-		
-		
+
+
 		foreach($result as $value => $key)
 		{
 			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
@@ -595,7 +601,7 @@ class Tariff extends Application
 			'iTotalDisplayRecords'=> $count_display_all,
 			'aaData'=>$aadata
 		);
-		
+
 		print json_encode($result);
 	}
 
@@ -603,7 +609,7 @@ class Tariff extends Application
 
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
-		
+
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
 
@@ -617,20 +623,20 @@ class Tariff extends Application
 		$count_all = $this->db->count_all($this->config->item('jayon_delivery_fee_table'));
 
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_delivery_fee_table'));
-		
+
 		$this->db->where('app_id', $app_id);
 
 		$this->db->order_by('seq','asc');
 
 		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_delivery_fee_table'));
-		
+
 		//print $this->db->last_query();
-		
+
 		$result = $data->result_array();
-			
+
 		$aadata = array();
-		
-		
+
+
 		foreach($result as $value => $key)
 		{
 			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
@@ -646,14 +652,14 @@ class Tariff extends Application
 				$key['period_to']
 				,$edit.' '.$delete); // Adding row to table
 		}
-		
+
 		$result = array(
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
 			'aaData'=>$aadata
 		);
-		
+
 		print json_encode($result);
 	}
 
@@ -661,12 +667,12 @@ class Tariff extends Application
 
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
-		
+
 		$sort_col = $this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
 
 		$columns = array(
-			'seq','kg_from','kg_to','calculated_kg','tariff_kg','total','period_from','period_to','is_on'
+			'seq','kg_from','kg_to','calculated_kg','tariff_kg','total','period_from','period_to','is_on','note'
 			);
 
 		$this->db->where('app_id', $app_id);
@@ -675,20 +681,20 @@ class Tariff extends Application
 		$count_all = $this->db->count_all($this->config->item('jayon_pickup_fee_table'));
 
 		$count_display_all = $this->db->count_all_results($this->config->item('jayon_pickup_fee_table'));
-		
+
 		$this->db->where('app_id', $app_id);
 
 		$this->db->order_by('seq','asc');
 
 		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('jayon_pickup_fee_table'));
-		
+
 		//print $this->db->last_query();
-		
+
 		$result = $data->result_array();
-			
+
 		$aadata = array();
-		
-		
+
+
 		foreach($result as $value => $key)
 		{
 			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
@@ -701,17 +707,18 @@ class Tariff extends Application
 				$key['tariff_kg'],
 				$key['total'],
 				$key['period_from'],
-				$key['period_to']
+				$key['period_to'],
+                $key['note']
 				,$edit.' '.$delete); // Adding row to table
 		}
-		
+
 		$result = array(
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
 			'aaData'=>$aadata
 		);
-		
+
 		print json_encode($result);
 	}
 
@@ -719,7 +726,7 @@ class Tariff extends Application
 	public function ajaxdeletecod()
 	{
 		$id = $this->input->post('id');
-		
+
 		if($this->db->where('id', $id)->delete($this->config->item('jayon_cod_fee_table'))){
 			print json_encode(array('result'=>'ok'));
 		}else{
@@ -730,27 +737,27 @@ class Tariff extends Application
 	public function ajaxdeletedelivery()
 	{
 		$id = $this->input->post('id');
-		
+
 		if($this->db->where('id', $id)->delete($this->config->item('jayon_delivery_fee_table'))){
 			print json_encode(array('result'=>'ok'));
 		}else{
 			print json_encode(array('result'=>'failed'));
 		}
-	}		
+	}
 
 	public function ajaxdeletepickup()
 	{
 		$id = $this->input->post('id');
-		
+
 		if($this->db->where('id', $id)->delete($this->config->item('jayon_pickup_fee_table'))){
 			print json_encode(array('result'=>'ok'));
 		}else{
 			print json_encode(array('result'=>'failed'));
 		}
-	}		
+	}
 
 	function get_merchant_app($app_id){
-		
+
 		$this->db->select('applications.application_name as app_name, m.fullname as merchant_name, m.id as merchant_id');
 		$this->db->join('members as m','applications.merchant_id=m.id','left');
 		$this->db->where('applications.id',$app_id);

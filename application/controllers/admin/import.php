@@ -26,7 +26,7 @@ class Import extends Application
 
     public function upload()
     {
-        $config['upload_path'] = './upload/';
+        $config['upload_path'] = FCPATH.'upload/';
         $config['allowed_types'] = 'xls|xlsx';
         $config['max_size'] = '1000';
         $config['max_width']  = '1024';
@@ -48,65 +48,96 @@ class Import extends Application
 
             $xdata = $this->xls->load($data['full_path'],$data['file_ext']);
 
+            $merchant_id = $this->input->post('merchant_id');
+            $merchant_name = $this->input->post('merchant_name');
+
             //var_dump($xdata);
 
-            $headidx = 1;
+            //exit();
 
-            foreach($xdata['cells'] as $dt){
-                if(in_array('id', $dt)){
-                    $head = $dt;
-                    break;
-                }
-                $headidx++;
-            }
+            $sheetdata = array();
 
-            $orderdata = array();
+            $sheetdata['merchant_id'] = $merchant_id;
+            $sheetdata['merchant_name'] = $merchant_name;
 
-            $datetimefields = array(
-                'created',
-                'ordertime',
-                'buyerdeliverytime',
-                'assigntime',
-                'deliverytime'
-            );
+            foreach($xdata as $sheet=>$row){
 
-            $datefields = array(
-                'assignment_date'
-            );
+                $headidx = 1;
 
-            for($i = $headidx; $i < $xdata['numRows'];$i++){
-                $temp = $xdata['cells'][$i];
-                $line = array();
-                for($j = 0;$j < $xdata['numCols'];$j++){
+                $xdata = $row;
 
-                    if(in_array($head[$j], $datetimefields )){
-                        $line[ $head[$j] ] = date('Y-m-d H:i:s', $this->xls->toPHPdate($temp[$j]) ) ;
-                    }elseif(in_array($head[$j], $datefields )){
-                        $line[ $head[$j] ] = date('Y-m-d', $this->xls->toPHPdate($temp[$j]) ) ;
-                    }else{
-                        $line[ $head[$j] ] = $temp[$j];
+                /*
+                foreach($xdata['cells'] as $dt){
+                    if(in_array('id', $dt)){
+                        $head = $dt;
+                        break;
                     }
+                    $headidx++;
+                }
+                */
+
+                $head = $row['cells'][0];
+
+                //print_r($head);
+
+
+                $datetimefields = array(
+                    'created',
+                    'ordertime',
+                    'buyerdeliverytime',
+                    'assigntime',
+                    'deliverytime'
+                );
+
+                $datefields = array(
+                    'assignment_date'
+                );
+
+                //print_r($row);
+
+                $orderdata = array();
+
+                for($i = 0; $i < $row['numRows'];$i++){
+                    $temp = $row['cells'][$i];
+                    $line = array();
+                    for($j = 0;$j < count($head);$j++){
+
+                        /*
+                        if(in_array($head[$j], $datetimefields )){
+                            $line[ $head[$j] ] = date('Y-m-d h:i:s', $this->xls->toPHPdate($temp[$j]) ) ;
+                        }elseif(in_array($head[$j], $datefields )){
+                            $line[ $head[$j] ] = date('Y-m-d', $this->xls->toPHPdate($temp[$j]) ) ;
+                        }else{
+                        */
+                            $line[ $head[$j] ] = $temp[$j];
+                        //}
+                    }
+
+                    $orderdata[] = $line;
+
                 }
 
-                $orderdata[] = $line;
+                $orderdata = array('head'=>$head,'data'=>$orderdata);
+
+                $sheetdata[$sheet] = $orderdata;
 
             }
 
-            $orderdata = array('head'=>$head,'data'=>$orderdata);
+            //print_r($sheetdata);
 
-            $jsonfile = date('d-m-Y-H-i-s',time());
+            $jsonfile = date('d-m-Y-h-i-s',time());
 
-            file_put_contents('./json/'.$jsonfile.'.json', json_encode($orderdata));
+            file_put_contents(FCPATH.'json/'.$jsonfile.'.json', json_encode($sheetdata));
 
-            redirect('admin/import/preview/'.$jsonfile, 'location' );
+            redirect('admin/import/preview/'.$merchant_id.'/'.$jsonfile, 'location' );
 
         }
 
     }
 
-    public function preview($jsonfile)
+    public function preview($merchant_id,$jsonfile)
     {
-        $json = file_get_contents('./json/'.$jsonfile.'.json');
+        $json = file_get_contents(FCPATH.'json/'.$jsonfile.'.json');
 
         //print_r(json_decode($json));
 
@@ -114,24 +145,40 @@ class Import extends Application
 
         //print_r($json);
 
-        $this->load->library('table');
+        $merchant_id = $json['merchant_id'];
+        $merchant_name = $json['merchant_name'];
 
+        unset($json['merchant_id']);
+        unset($json['merchant_name']);
 
-        $heads = array_merge(array('<input type="checkbox" id="select_all">'),$json['head']);
+        $tables = array();
 
-        $this->table->set_heading($heads);
+        foreach($json as $sheet=>$rows){
 
-        $cells = array();
+            $this->load->library('table');
 
-        $idx = 0;
+            $heads = array_merge(array('<input type="checkbox" id="select_all">'),$rows['head']);
 
-        foreach($json['data'] as $cell){
-            $cells[] = array_merge(array('<input type="checkbox" class="selector" id="'.$idx.'" value="'.$idx.'">'),$cell);
-            $idx++;
+            $this->table->set_heading(array('data'=>'SHEET : '.$sheet,'colspan'=>100));
+            $this->table->set_subheading($heads);
+
+            $cells = array();
+
+            $idx = 0;
+
+            foreach($rows['data'] as $cell){
+                $cells[] = array_merge(array('<input type="checkbox" class="selector" id="'.$idx.'" value="'.$idx.'">'),$cell);
+                $idx++;
+            }
+
+            $tables[$sheet] = $this->table->generate($cells);
+
         }
 
-        $page['cells'] = $cells;
+        $page['tables'] = $tables;
 
+        $page['merchant_id'] = $merchant_id;
+        $page['merchant_name'] = $merchant_name;
 
         $this->breadcrumb->add_crumb('Import','admin/import');
 

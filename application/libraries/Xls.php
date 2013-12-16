@@ -50,46 +50,51 @@ class Xls {
         $last_col = '';
         $last_row = '';
 
+        $sheets = array();
 
         foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
             //echo '- ' . $worksheet->getTitle() . "\r\n";
 
-            $sheetname = $this->sheetname;
+            $sheetname = $worksheet->getTitle();
 
-            if(preg_match('/^'.$sheetname.'/', $worksheet->getTitle()) OR preg_match('/Data/', $worksheet->getTitle())){
+            //if(preg_match('/^'.$sheetname.'/', $worksheet->getTitle()) OR preg_match('/Data/', $worksheet->getTitle())){
 
-                foreach ($worksheet->getRowIterator() as $row) {
-                    //echo '    - Row number: ' . $row->getRowIndex() . "\r\n";
+            foreach ($worksheet->getRowIterator() as $row) {
+                //echo '    - Row number: ' . $row->getRowIndex() . "\r\n";
 
-                    $last_row = $row->getRowIndex();
+                $last_row = $row->getRowIndex();
 
 
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
-                    $numcols = 0;
-                    foreach ($cellIterator as $cell) {
-                        $cell_array[$numrows][$numcols] = $cell->getCalculatedValue() ;
-                        $numcols++;
-                        $last_col = $cell->getCoordinate();
-                    }
-
-                    $numrows++;
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
+                $numcols = 0;
+                foreach ($cellIterator as $cell) {
+                    $cell_array[$numrows][$numcols] = $cell->getCalculatedValue() ;
+                    $numcols++;
+                    $last_col = $cell->getCoordinate();
                 }
 
+                $numrows++;
             }
+
+            //}
+
+            $xls_array['numRows'] = $numrows - 1;
+            $xls_array['numCols'] = $numcols - 1;
+
+            $xls_array['lastRow'] = $last_row;
+            $xls_array['lastCol'] = $last_col;
+
+            $xls_array['cells'] = $cell_array;
+
+            $sheets[$sheetname] = $xls_array;
 
         }
 
-        $xls_array['numRows'] = $numrows - 1;
-        $xls_array['numCols'] = $numcols - 1;
-
-        $xls_array['lastRow'] = $last_row;
-        $xls_array['lastCol'] = $last_col;
 
 
-        $xls_array['cells'] = $cell_array;
 
-        return $xls_array;
+        return $sheets;
     }
 
     public function xload($filename){

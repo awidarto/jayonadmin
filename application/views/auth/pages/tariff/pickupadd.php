@@ -37,6 +37,9 @@
 			Period To:<br />
 			<input type="text" name="period_to" size="50" class="form date" value="<?php echo set_value('period_to'); ?>" /><?php echo form_error('period_to'); ?><br /><br />
 
+            Note:<br />
+            <input type="text" name="note" size="50" class="form" value="<?php echo set_value('note'); ?>" /><?php echo form_error('note'); ?><br /><br />
+
 			<input type="submit" value="Add" name="adddelivery" />
 			<?php
 				print anchor('admin/tariff/delivery/'.$app_id,'Cancel');

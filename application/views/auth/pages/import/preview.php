@@ -7,9 +7,17 @@
         print anchor('import','Cancel');
     ?>
 
-    <div id="table">
-        <?php print $this->table->generate($cells);?>
-    </div>
+    <h3>Merchant ID : <?php print $merchant_id ?></h3>
+    <h3>Merchant Name : <?php print $merchant_name ?></h3>
+
+    <input type="hidden" value="<?= $merchant_name; ?>" name="merchant_name" >
+    <input type="hidden" value="<?= $merchant_id; ?>" name="merchant_id" >
+
+    <?php foreach ($tables as $name => $table): ?>
+        <div class="table">
+            <?php print $table ?>
+        </div>
+    <?php endforeach ?>
 
 </form>
 
