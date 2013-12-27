@@ -179,7 +179,18 @@
 
 		td.lsums{
 			text-align: right;
+            font-weight: bold;
 		}
+
+        td.lsums.bigtype{
+            text-align: right;
+            font-weight: bold;
+        }
+
+        td.bigtype{
+            font-size: 14px;
+            font-weight: bold;
+        }
 
 	</style>
 </head>
@@ -280,7 +291,19 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr>
 								<td class="row_label">Jenis Delivery</td>
-								<td style="font-size:24px;font-weight:bold;">
+                                <?php
+
+                                    if($main_info['delivery_type'] == 'CCOD' || $main_info['delivery_type'] == 'COD'){
+
+                                        $fsize = 18;
+                                    }else{
+                                        $fsize = 12;
+
+                                    }
+
+                                ?>
+
+								<td style="font-size:<?php print $fsize; ?>px;font-weight:bold;">
 									<?php print $main_info['delivery_type'];?>
 									<?php if($main_info['delivery_type'] == 'CCOD'):?>
 										<?php if($main_info['ccod_method'] == '' || $main_info['ccod_method'] == 'full'): ?>
@@ -301,7 +324,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr>
 								<td class="row_label">Nomor Delivery</td>
-								<td style="font-size:18px;font-weight:bold;"><?php
+								<td style="font-weight:bold;"><?php
                                         $orderno = explode('-',$main_info['delivery_id']);
                                         $orderno = array_pop($orderno);
                                         print $orderno;

@@ -4,7 +4,7 @@
     <input type="submit" value="Commit" name="commit" />
 
     <?php
-        print anchor('import','Cancel');
+        print anchor('admin/import','Cancel');
     ?>
 
     <h3>Merchant ID : <?php print $merchant_id ?></h3>

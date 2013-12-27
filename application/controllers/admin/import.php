@@ -63,6 +63,7 @@ class Import extends Application
             foreach($xdata as $sheet=>$row){
 
                 $headidx = 1;
+                $dataidx = 2;
 
                 $xdata = $row;
 
@@ -76,7 +77,8 @@ class Import extends Application
                 }
                 */
 
-                $head = $row['cells'][0];
+                $label = $row['cells'][$headidx - 1];
+                $head = $row['cells'][$headidx];
 
                 //print_r($head);
 
@@ -97,7 +99,7 @@ class Import extends Application
 
                 $orderdata = array();
 
-                for($i = 0; $i < $row['numRows'];$i++){
+                for($i = $dataidx; $i < $row['numRows'];$i++){
                     $temp = $row['cells'][$i];
                     $line = array();
                     for($j = 0;$j < count($head);$j++){
@@ -117,7 +119,7 @@ class Import extends Application
 
                 }
 
-                $orderdata = array('head'=>$head,'data'=>$orderdata);
+                $orderdata = array('label'=>$label,'head'=>$head,'data'=>$orderdata);
 
                 $sheetdata[$sheet] = $orderdata;
 
@@ -179,6 +181,8 @@ class Import extends Application
 
         $page['merchant_id'] = $merchant_id;
         $page['merchant_name'] = $merchant_name;
+
+        //$page['app_select'] = $app_select;
 
         $this->breadcrumb->add_crumb('Import','admin/import');
 

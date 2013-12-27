@@ -47,6 +47,16 @@ function idr($in){
 	return number_format((double) $in,2,',','.');
 }
 
+function get_apps($merchant_id){
+    $CI =& get_instance();
+
+    $CI->db->where('merchant_id',$merchant_id)
+        ->get($CI->config->item('applications_table'))->result_array();
+
+    return $apps;
+}
+
+
 function get_delivery_id($sequence,$merchant_id){
 	$CI =& get_instance();
 	$year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);

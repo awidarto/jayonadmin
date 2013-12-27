@@ -1,0 +1,33 @@
+api_key
+transaction_id
+buyer_id
+merchant_id
+buyer_name
+recipient_name
+shipping_address
+buyerdeliveryzone
+buyerdeliverycity
+buyerdeliverytime
+buyerdeliveryslot
+direction            = $('#direction').val();
+auto_confirm         = true; //true
+email                = $('#buyer_email').val();
+zip                  = $('#buyerdeliveryzip').val();
+mobile1              = $('#mobile1').val();
+mobile2              = $('#mobile2').val();
+phone                = $('#phone').val();
+total_price          = $('#total_price').val();
+total_discount       = $('#total_discount').val();
+total_tax            = $('#total_tax').val();
+chargeable_amount    = $('#total_charges').val();
+cod_cost             = $('#cod_cost').val();     /* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
+delivery_cost        = $('#delivery_cost').val();
+delivery_type        = $('#delivery_type').val();
+currency             = $('#currency').val();   /* currency in 3 digit codes*/
+status               = 'confirmed'; /* status can be : pending or confirm, depending on merchant's workflow */
+width                = $('#package_width').val();
+height               = $('#package_height').val();
+length               = $('#package_length').val();
+weight               = $('#package_weight').val();
+show_shop            = ($('#show_shop').is(':checked'))?1:0;
+show_merchant        = ($('#show_merchant').is(':checked'))?1:0;

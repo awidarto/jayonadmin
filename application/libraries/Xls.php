@@ -54,6 +54,14 @@ class Xls {
 
         foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
             //echo '- ' . $worksheet->getTitle() . "\r\n";
+            $cell_array = array();
+
+            $numrows = 0;
+            $numcols = 0;
+
+            $last_col = '';
+            $last_row = '';
+
 
             $sheetname = $worksheet->getTitle();
 
@@ -66,7 +74,7 @@ class Xls {
 
 
                 $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
+                $cellIterator->setIterateOnlyExistingCells(true); // Loop all cells, even if it is not set
                 $numcols = 0;
                 foreach ($cellIterator as $cell) {
                     $cell_array[$numrows][$numcols] = $cell->getCalculatedValue() ;

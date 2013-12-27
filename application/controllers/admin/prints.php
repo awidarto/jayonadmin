@@ -124,12 +124,23 @@ class Prints extends Application
 
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
+            if($data['main_info']['delivery_type'] == 'COD' || $data['main_info']['delivery_type'] == 'CCOD'){
+                $cclass = ' bigtype';
+            }else{
+                $cclass = '';
+            }
+
+
 			$this->table->add_row(
 					array('data'=>'Total Price',
 						'colspan'=>3,
-						'class'=>'lsums'
+						'class'=>'lsums'.$cclass
 						),
-				number_format($gt,2,',','.')
+                    array('data'=>number_format($gt,2,',','.'),
+                        'colspan'=>3,
+                        'class'=>$cclass
+                        )
+
 			);
 
 				$this->table->add_row(
@@ -137,7 +148,10 @@ class Prints extends Application
 						'colspan'=>3,
 						'class'=>'lsums'
 						),
-					number_format($dsc,2,',','.')
+                    array(
+                        'data'=>number_format($dsc,2,',','.'),
+                        'class'=>$cclass
+                        )
 				);
 
 				$this->table->add_row(
@@ -145,7 +159,7 @@ class Prints extends Application
 						'colspan'=>3,
 						'class'=>'lsums'
 						),
-					number_format($tax,2,',','.')
+                    number_format($tax,2,',','.')
 				);
 
 				/*
@@ -161,10 +175,10 @@ class Prints extends Application
 						'class'=>'lsums'
 						),
 					array('data'=>'Delivery Charge',
-						'class'=>'lsums'
+                        'class'=>'lsums'.$cclass
 						),
 					array('data'=>number_format($dc,2,',','.'),
-						'class'=>'editable',
+						'class'=>'editable'.$cclass,
 						'id'=>'delivery_cost'
 					)
 				);
@@ -182,10 +196,10 @@ class Prints extends Application
 						'class'=>'lsums'
 						),
 					array('data'=>'COD Surcharge',
-						'class'=>'lsums'
+                        'class'=>'lsums'.$cclass
 						),
 					array('data'=>number_format($cod,2,',','.'),
-						'class'=>'editable',
+						'class'=>'editable'.$cclass,
 						'id'=>'cod_cost'
 					)
 				);
@@ -193,9 +207,12 @@ class Prints extends Application
 				$this->table->add_row(
 					array('data'=>'Total Charges',
 						'colspan'=>3,
-						'class'=>'lsums'
+                        'class'=>'lsums'.$cclass
 						),
-					number_format($chg,2,',','.')
+                    array('data'=>number_format($chg,2,',','.'),
+                        'class'=>'editable'.$cclass,
+                        'id'=>'delivery_cost'
+                        )
 				);
 
 			$data['grand_total'] = $gt;
@@ -398,7 +415,8 @@ class Prints extends Application
 					'&nbsp;',
 					'Total Charges',
 					array('data'=>number_format($chg,2,',','.'),
-						'id'=>'total_charges'
+						'id'=>'total_charges',
+                        'class'=>'bigtype'
 					)
 
 				);
