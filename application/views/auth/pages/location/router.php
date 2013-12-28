@@ -257,9 +257,9 @@
         });
 
 
-        $('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+        $('#search_deliverydate').datepicker({ dateFormat: 'yy-mm-dd' });
 
-        $('#search_deliverytime').change(function(){
+        $('#search_deliverydate').change(function(){
             oTable.fnFilter( this.value, $('tfoot input').index(this) );
             refreshMap();
         });
@@ -357,9 +357,16 @@
                     <div id="map" style="width:800px;height:700px;display:block;border:thin solid grey;"></div>
                 </td>
                 <td style="width:100%;height:100%;vertical-align:top;">
-                    <h3>Position Logs</h3>
+                    <h3>Delivery Orders</h3>
                     <?php echo $this->table->generate(); ?>
                 </td>
             </tr>
         </table>
+    </div>
+
+    <div id="setloc_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
+        <input type="hidden" value="" id="print_id" />
+        <iframe id="map_frame" name="map_frame" width="100%" height="100%"
+        marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+        title="Dialog Title">Your browser does not suppr</iframe>
     </div>

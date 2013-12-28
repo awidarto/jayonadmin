@@ -150,7 +150,7 @@ class Prints extends Application
 						),
                     array(
                         'data'=>number_format($dsc,2,',','.'),
-                        'class'=>$cclass
+                        'class'=>'lsums'
                         )
 				);
 

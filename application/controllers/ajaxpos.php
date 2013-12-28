@@ -288,21 +288,18 @@ class Ajaxpos extends CI_Controller
         $sort_dir = $this->input->post('sSortDir_0');
 
         $columns = array(
-            'timestamp',
+            'assignment_date',
+            'assignment_seq',
             'device_id',
-            'identifier',
-            'courier_id',
-            'latitude',
-            'longitude',
-            'status',
-            'notes'
+            'shipping_address',
+            'latitude'
         );
 
         // get total count result
-        $count_all = $this->db->count_all($this->config->item('location_log_table'));
+        $count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
 
         $count_display_all = $this->db
-            ->count_all_results($this->config->item('location_log_table'));
+            ->count_all_results($this->config->item('assigned_delivery_table'));
 
         //search column
         if($this->input->post('sSearch') != ''){
@@ -313,32 +310,28 @@ class Ajaxpos extends CI_Controller
         }
 
         if($this->input->post('sSearch_0') != ''){
-            $this->db->like($this->config->item('location_log_table').'.timestamp',$this->input->post('sSearch_0'));
+            $this->db->like($this->config->item('assigned_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
         }
-
 
         if($this->input->post('sSearch_1') != ''){
             $this->db->like('d.identifier',$this->input->post('sSearch_1'));
         }
 
+
         if($this->input->post('sSearch_2') != ''){
-            $this->db->like('c.courier',$this->input->post('sSearch_2'));
+            $this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_2'));
         }
 
-        if($this->input->post('sSearch_3') != ''){
-            $this->db->like($this->config->item('location_log_table').'.status',$this->input->post('sSearch_3'));
-        }
-
-        $this->db->select('*,d.identifier as identifier,c.fullname as courier');
-        $this->db->join('devices as d',$this->config->item('location_log_table').'.device_id=d.id','left');
-        $this->db->join('couriers as c',$this->config->item('location_log_table').'.courier_id=c.id','left');
+        $this->db->select($this->config->item('assigned_delivery_table').'.*,d.identifier as identifier');
+        $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 
 
         $data = $this->db
             ->limit($limit_count, $limit_offset)
-            ->order_by($this->config->item('location_log_table').'.timestamp','desc')
+            ->order_by('assignment_date','desc')
+            ->order_by('assignment_seq','asc')
             ->order_by($columns[$sort_col],$sort_dir)
-            ->get($this->config->item('location_log_table'));
+            ->get($this->config->item('assigned_delivery_table'));
 
         //print $this->db->last_query();
 
@@ -352,12 +345,11 @@ class Ajaxpos extends CI_Controller
         {
 
             $aadata[] = array(
-                $key['timestamp'],
+                $key['assignment_date'],
+                $key['assignment_seq'],
                 $key['identifier'],
-                $key['courier'],
-                $key['latitude'],
-                $key['longitude'],
-                $key['status']
+                $key['shipping_address'],
+                $key['latitude'].'<br />'.$key['longitude']
             );
         }
 

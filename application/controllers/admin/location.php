@@ -302,12 +302,11 @@ class Location extends Application
         $this->breadcrumb->add_crumb('Router','admin/location/router');
 
         $this->table->set_heading(
-            'Timestamp',
+            'Delivery Date',
+            'Seq',
             'Device Identifier',
-            'Courier',
-            'Latitude',
-            'Longitude',
-            'Status'
+            'Address',
+            'Lat Lon'
             ); // Setting headings for the table
 
         $devs = array();
@@ -319,12 +318,12 @@ class Location extends Application
         $dev_search = form_dropdown('search_device',$devs,'Search device','id="search_device"');
 
         $this->table->set_footing(
-            '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search timestamp" class="search_init" />',
+            '<input type="text" name="search_deliverydate" id="search_deliverydate" value="Search delivery date" class="search_init" />',
+            '',
             '<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
-            '<input type="text" name="search_courier" id="search_courier" value="Search courier" class="search_init" />',
+            '<input type="text" name="search_address" id="search_address" value="Search address" class="search_init" />',
             '',
-            '',
-            '<input type="text" name="search_status" id="search_status" value="Search status" class="search_init" />'
+            ''
             );
 
 
