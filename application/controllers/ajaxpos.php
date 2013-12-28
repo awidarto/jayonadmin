@@ -102,11 +102,13 @@ class Ajaxpos extends CI_Controller
         $timestamp = $this->input->post('timestamp');
         $address = $this->input->post('address');
         $limit_count = $this->input->post('limit');
+        $delivery_status = $this->input->post('delivery_status');
         $limit_offset = 0;
 
         $device_name = ($device_name == 'Search device')?'':$device_name;
         $timestamp = ($timestamp == 'Search delivery date')?'':$timestamp;
         $address = ($address == 'Search address')?'':$address;
+        $delivery_status = ($delivery_status == 'Search status')?'':$delivery_status;
 
         $this->db->distinct();
         $this->db->select('identifier');
@@ -132,6 +134,7 @@ class Ajaxpos extends CI_Controller
         $loc = $this->db
             ->where('longitude != ',0)->where('latitude != ',0)
             ->like('assignment_date',$timestamp,'after')
+            ->like('status',$delivery_status)
             ->limit($limit_count, $limit_offset)
             ->order_by('assignment_date','desc')
             ->order_by('assignment_seq','asc')
@@ -396,7 +399,8 @@ class Ajaxpos extends CI_Controller
             'assignment_seq',
             'device_id',
             'shipping_address',
-            'latitude'
+            'latitude',
+            'status'
         );
 
         // get total count result
@@ -420,6 +424,10 @@ class Ajaxpos extends CI_Controller
 
         if($this->input->post('sSearch_2') != ''){
             $this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_2'));
+        }
+
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.status',$this->input->post('sSearch_3'));
         }
 
         $this->db->select($this->config->item('assigned_delivery_table').'.*,d.identifier as identifier');
@@ -464,12 +472,15 @@ class Ajaxpos extends CI_Controller
             $pos = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.'</span><br />';
             $pos .= '<span id="'.$key['id'].'" '.$style.' class="locpick">'.$lon.'</span>';
 
+            $sclass = ($key['status'] == 'delivered')?'green':'orange';
+
             $aadata[] = array(
                 $key['assignment_date'],
                 '<input type="text" style="width:25px;" class="inseq" id="'.$key['id'].'" value="'.$key['assignment_seq'].'">',
                 $key['identifier'],
                 '<b>'.$key['buyer_name'].'</b><br />'.$key['shipping_address'],
-                $pos
+                $pos,
+                '<span class="'.$sclass.'">'.$key['status'].'</span>'
             );
         }
 

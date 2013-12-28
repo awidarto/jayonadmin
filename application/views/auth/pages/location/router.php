@@ -116,6 +116,7 @@
                 {
                     'device_identifier':$('#search_device').val(),
                     'timestamp':$('#search_deliverydate').val(),
+                    'delivery_status':$('#search_status').val(),
                     'address':$('#search_address').val(),
                     'limit':$('select[name=DataTables_Table_0_length]').val()
                 },
@@ -184,7 +185,7 @@
                                         $('#' + inid).val($('#routeSeq').val());
                                     }else{
                                         var current = $('#' + inid).val();
-                                        $('#routeSeq').val(current)
+                                        $('#routeSeq').val(current);
                                     }
 
                                 }).addTo(map).bindPopup(content);

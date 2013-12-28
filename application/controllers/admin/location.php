@@ -306,7 +306,8 @@ class Location extends Application
             'Seq',
             'Device Identifier',
             'Address',
-            'Lat Lon'
+            'Lat Lon',
+            'Status'
             ); // Setting headings for the table
 
         $devs = array();
@@ -323,7 +324,7 @@ class Location extends Application
             '<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
             '<input type="text" name="search_address" id="search_address" value="Search address" class="search_init" />',
             '',
-            ''
+            '<input type="text" name="search_status" id="search_status" value="Search status" class="search_init" />'
             );
 
 
