@@ -85,6 +85,14 @@
             routeReset();
         });
 
+        function supportsLocalStorage() {
+            try {
+                return 'localStorage' in window && window['localStorage'] !== null;
+            } catch (e) {
+                return false;
+            }
+        }
+
         function refreshMap(){
             var currtime = new Date();
             lineWeight = $('#lineWeight').val();
@@ -277,6 +285,63 @@
                 $('#setloc_dialog').dialog('open');
             }
 
+            if ($(e.target).is('.copyloc')) {
+
+                var loc = e.target.id;
+
+                if (!supportsLocalStorage()) {
+                    alert('localStorage not supported, failed to copy');
+                    return false;
+                }else{
+                    localStorage['locCopy'] = loc;
+                    alert('Location data copied');
+                }
+
+            }
+
+            if ($(e.target).is('.pasteloc')) {
+                console.log(e.target);
+                var id = e.target.id;
+                var loc = localStorage['locCopy'];
+
+                var locs = loc.split('_');
+
+                console.log(locs);
+
+                var lat = locs[0];
+                var lon = locs[1];
+
+                alert(id + ' <- ' + lat + ',' + lon);
+
+                console.log(id + ' <- ' + lat + ',' + lon);
+
+                var answer = confirm("Are you sure you want to copy location to this order ?");
+                if (answer){
+
+
+                    $.post('<?php print site_url('ajax/setbuyerloc');?>',
+                        {   id : id,
+                            latitude: lat,
+                            longitude: lon,
+                            type: 'delivery' },
+                            function(data) {
+                                if(data.result == 'OK'){
+                                    oTable.fnDraw();
+                                    refreshMap()
+                                    alert('Location copied to target order');
+                                }else{
+                                    alert('Copy location canceled');
+                                }
+                                //alert(data.status);
+                            },'json');
+
+
+                }else{
+                    alert('copy cancelled');
+                }
+
+            }
+
             e.preventDefault();
         });
 
@@ -439,7 +504,6 @@
 
             }
         });
-
 
     } );
 

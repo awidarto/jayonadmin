@@ -471,6 +471,8 @@ class Ajaxpos extends CI_Controller
 
             $pos = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.'</span><br />';
             $pos .= '<span id="'.$key['id'].'" '.$style.' class="locpick">'.$lon.'</span>';
+            $pos .= '<br /><span class="copyloc orange" style="display:inline-block;cursor:pointer;" id="'.$key['latitude'].'_'.$key['longitude'].'" >Copy</span>';
+            $pos .= '&nbsp;&nbsp;<span class="pasteloc green" style="display:inline-block;cursor:pointer;" id="'.$key['id'].'" >Paste</span>';
 
             $sclass = ($key['status'] == 'delivered')?'green':'orange';
 
