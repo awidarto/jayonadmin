@@ -19,6 +19,12 @@
     display: inline-block;
     font-size: 10px;
 }
+
+.redborder{
+    border:2px solid red;
+    background-color: yellow;
+}
+
 </style>
 
 <script>
@@ -65,6 +71,19 @@
 
         var markers = [];
         var paths = [];
+        var routelineexists = false;
+
+        map.on('click', function(e) {
+            alert(e.latlng); // e is an event object (MouseEvent in this case)
+        });
+
+        function routeReset(){
+            $('input#routeSeq').val(0);
+        }
+
+        $('#routeReset').on('click',function(){
+            routeReset();
+        });
 
         function refreshMap(){
             var currtime = new Date();
@@ -93,17 +112,20 @@
                 shadowAnchor: shanchor
             });
 
-            $.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
+            $.post('<?php print site_url('ajaxpos/getroutemarker');?>/' + currtime.getTime() ,
                 {
                     'device_identifier':$('#search_device').val(),
-                    'timestamp':$('#search_deliverytime').val(),
-                    'courier':$('#search_courier').val(),
-                    'status':$('#search_status').val()
+                    'timestamp':$('#search_deliverydate').val(),
+                    'address':$('#search_address').val(),
+                    'limit':$('select[name=DataTables_Table_0_length]').val()
                 },
 
                 function(data) {
                     if(data.result == 'ok'){
 
+                        var path = data.paths;
+
+                        console.log(path);
 
                         if(paths.length > 0){
 
@@ -115,6 +137,7 @@
 
                         }
 
+
                         if(markers.length > 0){
 
                             for(m = 0; m < markers.length; m++){
@@ -125,15 +148,13 @@
 
                         }
 
-                        $.each(data.paths, function(){
-                            var polyline = L.polyline( this.poly,
-                                {
-                                    color: this.color,
-                                    weight: lineWeight
-                                } ).addTo(map);
+                        var polyline = L.polyline( path.poly,
+                            {
+                                color: 'blue',
+                                weight: lineWeight
+                            } ).addTo(map);
 
-                            paths.push(polyline);
-                        });
+                        paths.push(polyline);
 
 
                         $.each(data.locations,function(){
@@ -148,13 +169,26 @@
 
                             var content = '<div style="background-color:white;padding:3px;width:150px;">' +
                                 '<div class="bg"></div>' +
-                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
+                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.address + '</div>' +
                             '</div>';
 
                             if($('#showLocUpdate').is(':checked')){
-                                var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
-                                markers.push(m);
+                                var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon, id: this.data.id }).on('click',function(e){
+                                    console.log(e.target.options.id);
+                                    var inid = e.target.options.id;
+                                    $('.inseq').removeClass('redborder');
+                                    $('#' + inid).addClass('redborder');
+                                    if($('#routeMode').is(':checked')){
+                                        var sq = parseInt($('#routeSeq').val()) + 1;
+                                        $('#routeSeq').val( sq );
+                                        $('#' + inid).val($('#routeSeq').val());
+                                    }else{
+                                        var current = $('#' + inid).val();
+                                        $('#routeSeq').val(current)
+                                    }
 
+                                }).addTo(map).bindPopup(content);
+                                markers.push(m);
                             }else{
                                 if(this.data.status != 'loc_update'){
                                     var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
@@ -228,6 +262,27 @@
             }
         } );
 
+        $('table.dataTable').click(function(e){
+
+            console.log(e);
+
+            if ($(e.target).is('.locpick')) {
+                var buyer_id = e.target.id;
+                $('#setloc_dialog').dialog('open');
+
+                var src = '<?php print base_url() ?>admin/prints/mapview/delivery/' + buyer_id;
+
+                $('#map_frame').attr('src',src);
+                $('#setloc_dialog').dialog('open');
+            }
+
+            e.preventDefault();
+        });
+
+        $('select[name=DataTables_Table_0_length]').on('change',function(){
+            refreshMap();
+        });
+
         //Refresh page every x second ( in milis)
         function refresh(){
             refreshMap();
@@ -236,7 +291,6 @@
         }
 
         refresh();
-
 
 
         $( '#assign_courier' ).autocomplete({
@@ -271,6 +325,33 @@
 
         $('#showLocUpdate').click(function(){
             refreshMap();
+        });
+
+        $('#save_seq').on('click',function(){
+            var sequences = [];
+            var sequence_id = [];
+
+            $('input.inseq').each(function(){
+                sequences.push(this.value);
+                sequence_id.push(this.id);
+            });
+
+            console.log(sequences);
+            console.log(sequence_id);
+
+            $.post('<?php print site_url('ajaxpos/seq');?>',
+                {
+                    ids : sequence_id,
+                    seq : sequences
+                }, function(data) {
+                if(data.result == 'ok'){
+                    //redraw table
+                    oTable.fnDraw();
+                    refreshMap();
+                }
+            },'json');
+
+
         });
 
         /*Delivery process mandatory*/
@@ -332,6 +413,33 @@
             }
         });
 
+        refreshTab = function(){
+            oTable.fnDraw();
+            refreshMap();
+        };
+
+        $('#setloc_dialog').dialog({
+            autoOpen: false,
+            height: 600,
+            width: 900,
+            modal: true,
+            buttons: {
+                Save: function(){
+                    var nframe = document.getElementById('map_frame');
+                    var nframeWindow = nframe.contentWindow;
+                    nframeWindow.submitlocation();
+                },
+                Close: function() {
+                    oTable.fnDraw();
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+
+            }
+        });
+
+
     } );
 
 
@@ -347,7 +455,12 @@
             <option value="5">5</option>
             <option value="6">6</option>
             <option value="7">7</option>
-        </select>
+        </select> |
+        <input type="checkbox" checked="checked" id="routeMode" value="1" /> Routing Mode |
+         Urutan <input type="text" checked="checked" id="routeSeq" value="0" style="width:25px;" /> |
+         <button id="routeReset">Reset</button>
+
+
     </div>
     <div id="tracker" >
         <table style="padding:0px;margin:0px;">

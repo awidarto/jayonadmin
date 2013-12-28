@@ -39,7 +39,7 @@ class Ajaxpos extends CI_Controller
 			$mapcolor = get_device_color($d->identifier);
 
 			$this->db
-				->select('identifier,timestamp,latitude as lat,longitude as lng,status')
+				->select('id,identifier,timestamp,latitude as lat,longitude as lng,status')
 				->where('identifier',$d->identifier);
 
 			if($timestamp == ''){
@@ -68,6 +68,7 @@ class Ajaxpos extends CI_Controller
 					if($lat != 0 && $lng != 0){
 						$locations[] = array(
 							'data'=>array(
+                                    'id'=>$l->id,
 									'lat'=>$lat,
 									'lng'=>$lng,
 									'timestamp'=>$l->timestamp,
@@ -95,6 +96,109 @@ class Ajaxpos extends CI_Controller
 
 	}
 
+    public function getroutemarker(){
+
+        $device_name = $this->input->post('device_identifier');
+        $timestamp = $this->input->post('timestamp');
+        $address = $this->input->post('address');
+        $limit_count = $this->input->post('limit');
+        $limit_offset = 0;
+
+        $device_name = ($device_name == 'Search device')?'':$device_name;
+        $timestamp = ($timestamp == 'Search delivery date')?'':$timestamp;
+        $address = ($address == 'Search address')?'':$address;
+
+        $this->db->distinct();
+        $this->db->select('identifier');
+
+        $devices = $this->db->get($this->config->item('location_log_table'))
+            ->result();
+
+        $locations = array();
+
+        $paths = array();
+
+        $pathdummy = array();
+
+        //get points
+
+        $this->db->select($this->config->item('assigned_delivery_table').'.*,d.identifier as identifier');
+        $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+
+        if($device_name != ''){
+            $this->db->like('d.identifier',$device_name);
+        }
+
+        $loc = $this->db
+            ->where('longitude != ',0)->where('latitude != ',0)
+            ->like('assignment_date',$timestamp,'after')
+            ->limit($limit_count, $limit_offset)
+            ->order_by('assignment_date','desc')
+            ->order_by('assignment_seq','asc')
+            //->order_by($columns[$sort_col],$sort_dir)
+            ->get($this->config->item('assigned_delivery_table'));
+
+        $mapcolor = '#FF000';
+
+            if($loc->num_rows() > 0){
+                $path = array();
+                $loc = $loc->result();
+                foreach($loc as $l){
+                    $lat = (double)$l->latitude;
+                    $lng = (double)$l->longitude;
+
+                    if($lat != 0 && $lng != 0){
+                        $locations[] = array(
+                            'data'=>array(
+                                    'id'=>$l->id,
+                                    'lat'=>$lat,
+                                    'lng'=>$lng,
+                                    'timestamp'=>$l->created,
+                                    'identifier'=>$l->buyer_name,
+                                    'note'=>$l->delivery_note,
+                                    'directions'=>$l->directions,
+                                    'address'=>$l->shipping_address
+                                )
+                            );
+                        $path[] = array(
+                                $lat,
+                                $lng
+                            );
+                        $pathdummy[] = array(
+                                $l->buyer_name,
+                                $l->created,
+                                $lat,
+                                $lng
+                            );
+                    }
+                }
+                $paths = array('color'=>$mapcolor,'poly'=>$path);
+
+            }
+
+
+        print json_encode(array('result'=>'ok','locations'=>$locations,'paths'=>$paths, 'pathdummy'=>$pathdummy, 'q'=>$this->db->last_query() ));
+
+    }
+
+    public function seq(){
+        $ids = $this->input->post('ids');
+        $seq = $this->input->post('seq');
+
+        $idx = 0;
+        foreach($ids as $id){
+            $this->db->where('id',$id)
+                ->update($this->config->item('incoming_delivery_table'),
+                    array('assignment_seq'=>$seq[$idx]));
+            $idx++;
+        }
+
+        print json_encode(array('result'=>'ok',
+            'q'=>$this->db->last_query() ));
+
+    }
+
+
     public function getdistmarker(){
 
         $device_name = $this->input->post('device_identifier');
@@ -104,9 +208,9 @@ class Ajaxpos extends CI_Controller
         $status = $this->input->post('status');
 
         $device_name = ($device_name == 'Search device')?'':$device_name;
-//        $timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
-//        $courier = ($courier == 'Search courier')?'':$courier;
-//        $status = ($status == 'Search status')?'':$status;
+        //        $timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
+        //        $courier = ($courier == 'Search courier')?'':$courier;
+        //        $status = ($status == 'Search status')?'':$status;
 
         $this->db->distinct();
         $this->db->select('identifier');
@@ -296,10 +400,6 @@ class Ajaxpos extends CI_Controller
         );
 
         // get total count result
-        $count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
-
-        $count_display_all = $this->db
-            ->count_all_results($this->config->item('assigned_delivery_table'));
 
         //search column
         if($this->input->post('sSearch') != ''){
@@ -325,13 +425,23 @@ class Ajaxpos extends CI_Controller
         $this->db->select($this->config->item('assigned_delivery_table').'.*,d.identifier as identifier');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
 
+        $cdb = clone $this->db;
 
-        $data = $this->db
+        $count_all = $cdb->from($this->config->item('assigned_delivery_table'))->count_all_results();
+
+        $this->db
             ->limit($limit_count, $limit_offset)
-            ->order_by('assignment_date','desc')
             ->order_by('assignment_seq','asc')
-            ->order_by($columns[$sort_col],$sort_dir)
-            ->get($this->config->item('assigned_delivery_table'));
+            ->order_by('assignment_date','desc')
+            ->order_by($columns[$sort_col],$sort_dir);
+
+        $cdr = clone $this->db;
+
+        $data = $this->db->get($this->config->item('assigned_delivery_table'));
+
+        $count_display_all = $cdr
+            ->from($this->config->item('assigned_delivery_table'))
+            ->count_all_results();
 
         //print $this->db->last_query();
 
@@ -341,15 +451,25 @@ class Ajaxpos extends CI_Controller
 
         $aadata = array();
 
+        $style = 'style="cursor:pointer;padding:2px;display:block;"';
+
         foreach($result as $value => $key)
         {
 
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $class = ($lat == 'Set Loc')?' red':' green';
+
+            $pos = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.'</span><br />';
+            $pos .= '<span id="'.$key['id'].'" '.$style.' class="locpick">'.$lon.'</span>';
+
             $aadata[] = array(
                 $key['assignment_date'],
-                $key['assignment_seq'],
+                '<input type="text" style="width:25px;" class="inseq" id="'.$key['id'].'" value="'.$key['assignment_seq'].'">',
                 $key['identifier'],
-                $key['shipping_address'],
-                $key['latitude'].'<br />'.$key['longitude']
+                '<b>'.$key['buyer_name'].'</b><br />'.$key['shipping_address'],
+                $pos
             );
         }
 

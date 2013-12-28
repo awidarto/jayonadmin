@@ -319,7 +319,7 @@ class Location extends Application
 
         $this->table->set_footing(
             '<input type="text" name="search_deliverydate" id="search_deliverydate" value="Search delivery date" class="search_init" />',
-            '',
+            '<button id="save_seq">Simpan Urutan</button>',
             '<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
             '<input type="text" name="search_address" id="search_address" value="Search address" class="search_init" />',
             '',
