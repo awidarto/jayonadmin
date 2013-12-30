@@ -359,7 +359,13 @@ class Prints extends Application
 			$dc = (int)$dc;
 			$cod = (int)$cod;
 
-			$chg = ($gt - $dsc) + $tax + $dc + $cod;
+            if($data['main_info']['delivery_type'] == 'COD' || $data['main_info']['delivery_type'] == 'CCOD'){
+                $chg = ($gt - $dsc) + $tax + $dc + $cod;
+            }else{
+                $cod = 0;
+                $chg = $dc;
+            }
+
 
 			$this->table->add_row(
 				'&nbsp;',

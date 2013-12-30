@@ -31,3 +31,74 @@ length               = $('#package_length').val();
 weight               = $('#package_weight').val();
 show_shop            = ($('#show_shop').is(':checked'))?1:0;
 show_merchant        = ($('#show_merchant').is(':checked'))?1:0;
+
+
+
+id                  bigint(20)          No  None    AUTO_INCREMENT  Change Change   Drop Drop
+created             timestamp           No  CURRENT_TIMESTAMP       Change Change   Drop Drop
+ordertime           datetime            No  None        Change Change   Drop Drop
+buyerdeliverytime   datetime            Yes NULL        Change Change   Drop Drop
+buyerdeliveryslot   int(11)             No  None        Change Change   Drop Drop
+buyerdeliveryzone   varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+buyerdeliverycity   varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+assigntime          datetime            No  None        Change Change   Drop Drop
+deliverytime        datetime            No  None        Change Change   Drop Drop
+assignment_date     date                No  None        Change Change   Drop Drop
+assignment_timeslot int(11)             No  None        Change Change   Drop Drop
+assignment_zone     varchar(128)        latin1_swedish_ci       No  None        Change Change   Drop Drop
+assignment_city     varchar(255)        latin1_swedish_ci       No  None        Change Change   Drop Drop
+assignment_seq      int(11)             Yes 0       Change Change   Drop Drop
+delivery_id         varchar(40)         latin1_swedish_ci       No  None        Change Change   Drop Drop
+delivery_cost       varchar(128)        latin1_swedish_ci       Yes 0       Change Change   Drop Drop
+cod_cost            varchar(40)         latin1_swedish_ci       Yes 0       Change Change   Drop Drop
+width               int(11)             Yes 0       Change Change   Drop Drop
+height              int(11)             Yes 0       Change Change   Drop Drop
+length              int(11)             Yes 0       Change Change   Drop Drop
+weight              float               Yes 0       Change Change   Drop Drop
+actual_weight       varchar(10)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+delivery_type       varchar(40)         latin1_swedish_ci       No  COD     Change Change   Drop Drop
+currency            varchar(8)          latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+total_price         varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+fixed_discount      int(1)              No  1       Change Change   Drop Drop
+total_discount      varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+total_tax           varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+chargeable_amount   varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+delivery_bearer     varchar(15)         latin1_swedish_ci       No  None        Change Change   Drop Drop
+cod_bearer          varchar(15)         latin1_swedish_ci       No  None        Change Change   Drop Drop
+cod_method          varchar(15)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+ccod_method         varchar(15)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+application_id      bigint(20)          Yes NULL        Change Change   Drop Drop
+application_key     varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+buyer_id            bigint(20)          Yes NULL        Change Change   Drop Drop
+merchant_id         bigint(20)          Yes NULL        Change Change   Drop Drop
+merchant_trans_id   varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+courier_id          bigint(20)          No  None        Change Change   Drop Drop
+device_id           bigint(11)          No  None        Change Change   Drop Drop
+buyer_name          varchar(255)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+email               varchar(255)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+recipient_name      varchar(255)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+shipping_address    text                latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+shipping_zip        varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+directions          varchar(255)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+dir_lat             decimal(18,12)          Yes NULL        Change Change   Drop Drop
+dir_lon             decimal(18,12)          Yes NULL        Change Change   Drop Drop
+phone               varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+mobile1             varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+mobile2             varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+status              varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+laststatus          varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+change_actor        varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+actor_history       text                latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+delivery_note       text                latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+reciever_name       varchar(128)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+reciever_picture    varchar(128)        latin1_swedish_ci       Yes nopic       Change Change   Drop Drop
+undersign           varchar(255)        latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+latitude            decimal(18,12)          Yes NULL        Change Change   Drop Drop
+longitude           decimal(18,12)          Yes NULL        Change Change   Drop Drop
+reschedule_ref      varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+revoke_ref          varchar(40)         latin1_swedish_ci       Yes NULL        Change Change   Drop Drop
+reattemp            int(11)             No  0       Change Change   Drop Drop
+show_merchant       int(1)              No  1       Change Change   Drop Drop
+show_shop           int(1)              No  1       Change Change   Drop Drop
+is_pickup
+

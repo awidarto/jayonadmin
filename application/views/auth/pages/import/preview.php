@@ -1,5 +1,5 @@
 
-<form method="post" action="<?php echo site_url('import/commit')?>">
+<form method="post" action="<?php echo site_url('admin/import/commit')?>">
 
     <input type="submit" value="Commit" name="commit" />
 
@@ -12,6 +12,7 @@
 
     <input type="hidden" value="<?= $merchant_name; ?>" name="merchant_name" >
     <input type="hidden" value="<?= $merchant_id; ?>" name="merchant_id" >
+    <input type="hidden" value="<?= $jsonfile; ?>" name="jsonfile" >
 
     <?php foreach ($tables as $name => $table): ?>
         <div class="table">

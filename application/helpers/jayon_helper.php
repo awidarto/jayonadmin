@@ -50,7 +50,7 @@ function idr($in){
 function get_apps($merchant_id){
     $CI =& get_instance();
 
-    $CI->db->where('merchant_id',$merchant_id)
+    $apps = $CI->db->where('merchant_id',$merchant_id)
         ->get($CI->config->item('applications_table'))->result_array();
 
     return $apps;
@@ -367,7 +367,7 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
 
     $weight = (float)$weight;
 
-    if($tariff > 0){
+    if($weight > 0){
         $CI->db->select('total');
         $CI->db->where('app_id', $app_id);
         $CI->db->where('kg_from <= ',$weight);
