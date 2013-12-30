@@ -218,6 +218,7 @@
                 "bServerSide": true,
                 "sAjaxSource": "<?php print site_url($ajaxurl);?>",
                 "oLanguage": { "sSearch": "Search "},
+                "iDisplayLength": 50,
                 "sPaginationType": "full_numbers",
             <?php if($this->config->item('infinite_scroll')):?>
                 "bScrollInfinite": true,
