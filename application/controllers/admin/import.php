@@ -129,7 +129,7 @@ class Import extends Application
 
             foreach($xdata as $sheet=>$row){
 
-                $headidx = 1;
+                $headidx = 0;
                 $dataidx = 2;
 
                 $xdata = $row;
@@ -144,8 +144,8 @@ class Import extends Application
                 }
                 */
 
-                $label = $row['cells'][$headidx - 1];
-                $head = $row['cells'][$headidx];
+                $label = $row['cells'][$headidx];
+                $head = $row['cells'][$headidx + 1];
 
                 //print_r($head);
 
@@ -165,7 +165,7 @@ class Import extends Application
 
                 $orderdata = array();
 
-                for($i = $dataidx; $i < $row['numRows'];$i++){
+                for($i = $dataidx; $i <= $row['numRows'];$i++){
                     $temp = $row['cells'][$i];
                     $line = array();
                     for($j = 0;$j < count($head);$j++){
