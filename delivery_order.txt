@@ -1,0 +1,17 @@
+delivery_type
+buyer_name
+recipient_name
+shipping_address
+buyerdeliveryzone
+buyerdeliverycity
+buyerdeliverytime
+direction
+phone
+mobile1
+mobile2
+weight
+width
+height
+length
+package_description
+total_price

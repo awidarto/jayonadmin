@@ -118,6 +118,12 @@ class Import extends Application
             $merchant_id = $this->input->post('merchant_id');
             $merchant_name = $this->input->post('merchant_name');
 
+            $head_index = $this->input->post('header_index');
+
+            $label_index = $this->input->post('label_index');
+            $header_index = $this->input->post('header_index');
+            $data_index = $this->input->post('data_index');
+
             //var_dump($xdata);
 
             //exit();
@@ -129,8 +135,8 @@ class Import extends Application
 
             foreach($xdata as $sheet=>$row){
 
-                $headidx = 0;
-                $dataidx = 2;
+                $headidx = $header_index;
+                $dataidx = $data_index;
 
                 $xdata = $row;
 
@@ -144,8 +150,8 @@ class Import extends Application
                 }
                 */
 
-                $label = $row['cells'][$headidx];
-                $head = $row['cells'][$headidx + 1];
+                $label = $row['cells'][$label_index];
+                $head = $row['cells'][$header_index];
 
                 //print_r($head);
 
@@ -183,9 +189,10 @@ class Import extends Application
                     }
 
                     $buyerdeliverytime = PHPExcel_Shared_Date::ExcelToPHP($line['buyerdeliverytime']);
-
                     $line['buyerdeliverytime'] = date('Y-m-d h:i:s',$buyerdeliverytime);
 
+                    $line['buyerdeliverycity'] = ucwords(strtolower($line['buyerdeliverycity']));
+                    $line['buyerdeliveryzone'] = ucwords(strtolower($line['buyerdeliveryzone']));
 
                     $index = random_string('alnum', 5);
                     $orderdata[$index] = $line;
