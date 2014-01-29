@@ -706,6 +706,7 @@ class V1 extends Application
 							d.email as by_email,
 							d.phone as by_phone,
 							d.recipient_name as rec_name,
+                            d.assignment_seq as seq,
 							d.undersign as rec_sign,
 							d.total_price as tot_price,
 							d.total_discount as tot_disc,
