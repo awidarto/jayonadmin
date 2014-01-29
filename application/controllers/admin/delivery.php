@@ -170,6 +170,7 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_8') != ''){
+            $this->db->and_();
             $this->db->group_start();
             $this->db->like('a.application_name',$this->input->post('sSearch_8'));
             $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
