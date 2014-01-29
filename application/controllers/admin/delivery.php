@@ -116,6 +116,8 @@ class Delivery extends Application
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left');
 
+        $this->db->where('is_pickup',0);
+
 		$search = false;
 				//search column
 		if($this->input->post('sSearch') != ''){
@@ -221,7 +223,6 @@ class Delivery extends Application
         }
 
 
-        $this->db->where('is_pickup',0);
         $search = true;
 
 		if($search){
