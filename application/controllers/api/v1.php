@@ -777,7 +777,7 @@ class V1 extends Application
 		            //$o['tot_disc'] =>
 		            //$o['tot_tax'] =>
 		            //$o['chg_amt'] =>
-					$o['cod_cost'] = number_format($chg,2,',','.');
+					$o['cod_cost_fmt'] = number_format($chg,2,',','.');
 					$output[] = $o;
 				}
 
