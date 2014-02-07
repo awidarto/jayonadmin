@@ -512,7 +512,6 @@
 </script>
 
     <div>
-        <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point |
         Track Line Weight <select name="line" id="lineWeight">
             <option value="1">1</option>
             <option value="2">2</option>

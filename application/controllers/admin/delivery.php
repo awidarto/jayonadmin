@@ -387,6 +387,7 @@ class Delivery extends Application
             //'Merchant',
             //'App Domain',
             'Buyer',
+            'Picture',
             'Shipping Address',
             'Directions',
             'Phone',
@@ -416,9 +417,10 @@ class Delivery extends Application
             '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
             //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
-            '',
+            //'',
             '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
-            '<input type="text" name="search_shipping_address" value="Search merchant" class="search_init" />',
+            '',
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
             '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
             '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
             '<input type="text" name="search_status" value="Search status" class="search_init" />'
@@ -644,6 +646,12 @@ class Delivery extends Application
                 $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
             }
 
+            if(file_exists(FCPATH.'public/pickup/'.$key['merchant_trans_id'].'_address.jpg')){
+                $picture = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
+            }else{
+                $picture = '';
+            }
+
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
             $aadata[] = array(
@@ -667,6 +675,7 @@ class Delivery extends Application
                 //$key['merchant'],
                 //$app['domain'],
                 $key['buyer_name'],
+                $picture,
                 $key['shipping_address'],
                 $key['directions'],
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
