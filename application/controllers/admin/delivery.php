@@ -387,7 +387,7 @@ class Delivery extends Application
             //'Merchant',
             //'App Domain',
             'Buyer',
-            'Picture',
+            'Pick Up Picture',
             'Shipping Address',
             'Directions',
             'Phone',
