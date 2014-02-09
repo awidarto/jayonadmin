@@ -20,16 +20,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -42,7 +42,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -66,7 +66,7 @@
 		} );
 
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -77,31 +77,43 @@
 				var currentTime = new Date();
 				$.fancybox.open([
 			        {
-			            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),                
+			            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),
 			            title : delivery_id
 			        }
 			    ]);
 
 			}
 
+            if($(e.target).is('.sign')){
+                var delivery_id = e.target.alt;
+                var currentTime = new Date();
+                $.fancybox.open([
+                    {
+                        href : '<?php print base_url();?>public/receiver/' + delivery_id + '_sign.jpg?' + currentTime.getTime(),
+                        title : delivery_id
+                    }
+                ]);
+
+            }
+
 			if($(e.target).is('.rotate')){
 				var delivery_id = e.target.id;
-				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':0}, 
+				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':0},
 				function(data) {
 					if(data.result == 'ok'){
 						//redraw table
 						//oTable.fnDraw();
 						alert("Photo of " + data.delivery_id + " rotated");
 					}
-				},'json');	
+				},'json');
 
-				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':1}, 
+				$.post('<?php print site_url('ajax/rotatephoto');?>',{'delivery_id':delivery_id,'is_thumb':1},
 				function(data) {
 					if(data.result == 'ok'){
 						oTable.fnDraw();
 						alert("Thumbnail of " + data.delivery_id + " rotated");
 					}
-				},'json');	
+				},'json');
 			}
 
 
@@ -172,7 +184,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -195,7 +207,7 @@
 						delivery_ids[i] = $(this).val();
 						laststatus[i] = $(this).attr('title');
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -224,7 +236,7 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				"Download PDF": function(){
 					var print_id = $('#print_id').val();
 					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
@@ -236,7 +248,7 @@
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 
@@ -250,7 +262,7 @@
 					var delivery_id = $('#change_id').html();
 					var device_id = $('#changedev_id').val();
 
-					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
+					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
 						'delivery_id':delivery_id,
 						'new_status': $('#new_status').val(),
 						'actor': $('#actor').val()
@@ -282,14 +294,14 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 	});
