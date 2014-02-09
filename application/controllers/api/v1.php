@@ -890,9 +890,9 @@ class V1 extends Application
 
                     $this->image_lib->resize();
 
-                    $res .= ':SIGN:OK'
+                    $res .= ':SIGN:OK';
                 } else{
-                    $res .= ':SIGN:FAILED'
+                    $res .= ':SIGN:FAILED';
                 }
 
             }
