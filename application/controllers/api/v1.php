@@ -807,7 +807,7 @@ class V1 extends Application
 		$this->log_access($api_key, __METHOD__ ,$result);
 	}
 
-	public function uploadpic($api_key = null){
+	public function old_uploadpic($api_key = null){
 
 		if(is_null($api_key)){
 			$result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
@@ -840,7 +840,7 @@ class V1 extends Application
 		}
 	}
 
-    public function uploadsignpic($api_key = null){
+    public function uploadpic($api_key = null){
 
         if(is_null($api_key)){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
