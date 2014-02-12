@@ -42,8 +42,12 @@
 			<li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Orders <span class="badge" id="total_changed"></span>'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/incoming', 'Incoming Orders <span class="badge" id="total_changed_incoming"></span>'); } ?></li>
+                    <?php
+                    /*
                     <li class="<?php print set_hilite('admin\/delivery\/pickup')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/pickup', 'Incoming Orders PU <span class="badge" id="total_changed_incoming"></span>'); } ?></li>
-					<li class="<?php print set_hilite('admin\/delivery\/canceled')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/canceled', 'Canceled Orders'); } ?></li>
+					*/
+                    ?>
+                    <li class="<?php print set_hilite('admin\/delivery\/canceled')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/canceled', 'Canceled Orders'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/zoning')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/zoning', 'Device Zone Assignment'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/assigned')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/courierassign', 'Courier Assignment'); } ?></li>
 					<li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/dispatched', 'In Progress Orders'); } ?></li>

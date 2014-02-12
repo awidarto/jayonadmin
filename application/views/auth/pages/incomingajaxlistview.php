@@ -339,6 +339,7 @@
 			}
 		});
 
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 400,
@@ -593,6 +594,12 @@
 
 		refresh();
 		*/
+
+        function closeView(){
+            $('view_dialog').dialog('close');
+        }
+
+
 	} );
 
 

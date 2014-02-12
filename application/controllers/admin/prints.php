@@ -318,6 +318,39 @@ class Prints extends Application
 
 			$data['typeselect'] = $typeselect;
 
+            // city selector
+            $this->db->distinct('city');
+            $this->db->where('is_on',1);
+            $this->db->order_by('city');
+            $cities = $this->db->get($this->config->item('jayon_zones_table'));
+
+            if($cities->num_rows() > 0){
+                $city[0] = 'Select delivery city';
+                foreach ($cities->result() as $r) {
+                    $city[$r->city] = $r->city;
+                }
+            }else{
+                $city[0] = 'Select delivery city';
+            }
+
+            $data['cityselect'] = form_dropdown('buyerdeliverycity',$city,$data['main_info']['buyerdeliverycity'],'id="buyerdeliverycity"');
+
+            $this->db->where('city',$data['main_info']['buyerdeliverycity']);
+            $this->db->where('is_on',1);
+
+            $this->db->order_by('district');
+            $zones = $this->db->get($this->config->item('jayon_zones_table'));
+
+            if($zones->num_rows() > 0){
+                $zone[0] = 'Select delivery zone';
+                foreach ($zones->result() as $r) {
+                    $zone[$r->district] = $r->district;
+                }
+            }else{
+                $zone[0] = 'Select delivery zone';
+            }
+
+            $data['zoneselect'] = form_dropdown('buyerdeliveryzone',$zone,$data['main_info']['buyerdeliveryzone'],'id="buyerdeliveryzone"');
 
 
 			$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));

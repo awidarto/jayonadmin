@@ -248,6 +248,21 @@
                 minLength: 2
             });
 
+            $('#buyerdeliverycity').change(function(){
+                //alert($('#buyerdeliverycity').val());
+                var city = $('#buyerdeliverycity').val();
+
+                if(city != 0){
+                    $('#zone_select').html('Loading zones...');
+                    $.post('<?php print site_url('ajax/getzoneselect');?>',
+                        { city: city },
+                        function(data) {
+                            $('#zone_select').html(data.data);
+                        },'json');
+                }
+
+            });
+
             $('#assignment_date').datepicker({
                 numberOfMonths: 2,
                 showButtonPanel: true,
@@ -527,7 +542,8 @@
                             if(data.status == 'OK:ORDERUPDATED'){
                                 //alert('Transaction Success');
                                 $('#trx_result').html('Transaction Success');
-                                $('#neworder_dialog').dialog( "close" );
+                                parent.$('#view_dialog').dialog('close');
+                                parent.refreshTab();
                             }
                             //alert(data.status);
                         },'json');
@@ -550,6 +566,12 @@
         <tbody>
             <tr>
                 <td id="merchant_detail">
+
+            <?php if(file_exists(FCPATH.'public/pickup/'.$main_info['merchant_trans_id'].'_address.jpg')): ?>
+                <img src="<?php print base_url(); ?>public/pickup/<?php print $main_info['merchant_trans_id'] ?>_address.jpg" style="width:100%;height:auto">
+            <?php else : ?>
+
+
                     <table border="0" cellpadding="4" cellspacing="0" id="mainInfo">
                         <tbody>
 
@@ -618,6 +640,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                         </tbody>
                     </table>
+                    <?php endif; ?>
                 </td>
                 <td id="order_detail">
                     <table width="100%" cellpadding="4" cellspacing="0" id="orderInfo">
@@ -655,14 +678,16 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery City:</td>
-                                <td>
-                                    <?php print form_input('buyerdeliverycity',$main_info['buyerdeliverycity'],'id="buyerdeliverycity"');?>
+                                <td id="city_select">
+                                    <?php print $cityselect; ?>
+                                    <?php //print form_input('buyerdeliverycity',$main_info['buyerdeliverycity'],'id="buyerdeliverycity"');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Zone:</td>
-                                <td>
-                                    <?php print form_input('buyerdeliveryzone',$main_info['buyerdeliveryzone'],'id="buyerdeliveryzone"');?>
+                                <td id="zone_select">
+                                    <?php print $zoneselect; ?>
+                                    <?php //print form_input('buyerdeliveryzone',$main_info['buyerdeliveryzone'],'id="buyerdeliveryzone"');?>
                                 </td>
                             </tr>
                             <tr>
