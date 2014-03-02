@@ -121,10 +121,15 @@ class Admin extends Application
         foreach ($delis as $o) {
 
             //print_r($o->delivery_id);
+            $imgfile = $this->config->item('picture_path').$o->delivery_id.'.jpg';
 
-            if(file_exists($this->config->item('picture_path').$o->delivery_id.'.jpg')){
-                $exifdata = exif_read_data($this->config->item('picture_path').$o->delivery_id.'.jpg');
-                print_r($exifdata);
+            if(file_exists($imgfile)){
+                $latlon = read_gps_location($file)
+                if($latlon){
+                    print_r($exifdata);
+                }else{
+                    print "no geotag\r\n";
+                }
             }
 
             /*
