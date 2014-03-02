@@ -124,7 +124,7 @@ class Admin extends Application
             $imgfile = $this->config->item('picture_path').$o->delivery_id.'.jpg';
 
             if(file_exists($imgfile)){
-                $latlon = read_gps_location($file)
+                $latlon = read_gps_location($file);
                 if($latlon){
                     print_r($exifdata);
                 }else{
