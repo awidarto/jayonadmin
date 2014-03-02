@@ -120,6 +120,8 @@ class Admin extends Application
 
         foreach ($delis as $o) {
 
+            //print_r($o->delivery_id);
+
             if(file_exists($this->config->item('picture_path').$o->delivery_id.'.jpg')){
                 $exifdata = exif_read_data($CI->config->item('picture_path').$o->delivery_id.'.jpg');
                 print_r($exifdata);
