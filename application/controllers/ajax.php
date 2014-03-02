@@ -95,6 +95,40 @@ class Ajax extends Application
 		print json_encode(array('result'=>$result,'delivery_id'=>$delivery_id,'data'=>$config['source_image'].' '.$this->image_lib->display_errors()));
 	}
 
+    public function rotateaddressphoto(){
+        $trx_id = $this->input->post('trx_id');
+        $is_thumb = $this->input->post('is_thumb');
+
+        $trx_id = trim(str_replace('r_', '', $trx_id));
+
+        $this->load->library('image_lib');
+
+        $config['image_library'] = 'imagemagick';
+        $config['library_path'] = '/usr/bin/';
+        $config['rotation_angle'] = '90';
+
+        if($is_thumb == 1){
+            $config['source_image'] = $this->config->item('thumbnail_path').'th_'.$trx_id.'.jpg';
+        }else{
+            $config['source_image'] = $this->config->item('pickuppic_path').$trx_id.'_address.jpg';
+        }
+
+        chmod($config['source_image'],0777);
+
+        $this->image_lib->initialize($config);
+
+        if ( $this->image_lib->rotate())
+        {
+            $result = 'ok';
+        }else{
+            $result = 'err';
+        }
+
+        $url = base_url().'public/pickup/'.$trx_id.'_address.jpg?'.time();
+
+        print json_encode(array('result'=>$result,'trx_id'=>$trx_id,'url'=>$url,'data'=>$config['source_image'].' '.$this->image_lib->display_errors()));
+    }
+
 	public function getorder(){
 		$delivery_id = $this->input->post('delivery_id');
 

@@ -474,6 +474,23 @@
                 $('#cod_bearer_option').hide();
             });
 
+            $('.rotate-picture').on('click',function(){
+                var trx_id = this.id;
+
+                alert(trx_id);
+
+                $.post('<?php print site_url('ajax/rotateaddressphoto');?>',{'trx_id':trx_id,'is_thumb':0},
+                function(data) {
+                    if(data.result == 'ok'){
+
+                        $('#address-pic').attr('src',data.url);
+                        //redraw table
+                        //oTable.fnDraw();
+                        alert("Photo of " + data.trx_id + "_address.jpg rotated");
+                    }
+                },'json');
+            });
+
 
         });
 
@@ -496,6 +513,7 @@
             */
             return [true,''];
         }
+
 
 
         function submitorder(){
@@ -568,7 +586,10 @@
                 <td id="merchant_detail">
 
             <?php if(file_exists(FCPATH.'public/pickup/'.$main_info['merchant_trans_id'].'_address.jpg')): ?>
-                <img src="<?php print base_url(); ?>public/pickup/<?php print $main_info['merchant_trans_id'] ?>_address.jpg" style="width:100%;height:auto">
+                <img id="address-pic" src="<?php print base_url(); ?>public/pickup/<?php print $main_info['merchant_trans_id'] ?>_address.jpg?<?php print time();?>" style="width:100%;height:auto">
+                <div style="text-align:center;padding-top:8px;">
+                    <span class="button rotate-picture" id="<?php print $main_info['merchant_trans_id'] ?>" style="cursor:pointer;">Rotate Picture</span>
+                </div>
             <?php else : ?>
 
 

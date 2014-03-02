@@ -105,6 +105,40 @@ class Admin extends Application
 
     }
 
+    public function geopic(){
+
+        set_time_limit(0);
+
+        $delis = $this->db
+            ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+            ->select('delivery_id,latitude,longitude')
+            ->get($this->config->item('delivered_delivery_table'));
+
+        $delis = $delis->result();
+
+        foreach ($delis as $o) {
+
+            if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
+                $exifdata = exif_read_data($CI->config->item('picture_path').$delivery_id.'.jpg');
+                print_r($exifdata);
+            }
+
+            /*
+            $geodata = array(
+                'latitude'=>$o->latitude,
+                'longitude'=>$o->longitude,
+                'dir_lat'=>$o->latitude,
+                'dir_lon'=>$o->longitude
+                );
+            */
+            //$this->db->where('delivery_id',$o->delivery_id)
+            //    ->update($this->config->item('jayon_buyers_table'),$geodata);
+        }
+
+    }
+
 	public function monthlygraph($status = null){
 		$this->load->library('plot');
 		$lineplot = $this->plot->plot(500,130);
