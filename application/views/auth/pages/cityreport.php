@@ -159,6 +159,11 @@ div.stickyHeader {
                     <td><?php print 'To '.form_input(array('name'=>'date_to','id'=>'date_to','class'=>'text','value'=>$to));?></td>
                     <td><span id="get_date_range" class="action_link" >Generate</span></td>
                 </tr>
+
+                <tr>
+                    <td colspan="4" style="text-align:right;"><?php print anchor(uri_string().'/csv', 'Download CSV');?></td>
+                </tr>
+
             </table>
         </form>
     </div>

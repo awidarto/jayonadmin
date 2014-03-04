@@ -1567,6 +1567,41 @@ class Reports extends Application
 
             $this->db->group_by('assignment_date,buyerdeliveryzone,delivery_type,status');
             //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
+        if($pdf == 'csv'){
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
 
 
         $rows = $this->db->get();
@@ -2039,6 +2074,43 @@ class Reports extends Application
 
             $this->db->group_by('assignment_date,buyerdeliveryzone,delivery_type,status');
             //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
+
+        if($pdf == 'csv'){
+
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
 
 
         $rows = $this->db->get();
@@ -3164,6 +3236,47 @@ class Reports extends Application
 			$this->db->group_end();
 
 		$this->db->group_by('assignment_date');
+
+        if($pdf == 'csv'){
+
+            $this->db->select('assignment_date,merchant_id,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value, members.merchantname as merchantname, members.fullname as merchantfullname');
+
+            $this->db->join($this->config->item('jayon_members_table'), $this->config->item('jayon_members_table').'.id = '.$this->config->item('incoming_delivery_table').'.id', 'left');
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
+
 
 		$rows = $this->db->get();
 
