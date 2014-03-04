@@ -1070,9 +1070,13 @@ class Reports extends Application
 		$rows = $this->db->get();
 
 		$result = $rows->result_array();
-		//print $this->db->last_query();
 
+        /* raw query
+            SELECT DISTINCT `assignment_date`, `merchant_id`, `delivery_type`, `status`, count(*) as count, sum(cod_cost) as cod_cost, sum(delivery_cost) as delivery_cost, sum(total_price) as total_price, sum(total_discount) as total_discount, sum(total_tax) as total_tax, sum(((total_price-total_discount)+total_tax)) as package_value, m.merchantname as merchantname FROM (`delivery_order_active`) LEFT JOIN members as m ON merchant_id = m.id WHERE `assignment_date`between '2014-02-01%' and '2014-02-28%' AND `assignment_date` != '0000-00-00' AND ( `status` = 'delivered' OR `status` = 'revoked' OR `status` = 'noshow' OR `status` = 'rescheduled' ) GROUP BY `assignment_date`, `merchant_id`, `delivery_type`, `status`
+        */
+        //print $this->db->last_query();
 
+        $last_query = $this->db->last_query();
 		//print_r($result);
 
 		//exit();
@@ -1383,6 +1387,8 @@ class Reports extends Application
 
 		$data['controller'] = 'admin/reports/revenue/';
 
+        $data['last_query'] = $last_query;
+
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/revenue',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
@@ -1526,6 +1532,7 @@ class Reports extends Application
         $result = $rows->result_array();
         //print $this->db->last_query();
 
+        $last_query = $this->db->last_query();
 
         //print_r($result);
 
@@ -1852,6 +1859,8 @@ class Reports extends Application
 
         $data['controller'] = 'admin/reports/zonerevenue/';
 
+        $data['last_query'] = $last_query;
+
         if($pdf == 'pdf'){
             $html = $this->load->view('print/revenue',$data,true);
             $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
@@ -1995,6 +2004,7 @@ class Reports extends Application
         $result = $rows->result_array();
         //print $this->db->last_query();
 
+        $last_query = $this->db->last_query();
 
         //print_r($result);
 
@@ -2307,6 +2317,8 @@ class Reports extends Application
 
         $data['controller'] = 'admin/reports/cityrevenue/';
 
+        $data['last_query'] = $last_query;
+
         if($pdf == 'pdf'){
             $html = $this->load->view('print/revenue',$data,true);
             $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
@@ -2464,6 +2476,8 @@ class Reports extends Application
 		$rows = $this->db->get();
 
 		//print $this->db->last_query();
+
+        $last_query = $this->db->last_query();
 
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
@@ -2688,6 +2702,8 @@ class Reports extends Application
 
 		$data['controller'] = 'admin/reports/merchantrecon/';
 
+        $data['last_query'] = $last_query;
+
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/merchantrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
@@ -2844,6 +2860,8 @@ class Reports extends Application
 
 		$rows = $this->db->get();
 
+        $last_query = $this->db->last_query();
+
 		//print $this->db->last_query();
 
 		$this->table->set_heading(
@@ -2980,6 +2998,8 @@ class Reports extends Application
 
 		$data['controller'] = 'admin/reports/courierrecon/';
 
+        $data['last_query'] = $last_query;
+
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/courierrecon',$data,true);
 			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
@@ -3105,6 +3125,9 @@ class Reports extends Application
 
 		$rows = $this->db->get();
 
+        $last_query = $this->db->last_query();
+
+
 		//print $this->db->last_query();
 
 		$this->table->set_heading(
@@ -3195,6 +3218,8 @@ class Reports extends Application
 		$page['page_title'] = 'Device Reconciliations';
 
 		$data['controller'] = 'admin/reports/devicerecon/';
+
+        $data['last_query'] = $last_query;
 
 		if($pdf == 'pdf'){
 			$html = $this->load->view('print/devicerecon',$data,true);

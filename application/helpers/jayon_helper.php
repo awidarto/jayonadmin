@@ -792,8 +792,8 @@ function read_gps_location($file){
             $GPSLongitudeRef == 'w' ? $lng *= -1 : '';
 
             return array(
-                'lat' => $lat,
-                'lng' => $lng
+                'latitude' => $lat,
+                'longitude' => $lng
             );
         }
     }

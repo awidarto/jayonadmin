@@ -194,6 +194,12 @@ class Import extends Application
                     $line['buyerdeliverycity'] = ucwords(strtolower($line['buyerdeliverycity']));
                     $line['buyerdeliveryzone'] = ucwords(strtolower($line['buyerdeliveryzone']));
 
+                    if( strtoupper($line['delivery_type']) == 'DO'){
+                        $line['delivery_type'] = 'Delivery Only';
+                    }
+
+                    $line['delivery_type'] = ucfirst($line['delivery_type']);
+
                     $index = random_string('alnum', 5);
                     $orderdata[$index] = $line;
 

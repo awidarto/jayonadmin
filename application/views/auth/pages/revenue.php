@@ -1,12 +1,12 @@
 <script type="text/javascript">
-	
+
 	var base = '<?php print base_url();?>';
 	var controller = '<?php print $controller; ?>';
 
 	$(document).ready(function() {
 		$('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#get_week').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
@@ -39,6 +39,9 @@
 			}
 		);
 
+        $('#show_last').on('click',function(){
+            $('#last_query').toggle();
+        });
 
 
 	});
@@ -61,7 +64,7 @@ table#recon_select td input{
 </style>
 
 <?php
-	
+
 	$opts = array('Global'=>'Global','Merchant'=>'Merchant','Courier'=>'Courier');
 
 	for($i=2012;$i < 2100;$i++){
@@ -125,4 +128,6 @@ table#recon_select td input{
 <div>
 	<h3><?php print $type.' '.$period; ?></h3>
 	<?php print $recontab; ?>
+</div>
+
 </div>

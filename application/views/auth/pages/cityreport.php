@@ -39,6 +39,10 @@
             }
         );
 
+        $('#show_last').on('click',function(){
+            $('#last_query').toggle();
+        });
+
         //$("#toClone thead").sticky({topSpacing:0});
 
     });
@@ -164,3 +168,11 @@ div.stickyHeader {
     <h3><?php print $type.' '.$period; ?></h3>
     <?php print $recontab; ?>
 </div>
+
+<span id="show_last">Query</span>
+<div id="last_query" style="display:none;">
+    <p>
+        <?php print $last_query; ?>
+    </p>
+</div>
+

@@ -1,12 +1,12 @@
 <script type="text/javascript">
-	
+
 	var base = '<?php print base_url();?>';
 	var controller = '<?php print $controller; ?>';
 
 	$(document).ready(function() {
 		$('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#get_week').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
@@ -39,6 +39,10 @@
 			}
 		);
 
+        $('#show_last').on('click',function(){
+            $('#last_query').toggle();
+        });
+
 		//$("#toClone thead").sticky({topSpacing:0});
 
 	});
@@ -67,7 +71,7 @@ table#recon_select td {
 }
 
 .dataTable * td, .dataTable * th{
-	text-align: center;	
+	text-align: center;
 }
 
 .dataTable * td.right{
@@ -96,7 +100,7 @@ div.stickyHeader {
 </style>
 
 <?php
-	
+
 	$opts = array('Global'=>'Global','Merchant'=>'Merchant','Courier'=>'Courier');
 
 	for($i=2012;$i < 2100;$i++){
@@ -164,3 +168,11 @@ div.stickyHeader {
 	<h3><?php print $type.' '.$period; ?></h3>
 	<?php print $recontab; ?>
 </div>
+
+<span id="show_last">Query</span>
+<div id="last_query" style="display:none;">
+    <p>
+        <?php print $last_query; ?>
+    </p>
+</div>
+

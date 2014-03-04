@@ -81,6 +81,19 @@ class Admin extends Application
 		}
 	}
 
+    public function tmnull(){
+        $delivery_id = '004670-02-102013-00019892';
+        $result = $this->db->where('delivery_id', $delivery_id)
+            ->where('latitude is not null', null)
+            ->where('longitude is not null', null)
+            ->get($this->config->item('incoming_delivery_table'));
+
+        print_r($result->result());
+
+        print $this->db->last_query();
+
+    }
+
     public function geoinsert(){
 
         set_time_limit(0);

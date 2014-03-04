@@ -867,6 +867,17 @@ class V1 extends Application
 
                 $this->image_lib->resize();
 
+                $ploc = read_gps_location($target_path);
+
+                if($ploc && is_array($ploc)){
+
+                    $this->db->where('delivery_id', $delivery_id)
+                        ->where('latitude', null)
+                        ->where('longitude', null)
+                        ->update($this->config->item('incoming_delivery_table'),$ploc);
+
+                }
+
                 $res = 'OK:PICUPLOAD';
             } else{
                 $res = 'ERR:UPLOADFAILED';
