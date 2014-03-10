@@ -825,7 +825,11 @@ class Import extends Application
                 $order['total_discount'] = (isset($in->total_discount))?$in->total_discount:0;
                 $order['total_tax'] = (isset($in->total_tax))?$in->total_tax:0;
 
-                $order['cod_cost'] = get_cod_tariff($order['total_price'],$app->id);
+                if($in->delivery_type == 'DO' || $in->delivery_type == 'Delivery Only'){
+                    $order['cod_cost'] = 0;
+                }else{
+                    $order['cod_cost'] = get_cod_tariff($order['total_price'],$app->id);
+                }
 
                 $order['shipping_address'] = $in->shipping_address;
                 $order['shipping_zip'] = $in->zip;
@@ -862,6 +866,7 @@ class Import extends Application
                     $order['show_merchant'] = $in->show_merchant;
                 }
 
+                $order['is_import'] = 1;
                 print_r($order);
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);

@@ -1142,12 +1142,14 @@ class Reports extends Application
 			$irows = $this->db->get()->result_array();
 			*/
 
-			$trans[$r['assignment_date']][$r['merchant_id']][$r['delivery_type']][$r['status']]['count'] = $r['count'];
-			$trans[$r['assignment_date']][$r['merchant_id']][$r['delivery_type']][$r['status']]['cod_cost'] = $r['cod_cost'];
-			$trans[$r['assignment_date']][$r['merchant_id']][$r['delivery_type']][$r['status']]['delivery_cost'] = $r['delivery_cost'];
-			$trans[$r['assignment_date']][$r['merchant_id']][$r['delivery_type']][$r['status']]['total_price'] = $r['total_price'];
-			$trans[$r['assignment_date']][$r['merchant_id']][$r['delivery_type']][$r['status']]['package_value'] = $r['package_value'];
+			$trans[$r['assignment_date']][$r['merchant_id']][ trim($r['delivery_type']) ][ trim($r['status']) ]['count'] = $r['count'];
+			$trans[$r['assignment_date']][$r['merchant_id']][ trim($r['delivery_type']) ][ trim($r['status']) ]['cod_cost'] = $r['cod_cost'];
+			$trans[$r['assignment_date']][$r['merchant_id']][ trim($r['delivery_type']) ][ trim($r['status']) ]['delivery_cost'] = $r['delivery_cost'];
+			$trans[$r['assignment_date']][$r['merchant_id']][ trim($r['delivery_type']) ][ trim($r['status']) ]['total_price'] = $r['total_price'];
+			$trans[$r['assignment_date']][$r['merchant_id']][ trim($r['delivery_type']) ][ trim($r['status']) ]['package_value'] = $r['package_value'];
 		}
+
+
 
 		$status_array = array(
 			$this->config->item('trans_status_mobile_delivered'),
@@ -1168,6 +1170,8 @@ class Reports extends Application
 		foreach ($trans as $key => $value) {
 
 			foreach($value as $k=>$v){
+
+                print_r($v);
 
 				foreach($type_array as $t){
 
@@ -1301,7 +1305,7 @@ class Reports extends Application
 
 					$lastdate = $key;
 
-					$total['Delivery Only']['count'] +=	$r[$key][$k]['Delivery Only']['count'];
+					$total['Delivery Only']['count'] += (int) $r[$key][$k]['Delivery Only']['count'];
 					$total['Delivery Only']['dcost'] +=	$r[$key][$k]['Delivery Only']['dcost'];
 					$total['Delivery Only']['pval'] += $r[$key][$k]['Delivery Only']['pval'];
 					$total['COD']['count'] += $r[$key][$k]['COD']['count'];
