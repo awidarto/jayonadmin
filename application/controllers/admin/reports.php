@@ -1171,7 +1171,7 @@ class Reports extends Application
 
 			foreach($value as $k=>$v){
 
-                print_r($v);
+                //print_r($v);
 
 				foreach($type_array as $t){
 
