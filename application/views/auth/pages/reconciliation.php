@@ -1,12 +1,12 @@
 <script type="text/javascript">
-	
+
 	var base = '<?php print base_url();?>';
 	var controller = '<?php print $controller; ?>';
 
 	$(document).ready(function() {
 		$('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#get_week').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
@@ -61,7 +61,7 @@ table#recon_select td input{
 </style>
 
 <?php
-	
+
 	$opts = array('Global'=>'Global');
 
 	for($i=2012;$i < 2100;$i++){
@@ -118,6 +118,11 @@ table#recon_select td input{
 					<td><?php print 'To '.form_input(array('name'=>'date_to','id'=>'date_to','class'=>'text','value'=>$to));?></td>
 					<td><span id="get_date_range" class="action_link" >Get By Date Range</span></td>
 				</tr>
+
+                <tr>
+                    <td colspan="4" style="text-align:right;"><?php print anchor(uri_string().'/csv', 'Download CSV');?></td>
+                </tr>
+
 			</table>
 		</form>
 	</div>
