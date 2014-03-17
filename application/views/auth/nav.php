@@ -67,6 +67,12 @@
 					<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Location Log'); } ?></li>
 				</ul>
 			</li>
+            <li class="<?php print set_hilite('admin\/admanager')?>" ><?php if(user_group('admin')) { echo anchor('admin/admanager', 'Advertising'); } ?>
+                <ul>
+                    <li class="<?php print set_hilite('admin\/admanager')?>" ><?php if(user_group('admin')) { echo anchor('admin/admanager', 'Ad Manager'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/adcategory')?>" ><?php if(user_group('admin')) { echo anchor('admin/adcategory', 'Ad Category'); } ?></li>
+                </ul>
+            </li>
 			<li class="<?php print set_hilite('admin\/apps\/manage')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'System'); } ?>
 				<ul>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/apps\/manage')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li><?php endif;?>
