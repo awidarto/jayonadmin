@@ -477,7 +477,7 @@
             $('.rotate-picture').on('click',function(){
                 var trx_id = this.id;
 
-                alert(trx_id);
+                //alert(trx_id);
 
                 $.post('<?php print site_url('ajax/rotateaddressphoto');?>',{'trx_id':trx_id,'is_thumb':0},
                 function(data) {
