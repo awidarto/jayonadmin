@@ -122,6 +122,15 @@ class Prints extends Application
 			$dc = (int)$dc;
 			$cod = (int)$cod;
 
+            if($data['main_info']['delivery_bearer'] == 'merchant'){
+                $dc = 0;
+            }
+
+
+            if($data['main_info']['cod_bearer'] == 'merchant'){
+                $cod = 0;
+            }
+
             if($data['main_info']['delivery_type'] == 'COD' || $data['main_info']['delivery_type'] == 'CCOD'){
                 $chg = ($gt - $dsc) + $tax + $dc + $cod;
             }else{
@@ -174,8 +183,13 @@ class Prints extends Application
 				}
 				*/
 
+                $translasi = array(
+                    'merchant'=>'toko online',
+                    'buyer'=>'pembeli'
+                    );
+
 				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$data['main_info']['delivery_bearer'],
+					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']],
 						'colspan'=>2,
 						'class'=>'lsums'
 						),
@@ -196,7 +210,7 @@ class Prints extends Application
 				*/
 
 				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$data['main_info']['cod_bearer'],
+					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
 						'colspan'=>2,
 						'class'=>'lsums'
 						),
