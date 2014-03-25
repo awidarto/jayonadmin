@@ -853,35 +853,41 @@ class V1 extends Application
 
             $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
 
-            if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+            if(isset($_FILES['receiverpic'])){
+                if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
 
-                $config['image_library'] = 'gd2';
-                $config['source_image'] = $target_path;
-                $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
-                $config['create_thumb'] = false;
-                $config['maintain_ratio'] = TRUE;
-                $config['width']     = 100;
-                $config['height']   = 75;
+                    $config['image_library'] = 'gd2';
+                    $config['source_image'] = $target_path;
+                    $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+                    $config['create_thumb'] = false;
+                    $config['maintain_ratio'] = TRUE;
+                    $config['width']     = 100;
+                    $config['height']   = 75;
 
-                $this->load->library('image_lib', $config);
+                    $this->load->library('image_lib', $config);
 
-                $this->image_lib->resize();
+                    $this->image_lib->resize();
 
-                $ploc = read_gps_location($target_path);
+                    $ploc = read_gps_location($target_path);
 
-                if($ploc && is_array($ploc)){
+                    if($ploc && is_array($ploc)){
 
-                    $this->db->where('delivery_id', $delivery_id)
-                        ->where('latitude', null)
-                        ->where('longitude', null)
-                        ->update($this->config->item('incoming_delivery_table'),$ploc);
+                        $this->db->where('delivery_id', $delivery_id)
+                            ->where('latitude', null)
+                            ->where('longitude', null)
+                            ->update($this->config->item('incoming_delivery_table'),$ploc);
 
+                    }
+
+                    $res = 'OK:PICUPLOAD';
+                } else{
+                    $res = 'ERR:UPLOADFAILED';
                 }
 
-                $res = 'OK:PICUPLOAD';
-            } else{
-                $res = 'ERR:UPLOADFAILED';
+            }else{
+                    $res = 'OK:NOPIC';
             }
+
 
             if(isset($_FILES['signaturepic'])){
 
