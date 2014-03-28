@@ -619,8 +619,17 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Transaction ID:</td>
-                                <td><?php print $main_info['merchant_trans_id'];?></td>
+                                <td>No Kode Toko:</td>
+                                <td>
+                                    <?php
+                                        if(preg_match('/^TRX_/', $main_info['merchant_trans_id'])){
+                                            print '';
+                                        }else{
+                                            print $main_info['merchant_trans_id'];
+                                        }
+                                    ?>
+
+                                </td>
                             </tr>
 <?php
 /*
