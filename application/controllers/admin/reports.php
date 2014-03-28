@@ -3322,7 +3322,7 @@ class Reports extends Application
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
 			$this->db->group_end();
 
-		$this->db->group_by('assignment_date');
+		$this->db->group_by('assignment_date,status');
 
         if($pdf == 'csv'){
 
