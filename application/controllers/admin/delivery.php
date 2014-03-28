@@ -338,7 +338,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				$key['merchant_trans_id'],
+				$this->hide_trx($key['merchant_trans_id']),
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
@@ -679,7 +679,7 @@ class Delivery extends Application
                 $key['buyerdeliverycity'],
                 $key['shipping_zip'],
                 $delivery_check,
-                //$key['merchant_trans_id'],
+                //              $this->hide_trx($key['merchant_trans_id']),
                 colorizetype($key['delivery_type']),
                 '<b>'.$key['merchant'].'</b><br />'.$app['application_name'],
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
@@ -944,7 +944,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -1133,7 +1133,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				//$key['merchant_trans_id'],
+//              $this->hide_trx($key['merchant_trans_id']),
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -1374,7 +1374,7 @@ class Delivery extends Application
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
@@ -2178,7 +2178,7 @@ class Delivery extends Application
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
@@ -2367,7 +2367,7 @@ class Delivery extends Application
 				//$app['domain'],
 				$key['buyer'],
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
@@ -2860,7 +2860,7 @@ class Delivery extends Application
                 $key['delivery_note'],
                 colorizestatus($key['status']),
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-                $key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
@@ -3046,7 +3046,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['recipient_name'],
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
@@ -3232,7 +3232,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['recipient_name'],
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
@@ -3440,7 +3440,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['recipient_name'],
 				$key['merchant'],
-				$key['merchant_trans_id'],
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['device'],
 				$key['courier'],
 				$key['shipping_address'],
@@ -4136,6 +4136,15 @@ class Delivery extends Application
 
 		return $order_exist;
 	}
+
+
+    public function hide_trx($trx_id){
+        if(preg_match('/^TRX_/', $trx_id)){
+            return '';
+        }else{
+            return $trx_id;
+        }
+    }
 
 }
 

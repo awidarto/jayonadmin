@@ -348,6 +348,12 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     ?>
                                 </td>
 							</tr>
+                            <tr>
+                                <td class="row_label">No Kode Toko</td>
+                                <td>
+                                    <?php print $main_info['merchant_trans_id']; ?>
+                                </td>
+                            </tr>
 							<tr>
 								<td>Tanggal Delivery</td>
 								<td><?php print $main_info['assignment_date'];?>
