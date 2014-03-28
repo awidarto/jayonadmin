@@ -33,7 +33,7 @@ class Delivery extends Application
             'City',
             'ZIP',
             'Delivery ID',
-            //'Merchant Trans ID',
+            'No Kode Toko',
             'Type',
             'Merchant / App Name',
             'W x H x L = V',
@@ -67,7 +67,7 @@ class Delivery extends Application
             '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
             '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-            //'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+            '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
             //'',
@@ -76,13 +76,12 @@ class Delivery extends Application
             '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
             '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
+            '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
             '',
             '',
             '',
-            '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
-            '',
-            '<input type="text" name="search_shipping_address" value="Search merchant" class="search_init" />',
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
             '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
             '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
             '<input type="text" name="search_status" value="Search status" class="search_init" />'
@@ -171,38 +170,38 @@ class Delivery extends Application
 		}
 
         if($this->input->post('sSearch_7') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_7'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_7'));
             $search = true;
         }
 
         if($this->input->post('sSearch_8') != ''){
-            if($search == true){
-                $this->db->and_();
-            }
-            $this->db->group_start();
-            $this->db->like('a.application_name',$this->input->post('sSearch_8'));
-            $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
-            $this->db->group_end();
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_8'));
             $search = true;
         }
 
         if($this->input->post('sSearch_9') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_9'));
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like('a.application_name',$this->input->post('sSearch_9'));
+            $this->db->or_like('m.merchantname',$this->input->post('sSearch_9'));
+            $this->db->group_end();
             $search = true;
         }
 
         if($this->input->post('sSearch_10') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_10'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_10'));
             $search = true;
         }
 
         if($this->input->post('sSearch_11') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_11'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_11'));
             $search = true;
         }
 
         if($this->input->post('sSearch_12') != ''){
-            $this->db->like('m.merchantname',$this->input->post('sSearch_12'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_12'));
             $search = true;
         }
 
@@ -339,7 +338,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				//$key['merchant_trans_id'],
+				$key['merchant_trans_id'],
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
@@ -392,7 +391,7 @@ class Delivery extends Application
             'City',
             'ZIP',
             'Delivery ID',
-            //'Merchant Trans ID',
+            //'No Kode Toko',
             'Type',
             'Merchant / App Name',
             'W x H x L = V',
@@ -732,7 +731,7 @@ class Delivery extends Application
 			'City',
 			'ZIP',
 			'Delivery ID',
-			//'Merchant Trans ID',
+			'No Kode Toko',
 			'Type',
 			'App Name',
 			'W x H x L',
@@ -763,7 +762,7 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			//'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			'<input type="text" name="search_merchantid" value="Search kode toko" class="search_init" />',
 			'',
 			'',
 			'',
@@ -849,15 +848,15 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		/*
+
 		if($this->input->post('sSearch_4') != ''){
 			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
 			$search = true;
 		}
-		*/
 
-		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -945,7 +944,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				//$key['merchant_trans_id'],
+				$key['merchant_trans_id'],
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -1183,7 +1182,7 @@ class Delivery extends Application
 			'City',
 			'ZIP',
 			'Delivery ID',
-			//'Merchant Trans ID',
+			//'No Kode Toko',
 			'Type',
 			'App Name',
 			'W x H x L',
@@ -1417,7 +1416,7 @@ class Delivery extends Application
 			'Volume',
 			'Weight Range',
 			'Merchant',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Shipping Address',
 			'Phone',
 			'Status'
@@ -2223,7 +2222,7 @@ class Delivery extends Application
 			'Volume',
 			'Weight Range',
 			'Merchant',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Shipping Address',
 			'Phone',
 			'Status',
@@ -2798,6 +2797,11 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
 		if($search){
 			$this->db->and_();
 		}
@@ -2856,6 +2860,7 @@ class Delivery extends Application
                 $key['delivery_note'],
                 colorizestatus($key['status']),
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $key['merchant_trans_id'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
@@ -2900,6 +2905,7 @@ class Delivery extends Application
             'Receiver / Note',
             'Status',
             'Delivery ID',
+            'No Kode Toko',
             'Delivery Fee',
             'COD Surcharge',
 			'Reschedule Ref',
@@ -2925,6 +2931,7 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_merchant_trans_id" value="Search kode toko" class="search_init" />',
 			form_button('do_archive','Archive Selection','id="doArchive"')
 			);
 
@@ -3471,7 +3478,7 @@ class Delivery extends Application
 			'Buyer',
 			'Delivered To',
 			'Merchant',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Device',
 			'Courier',
 			'Shipping Address',
