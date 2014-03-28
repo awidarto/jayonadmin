@@ -793,7 +793,9 @@ function read_gps_location($file){
 
             return array(
                 'latitude' => $lat,
-                'longitude' => $lng
+                'longitude' => $lng,
+                'photolatitude' => $lat,
+                'photolongitude' => $lng,
             );
         }
     }

@@ -775,6 +775,7 @@
             pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
             pdata.buyerdeliverytime = $('#buyerdeliverydate').val();
             pdata.buyerdeliveryslot = $('#buyerdeliverytime').val();
+            pdata.merchant_trans_id = $('#merchant_trans_id').val();
             pdata.direction = $('#direction').val();
             pdata.auto_confirm = true; //true
             pdata.email = $('#buyer_email').val();
@@ -1250,6 +1251,13 @@
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
+                            <tr class="buyer_info">
+                                <td class="row_label" id="merchant_id_label">No Kode Toko<hr /><span class="fine">No Kode Toko</span></td>
+                                <td>
+                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" />
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
                                 <td id="type_select">

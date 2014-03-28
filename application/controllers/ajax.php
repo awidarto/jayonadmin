@@ -515,6 +515,7 @@ class Ajax extends Application
 			'buyerdeliverycity'=>$this->input->post('buyerdeliverycity'),
 			'buyerdeliverytime'=>$this->input->post('buyerdeliverytime'),
 			'buyerdeliveryslot'=>$this->input->post('buyerdeliveryslot'),
+            'merchant_trans_id'=>$this->input->post('merchant_trans_id'),
 			'directions'=>$this->input->post('direction'),
 			'auto_confirm'=>$this->input->post('auto_confirm'),
 			'email'=>$this->input->post('email'),
@@ -546,7 +547,11 @@ class Ajax extends Application
 			'ccod_method' => $this->input->post('ccod_method')
 		);
 
-		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
+        if($trx['merchant_trans_id'] == ''){
+            $trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
+        }else{
+            $trx['transaction_id'] = $trx['merchant_trans_id'];
+        }
 
 		$api_key = $this->input->post('api_key');
 		$trx_id = $trx['transaction_id'];
