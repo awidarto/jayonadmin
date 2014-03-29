@@ -349,7 +349,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 </td>
 							</tr>
                             <tr>
-                                <td class="row_label">No Kode Toko</td>
+                                <td class="row_label">No Kode Penjualan Toko</td>
                                 <td>
                                     <?php
                                         if(preg_match('/^TRX_/', $main_info['merchant_trans_id'])){

@@ -1251,12 +1251,6 @@
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
-                            <tr class="buyer_info">
-                                <td class="row_label" id="merchant_id_label">No Kode Toko<hr /><span class="fine">No Kode Toko</span></td>
-                                <td>
-                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" />
-                                </td>
-                            </tr>
 
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
@@ -1280,6 +1274,13 @@
                                     <input type="text" id="buyer_name" name="buyer_name" value="" />
                                 </td>
                             </tr>
+                            <tr class="buyer_info">
+                                <td class="row_label" id="merchant_id_label">No Kode Penjualan Toko<hr /><span class="fine">No Kode Penjualan Toko</span></td>
+                                <td>
+                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" />
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td class="row_label" id="buyer_email_label">Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span></td>
                                 <td>
