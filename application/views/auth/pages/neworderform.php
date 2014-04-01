@@ -1277,7 +1277,7 @@
                             <tr class="buyer_info">
                                 <td class="row_label" id="merchant_id_label">No Kode Penjualan Toko<hr /><span class="fine">No Kode Penjualan Toko</span></td>
                                 <td>
-                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" />
+                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" /> <span class="fine">( No. Invoice / AWB / dll )</span>
                                 </td>
                             </tr>
 
