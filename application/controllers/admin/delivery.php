@@ -329,6 +329,8 @@ class Delivery extends Application
                 $picture = '';
             }
 
+            $app_name = (isset($app['application_name']))?$app['application_name']:'-';
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -340,7 +342,7 @@ class Delivery extends Application
 				$delivery_check,
 				$this->hide_trx($key['merchant_trans_id']),
 				colorizetype($key['delivery_type']),
-				'<b>'.$key['merchant'].'</b><br />'.$app['application_name'],
+				'<b>'.$key['merchant'].'</b><br />'.$app_name,
 				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
 				//(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
