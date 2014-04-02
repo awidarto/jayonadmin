@@ -19,7 +19,7 @@ class Gen extends Application
         for($d = 1; $d < $days + 1; $d++){
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
-            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name,delivery_type,status,cod_cost,delivery_cost,total_price')
+            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price')
                 ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
                 ->like('assignment_date',$date,'before')
                 ->from($this->config->item('incoming_delivery_table'));
@@ -31,7 +31,7 @@ class Gen extends Application
 
             foreach($result as $r){
 
-                $lookupname[$r->merchant_id] = $r->merchant_name;
+                $lookupname[$r->merchant_id] = $r->merchant_name.' - '.$r->fullname;
 
                 if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'])){
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'] += 1;
