@@ -1747,7 +1747,7 @@ class Reports extends Application
 
             $this->table->add_row(
                 $counter,
-                ($lastdate == $r['assignment_date'])?'':$r['assignment_date'],
+                ($lastdate == $r['assignment_date'])?'': date( 'd-m-Y' ,strtotime($r['assignment_date']) ) ,
                 $r['merchant_name'],
                 array('data'=>$r['do_count'],'class'=>'count'),
                 array('data'=>idr($r['do_delivery_cost']),'class'=>'currency'),
