@@ -49,6 +49,8 @@ $config['jayon_zones_table'] = 'districts';
 $config['jayon_timeslots_table'] = 'time_slots';
 $config['jayon_email_outbox_table'] = 'email_outbox';
 
+$config['jayon_revenue_table'] = 'revenue_aggregate';
+
 //test only
 $config['jayon_mobile_table'] = 'mobile_orders';
 

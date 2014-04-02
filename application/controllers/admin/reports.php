@@ -1490,6 +1490,431 @@ class Reports extends Application
 		}
 	}
 
+
+    public function revenuegen($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+        $type = (is_null($type))?'Global':$type;
+        $id = (is_null($type))?'noid':$type;
+
+        if(is_null($scope)){
+            $id = 'noid';
+            $scope = 'month';
+            $year = date('Y',time());
+            $par1 = date('m',time());
+        }
+
+        $pdf = null;
+
+        if($scope == 'month'){
+            $days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+            $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+            $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+            $pdf = $par2;
+
+            $data['month'] = $par1;
+            $data['week'] = 1;
+        }else if($scope == 'week'){
+            $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+            $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+            $pdf = $par2;
+
+            $data['month'] = 1;
+            $data['week'] = $par1;
+        }else if($scope == 'date'){
+            $from = $par1;
+            $to = $par2;
+            $pdf = $par3;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }else{
+            $from = date('Y-m-d',time());
+            $to = date('Y-m-d',time());
+            $pdf = null;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }
+
+        $data['year'] = $year;
+        $data['from'] = $from;
+        $data['to'] = $to;
+
+        $clist = get_merchant(null,false);
+
+        $cs = array('noid'=>'All');
+        foreach ($clist as $ckey) {
+            $cs[$ckey['id']] = $ckey['merchantname'].' - '.$ckey['fullname'];
+        }
+
+        $data['merchants'] = $cs;
+        $data['id'] = $id;
+
+        /* copied from print controller */
+
+        $this->load->library('number_words');
+
+        if($id == 'noid'){
+            $data['type_name'] = '-';
+            $data['bank_account'] = 'n/a';
+            $data['type'] = 'Global';
+        }else{
+            $user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
+            //print $this->db->last_query();
+            $data['type'] = $user->merchantname.' - '.$user->fullname;
+            $data['type_name'] = $user->fullname;
+            $data['bank_account'] = 'n/a';
+        }
+
+        $data['period'] = $from.' s/d '.$to;
+
+        $sfrom = date('Y-m-d',strtotime($from));
+        $sto = date('Y-m-d',strtotime($to));
+
+
+
+        // get assignment_date, merchant_id,delivery_type
+        /*
+        $this->db->distinct();
+
+        $this->db->select('assignment_date,merchant_id,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
+        //$this->db->select('assignment_date,merchant_id,delivery_type,status');
+
+        $this->db->from($this->config->item('delivered_delivery_table'));
+        */
+
+        $this->db->from($this->config->item('jayon_revenue_table'));
+
+
+        $column = 'assignment_date';
+        $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+        $this->db->where($daterange, null, false);
+        $this->db->where($column.' != ','0000-00-00');
+
+        if($id != 'noid'){
+            $this->db->where('merchant_id',$id);
+        }
+
+        $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
+
+            //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
+            //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
+
+
+
+        /* raw query
+            SELECT DISTINCT `assignment_date`, `merchant_id`, `delivery_type`, `status`, count(*) as count, sum(cod_cost) as cod_cost, sum(delivery_cost) as delivery_cost, sum(total_price) as total_price, sum(total_discount) as total_discount, sum(total_tax) as total_tax, sum(((total_price-total_discount)+total_tax)) as package_value, m.merchantname as merchantname FROM (`delivery_order_active`) LEFT JOIN members as m ON merchant_id = m.id WHERE `assignment_date`between '2014-02-01%' and '2014-02-28%' AND `assignment_date` != '0000-00-00' AND ( `status` = 'delivered' OR `status` = 'revoked' OR `status` = 'noshow' OR `status` = 'rescheduled' ) GROUP BY `assignment_date`, `merchant_id`, `delivery_type`, `status`
+        */
+        //print $this->db->last_query();
+
+        if($pdf == 'csv'){
+
+            //$this->db->select('assignment_date,merchant_id,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value, members.merchantname as merchantname, members.fullname as merchantfullname');
+
+            //$this->db->join($this->config->item('jayon_members_table'), $this->config->item('jayon_members_table').'.id = '.$this->config->item('incoming_delivery_table').'.merchant_id', 'left');
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
+
+
+        $rows = $this->db->get();
+
+        $trans = $rows->result_array();
+
+        $last_query = $this->db->last_query();
+        //print_r($result);
+
+
+        //exit();
+
+        //print_r($trans);
+
+        //exit();
+
+        $this->table->set_heading(
+            '',
+            '',
+            '',
+            array('data'=>'DO','colspan'=>'3'),
+            array('data'=>'COD','colspan'=>'4'),
+            array('data'=>'CCOD','colspan'=>'4'),
+            array('data'=>'PS','colspan'=>'3'),
+
+            array('data'=>'Total','colspan'=>'3')
+        ); // Setting headings for the table
+
+
+        $this->table->set_subheading(
+            'No.',
+            'Date',
+            'Merchant',
+
+            'count',
+            'dcost',
+            'pval',
+
+            'count',
+            'dcost',
+            'sur',
+            'pval',
+
+            'count',
+            'dcost',
+            'sur',
+            'pval',
+
+            'count',
+            'pfee',
+            'pval',
+
+            'Revenue',
+            'Delivery Count',
+            'Package Value'
+        ); // Setting headings for the table
+
+        $counter  = 1;
+
+        $total = array();
+
+        $total['Delivery Only']['count'] = 0;
+        $total['Delivery Only']['dcost'] = 0;
+        $total['Delivery Only']['pval'] = 0;
+        $total['COD']['count'] = 0;
+        $total['COD']['dcost'] = 0;
+        $total['COD']['sur'] = 0;
+        $total['COD']['pval']  = 0;
+        $total['CCOD']['count']  = 0;
+        $total['CCOD']['dcost']  = 0;
+        $total['CCOD']['sur']  = 0;
+        $total['CCOD']['pval']  = 0;
+        $total['PS']['count']  = 0;
+        $total['PS']['pfee']  = 0;
+        $total['PS']['pval']  = 0;
+        $total['delivered']['count'] = 0;
+        $total['noshow']['count']  = 0;
+        $total['rescheduled']['count']  = 0;
+        $total['jex']['revenue'] = 0;
+        $total['total_delivery_count']  = 0;
+        $total['total_package_value']  = 0;
+
+        $lastdate = '';
+
+        foreach($trans as $r){
+
+            $revtotal = ( $r['do_delivery_cost'] + $r['cod_delivery_cost'] + $r['cod_cod_cost'] + $r['ccod_delivery_cost'] + $r['ccod_cod_cost'] + $r['ps_delivery_cost']);
+            $total_count = $r['do_count'] + $r['cod_count'] + $r['ccod_count'] + $r['ps_count'];
+
+            $total_value = $r['do_total_price'] + $r['cod_total_price'] + $r['ccod_total_price'] + $r['ps_total_price'];
+
+
+            $this->table->add_row(
+                $counter,
+                ($lastdate == $r['assignment_date'])?'':$r['assignment_date'],
+                $r['merchant_name'],
+                array('data'=>$r['do_count'],'class'=>'count'),
+                array('data'=>idr($r['do_delivery_cost']),'class'=>'currency'),
+                array('data'=>idr($r['do_total_price']),'class'=>'currency'),
+
+                array('data'=>$r['cod_count'],'class'=>'count'),
+                array('data'=>idr($r['cod_delivery_cost']),'class'=>'currency'),
+                array('data'=>idr($r['cod_cod_cost']),'class'=>'currency'),
+                array('data'=>idr($r['cod_total_price']),'class'=>'currency'),
+
+                array('data'=>$r['ccod_count'],'class'=>'count'),
+                array('data'=>idr($r['ccod_delivery_cost']),'class'=>'currency'),
+                array('data'=>idr($r['ccod_cod_cost']),'class'=>'currency'),
+                array('data'=>idr($r['ccod_total_price']),'class'=>'currency'),
+
+                array('data'=>$r['ps_count'],'class'=>'count'),
+                array('data'=>idr($r['ps_delivery_cost']),'class'=>'currency'),
+                array('data'=>idr($r['ps_total_price']),'class'=>'currency'),
+
+                array('data'=>idr($revtotal),'class'=>'currency'),
+                array('data'=>$total_count,'class'=>'count'),
+                array('data'=>idr($total_value),'class'=>'currency')
+
+            );
+
+                $lastdate = $r['assignment_date'];
+
+                $total['Delivery Only']['count'] += (int) $r['do_count'];
+                $total['Delivery Only']['dcost'] += $r['do_delivery_cost'];
+                $total['Delivery Only']['pval'] += $r['do_total_price'];
+                $total['COD']['count'] += $r['cod_count'];
+                $total['COD']['dcost'] += $r['cod_delivery_cost'];
+                $total['COD']['sur'] += $r['cod_cod_cost'];
+                $total['COD']['pval'] += $r['cod_total_price'];
+                $total['CCOD']['count'] += $r['ccod_count'];
+                $total['CCOD']['dcost'] += $r['ccod_delivery_cost'];
+                $total['CCOD']['sur'] += $r['ccod_cod_cost'];
+                $total['CCOD']['pval'] += $r['ccod_total_price'];
+                $total['PS']['count'] += $r['ps_count'];
+                $total['PS']['pfee'] += $r['ps_delivery_cost'];
+                $total['PS']['pval'] += $r['ps_total_price'];
+
+                $total['jex']['revenue'] += $revtotal;
+                $total['total_delivery_count'] += $total_count;
+                $total['total_package_value'] += $total_value;
+
+            $counter++;
+
+        }
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Totals','class'=>'total'),
+
+                array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
+                array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['COD']['count'],'class'=>'total count'),
+                array('data'=>idr($total['COD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['COD']['sur']),'class'=>'total currency'),
+                array('data'=>idr($total['COD']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['CCOD']['count'],'class'=>'total count'),
+                array('data'=>idr($total['CCOD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['CCOD']['sur']),'class'=>'total currency'),
+                array('data'=>idr($total['CCOD']['pval']),'class'=>'total currency'),
+
+                array('data'=>$total['PS']['count'],'class'=>'total count'),
+                array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+                array('data'=>idr($total['PS']['pval']),'class'=>'total currency'),
+
+                array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
+                array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+                array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
+            );
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Percentage (%)','class'=>'total'),
+
+                array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
+                array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr($total['Delivery Only']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['Delivery Only']['pval'] == 0)?idr(0):idr($total['Delivery Only']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['COD']['count'] == 0)?idr(0):idr($total['COD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['COD']['dcost'] == 0)?idr(0):idr($total['COD']['dcost'] / $total['jex']['revenue'] * 100 ),'class'=>'total currency c-maroon'),
+                array('data'=>($total['COD']['sur'] == 0)?idr(0):idr($total['COD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['COD']['pval'] == 0)?idr(0):idr($total['COD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['CCOD']['count'] == 0)?idr(0):idr($total['CCOD']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['CCOD']['dcost'] == 0)?idr(0):idr($total['CCOD']['dcost'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['CCOD']['sur'] == 0)?idr(0):idr($total['CCOD']['sur'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['CCOD']['pval'] == 0)?idr(0):idr($total['CCOD']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                array('data'=>($total['PS']['count'] == 0)?idr(0):idr($total['PS']['count'] / $total['total_delivery_count'] * 100),'class'=>'total count c-orange'),
+                array('data'=>($total['PS']['pfee'] == 0)?idr(0):idr($total['PS']['pfee'] / $total['jex']['revenue'] * 100),'class'=>'total currency c-maroon'),
+                array('data'=>($total['PS']['pval'] == 0)?idr(0):idr($total['PS']['pval'] / $total['total_package_value'] * 100),'class'=>'total currency c-maroon'),
+
+                '',
+                '',
+                ''
+            );
+
+
+            $this->table->add_row(
+                '',
+                '',
+
+                array('data'=>'Summary','class'=>'total'),
+
+                array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
+                array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),
+
+                '',
+                '',
+                array('data'=>idr($total['COD']['sur'] + $total['CCOD']['sur']),'class'=>'total currency'),
+                '',
+
+                '',
+                '',
+                '',
+                '',
+
+                '',
+                array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+                '',
+
+                array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
+                array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+                array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
+            );
+
+
+        $recontab = $this->table->generate();
+        $data['recontab'] = $recontab;
+
+        /* end copy */
+
+        $this->breadcrumb->add_crumb('Revenue ( Manual Generated )','admin/reports/reconciliation');
+
+        $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+        $page['page_title'] = 'Merchant Reconciliations';
+
+        $data['controller'] = 'admin/reports/revenuegen/';
+
+        $data['last_query'] = $last_query;
+
+        if($pdf == 'pdf'){
+            $html = $this->load->view('print/revenue',$data,true);
+            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+        }else if($pdf == 'print'){
+            $this->load->view('print/merchantrecon',$data); // Load the view
+        }else{
+            $this->ag_auth->view('merchantrecon',$data); // Load the view
+        }
+    }
+
+
     public function zonerevenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
         $type = (is_null($type))?'Global':$type;

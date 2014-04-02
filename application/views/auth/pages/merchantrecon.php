@@ -43,6 +43,21 @@
             $('#last_query').toggle();
         });
 
+        $('#act_regenerate').on('click',function(){
+            $('#generating').show();
+            var mo = $('#month_period').val();
+            var yr = $('#year_period').val();
+
+            $.post( base + 'gen/rev/' + mo +'/' + yr,
+                {},
+                function(data){
+                    if(data.result == 'OK'){
+                        $('#generating').hide();
+                        alert('Report regenerated, refresh page if necessary');
+                    }
+                },
+                'json' );
+        });
 		//$("#toClone thead").sticky({topSpacing:0});
 
 	});
@@ -95,6 +110,12 @@ div.stickyHeader {
     top:0;
     position:fixed;
     _position:absolute;
+}
+
+#generating{
+    color: red;
+    font-weight: bold;
+    background-color: yellow;
 }
 
 </style>
@@ -163,6 +184,27 @@ div.stickyHeader {
                 <tr>
                     <td colspan="4" style="text-align:right;"><?php print anchor(uri_string().'/csv', 'Download CSV');?></td>
                 </tr>
+
+                <tr>
+                    <td>Period</td>
+                    <td>
+                        <?php print form_dropdown('month_period',$months,$month,'id = "month_period"');?>
+                    </td>
+                    <td>
+                        <?php print form_dropdown('year_period',$years,$year,'id = "year_period"');?>
+                    </td>
+                    <td>
+                        <span id="act_regenerate" class="action_link" >Regenerate Report Data</span>
+                    </td>
+
+                </tr>
+                <tr id="generating" style="display:none">
+                    <td colspan="4">
+                        <img src="<?php print base_url();?>assets/images/ajax_loader.gif" />
+                        Regenerating data, please wait, this will take a while.
+                    </td>
+                </tr>
+
 
 			</table>
 		</form>
