@@ -1599,9 +1599,9 @@ class Reports extends Application
         $this->db->and_();
             $this->db->group_start();
                 $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
-//                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-//                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-//                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
             $this->db->group_end();
 
             //$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
