@@ -33,7 +33,7 @@ class Gen extends Application
 
                 $lookupname[$r->merchant_id] = $r->merchant_name.' - '.$r->fullname;
 
-                $r->delivery_type = ($r->delivery_type == 'DO')? 'Delivery Only': $r->delivery_type ;
+                $r->delivery_type = (strtoupper($r->delivery_type) == 'DO')? 'Delivery Only': $r->delivery_type ;
 
                 if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'])){
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'] += 1;
