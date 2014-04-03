@@ -1305,6 +1305,10 @@ class Delivery extends Application
 			$search = true;
 		}
 
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like('merchant_trans_id',$this->input->post('sSearch_4'));
+            $search = true;
+        }
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
 		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
@@ -1434,7 +1438,12 @@ class Delivery extends Application
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'',
-			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
+			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"'),
+            '',
+            '',
+            '',
+            '',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '0,1,2';
@@ -2090,20 +2099,32 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('d.identifier',$this->input->post('sSearch_0'));
+
+        if($this->input->post('sSearch_0') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.assignment_date',$this->input->post('sSearch_0'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_1') != ''){
+            $this->db->like('d.identifier',$this->input->post('sSearch_1'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_2'));
+            $search = true;
+        }
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('assignment_date',$this->input->post('sSearch_1'));
-			$search = true;
-		}
 
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('assignment_zone',$this->input->post('sSearch_2'));
-			$search = true;
-		}
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+            $search = true;
+        }
 
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
@@ -2238,7 +2259,16 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			form_button('do_dispatch','Assign Courier','id="doDispatch"')
+			form_button('do_dispatch','Assign Courier','id="doDispatch"'),
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />'
+
 			);
 
 		$page['sortdisable'] = '0,1,2,9,10,11';
@@ -2523,6 +2553,11 @@ class Delivery extends Application
 			$search = true;
 		}
 
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
 
 		/* handle pulldown type filter , hacky thing but should work for now */
 
@@ -2633,6 +2668,7 @@ class Delivery extends Application
                 $key['shipping_address'].'<br />'.$direction,
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $this->hide_trx($key['merchant_trans_id']),
 				$key['delivery_cost'],
 				($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -2681,6 +2717,7 @@ class Delivery extends Application
 			'Shipping Address',
 			'Phone',
             'Delivery ID',
+            'No Kode Penjualan Toko',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
@@ -2705,6 +2742,7 @@ class Delivery extends Application
 			'<input type="text" name="search_shipping" id="search_shipping" value="Search Address" class="search_init" />',
             '',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
