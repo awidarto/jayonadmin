@@ -454,6 +454,21 @@ class V1 extends Application
                             $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
                         }
 
+                        if($in->status == $this->config->item('trans_status_mobile_pending')){
+                            $locdata['dir_lat'] = $in->lat;
+                            $locdata['dir_lon'] = $in->lon;
+                            $locdata['latitude'] = $in->lat;
+                            $locdata['longitude'] = $in->lon;
+                            $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
+
+                            $pd = $this->db->select('pending_count')
+                                ->from($this->config->item('assigned_delivery_table'))
+                                ->where('delivery_id',$in->delivery_id)->get()->row();
+
+                            $pc = array('pending_count', ($pd->pending_count + 1) );
+                            $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'), $pc);
+                        }
+
 					}else{
 						$delivery_id = "N/A";
 					}
@@ -851,7 +866,13 @@ class V1 extends Application
 
             $delivery_id = $this->input->post('delivery_id');
 
-            $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+            $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+            if(count($existingpic) == 0){
+                $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+            }else{
+                $pidx = count($existingpic);
+                $target_path = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.jpg';
+            }
 
             if(isset($_FILES['receiverpic'])){
                 if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
