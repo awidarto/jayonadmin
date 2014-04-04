@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
  <!--[if lte IE 8]>
      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
  <![endif]-->
@@ -6,7 +6,7 @@
 <?php echo $this->ag_asset->load_css('font-awesome.min.css');?>
 <?php echo $this->ag_asset->load_css('leaflet.awesome-markers.css');?>
 
-<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
 
 <?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
 <?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
