@@ -2577,6 +2577,8 @@ class Reports extends Application
             $this->db->where($this->config->item('assigned_delivery_table').'.courier_id',$id);
         }
 
+        $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+
         /*
         $this->db->and_();
             $this->db->group_start();
