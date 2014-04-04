@@ -146,7 +146,7 @@ div.stickyHeader {
 		<form method="get">
 			<table style="width:500px;" id="recon_select" cellspacing="0" >
 				<tr>
-					<td>Merchant</td>
+					<td><?php print (isset($select_title))?$select_title:'Merchant'; ?></td>
 					<td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
 				</tr>
 				<tr>

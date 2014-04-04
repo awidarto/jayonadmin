@@ -1972,7 +1972,7 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -2060,6 +2060,7 @@ class Reports extends Application
             'Merchant Name',
             'Store',
             'Delivery Date',
+            'Buyer Name',
             'Delivery Type',
             'Status',
             'Package Value',
@@ -2105,7 +2106,8 @@ class Reports extends Application
                 $this->short_did($r->delivery_id),
                 $r->fullname.'<hr />'.$r->merchant_name,
                 $r->app_name.'<hr />'.$r->domain,
-                $r->assignment_date,
+                date('d-m-Y',strtotime($r->assignment_date)),
+                $r->buyer_name,
                 $r->delivery_type,
                 $r->status,
                 array('data'=>idr($total),'class'=>'currency'),
@@ -2166,6 +2168,599 @@ class Reports extends Application
         $page['page_title'] = 'Merchant Reconciliations';
 
         $data['controller'] = 'admin/reports/invoices/';
+
+        $data['last_query'] = $last_query;
+
+        if($pdf == 'pdf'){
+            $html = $this->load->view('print/revenue',$data,true);
+            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+        }else if($pdf == 'print'){
+            $this->load->view('print/merchantrecon',$data); // Load the view
+        }else{
+            $this->ag_auth->view('merchantrecon',$data); // Load the view
+        }
+    }
+
+    public function manifests($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+        $type = (is_null($type))?'Global':$type;
+        $id = (is_null($type))?'noid':$type;
+
+        if(is_null($scope)){
+            $id = 'noid';
+            $scope = 'month';
+            $year = date('Y',time());
+            $par1 = date('m',time());
+        }
+
+        $pdf = null;
+
+        if($scope == 'month'){
+            $days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+            $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+            $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+            $pdf = $par2;
+
+            $data['month'] = $par1;
+            $data['week'] = 1;
+        }else if($scope == 'week'){
+            $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+            $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+            $pdf = $par2;
+
+            $data['month'] = 1;
+            $data['week'] = $par1;
+        }else if($scope == 'date'){
+            $from = $par1;
+            $to = $par2;
+            $pdf = $par3;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }else{
+            $from = date('Y-m-d',time());
+            $to = date('Y-m-d',time());
+            $pdf = null;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }
+
+        $data['year'] = $year;
+        $data['from'] = $from;
+        $data['to'] = $to;
+
+        $clist = get_merchant(null,false);
+
+        $clist = get_device_list();
+
+        $cs = array('noid'=>'All');
+        foreach ($clist as $ckey) {
+            $cs[$ckey->id] = $ckey->identifier;
+        }
+
+        $data['merchants'] = $cs;
+        $data['id'] = $id;
+
+        /* copied from print controller */
+
+        $this->load->library('number_words');
+
+        if($id == 'noid'){
+            $data['type_name'] = '-';
+            $data['bank_account'] = 'n/a';
+            $data['type'] = 'Global';
+        }else{
+            $user = $this->db->where('id',$id)->get($this->config->item('jayon_devices_table'))->row();
+            //print $this->db->last_query();
+            $data['type'] = $user->identifier;
+            $data['type_name'] = $user->identifier;
+            $data['bank_account'] = 'n/a';
+        }
+
+        $data['period'] = $from.' s/d '.$to;
+
+        $sfrom = date('Y-m-d',strtotime($from));
+        $sto = date('Y-m-d',strtotime($to));
+
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname,d.identifier as device_name, c.fullname as courier_name ,a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+            ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+            ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
+            ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
+            ->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left')
+            //->like('assignment_date',$date,'before')
+            ->from($this->config->item('incoming_delivery_table'));
+
+        $column = 'assignment_date';
+        $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+        $this->db->where($daterange, null, false);
+        $this->db->where($column.' != ','0000-00-00');
+
+        if($id != 'noid'){
+            $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
+        }
+
+        /*
+        $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
+        */
+        //print $this->db->last_query();
+
+        if($pdf == 'csv'){
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
+
+
+        $rows = $this->db->get();
+
+        $trans = $rows->result();
+
+        $last_query = $this->db->last_query();
+        //print_r($result);
+
+
+        //exit();
+
+        //print_r($trans);
+
+        //exit();
+
+        $this->table->set_heading(
+            'No.',
+            'Device Name',
+            'Courier',
+            'No Kode Penjualan Toko',
+            'Delivery ID',
+            'Store',
+            'Delivery Date',
+            'Buyer Name',
+            'Delivery Type',
+            'Status',
+            'Package Value',
+            'Disc',
+            'Tax',
+            'Delivery Chg',
+            'COD Surchg',
+            'Payable Value'
+        ); // Setting headings for the table
+
+        $seq = 1;
+        $total_billing = 0;
+        $total_delivery = 0;
+        $total_cod = 0;
+
+        $lastdate = '';
+
+        foreach($rows->result() as $r){
+
+            $total = str_replace(array(',','.'), '', $r->total_price);
+            $dsc = str_replace(array(',','.'), '', $r->total_discount);
+            $tax = str_replace(array(',','.'), '',$r->total_tax);
+            $dc = str_replace(array(',','.'), '',$r->delivery_cost);
+            $cod = str_replace(array(',','.'), '',$r->cod_cost);
+
+            $total = (int)$total;
+            $dsc = (int)$dsc;
+            $tax = (int)$tax;
+            $dc = (int)$dc;
+            $cod = (int)$cod;
+
+            $payable = 0;
+
+            if($r->status == 'delivered'){
+                $payable = ($total - $dsc) + $tax;
+
+                $total_delivery += (int)str_replace('.','',$dc);
+                $total_cod += (int)str_replace('.','',$cod);
+                $total_billing += (int)str_replace('.','',$payable);
+
+            }
+
+            $this->table->add_row(
+                $seq,
+                $r->device_name,
+                $r->courier_name,
+                $this->hide_trx($r->merchant_trans_id),
+                $this->short_did($r->delivery_id),
+                $r->app_name.'<hr />'.$r->domain,
+                date('d-m-Y',strtotime($r->assignment_date)),
+                $r->buyer_name,
+                $r->delivery_type,
+                $r->status,
+                array('data'=>idr($total),'class'=>'currency'),
+                array('data'=>idr($dsc),'class'=>'currency'),
+                array('data'=>idr($tax),'class'=>'currency'),
+                array('data'=>idr($dc),'class'=>'currency'),
+                array('data'=>idr($cod),'class'=>'currency'),
+                array('data'=>idr($payable),'class'=>'currency')
+            );
+
+            $seq++;
+        }
+
+        $total_span = 13;
+        $say_span = 14;
+
+        $this->table->add_row(
+            array('data'=>'Total','colspan'=>$total_span),
+            array('data'=>idr($total_delivery),'class'=>'total currency'),
+            array('data'=>idr($total_cod),'class'=>'total currency'),
+            array('data'=>idr($total_billing),'class'=>'total currency')
+        );
+
+        $this->table->add_row(
+            'Terbilang',
+            array('data'=>'&nbsp;','colspan'=>$say_span)
+        );
+
+        if($type == 'Merchant' || $type == 'Global'){
+            $this->table->add_row(
+                'Payable',
+                array('data'=>$this->number_words->to_words($total_billing).' rupiah',
+                    'colspan'=>$say_span)
+            );
+        }
+
+        $this->table->add_row(
+            'Delivery Charge',
+            array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $this->table->add_row(
+            'COD Surcharge',
+            array('data'=>$this->number_words->to_words($total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $recontab = $this->table->generate();
+        $data['recontab'] = $recontab;
+
+
+        /* end copy */
+
+        $this->breadcrumb->add_crumb('Manifests','admin/reports/manifests');
+
+        $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+        $page['page_title'] = 'Manifests';
+        $data['select_title'] = 'Device';
+
+        $data['controller'] = 'admin/reports/manifests/';
+
+        $data['last_query'] = $last_query;
+
+        if($pdf == 'pdf'){
+            $html = $this->load->view('print/revenue',$data,true);
+            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+        }else if($pdf == 'print'){
+            $this->load->view('print/merchantrecon',$data); // Load the view
+        }else{
+            $this->ag_auth->view('merchantrecon',$data); // Load the view
+        }
+    }
+
+    public function courierrecap($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+        $type = (is_null($type))?'Global':$type;
+        $id = (is_null($type))?'noid':$type;
+
+        if(is_null($scope)){
+            $id = 'noid';
+            $scope = 'month';
+            $year = date('Y',time());
+            $par1 = date('m',time());
+        }
+
+        $pdf = null;
+
+        if($scope == 'month'){
+            $days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+            $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+            $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+            $pdf = $par2;
+
+            $data['month'] = $par1;
+            $data['week'] = 1;
+        }else if($scope == 'week'){
+            $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+            $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+            $pdf = $par2;
+
+            $data['month'] = 1;
+            $data['week'] = $par1;
+        }else if($scope == 'date'){
+            $from = $par1;
+            $to = $par2;
+            $pdf = $par3;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }else{
+            $from = date('Y-m-d',time());
+            $to = date('Y-m-d',time());
+            $pdf = null;
+
+            $data['month'] = 1;
+            $data['week'] = 1;
+        }
+
+        $data['year'] = $year;
+        $data['from'] = $from;
+        $data['to'] = $to;
+
+        $clist = get_courier(null,false);
+
+        $cs = array('noid'=>'All');
+        foreach ($clist as $ckey) {
+            $cs[$ckey['id']] = $ckey['fullname'];
+        }
+
+        $data['merchants'] = $cs;
+        $data['id'] = $id;
+
+        /* copied from print controller */
+
+        $this->load->library('number_words');
+
+        if($id == 'noid'){
+            $data['type_name'] = '-';
+            $data['bank_account'] = 'n/a';
+            $data['type'] = 'Global';
+        }else{
+            $user = $this->db->where('id',$id)->get($this->config->item('jayon_couriers_table'))->row();
+            //print $this->db->last_query();
+            $data['type'] = $user->fullname;
+            $data['type_name'] = $user->fullname;
+            $data['bank_account'] = 'n/a';
+        }
+
+        $data['period'] = $from.' s/d '.$to;
+
+        $sfrom = date('Y-m-d',strtotime($from));
+        $sto = date('Y-m-d',strtotime($to));
+
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname,d.identifier as device_name, c.fullname as courier_name ,a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+            ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+            ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
+            ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
+            ->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left')
+            //->like('assignment_date',$date,'before')
+            ->from($this->config->item('incoming_delivery_table'));
+
+        $column = 'assignment_date';
+        $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+        $this->db->where($daterange, null, false);
+        $this->db->where($column.' != ','0000-00-00');
+
+        if($id != 'noid'){
+            $this->db->where($this->config->item('assigned_delivery_table').'.courier_id',$id);
+        }
+
+        /*
+        $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
+        */
+        //print $this->db->last_query();
+
+        if($pdf == 'csv'){
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
+
+
+        $rows = $this->db->get();
+
+        $trans = $rows->result();
+
+        $last_query = $this->db->last_query();
+        //print_r($result);
+
+
+        //exit();
+
+        //print_r($trans);
+
+        //exit();
+
+        $this->table->set_heading(
+            'No.',
+            'Device Name',
+            'Courier',
+            'No Kode Penjualan Toko',
+            'Delivery ID',
+            'Store',
+            'Delivery Date',
+            'Buyer Name',
+            'Delivery Type',
+            'Status',
+            'Package Value',
+            'Disc',
+            'Tax',
+            'Delivery Chg',
+            'COD Surchg',
+            'Payable Value'
+        ); // Setting headings for the table
+
+        $seq = 1;
+        $total_billing = 0;
+        $total_delivery = 0;
+        $total_cod = 0;
+
+        $lastdate = '';
+
+        foreach($rows->result() as $r){
+
+            $total = str_replace(array(',','.'), '', $r->total_price);
+            $dsc = str_replace(array(',','.'), '', $r->total_discount);
+            $tax = str_replace(array(',','.'), '',$r->total_tax);
+            $dc = str_replace(array(',','.'), '',$r->delivery_cost);
+            $cod = str_replace(array(',','.'), '',$r->cod_cost);
+
+            $total = (int)$total;
+            $dsc = (int)$dsc;
+            $tax = (int)$tax;
+            $dc = (int)$dc;
+            $cod = (int)$cod;
+
+            $payable = 0;
+
+            if($r->status == 'delivered'){
+                $payable = ($total - $dsc) + $tax;
+
+                $total_delivery += (int)str_replace('.','',$dc);
+                $total_cod += (int)str_replace('.','',$cod);
+                $total_billing += (int)str_replace('.','',$payable);
+
+            }
+
+            $this->table->add_row(
+                $seq,
+                $r->device_name,
+                $r->courier_name,
+                $this->hide_trx($r->merchant_trans_id),
+                $this->short_did($r->delivery_id),
+                $r->app_name.'<hr />'.$r->domain,
+                date('d-m-Y',strtotime($r->assignment_date)),
+                $r->buyer_name,
+                $r->delivery_type,
+                $r->status,
+                array('data'=>idr($total),'class'=>'currency'),
+                array('data'=>idr($dsc),'class'=>'currency'),
+                array('data'=>idr($tax),'class'=>'currency'),
+                array('data'=>idr($dc),'class'=>'currency'),
+                array('data'=>idr($cod),'class'=>'currency'),
+                array('data'=>idr($payable),'class'=>'currency')
+            );
+
+            $seq++;
+        }
+
+        $total_span = 13;
+        $say_span = 14;
+
+        $this->table->add_row(
+            array('data'=>'Total','colspan'=>$total_span),
+            array('data'=>idr($total_delivery),'class'=>'total currency'),
+            array('data'=>idr($total_cod),'class'=>'total currency'),
+            array('data'=>idr($total_billing),'class'=>'total currency')
+        );
+
+        $this->table->add_row(
+            'Terbilang',
+            array('data'=>'&nbsp;','colspan'=>$say_span)
+        );
+
+        if($type == 'Merchant' || $type == 'Global'){
+            $this->table->add_row(
+                'Payable',
+                array('data'=>$this->number_words->to_words($total_billing).' rupiah',
+                    'colspan'=>$say_span)
+            );
+        }
+
+        $this->table->add_row(
+            'Delivery Charge',
+            array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $this->table->add_row(
+            'COD Surcharge',
+            array('data'=>$this->number_words->to_words($total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $recontab = $this->table->generate();
+        $data['recontab'] = $recontab;
+
+
+        /* end copy */
+
+        $this->breadcrumb->add_crumb('Courier Recap','admin/reports/courierrecap');
+
+        $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+        $page['page_title'] = 'Courier Recap';
+
+        $data['select_title'] = 'Courier';
+
+        $data['controller'] = 'admin/reports/courierrecap/';
 
         $data['last_query'] = $last_query;
 

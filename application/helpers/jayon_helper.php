@@ -75,6 +75,15 @@ function get_devices(){
 	return $identifiers;
 }
 
+function get_device_list(){
+    $CI =& get_instance();
+
+    $identifiers = $CI->db->select('id,identifier')
+        ->get($CI->config->item('jayon_devices_table'))->result();
+
+    return $identifiers;
+}
+
 function get_device_color($identifier){
 	$CI =& get_instance();
 
