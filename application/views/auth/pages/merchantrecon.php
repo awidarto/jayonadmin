@@ -48,7 +48,15 @@
             var mo = $('#month_period').val();
             var yr = $('#year_period').val();
 
-            $.post( base + 'gen/rev/' + mo +'/' + yr,
+            <?php
+                if($select_title == 'Device'){
+                    $gen = 'dev';
+                }else{
+                    $gen = 'rev';
+                }
+            ?>
+
+            $.post( base + 'gen/<?php print $gen; ?>/' + mo +'/' + yr,
                 {},
                 function(data){
                     if(data.result == 'OK'){

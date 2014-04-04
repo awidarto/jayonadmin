@@ -130,6 +130,128 @@ class Gen extends Application
 
     }
 
+    public function dev($month,$year){
+
+        set_time_limit(0);
+
+        $aggregate = array();
+
+        $lookupname = array();
+
+        $days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        for($d = 1; $d < $days + 1; $d++){
+
+            $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
+            //print($date);
+            $this->db->select('assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price')
+                ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
+                ->like('assignment_date',$date,'before')
+                ->from($this->config->item('incoming_delivery_table'));
+
+            $result = $this->db->get()->result();
+
+            foreach($result as $r){
+
+                $lookupname[$r->device_id] = $r->device_name;
+
+                $r->delivery_type = (strtoupper($r->delivery_type) == 'DO')? 'Delivery Only': $r->delivery_type ;
+
+                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['count'])){
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['count'] += 1;
+                }else{
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['count'] = 1;
+                }
+
+                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'])){
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] += $r->total_price;
+                }else{
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
+                }
+
+
+                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['cod_cost'])){
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['cod_cost'] += $r->cod_cost;
+                }else{
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['cod_cost'] = $r->cod_cost;
+                }
+
+
+                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['delivery_cost'])){
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['delivery_cost'] += $r->delivery_cost;
+                }else{
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['delivery_cost'] = $r->delivery_cost;
+                }
+            }
+
+            //print_r($aggregate);
+
+            $existingdates = array_keys($aggregate);
+
+            foreach($existingdates as $dt){
+                $devicetodate = array_keys($aggregate[$dt]);
+
+                foreach($devicetodate as $device){
+
+                    //print_r($lookupname);
+
+                    $existingstatus = array_keys($aggregate[$dt][$device]);
+
+                    $device_name = $lookupname[$device];
+
+                    foreach($existingstatus as $status){
+                        $data = array();
+                        $data['assignment_date'] = $dt;
+                        $data['device_id'] = $device;
+                        $data['device_name'] = $device_name;
+                        $data['status'] = $status;
+
+                        $data['do_delivery_cost'] = ( isset($aggregate[$dt][$device][$status]['Delivery Only']['delivery_cost']))?$aggregate[$dt][$device][$status]['Delivery Only']['delivery_cost']:0;
+                        $data['do_cod_cost'] = ( isset($aggregate[$dt][$device][$status]['Delivery Only']['cod_cost']))?$aggregate[$dt][$device][$status]['Delivery Only']['cod_cost']:0;
+                        $data['do_total_price'] = ( isset($aggregate[$dt][$device][$status]['Delivery Only']['total_price']))?$aggregate[$dt][$device][$status]['Delivery Only']['total_price']:0;
+                        $data['do_count'] = ( isset($aggregate[$dt][$device][$status]['Delivery Only']['count']))?$aggregate[$dt][$device][$status]['Delivery Only']['count']:0;
+
+                        $data['cod_delivery_cost'] = ( isset($aggregate[$dt][$device][$status]['COD']['delivery_cost']))?$aggregate[$dt][$device][$status]['COD']['delivery_cost']:0;
+                        $data['cod_cod_cost'] = ( isset($aggregate[$dt][$device][$status]['COD']['cod_cost']))?$aggregate[$dt][$device][$status]['COD']['cod_cost']:0;
+                        $data['cod_total_price'] = ( isset($aggregate[$dt][$device][$status]['COD']['total_price']))?$aggregate[$dt][$device][$status]['COD']['total_price']:0;
+                        $data['cod_count'] = ( isset($aggregate[$dt][$device][$status]['COD']['count']))?$aggregate[$dt][$device][$status]['COD']['count']:0;
+
+                        $data['ccod_delivery_cost'] = ( isset($aggregate[$dt][$device][$status]['CCOD']['delivery_cost']))?$aggregate[$dt][$device][$status]['CCOD']['delivery_cost']:0;
+                        $data['ccod_cod_cost'] = ( isset($aggregate[$dt][$device][$status]['CCOD']['cod_cost']))?$aggregate[$dt][$device][$status]['CCOD']['cod_cost']:0;
+                        $data['ccod_total_price'] = ( isset($aggregate[$dt][$device][$status]['CCOD']['total_price']))?$aggregate[$dt][$device][$status]['CCOD']['total_price']:0;
+                        $data['ccod_count'] = ( isset($aggregate[$dt][$device][$status]['CCOD']['count']))?$aggregate[$dt][$device][$status]['CCOD']['count']:0;
+
+                        $data['ps_delivery_cost'] = ( isset($aggregate[$dt][$device][$status]['PS']['delivery_cost']))?$aggregate[$dt][$device][$status]['PS']['delivery_cost']:0;
+                        $data['ps_cod_cost'] = ( isset($aggregate[$dt][$device][$status]['PS']['cod_cost']))?$aggregate[$dt][$device][$status]['PS']['cod_cost']:0;
+                        $data['ps_total_price'] = ( isset($aggregate[$dt][$device][$status]['PS']['total_price']))?$aggregate[$dt][$device][$status]['PS']['total_price']:0;
+                        $data['ps_count'] = ( isset($aggregate[$dt][$device][$status]['PS']['count']))?$aggregate[$dt][$device][$status]['PS']['count']:0;
+
+                        $ex = $this->db->where('assignment_date',$dt)
+                            ->where('device_id',$device)
+                            ->where('status',$status)
+                            ->get($this->config->item('jayon_devicerecap_table'));
+
+                        if($ex->num_rows() > 0){
+                            $this->db->where('assignment_date',$dt)
+                                ->where('device_id',$device)
+                                ->where('status',$status)
+                                ->update( $this->config->item('jayon_devicerecap_table'),$data );
+                        }else{
+                            $this->db->insert($this->config->item('jayon_devicerecap_table'),$data);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        print json_encode(array('result'=>'OK'));
+
+    }
+
 }
 
 ?>
