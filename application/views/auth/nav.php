@@ -93,7 +93,7 @@
 					<li class="<?php print set_hilite('admin\/reports\/courierrecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/courierrecon', 'Courier Reconciliation'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/courierrecap')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/courierrecap', 'Courier Recap'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/merchantrecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/merchantrecon', 'Merchant Reconciliation'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/devicerecon')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/devicerecon', 'Device Reconciliation'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/devicerecon$')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/devicerecon', 'Device Reconciliation'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/devicerecongen')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/devicerecongen', 'Device Reconciliation ( Manual )'); } ?></li>
 					<li class="<?php print set_hilite('admin\/reports\/revenue$')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/revenue', 'Revenue Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/revenuegen')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/revenuegen', 'Revenue Report ( Manual )'); } ?></li>
