@@ -181,7 +181,7 @@
                                 '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.address + '</div>' +
                             '</div>';
 
-                            if($('#showLocUpdate').is(':checked')){
+                            //if($('#showLocUpdate').is(':checked')){
                                 var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon, id: this.data.id }).on('click',function(e){
                                     console.log(e.target.options.id);
                                     var inid = e.target.options.id;
@@ -198,12 +198,14 @@
 
                                 }).addTo(map).bindPopup(content);
                                 markers.push(m);
+                            /*
                             }else{
                                 if(this.data.status != 'loc_update'){
                                     var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
                                     markers.push(m);
                                 }
                             }
+                            */
 
                         });
 
