@@ -1474,6 +1474,7 @@ class Reports extends Application
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Merchant Reconciliations';
+        $data['select_title'] = 'Merchant';
 
 		$data['controller'] = 'admin/reports/revenue/';
 
@@ -1876,6 +1877,7 @@ class Reports extends Application
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
         $page['page_title'] = 'Merchant Reconciliations';
+        $data['select_title'] = 'Merchant';
 
         $data['controller'] = 'admin/reports/revenuegen/';
 
@@ -2571,6 +2573,7 @@ class Reports extends Application
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
         $page['page_title'] = 'Merchant Reconciliations';
+        $data['select_title'] = 'Merchant';
 
         $data['controller'] = 'admin/reports/invoices/';
 
@@ -3673,6 +3676,7 @@ class Reports extends Application
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
         $page['page_title'] = 'Zone Revenue';
+        $data['select_title'] = 'Zone';
 
         $data['controller'] = 'admin/reports/zonerevenue/';
 
@@ -4553,6 +4557,7 @@ class Reports extends Application
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Merchant Reconciliations';
+        $data['select_title'] = 'Merchant';
 
 		$data['controller'] = 'admin/reports/merchantrecon/';
 
@@ -4888,6 +4893,7 @@ class Reports extends Application
 
 		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Courier Reconciliations';
+        $data['select_title'] = 'Courier';
 
 		$data['controller'] = 'admin/reports/courierrecon/';
 

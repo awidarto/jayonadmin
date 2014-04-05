@@ -131,20 +131,23 @@
 	?>
 	</ul>
 	<script type="text/javascript">
-	$(document).ready(function(){
+    	$(document).ready(function(){
 
-		var seconds = new Date().getTime() / 1000;
-		function getChanges(){
-			var times = new Date().getTime();
-			$.post('<?php print base_url() ?>admin/uichanges?'+ times,{ lastupdate: seconds },function(data){
-				$('#total_changed').html(data.total_changed);
-				seconds = new Date().getTime() / 1000;
-			}, 'json');
-		}
+    		var seconds = new Date().getTime() / 1000;
 
-		getChanges();
+    		function getChanges(){
+    			var times = new Date().getTime();
+    			$.post('<?php print base_url() ?>admin/uichanges?'+ times,{ lastupdate: seconds },function(data){
+    				$('#total_changed').html(data.total_changed);
+    				seconds = new Date().getTime() / 1000;
+    			}, 'json');
+    		}
 
-		self.setInterval(function(){ getChanges();},20000);
-	});
+    		getChanges();
+
+    		self.setInterval(function(){
+                getChanges();
+            },20000);
+    	});
 	</script>
 <div class="clear"></div>
