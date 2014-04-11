@@ -331,6 +331,12 @@ class Delivery extends Application
 
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
+            if($key['toscan'] == 1){
+                $markscan = '<img src="'.base_url().'assets/images/barcode-icon.png" style="width:25px;height:auto">';
+            }else{
+                $markscan = '';
+            }
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -340,7 +346,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-				$this->hide_trx($key['merchant_trans_id']),
+				$this->hide_trx($key['merchant_trans_id']).$markscan,
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
 				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
@@ -1897,6 +1903,51 @@ class Delivery extends Application
 
 		print json_encode(array('result'=>'ok'));
 	}
+
+    public function ajaxmarkscan(){
+        $delivery_id = $this->input->post('delivery_id');
+        $mark = $this->input->post('setmark');
+
+        if(is_array($delivery_id)){
+            foreach($delivery_id as $d){
+                $this->do_scan_mark($d, 1);
+                $data = array(
+                        'timestamp'=>date('Y-m-d H:i:s',time()),
+                        'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                        'delivery_id'=>$d,
+                        'device_id'=>'',
+                        'courier_id'=>'',
+                        'actor_type'=>'AD',
+                        'actor_id'=>$this->session->userdata('userid'),
+                        'latitude'=>'',
+                        'longitude'=>'',
+                        'notes'=>''
+                    );
+
+                delivery_log($data);
+            }
+        }else{
+            $this->do_scan_mark($delivery_id, 1);
+                $data = array(
+                        'timestamp'=>date('Y-m-d H:i:s',time()),
+                        'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                        'delivery_id'=>$delivery_id,
+                        'device_id'=>'',
+                        'courier_id'=>'',
+                        'actor_type'=>'AD',
+                        'actor_id'=>$this->session->userdata('userid'),
+                        'latitude'=>'',
+                        'longitude'=>'',
+                        'notes'=>''
+                    );
+
+                delivery_log($data);
+
+        }
+
+        print json_encode(array('result'=>'ok'));
+
+    }
 
 	public function ajaxassigndate(){
 		$assignment_date = $this->input->post('assignment_date');
@@ -3974,6 +4025,44 @@ class Delivery extends Application
 		} // if($this->form_validation->run() == FALSE)
 
 	}
+
+    private function do_scan_mark($delivery_id, $mark){
+        /*
+        $incoming = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+        $dataset = $incoming->row_array();
+        unset($dataset['id']);
+        */
+
+        $dataset = array('toscan'=>$mark);
+
+        if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+        {
+            $order_exist = 'ORDER_MARKED';
+        }
+        else
+        {
+            $order_exist = 'ORDER_FAILED_MARKING';
+        }
+
+            $data = array(
+                'timestamp'=>date('Y-m-d H:i:s',time()),
+                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                'delivery_id'=>$delivery_id,
+                'device_id'=>'',
+                'courier_id'=>'',
+                'actor_type'=>'AD',
+                'actor_id'=>$this->session->userdata('userid'),
+                'latitude'=>'',
+                'longitude'=>'',
+                'status'=>$this->config->item('trans_status_admin_dated'),
+                'notes'=>''
+            );
+
+        delivery_log($data);
+
+        return $order_exist;
+    }
+
 
 	private function do_date_assignment($delivery_id,$assignment_date){
 		/*

@@ -205,24 +205,39 @@
 			}
 		});
 
-		$('#doConfirm').click(function(){
+		$('#doMarkscan').click(function(){
 			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
-
-				var deliverydate = $('#'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong></li>';
 				count++;
 			});
 
 			if(count > 0){
-				$('#confirm_list').html(assigns);
-				$('#confirm_dialog').dialog('open');
+				$('#markscan_list').html(assigns);
+				$('#markscan_dialog').dialog('open');
 			}else{
 				alert('Please select one or more delivery orders');
 			}
 		});
 
+        $('#doConfirm').click(function(){
+            var assigns = '';
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+
+                var deliverydate = $('#'+this.value).html();
+                assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
+                count++;
+            });
+
+            if(count > 0){
+                $('#confirm_list').html(assigns);
+                $('#confirm_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
 
 		$('#doCancel').click(function(){
 			var assigns = '';
@@ -338,6 +353,41 @@
 				},'json');
 			}
 		});
+
+        $('#markscan_dialog').dialog({
+            autoOpen: false,
+            height: 400,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Mark Orders": function() {
+                    var delivery_ids = [];
+                    i = 0;
+                    $('.assign_check:checked').each(function(){
+                        delivery_ids[i] = $(this).val();
+                        i++;
+                    });
+                    $.post('<?php print site_url('admin/delivery/ajaxmarkscan');?>',
+                        {
+                            'delivery_id[]':delivery_ids,
+                            'setmark':1
+                        }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#markscan_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#markscan_list').html('');
+            }
+        });
 
 
 		$('#assign_dialog').dialog({
@@ -621,6 +671,7 @@
 <?php
 
     print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
+    form_button('do_toscan','Mark for Scanning','id="doMarkscan"').
     form_button('do_confirm','Confirm Selection','id="doConfirm"').
     form_button('do_cancel','Cancel Selection','id="doCancel"');
 
@@ -703,6 +754,22 @@
 		</tr>
 	</table>
 </div>
+
+<div id="markscan_dialog" title="Mark Orders for Scanning">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                Delivery Orders :
+            </td>
+        </tr>
+        <tr>
+            <td style="overflow:auto;width:250px;vertical-align:top">
+                <ul id="markscan_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+            </td>
+        </tr>
+    </table>
+</div>
+
 
 <div id="confirm_dialog" title="Confirm Delivery Orders">
 	<table style="width:100%;border:0;margin:0;">
