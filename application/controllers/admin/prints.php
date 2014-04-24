@@ -220,7 +220,7 @@ class Prints extends Application
                     $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
 
                     $this->table->add_row(
-                        array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
+                        array('data'=>$paidby,
                             'colspan'=>2,
                             'class'=>'lsums'
                             ),
