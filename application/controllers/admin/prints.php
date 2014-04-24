@@ -157,24 +157,28 @@ class Prints extends Application
 
 			);
 
-				$this->table->add_row(
-					array('data'=>'Total Discount',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+            if($dsc > 0){
+                $this->table->add_row(
+                    array('data'=>'Total Discount',
+                        'colspan'=>3,
+                        'class'=>'lsums'
+                        ),
                     array(
                         'data'=>number_format($dsc,2,',','.'),
                         'class'=>'lsums'
                         )
-				);
+                );
+            }
 
-				$this->table->add_row(
-					array('data'=>'Total Tax',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
-                    number_format($tax,2,',','.')
-				);
+                if($tax > 0){
+                    $this->table->add_row(
+                        array('data'=>'Total Tax',
+                            'colspan'=>3,
+                            'class'=>'lsums'
+                            ),
+                        number_format($tax,2,',','.')
+                    );
+                }
 
 				/*
 				if($data['main_info']['delivery_bearer'] == 'merchant'){
@@ -208,20 +212,21 @@ class Prints extends Application
 					$cod = 0;
 				}
 				*/
-
-				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
-						'colspan'=>2,
-						'class'=>'lsums'
-						),
-					array('data'=>'COD Surcharge',
-                        'class'=>'lsums'.$cclass
-						),
-					array('data'=>number_format($cod,2,',','.'),
-						'class'=>'editable'.$cclass,
-						'id'=>'cod_cost'
-					)
-				);
+                if($data['main_info']['delivery_type'] != 'Delivery Only' && $cod > 0 ){
+                    $this->table->add_row(
+                        array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
+                            'colspan'=>2,
+                            'class'=>'lsums'
+                            ),
+                        array('data'=>'COD Surcharge',
+                            'class'=>'lsums'.$cclass
+                            ),
+                        array('data'=>number_format($cod,2,',','.'),
+                            'class'=>'editable'.$cclass,
+                            'id'=>'cod_cost'
+                        )
+                    );
+                }
 
 				$this->table->add_row(
 					array('data'=>'Total Charges',

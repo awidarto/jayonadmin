@@ -62,7 +62,7 @@
 
 			Account Number:<br />
 			<input type="text" name="account_number" size="50" class="form" value="<?php echo set_value('account_number'); ?>" /><?php echo form_error('account_number'); ?><br /><br />
-			
+
 			<?php echo form_checkbox('same_as_personal_address', '1', true);?> Same as personal address<br /><br />
 
 			Street:<br />
@@ -96,7 +96,9 @@
 
 			Last Order Time:<br />
 			<input type="text" name="mc_last_order" size="50" class="form" value="<?php echo set_value('mc_last_order'); ?>" /><?php echo form_error('mc_last_order'); ?><br /><br />
-			
+
+            <?php echo form_checkbox('mc_toscan', '1', false);?> Use barcode scan for pick up<br /><br />
+
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Add" name="register" />

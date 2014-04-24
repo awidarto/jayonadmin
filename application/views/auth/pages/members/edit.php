@@ -92,6 +92,8 @@
 			Last Order Time:<br />
 			<input type="text" name="mc_last_order" size="50" class="form" value="<?php echo set_value('mc_last_order',$user['mc_last_order']); ?>" /><?php echo form_error('mc_last_order'); ?><br /><br />
 
+            <?php echo form_checkbox('mc_toscan', '1', $user['mc_toscan']);?> Use barcode scan for pick up<br /><br />
+
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Update" name="register" />

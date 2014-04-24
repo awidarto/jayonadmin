@@ -1203,6 +1203,7 @@ class Members extends Application
 			$mc_zip = set_value('mc_zip');
 			$mc_phone= set_value('mc_phone');
 			$mc_mobile= set_value('mc_mobile');
+            $mc_toscan= set_value('mc_toscan');
 
 			$mc_first_order = set_value('mc_first_order');
 			$mc_last_order = set_value('mc_last_order');
@@ -1237,6 +1238,7 @@ class Members extends Application
 				'mc_zip' =>$mc_zip,
 				'mc_phone'=>$mc_phone,
 				'mc_mobile'=>$mc_mobile,
+                'mc_toscan'=>$mc_toscan,
 
 				'mc_first_order' => $mc_first_order,
 				'mc_last_order' => $mc_last_order,
@@ -1318,6 +1320,7 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_zip', 'ZIP', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_toscan', 'Use barcode scan', 'trim|xss_clean');
 
 		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
@@ -1370,6 +1373,7 @@ class Members extends Application
 			$dataset['mc_last_order'] = set_value('mc_last_order');
 			$dataset['mc_unlimited_time'] = set_value('mc_unlimited_time');
 
+            $dataset['mc_toscan'] = set_value('mc_toscan');
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
