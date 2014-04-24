@@ -151,7 +151,6 @@ class Prints extends Application
 						'class'=>'lsums'.$cclass
 						),
                     array('data'=>number_format($gt,2,',','.'),
-                        'colspan'=>3,
                         'class'=>$cclass
                         )
 
