@@ -193,8 +193,10 @@ class Prints extends Application
                     'buyer'=>'pembeli'
                     );
 
+                $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
+
 				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']],
+					array('data'=>$paidby,
 						'colspan'=>2,
 						'class'=>'lsums'
 						),
@@ -214,6 +216,9 @@ class Prints extends Application
 				}
 				*/
                 if($data['main_info']['delivery_type'] != 'Delivery Only' && $cod > 0 ){
+
+                    $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
+
                     $this->table->add_row(
                         array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
                             'colspan'=>2,
