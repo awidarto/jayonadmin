@@ -188,6 +188,7 @@ class Prints extends Application
 				*/
 
                 $translasi = array(
+                    ''=>'',
                     'merchant'=>'toko online',
                     'buyer'=>'pembeli'
                     );
