@@ -65,6 +65,7 @@ $config['trans_status_confirmed'] = 'confirmed';
 $config['trans_status_canceled'] = 'canceled';
 $config['trans_status_rescheduled'] = 'rescheduled';
 
+$config['trans_status_mobile_pending'] = 'pending';
 $config['trans_status_mobile_dispatched'] = 'dispatched';
 $config['trans_status_mobile_departure'] = 'departed';
 $config['trans_status_mobile_return'] = 'returned';

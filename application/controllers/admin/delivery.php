@@ -3023,7 +3023,9 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search kode toko" class="search_init" />',
-			form_button('do_archive','Archive Selection','id="doArchive"')
+			form_button('do_sending','Send Slip','id="doSending"'),
+            form_button('do_archive','Archive Selection','id="doArchive"')
+
 			);
 
 

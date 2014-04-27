@@ -193,6 +193,23 @@
 			}
 		});
 
+        $('#doSending').click(function(){
+            var assigns = '';
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong></li>';
+                count++;
+            });
+
+            if(count > 0){
+                $('#send_list').html(assigns);
+                $('#sendslip_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+
 		$('#archive_dialog').dialog({
 			autoOpen: false,
 			height: 300,
@@ -225,6 +242,42 @@
 				$('#archive_list').html('');
 			}
 		});
+
+        $('#sendslip_dialog').dialog({
+            autoOpen: false,
+            height: 300,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Send Delivery Slips": function() {
+                    var delivery_ids = [];
+                    i = 0;
+                    $('.assign_check:checked').each(function(){
+                        delivery_ids[i] = $(this).val();
+                        i++;
+                    });
+                    $.post('<?php print site_url('admin/prints/ajaxsendslip');?>',
+                        {
+                            'delivery_id[]':delivery_ids
+                        }, function(data) {
+                        if(data.result == 'OK'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#sendslip_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                    $('#send_list').html('');
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#send_list').html('');
+            }
+        });
+
 
 		$('#print_dialog').dialog({
 			autoOpen: false,
@@ -341,6 +394,13 @@
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
+
+<div id="sendslip_dialog" title="Send Delivery Slip" style="overflow:hidden;padding:8px;">
+    <ul id="send_list">
+
+    </ul>
+</div>
+
 
 <div id="changestatus_dialog" title="Change Delivery Orders">
 	<table style="width:100%;border:0;margin:0;">

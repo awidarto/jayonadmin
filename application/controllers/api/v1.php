@@ -427,11 +427,16 @@ class V1 extends Application
                     $in->lat = (isset($in->lat))?$in->lat:'';
                     $in->lon = (isset($in->lon))?$in->lon:'';
 
+                    $incr = false;
 					if($in->status == $this->config->item('trans_status_mobile_syncnote')){
 						$dataset['delivery_note'] = $in->notes;
 						$dataset['latitude'] = $in->lat;
 						$dataset['longitude'] = $in->lon;
 					}else{
+                        if($in->status == $this->config->item('trans_status_mobile_pending')){
+                            $in->status = $this->config->item('trans_status_admin_courierassigned');
+                            $incr = true;
+                        }
 						$dataset['status'] = $in->status;
 						$dataset['deliverytime'] = date('Y-m-d H:i:s',time());
 						$dataset['delivery_note'] = $in->notes;
@@ -443,7 +448,8 @@ class V1 extends Application
 
 					if(isset($in->delivery_id) && $in->delivery_id != ""){
 						$delivery_id = $in->delivery_id;
-						$this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$dataset);
+						$this->db->where('delivery_id',$in->delivery_id)
+                            ->update($this->config->item('assigned_delivery_table'),$dataset);
 
 
                         if($in->status == $this->config->item('trans_status_mobile_delivered')){
@@ -453,6 +459,22 @@ class V1 extends Application
                             $locdata['longitude'] = $in->lon;
                             $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
                         }
+
+                        if($incr == true){
+                            $pd = $this->db
+                                ->select('pending_count')
+                                ->where('delivery_id',$in->delivery_id)
+                                ->from($this->config->item('assigned_delivery_table'))
+                                ->row_array();
+
+                            if(isset($pd['pending_count'])){
+                                $pd['pending_count'] = $pd['pending_count'] + 1;
+                                $this->db->where('delivery_id',$in->delivery_id)
+                                    ->update($this->config->item('assigned_delivery_table'),$pd);
+                            }
+
+                        }
+
                         /*
                         if($in->status == $this->config->item('trans_status_mobile_pending')){
                             $locdata['dir_lat'] = $in->lat;

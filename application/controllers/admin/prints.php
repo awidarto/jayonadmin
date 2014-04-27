@@ -6,7 +6,7 @@ class Prints extends Application
 	public function __construct()
 	{
 		parent::__construct();
-		$this->ag_auth->restrict('admin'); // restrict this controller to admins only
+		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
 		$this->table_tpl = array(
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
@@ -145,18 +145,21 @@ class Prints extends Application
             }
 
 
-			$this->table->add_row(
-					array('data'=>'Total Price',
-						'colspan'=>3,
-						'class'=>'lsums'.$cclass
-						),
-                    array('data'=>number_format($gt,2,',','.'),
-                        'class'=>$cclass
-                        )
+        if($data['main_info']['delivery_type'] != 'Delivery Only' ){
 
-			);
 
-            if($dsc > 0){
+
+    			$this->table->add_row(
+    					array('data'=>'Total Price',
+    						'colspan'=>3,
+    						'class'=>'lsums'.$cclass
+    						),
+                        array('data'=>number_format($gt,2,',','.'),
+                            'class'=>$cclass
+                            )
+
+    			);
+
                 $this->table->add_row(
                     array('data'=>'Total Discount',
                         'colspan'=>3,
@@ -167,17 +170,14 @@ class Prints extends Application
                         'class'=>'lsums'
                         )
                 );
-            }
 
-                if($tax > 0){
-                    $this->table->add_row(
-                        array('data'=>'Total Tax',
-                            'colspan'=>3,
-                            'class'=>'lsums'
-                            ),
-                        number_format($tax,2,',','.')
-                    );
-                }
+                $this->table->add_row(
+                    array('data'=>'Total Tax',
+                        'colspan'=>3,
+                        'class'=>'lsums'
+                        ),
+                    number_format($tax,2,',','.')
+                );
 
 				/*
 				if($data['main_info']['delivery_bearer'] == 'merchant'){
@@ -214,8 +214,6 @@ class Prints extends Application
 					$cod = 0;
 				}
 				*/
-                if($data['main_info']['delivery_type'] != 'Delivery Only' && $cod > 0 ){
-
                     $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
 
                     $this->table->add_row(
@@ -231,7 +229,6 @@ class Prints extends Application
                             'id'=>'cod_cost'
                         )
                     );
-                }
 
 				$this->table->add_row(
 					array('data'=>'Total Charges',
@@ -243,6 +240,9 @@ class Prints extends Application
                         'id'=>'delivery_cost'
                         )
 				);
+
+        }
+
 
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
@@ -263,10 +263,19 @@ class Prints extends Application
 
 			//print_r($data['main_info']);
 
-			if($pdf){
+			if($pdf == 'pdf'){
 				$html = $this->load->view('print/deliveryslip',$data,true);
 				//print $html; // Load the view
 				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
+            }else if($pdf == 'save'){
+                $html = $this->load->view('print/deliveryslip',$data,true);
+                //print $html; // Load the view
+                $saved = @pdf_create($html, $delivery_id.'.pdf','A4','landscape', false);
+
+                @file_put_contents(FCPATH.'/public/slip/'.$delivery_id.'.pdf', $saved);
+
+                return file_exists(FCPATH.'/public/slip/'.$delivery_id.'.pdf');
+
 			}else{
 				$this->load->view('print/deliveryslip',$data); // Load the view
 			}
@@ -749,6 +758,47 @@ class Prints extends Application
 		}
 
 	}
+
+    public function ajaxsendslip(){
+        $ids = $this->input->post('delivery_id');
+
+        foreach($ids as $delivery_id){
+            $this->sendslip($delivery_id, 'andy.awidarto@gmail.com');
+        }
+
+        print json_encode(array('result'=>'OK'));
+
+    }
+
+    public function sendslip($delivery_id, $email = null){
+        $result = $this->deliveryslip($delivery_id, 'save');
+        if(file_exists(FCPATH.'/public/slip/'.$delivery_id.'.pdf') && !is_null($email) ){
+
+            $subject = 'JEX Delivery Slip';
+            $to = $email;
+            $cc = null;
+            $reply_to = null;
+            $template = 'deliveryslip';
+            $data = '';
+            $attachment = FCPATH.'/public/slip/'.$delivery_id.'.pdf';
+
+            $result = send_notification(
+                $subject,
+                $to,
+                $cc,
+                $reply_to,
+                $template,
+                $data,
+                $attachment
+            );
+
+            return $result;
+
+        }else{
+            return false;
+        }
+
+    }
 
 
 }
