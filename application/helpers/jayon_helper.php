@@ -739,6 +739,8 @@ function get_thumbnail($delivery_id){
     if(count($existingpic) > 0){
         $pidx = count($existingpic);
 
+        $gal .= '<br />'.$pidx.' pics';
+
         for($g = 0; $g < $pidx; $g++){
             $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$existingpic[$g].'" >';
         }
