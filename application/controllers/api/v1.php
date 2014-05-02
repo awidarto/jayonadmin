@@ -756,7 +756,8 @@ class V1 extends Application
 							d.latitude as dl_lat,
 							d.longitude as dl_lon,
 							d.reschedule_ref as res_ref,
-							d.revoke_ref as rev_ref')
+							d.revoke_ref as rev_ref,
+                            d.pending_count as pc')
 					->from($this->config->item('assigned_delivery_table').' as d')
 					->join('members as m','d.merchant_id=m.id','left')
                     ->where('assignment_date',$indate)
