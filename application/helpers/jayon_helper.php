@@ -748,8 +748,6 @@ function get_thumbnail($delivery_id){
         }
     }
 
-    print($gal);
-
     $thumbnail = $thumbnail.$gal;
 
 	return $thumbnail;
