@@ -2639,6 +2639,7 @@ class Delivery extends Application
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
 			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_where('pending_count >', 0)
 			->group_end();
 		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
