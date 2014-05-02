@@ -2708,6 +2708,7 @@ class Delivery extends Application
 
             $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
 
+            $thumbnail = get_thumbnail($key['delivery_id']);
 
 			$aadata[] = array(
 				$num,
@@ -2730,7 +2731,7 @@ class Delivery extends Application
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).($key['status'] == 'pending')?'<br />'.$thumbnail:'',
                 $key['pending_count'],
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
