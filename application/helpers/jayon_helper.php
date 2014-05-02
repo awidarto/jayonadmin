@@ -732,7 +732,7 @@ function get_thumbnail($delivery_id){
         //}
     }
 
-    $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+    $existingpic = glob($CI->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
     if(count($existingpic) > 0){
         $pidx = count($existingpic);
         $gal = '';
