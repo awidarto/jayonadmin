@@ -2710,6 +2710,11 @@ class Delivery extends Application
 
             $thumbnail = get_thumbnail($key['delivery_id']);
 
+            $thumbstat = colorizestatus($key['status']);
+            if($key['status'] == 'pending'){
+                $thumbstat .= '<br />'.$thumbnail;
+            }
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -2731,7 +2736,7 @@ class Delivery extends Application
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
-				colorizestatus($key['status']).'<br />'.($key['status'] == 'pending')?$thumbnail:'',
+				$thumbstat,
                 $key['pending_count'],
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
