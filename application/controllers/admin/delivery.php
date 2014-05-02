@@ -2731,7 +2731,7 @@ class Delivery extends Application
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
-				colorizestatus($key['status']).($key['status'] == 'pending')?'<br />'.$thumbnail:'',
+				colorizestatus($key['status']).'<br />'.($key['status'] == 'pending')?$thumbnail:'',
                 $key['pending_count'],
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
