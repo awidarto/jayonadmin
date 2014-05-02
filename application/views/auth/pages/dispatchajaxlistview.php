@@ -122,12 +122,19 @@
             if($(e.target).is('.thumb')){
                 var delivery_id = e.target.alt;
                 var currentTime = new Date();
-                $.fancybox.open([
-                    {
-                        href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),
-                        title : delivery_id
-                    }
-                ]);
+
+                var images = [];
+
+                $('.gal_' + delivery_id).each(function(el){
+                    images.push(
+                        {
+                            href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            title : delivery_id
+                        }
+                    );
+                });
+
+                $.fancybox.open(images);
 
             }
 
