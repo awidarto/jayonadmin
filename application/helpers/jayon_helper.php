@@ -744,7 +744,7 @@ function get_thumbnail($delivery_id){
         }
     }
 
-    $thumbnail .= $gal;
+    $thumbnail = $thumbnail.$gal;
 
 	return $thumbnail;
 }
