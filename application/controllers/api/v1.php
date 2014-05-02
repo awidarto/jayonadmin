@@ -889,7 +889,7 @@ class V1 extends Application
 
             $delivery_id = $this->input->post('delivery_id');
 
-            /*
+
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
             if(count($existingpic) == 0){
                 $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
@@ -897,9 +897,9 @@ class V1 extends Application
                 $pidx = count($existingpic);
                 $target_path = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.jpg';
             }
-            */
 
-            $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+
+            //$target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
 
             if(isset($_FILES['receiverpic'])){
                 if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
