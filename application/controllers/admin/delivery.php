@@ -2652,6 +2652,8 @@ class Delivery extends Application
 
 		//print $this->db->last_query();
 
+            $lastquery = $this->db->last_query();
+
 		$count_display_all = $this->db
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
@@ -2743,7 +2745,8 @@ class Delivery extends Application
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
+			'aaData'=>$aadata,
+            'q'=>$lastquery
 		);
 
 		print json_encode($result);
