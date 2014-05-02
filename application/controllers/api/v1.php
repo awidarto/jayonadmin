@@ -765,7 +765,6 @@ class V1 extends Application
                         ->where('status',$this->config->item('trans_status_new'))
                         ->where('pending_count >', 0)
                     ->group_end()
-                    ->and_()
 					->where('assignment_date',$indate)
 					->where('device_id',$dev->id)
 					->get();
