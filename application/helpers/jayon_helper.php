@@ -743,7 +743,6 @@ function get_thumbnail($delivery_id){
     if($pidx > 0){
         for($g = 0; $g < $pidx; $g++){
             $img = str_replace($CI->config->item('picture_path'), '', $existingpic[$g]);
-            print($img);
             $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$img.'" >';
         }
     }
