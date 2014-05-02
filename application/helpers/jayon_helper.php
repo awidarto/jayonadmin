@@ -734,7 +734,7 @@ function get_thumbnail($delivery_id){
 
     $existingpic = glob($CI->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
 
-    print_r($existingpic);
+    //print_r($existingpic);
 
     $pidx = count($existingpic);
 
@@ -742,6 +742,7 @@ function get_thumbnail($delivery_id){
 
     if($pidx > 0){
         for($g = 0; $g < $pidx; $g++){
+            print($existingpic[$g]);
             $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$existingpic[$g].'" >';
         }
     }
