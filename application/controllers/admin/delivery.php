@@ -242,6 +242,7 @@ class Delivery extends Application
 			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
 			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
+            ->where($this->config->item('incoming_delivery_table').'.pending_count',0)
 			->group_end();
 
         $dbca = clone $this->db;
