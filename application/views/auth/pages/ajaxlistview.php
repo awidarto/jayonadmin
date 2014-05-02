@@ -72,6 +72,7 @@
 		});
 
 		$('table.dataTable').click(function(e){
+            /*
 			if($(e.target).is('.thumb')){
 				var delivery_id = e.target.alt;
 				var currentTime = new Date();
@@ -83,6 +84,27 @@
 			    ]);
 
 			}
+            */
+
+            if($(e.target).is('.thumb')){
+                var delivery_id = e.target.alt;
+                var currentTime = new Date();
+
+                var images = [];
+
+                $('.gal_' + delivery_id).each(function(el){
+                    images.push(
+                        {
+                            href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            title : delivery_id
+                        }
+                    );
+                });
+
+                $.fancybox.open(images);
+
+            }
+
 
             if($(e.target).is('.sign')){
                 var delivery_id = e.target.alt;
