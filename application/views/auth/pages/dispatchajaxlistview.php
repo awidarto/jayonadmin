@@ -118,6 +118,19 @@
         };
 
 		$('table.dataTable').click(function(e){
+
+            if($(e.target).is('.thumb')){
+                var delivery_id = e.target.alt;
+                var currentTime = new Date();
+                $.fancybox.open([
+                    {
+                        href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),
+                        title : delivery_id
+                    }
+                ]);
+
+            }
+
 			if ($(e.target).is('.changestatus')) {
 				var delivery_id = e.target.id;
 				$('#change_id').html(delivery_id);
