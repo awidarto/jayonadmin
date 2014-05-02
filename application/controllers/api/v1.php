@@ -434,7 +434,6 @@ class V1 extends Application
 						$dataset['longitude'] = $in->lon;
 					}else{
                         if($in->status == $this->config->item('trans_status_mobile_pending')){
-                            $in->status = $this->config->item('trans_status_admin_courierassigned');
                             $incr = true;
                         }
 						$dataset['status'] = $in->status;
