@@ -760,11 +760,17 @@ class V1 extends Application
 					->from($this->config->item('assigned_delivery_table').' as d')
 					->join('members as m','d.merchant_id=m.id','left')
 					->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                    ->or_()
+                    ->group_start()
+                        ->where('status',$this->config->item('trans_status_new'))
+                        ->where('pending_count >', 0)
+                    ->group_end()
+                    ->and_()
 					->where('assignment_date',$indate)
 					->where('device_id',$dev->id)
 					->get();
 
-					//print $this->db->last_query();
+					print $this->db->last_query();
 
 				$out = $orders->result_array();
 
