@@ -460,17 +460,10 @@ class V1 extends Application
                         }
 
                         if($incr == true){
-                            $pd = $this->db
-                                ->select('pending_count')
-                                ->where('delivery_id',$in->delivery_id)
-                                ->from($this->config->item('assigned_delivery_table'))
-                                ->row_array();
 
-                            if(isset($pd['pending_count'])){
-                                $pd['pending_count'] = $pd['pending_count'] + 1;
-                                $this->db->where('delivery_id',$in->delivery_id)
-                                    ->update($this->config->item('assigned_delivery_table'),$pd);
-                            }
+                            $this->db->where('delivery_id',$in->delivery_id)
+                                ->set('pending_count', 'pending_count+1', FALSE)
+                                ->update($this->config->item('assigned_delivery_table'));
 
                         }
 
