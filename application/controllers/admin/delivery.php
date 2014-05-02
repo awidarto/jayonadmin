@@ -2731,6 +2731,7 @@ class Delivery extends Application
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
 				get_weight_range($key['weight'],$key['application_id']),
 				colorizestatus($key['status']),
+                $key['pending_count'],
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
 
@@ -2781,6 +2782,7 @@ class Delivery extends Application
             'Volume',
             'Weight Range',
             'Status',
+            'Pending',
 			'Actions'
 			); // Setting headings for the table
 
@@ -2803,6 +2805,7 @@ class Delivery extends Application
             '',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
+            '',
             '',
             ''
 			);
