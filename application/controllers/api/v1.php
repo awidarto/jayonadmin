@@ -769,7 +769,7 @@ class V1 extends Application
                     ->group_end()
 					->get();
 
-					print $this->db->last_query();
+					//print $this->db->last_query();
 
 				$out = $orders->result_array();
 
