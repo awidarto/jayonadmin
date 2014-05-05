@@ -2857,7 +2857,6 @@ class Delivery extends Application
                 reschedule_ref,
                 revoke_ref';
 
-
 		$this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
@@ -2961,8 +2960,11 @@ class Delivery extends Application
 		$aadata = array();
 
 		$num = $limit_offset;
-		foreach($result as $value => $key)
+		//foreach($result as $value => $key)
+        for($i = 0; $i < count($result);$i++)
 		{
+            $key = $result[$i];
+
 			$num++;
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
