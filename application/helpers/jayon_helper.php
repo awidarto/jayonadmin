@@ -896,7 +896,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 
 	$CI->load->library('email',$config);
 
-	$CI->email->set_newline("\r\n");
+    $CI->email->set_newline("\r\n");
 
 	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Notification');
 
@@ -960,6 +960,8 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 	$log['msg_status'] = $result;
 
 	$CI->db->insert($CI->config->item('jayon_email_outbox_table'),$log);
+
+    $CI->email->clear(true); // clear data AND attchments before sending another email
 
 	return $result;
 }

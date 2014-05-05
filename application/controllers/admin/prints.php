@@ -762,8 +762,55 @@ class Prints extends Application
     public function ajaxsendslip(){
         $ids = $this->input->post('delivery_id');
 
-        foreach($ids as $delivery_id){
-            $this->sendslip($delivery_id, 'andy.awidarto@gmail.com');
+        $idstring = implode(',',$ids);
+
+        $this->db->where_in('delivery_id',$ids);
+
+        $merchant_table = $this->config->item('jayon_members_table');
+        $delivery_table = $this->config->item('incoming_delivery_table');
+
+        $this->db->select($delivery_table.'.*, m.email as merchant_email');
+        $this->db->join( $merchant_table.' as m', $delivery_table.'.merchant_id = m.id', 'left' );
+        $res = $this->db->get($this->config->item('incoming_delivery_table'));
+
+        //print_r($res->result_array());
+
+        $digest = array();
+
+        foreach ($res->result() as $r) {
+            $result = $this->deliveryslip($r->delivery_id, 'save');
+            if(file_exists(FCPATH.'/public/slip/'.$r->delivery_id.'.pdf') && !is_null($r->merchant_email) ){
+                $digest[$r->merchant_email][] = FCPATH.'/public/slip/'.$r->delivery_id.'.pdf';
+            }
+        }
+
+        //print_r($digest);
+
+        foreach($digest as $email=>$attachments){
+
+            //print_r($attachments);
+
+            $subject = 'JEX Delivery Slip - '.$email;
+            //$to = 'andy.awidarto@gmail.com';
+            $to = $email;
+            $cc = $this->config->item('admin_username');
+            $reply_to = $this->config->item('admin_username');
+            $template = 'deliveryslip';
+            $data = '';
+            $attachment = $attachments;
+
+            $result = send_notification(
+                $subject,
+                $to,
+                $cc,
+                $reply_to,
+                $template,
+                $data,
+                $attachment
+            );
+
+            //return $result;
+
         }
 
         print json_encode(array('result'=>'OK'));
