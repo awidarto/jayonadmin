@@ -2825,7 +2825,6 @@ class Delivery extends Application
 
 	public function ajaxdelivered()
 	{
-        ini_set('memory_limit', '-1');
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
 
