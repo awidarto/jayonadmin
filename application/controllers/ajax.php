@@ -57,6 +57,30 @@ class Ajax extends Application
 		print json_encode($merchants);
 	}
 
+    public function getbuyerphone(){
+        $q = $this->input->get('term');
+        $merchant_id = $this->input->post('merchant_id');
+        $merchant_id = ($merchant_id == '')?null:$merchant_id;
+        $merchants = ajax_find_phone($q,'phone','id',$merchant_id);
+        print json_encode($merchants);
+    }
+
+    public function getbuyermobile1(){
+        $q = $this->input->get('term');
+        $merchant_id = $this->input->post('merchant_id');
+        $merchant_id = ($merchant_id == '')?null:$merchant_id;
+        $merchants = ajax_find_phone($q,'mobile1','id',$merchant_id);
+        print json_encode($merchants);
+    }
+
+    public function getbuyermobile2(){
+        $q = $this->input->get('term');
+        $merchant_id = $this->input->post('merchant_id');
+        $merchant_id = ($merchant_id == '')?null:$merchant_id;
+        $merchants = ajax_find_phone($q,'mobile2','id',$merchant_id);
+        print json_encode($merchants);
+    }
+
 	public function getdevice(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_device($q,'identifier');

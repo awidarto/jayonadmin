@@ -298,6 +298,24 @@ function ajax_find_buyer($zone,$col = 'buyer_name',$idcol = 'id',$merchant_id = 
 	return $q->result_array();
 }
 
+function ajax_find_phone($zone,$col = 'phone',$idcol = 'id',$merchant_id = null){
+    $CI =& get_instance();
+
+    if(is_null($merchant_id)){
+        return array();
+    }else{
+        $CI->db->distinct();
+        $CI->db->where('buyers.merchant_id',$merchant_id)
+            ->like('buyers.'.$col,$zone);
+        $CI->db->select('buyers.'.$idcol.' as id ,concat_ws(\'::\',buyers.'.$col.', buyers.buyer_name) as label, buyers.'.$col.' as value, buyers.merchant_id as merchant_id, buyers.buyer_name as buyer_name, buyers.email as email, buyers.shipping_address as shipping, buyers.mobile1 as mobile1,buyers.mobile2 as mobile2, buyers.phone as phone',false);
+        //$CI->db->join($CI->config->item('assigned_delivery_table').' as m','buyers.id = m.buyer_id','left');
+        $q = $CI->db->get('buyers');
+        return $q->result_array();
+    }
+
+}
+
+
 function old_ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id',$merchant_id = null){
 	$CI =& get_instance();
 	$group_id = user_group_id('buyer');
@@ -323,6 +341,7 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 		->get('members');
 	return $q->result_array();
 }
+
 
 function ajax_find_device($zone,$col = 'descriptor'){
 	$CI =& get_instance();
