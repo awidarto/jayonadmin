@@ -3712,8 +3712,6 @@ class Delivery extends Application
         $mfields = 'timestamp,
             report_timestamp,
             delivery_id,
-            device,
-            courier,
             actor_type,
             actor_id,
             req_by,
