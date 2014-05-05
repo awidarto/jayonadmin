@@ -2834,8 +2834,31 @@ class Delivery extends Application
 		//$count_display_all = $this->db
 		//	->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
 		//	->count_all_results($this->config->item('delivered_delivery_table'));
+        $mtab = $this->config->item('assigned_delivery_table');
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+        $mfields = $mtab.'.id as id,delivery_type,
+                buyerdeliverycity,
+                buyerdeliveryzone,
+                buyer_name,
+                recipient_name,
+                shipping_address,
+                '.$mtab.'.phone,
+                '.$mtab.'.mobile1,
+                '.$mtab.'.mobile2,
+                delivery_note,
+                status,
+                device_id,
+                deliverytime,
+                chargeable_amount,
+                delivery_id,
+                merchant_trans_id,
+                delivery_cost,
+                delivery_type,cod_cost,
+                reschedule_ref,
+                revoke_ref';
+
+
+		$this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
