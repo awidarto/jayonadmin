@@ -3707,12 +3707,36 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		$this->db->select($this->config->item('delivery_log_table').'.*,u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
+        $mtab = $this->config->item('delivery_log_table');
+
+        $mfields = 'timestamp,
+            report_timestamp,
+            delivery_id,
+            device,
+            courier,
+            actor_type,
+            actor_id,
+            req_by,
+            req_name,
+            req_note,
+            latitude,
+            longitude,
+            status,
+            notes';
+
+
+		$this->db->select($mfields.',u.fullname as admin_name,m.fullname as merchant_username,m.merchantname as merchant_name,d.identifier as device,c.fullname as courier');
 		$this->db->join('users as u',$this->config->item('delivery_log_table').'.actor_id=u.id','left');
 		$this->db->join('members as m',$this->config->item('delivery_log_table').'.actor_id=m.id','left');
 		//$this->db->join('applications as a',$this->config->item('delivery_log_table').'.key=b.key','left');
 		$this->db->join('devices as d',$this->config->item('delivery_log_table').'.device_id=d.id','left');
 		$this->db->join('couriers as c',$this->config->item('delivery_log_table').'.courier_id=c.id','left');
+
+        $now = time();
+
+        $lastyear = strtotime("-6 month", $now);
+
+        $this->db->where('timestamp > ', $lastyear);
 
 		$data = $this->db
 			->limit($limit_count, $limit_offset)
@@ -3727,8 +3751,11 @@ class Delivery extends Application
 		$aadata = array();
 
 
-		foreach($result as $value => $key)
+		//foreach($result as $value => $key)
+        for($i = 0; $i < count($result); $i++)
 		{
+            $key = $result[$i];
+
 			if($key['actor_type'] == 'AD'){
 				$actor_name = $key['admin_name'];
 			}else if($key['actor_type'] == 'MC'){
