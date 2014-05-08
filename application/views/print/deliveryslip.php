@@ -40,7 +40,7 @@
 		}
 
 		.dataTable td{
-			border-bottom:thin solid #eee;
+			/*border-bottom:thin solid #eee;*/
 			text-align:left;
 			font-size: 11px;
 		}
@@ -50,9 +50,9 @@
 			padding-right:15px;
 			font-size:12px;
 			font-weight: bold;
-			border-top:thin solid #eee;
+			/*border-top:thin solid #eee;
 			border-bottom:thin solid #eee;
-			/*border-left:thin solid #eee;*/
+			border-left:thin solid #eee;*/
 		}
 
 		.dataTable tr>th{
@@ -66,8 +66,8 @@
 		}
 
 		.dataTable td{
-			/*border-left:thin solid #eee;*/
-			border-bottom:thin solid #eee;
+			/*border-left:thin solid #eee;
+			border-bottom:thin solid #eee;*/
 		}
 
 		.dataTable td:last-child{
@@ -128,9 +128,10 @@
 			width:200px;
 		}
 
-		#mainInfo tr td:last-child, #orderInfo tr td:last-child{
-			border-bottom: thin solid #eee;
-			/*border-left:thin solid #eee;*/
+		#mainInfo tr td:last-child,
+        #orderInfo tr td:last-child{
+			/*border-bottom: thin solid #eee;
+			border-left:thin solid #eee;*/
 		}
 
 		#mainInfo td{
