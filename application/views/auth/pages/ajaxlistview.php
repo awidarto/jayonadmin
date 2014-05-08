@@ -99,7 +99,7 @@
 
             }
 
-            if($(e.target).is('.thumb_pending')){
+            if($(e.target).is('.thumb_multi')){
                 var delivery_id = e.target.alt;
                 var currentTime = new Date();
 

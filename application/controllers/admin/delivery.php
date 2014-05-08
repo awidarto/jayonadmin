@@ -2708,7 +2708,7 @@ class Delivery extends Application
 
             $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
 
-            $thumbnail = get_thumbnail($key['delivery_id']);
+            $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
 
             $thumbstat = colorizestatus($key['status']);
             if($key['status'] == 'pending'){
@@ -2971,7 +2971,7 @@ class Delivery extends Application
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 			if($key['status'] == 'pending'){
-                $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_pending');
+                $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
             }else{
                 $thumbnail = get_thumbnail($key['delivery_id']);
             }
