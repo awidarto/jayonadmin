@@ -90,7 +90,22 @@
                 var delivery_id = e.target.alt;
                 var currentTime = new Date();
 
+                $.fancybox.open([
+                        {
+                            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),
+                            title : delivery_id
+                        }
+                    ]);
+
+            }
+
+            if($(e.target).is('.thumb_pending')){
+                var delivery_id = e.target.alt;
+                var currentTime = new Date();
+
                 var images = [];
+
+                var thumbs = $('.gal_' + delivery_id)
 
                 $('.gal_' + delivery_id).each(function(el){
                     images.push(
