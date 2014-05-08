@@ -2970,7 +2970,12 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
-			$thumbnail = get_thumbnail($key['delivery_id']);
+			if($key['status'] == 'pending'){
+                $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_pending');
+            }else{
+                $thumbnail = get_thumbnail($key['delivery_id']);
+            }
+
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$aadata[] = array(
