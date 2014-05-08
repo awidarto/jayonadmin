@@ -600,7 +600,7 @@
         });
 
 
-        $('#phone' ).autocomplete({
+        $('#phone_off' ).autocomplete({
             //source: '<?php print site_url('ajax/getbuyerphone')?>',
             source:function(request,response){
                 var request_data = {
@@ -627,7 +627,7 @@
             }
         });
 
-        $('#mobile1' ).autocomplete({
+        $('#mobile1_off' ).autocomplete({
             //source: '<?php print site_url('ajax/getbuyerphone')?>',
             source:function(request,response){
                 var request_data = {
@@ -654,7 +654,7 @@
             }
         });
 
-        $('#mobile2' ).autocomplete({
+        $('#mobile2_off' ).autocomplete({
             //source: '<?php print site_url('ajax/getbuyerphone')?>',
             source:function(request,response){
                 var request_data = {
