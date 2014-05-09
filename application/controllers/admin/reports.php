@@ -2528,7 +2528,7 @@ class Reports extends Application
             $seq++;
         }
 
-        $total_span = 11;
+        $total_span = 12;
         $say_span = 13;
 
         $this->table->add_row(
