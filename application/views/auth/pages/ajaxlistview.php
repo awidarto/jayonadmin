@@ -252,6 +252,37 @@
             }
         });
 
+        $('#download-csv').on('click',function(){
+            var flt = $('tfoot td input, tfoot td select');
+            var dlfilter = [];
+
+            flt.each(function(){
+                var name = this.name;
+                var val = this.value;
+                dlfilter.push({ name : name, value : val });
+            });
+            console.log(dlfilter);
+
+            var sort = oTable.fnSettings().aaSorting;
+            console.log(sort);
+
+            $.post('<?php print base_url() ?>admin/dl/delivered',
+                {
+                    datafilter : dlfilter,
+                    sort : sort[0],
+                    sortdir : sort[1]
+                },
+                function(data) {
+                    if(data.status == 'OK'){
+                        console.log(data.data.urlcsv);
+                        window.location.href = data.data.urlcsv;
+                    }
+                },'json');
+
+            //return false;
+            event.preventDefault();
+        });
+
 
 		$('#archive_dialog').dialog({
 			autoOpen: false,
@@ -414,9 +445,10 @@
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
 <?php endif;?>
-
     <div class="button_nav">
-        <?php echo anchor('#','Download CSV','class="button dl"')?>
+        <span id="download-csv" class="button" style="cursor:pointer">
+            Download CSV
+        </span>
     </div>
 <?php echo $this->table->generate(); ?>
 

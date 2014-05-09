@@ -16,6 +16,25 @@ class Dl extends Application
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
+
+        $mtab = $this->config->item('assigned_delivery_table');
+
+        //generated columns
+        $columns = 'assignment_date,
+            buyerdeliveryzone,
+            delivery_id,
+            buyer_name,
+            shipping_address,
+            '.$mtab.'.phone,
+            status,
+            '.$mtab.'.merchant_id,
+            merchant_trans_id,
+            delivery_type,
+            delivery_cost,
+            cod_cost,
+            total_price';
+
+        // sorting columns
         $sort = $sorts[0];
         $sort_dir = $sorts[1];
 
@@ -33,18 +52,6 @@ class Dl extends Application
             'merchant_id',
             'merchant_trans_id'
             );
-
-        $mtab = $this->config->item('assigned_delivery_table');
-        $columns = 'assignment_date,
-            buyerdeliveryzone,
-            delivery_id,
-            buyer_name,
-            shipping_address,
-            '.$mtab.'.phone,
-            status,
-            '.$mtab.'.merchant_id,
-            merchant_trans_id';
-
 
         $search = false;
         foreach ($filter as $f) {
@@ -117,6 +124,29 @@ class Dl extends Application
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
+        $mtab = $this->config->item('assigned_delivery_table');
+
+        $columns = $mtab.'.id as id,delivery_type,
+                buyerdeliverycity,
+                buyerdeliveryzone,
+                buyer_name,
+                recipient_name,
+                shipping_address,
+                '.$mtab.'.phone,
+                '.$mtab.'.mobile1,
+                '.$mtab.'.mobile2,
+                delivery_note,
+                status,
+                device_id,
+                deliverytime,
+                chargeable_amount,
+                delivery_id,
+                merchant_trans_id,
+                delivery_cost,
+                delivery_type,cod_cost,
+                reschedule_ref,
+                revoke_ref';
+
         $sort = $sorts[0];
         $sort_dir = $sorts[1];
 
@@ -136,23 +166,28 @@ class Dl extends Application
             }
         }
 
-        $this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+        $this->db->select($columns.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
         //$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
         $this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
         $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+        if($search == false){
+            $this->db->like($mtab.'.assignment_date', date('Y-m',time()),'after' );
+            $this->db->and_();
+        }
+
         if($search){
             $this->db->and_();
         }
 
         $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_where('pending_count >', 0)
+            ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
             ->group_end();
+
         $data = $this->db->order_by('assignment_date','desc')
             ->order_by('device','asc')
             ->order_by('courier','asc')
