@@ -1,6 +1,8 @@
 <script>
 	var asInitVals = new Array();
 
+    var dl = false;
+
 	$(document).ready(function() {
 
 	    var oTable = $('.dataTable').dataTable(
@@ -25,6 +27,10 @@
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
+                    aoData.push({
+                        'name':'dl',
+                        'value': dl
+                    });
 		            $.ajax( {
 		                "dataType": 'json',
 		                "type": "POST",
@@ -394,6 +400,13 @@
 
 			}
 		});
+
+        $('#dl_csv').on('click',function(){
+            dl = 'csv';
+            oTable.fnDraw();
+            preventDefault();
+        });
+
 	});
 </script>
 <?php if(isset($add_button)):?>
@@ -401,6 +414,10 @@
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
 <?php endif;?>
+
+    <div class="button_nav">
+        <?php echo anchor('#','Download CSV','class="button dl"')?>
+    </div>
 <?php echo $this->table->generate(); ?>
 
 <div id="archive_dialog" title="Archive Delivery Orders">

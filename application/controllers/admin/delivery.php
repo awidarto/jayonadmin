@@ -14,7 +14,7 @@ class Delivery extends Application
 
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 
-        ini_set('memory_limit','800M');
+        ini_set('memory_limit','1024M');
 
 
 	}
@@ -2794,19 +2794,19 @@ class Delivery extends Application
 
 		$this->table->set_footing(
 			'',
-			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'<input type="text" name="search_buyerdeliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
 			'',
 			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'',
-            '<input type="text" name="search_city" id="search_city" value="Search City" class="search_init" />',
-            '<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+            '<input type="text" name="search_buyerdeliverycity" id="search_city" value="Search City" class="search_init" />',
+            '<input type="text" name="search_buyerdeliveryzone" id="search_zone" value="Search zone" class="search_init" />',
             '<input type="text" name="search_merchant" id="search_merchant" value="Search Merchant" class="search_init" />',
             '<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
-			'<input type="text" name="search_recipient" id="search_recipient" value="Search Recipient" class="search_init" />',
-			'<input type="text" name="search_shipping" id="search_shipping" value="Search Address" class="search_init" />',
+			'<input type="text" name="search_recipient_name" id="search_recipient" value="Search Recipient" class="search_init" />',
+			'<input type="text" name="search_shipping_address" id="search_shipping" value="Search Address" class="search_init" />',
             '',
-            '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_delivery_id" value="Search delivery ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '',
             '',
@@ -4346,6 +4346,27 @@ class Delivery extends Application
             return $trx_id;
         }
     }
+
+    public function getxls($filename)
+    {
+        $dlfile = public_path().'/storage/dled/'.$filename;
+
+        $headers = array(
+                'Content-Type: application/vnd.ms-excel'
+            );
+        return Response::download($dlfile, $filename, $headers );
+    }
+
+    public function getcsv($filename)
+    {
+        $dlfile = public_path().'/storage/dled/'.$filename;
+
+        $headers = array(
+                'Content-Type: text/csv'
+            );
+        return Response::download($dlfile, $filename, $headers );
+    }
+
 
 }
 
