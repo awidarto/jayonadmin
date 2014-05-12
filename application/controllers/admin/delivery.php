@@ -2636,12 +2636,34 @@ class Delivery extends Application
 		if($search){
 			$this->db->and_();
 		}
-
+/*
+    q: "SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`application_name` as app_name, `d`.`identifier` as device, `c`.`fullname` as courier
+    FROM (`delivery_order_active`)
+    LEFT JOIN `members` as m ON `delivery_order_active`.`merchant_id`=`m`.`id`
+    LEFT JOIN `applications` as a ON `delivery_order_active`.`application_id`=`a`.`id`
+    LEFT JOIN `devices` as d ON `delivery_order_active`.`device_id`=`d`.`id`
+    LEFT JOIN `couriers` as c ON `delivery_order_active`.`courier_id`=`c`.`id`
+    WHERE  `delivery_order_active`.`delivery_id`  LIKE '%33125%' AND
+    (
+        `status` =  'cr_assigned'
+        OR `status` =  'pickedup'
+        OR `status` =  'enroute'
+        OR (
+            `status` =  'pending'
+            AND `pending_count` > 0
+        )
+    )
+    ORDER BY `assignment_date` desc, `device` asc, `courier` asc, `buyerdeliverycity` asc, `buyerdeliveryzone` asc, `assignment_date` asc↵LIMIT 10"
+*/
 		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
 			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_where('pending_count >', 0)
+            ->or_()
+            ->group_start()
+            ->where('status',$this->config->item('trans_status_new'))
+            ->where('pending_count >', 0)
+            ->group_end()
 			->group_end();
 		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
