@@ -2689,7 +2689,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                     ->where('status',$this->config->item('trans_status_new'))
                     ->where('pending_count >', 0)
                 ->group_end()
-            ->group_end()
+            //->group_end()
 			->count_all_results($this->config->item('assigned_delivery_table'));
 
 
