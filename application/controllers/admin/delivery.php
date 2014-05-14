@@ -2637,14 +2637,14 @@ class Delivery extends Application
 			$this->db->and_();
 		}
 /*
-    q: "SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`application_name` as app_name, `d`.`identifier` as device, `c`.`fullname` as courier
+
+SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`application_name` as app_name, `d`.`identifier` as device, `c`.`fullname` as courier
     FROM (`delivery_order_active`)
     LEFT JOIN `members` as m ON `delivery_order_active`.`merchant_id`=`m`.`id`
     LEFT JOIN `applications` as a ON `delivery_order_active`.`application_id`=`a`.`id`
     LEFT JOIN `devices` as d ON `delivery_order_active`.`device_id`=`d`.`id`
     LEFT JOIN `couriers` as c ON `delivery_order_active`.`courier_id`=`c`.`id`
-    WHERE  `delivery_order_active`.`delivery_id`  LIKE '%33125%' AND
-    (
+    WHERE (
         `status` =  'cr_assigned'
         OR `status` =  'pickedup'
         OR `status` =  'enroute'
@@ -2653,7 +2653,9 @@ class Delivery extends Application
             AND `pending_count` > 0
         )
     )
-    ORDER BY `assignment_date` desc, `device` asc, `courier` asc, `buyerdeliverycity` asc, `buyerdeliveryzone` asc, `assignment_date` asc↵LIMIT 10"
+    ORDER BY `assignment_date` desc, `device` asc, `courier` asc, `buyerdeliverycity` asc, `buyerdeliveryzone` asc, `assignment_date` asc
+    LIMIT 10
+
 */
 		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))

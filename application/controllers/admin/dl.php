@@ -80,12 +80,27 @@ class Dl extends Application
             $this->db->and_();
         }
 
+        /*
         $this->db->group_start()
             ->where('status',$this->config->item('trans_status_admin_courierassigned'))
             ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
             ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
             ->or_where('pending_count >', 0)
             ->group_end();
+        */
+
+        $this->db->group_start()
+                ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+                ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+                ->or_()
+                    ->group_start()
+                        ->where('status',$this->config->item('trans_status_new'))
+                        ->where('pending_count >', 0)
+                    ->group_end()
+            ->group_end();
+
+
         $data = $this->db->order_by('assignment_date','desc')
             ->order_by('device','asc')
             ->order_by('courier','asc')
@@ -93,6 +108,8 @@ class Dl extends Application
             ->order_by('buyerdeliveryzone','asc')
             //->order_by($sort,$sort_dir)
             ->get($this->config->item('assigned_delivery_table'));
+
+            $last_query = $this->db->last_query();
 
         $sdata = $data->result_array();
 
@@ -115,7 +132,7 @@ class Dl extends Application
         fclose($fp);
 
         $urlcsv = base_url().'admin/dl/out/'.$fname;
-        $result = array( 'status'=>'OK','data'=>array('urlcsv'=>$urlcsv) );
+        $result = array( 'status'=>'OK','data'=>array('urlcsv'=>$urlcsv), 'q'=>$last_query );
         print json_encode($result);
     }
 
