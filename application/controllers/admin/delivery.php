@@ -2662,10 +2662,10 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
 			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
             ->or_()
-            ->group_start()
-            ->where('status',$this->config->item('trans_status_new'))
-            ->where('pending_count >', 0)
-            ->group_end()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
 			->group_end();
 		$data = $this->db->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
@@ -2678,12 +2678,18 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 
 		//print $this->db->last_query();
 
-            $lastquery = $this->db->last_query();
+        $lastquery = $this->db->last_query();
 
 		$count_display_all = $this->db
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
 			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
+            ->group_end();
 			->count_all_results($this->config->item('assigned_delivery_table'));
 
 
