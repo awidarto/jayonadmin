@@ -81,6 +81,10 @@ class Admin extends Application
 		}
 	}
 
+    public function testglob($delivery_id){
+        $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+    }
+
     public function tmnull(){
         $delivery_id = '004670-02-102013-00019892';
         $result = $this->db->where('delivery_id', $delivery_id)
