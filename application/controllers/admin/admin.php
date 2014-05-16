@@ -83,6 +83,7 @@ class Admin extends Application
 
     public function testglob($delivery_id){
         $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+        print_r($existingpic);
     }
 
     public function tmnull(){
