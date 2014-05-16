@@ -117,7 +117,7 @@
                     images.push(
                         {
                             href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
-                            title : delivery_id
+                            title : $(this).val()
                         }
                     );
                 });
