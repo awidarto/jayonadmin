@@ -733,7 +733,7 @@ function checkdateblock($date = null, $city = null){
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();
 
-    $existingpic = glob($CI->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+    $existingpic = glob($CI->config->item('picture_path').$delivery_id.'*.jpg');
 
     //print_r($existingpic);
 

@@ -889,10 +889,14 @@ class V1 extends Application
 
 
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
+
             if(count($existingpic) == 0){
                 $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
             }else{
                 $pidx = count($existingpic);
+                if(in_array($this->config->item('picture_path').$delivery_id.'_sign.jpg', $existingpic)){
+                    $pidx = $pidx - 1;
+                }
                 $target_path = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.jpg';
             }
 
