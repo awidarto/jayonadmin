@@ -2637,7 +2637,6 @@ class Delivery extends Application
 			$this->db->and_();
 		}
 /*
-
 SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`application_name` as app_name, `d`.`identifier` as device, `c`.`fullname` as courier
     FROM (`delivery_order_active`)
     LEFT JOIN `members` as m ON `delivery_order_active`.`merchant_id`=`m`.`id`
@@ -2646,15 +2645,16 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
     LEFT JOIN `couriers` as c ON `delivery_order_active`.`courier_id`=`c`.`id`
     WHERE (
         `status` =  'cr_assigned'
-        OR `status` =  'pickedup'
-        OR `status` =  'enroute'
-        OR (
-            `status` =  'pending'
-            AND `pending_count` > 0
-        )
+            OR `status` =  'pickedup'
+            OR `status` =  'enroute'
+            OR
+            (
+                `status` =  'pending'
+                AND `pending_count` > 0
+            )
     )
     ORDER BY `assignment_date` desc, `device` asc, `courier` asc, `buyerdeliverycity` asc, `buyerdeliveryzone` asc, `assignment_date` asc
-    LIMIT 10
+    LIMIT 10"
 
 */
 		$this->db->group_start()
@@ -3000,11 +3000,11 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
-			if($key['status'] == 'pending'){
+			//if($key['status'] == 'pending'){
                 $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
-            }else{
-                $thumbnail = get_thumbnail($key['delivery_id']);
-            }
+            //}else{
+            //    $thumbnail = get_thumbnail($key['delivery_id']);
+            //}
 
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
