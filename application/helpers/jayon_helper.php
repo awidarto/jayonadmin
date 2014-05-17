@@ -733,11 +733,9 @@ function get_sign($delivery_id){
     $CI =& get_instance();
 
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
-        //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
-            $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
-            return $sthumbnail;
-            //$thumbnail .= sprintf('<img style="cursor:pointer;width:100px;height:auto;" class="sign '.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
-        //}
+        $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
+        $thumbnail .= sprintf('<img style="cursor:pointer;width:70px;height:auto;" class="sign" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
+        return $thumbnail;
     }else{
         return '';
     }
