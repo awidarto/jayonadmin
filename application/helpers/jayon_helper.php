@@ -730,6 +730,8 @@ function checkdateblock($date = null, $city = null){
 }
 
 function get_sign($delivery_id){
+    $CI =& get_instance();
+
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
         //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
             $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
