@@ -440,7 +440,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr class="sign_space">
 								<td>&nbsp;</td>
-								<td>&nbsp;</td>
+								<td><?php print get_sign($main_info['delivery_id']);?></td>
 							</tr>
 							<tr class="sign_name">
 								<td>&nbsp;</td>
