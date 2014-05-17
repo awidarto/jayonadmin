@@ -425,6 +425,11 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>Arahan / Catatan</td>
 								<td><?php print $main_info['directions'];?></td>
 							</tr>
+                            <tr>
+                                <td>Catatan Penerimaan</td>
+                                <td><?php print $main_info['delivery_note'];?></td>
+                            </tr>
+
 						</tbody>
 					</table>
 
