@@ -25,14 +25,29 @@ class Dl extends Application
             delivery_id,
             buyer_name,
             shipping_address,
-            '.$mtab.'.phone,
+            '.$mtab.'.phone as phone,
             status,
-            '.$mtab.'.merchant_id,
+            '.$mtab.'.merchant_id as merchant_id,
             merchant_trans_id,
             delivery_type,
             delivery_cost,
             cod_cost,
             total_price';
+
+        $columns .= ',buyerdeliverycity,
+            latitude,
+            longitude,
+            '.$mtab.'.id as id,
+            recipient_name,
+            '.$mtab.'.mobile1 as mobile1,
+            '.$mtab.'.mobile2 as mobile2,
+            weight,
+            width,
+            length,
+            height,
+            application_id,
+            pending_count,
+            chargeable_amount';
 
         // sorting columns
         $sort = $sorts[0];
@@ -100,7 +115,15 @@ class Dl extends Application
                     ->group_end()
             ->group_end();
 
+        $data = $this->db
+            ->order_by('assignment_date','desc')
+            ->order_by('device','asc')
+            ->order_by('courier','asc')
+            ->order_by('buyerdeliverycity','asc')
+            ->order_by('buyerdeliveryzone','asc')
+            ->get($this->config->item('assigned_delivery_table'));
 
+        /*
         $data = $this->db->order_by('assignment_date','desc')
             ->order_by('device','asc')
             ->order_by('courier','asc')
@@ -108,19 +131,122 @@ class Dl extends Application
             ->order_by('buyerdeliveryzone','asc')
             //->order_by($sort,$sort_dir)
             ->get($this->config->item('assigned_delivery_table'));
+        */
 
             $last_query = $this->db->last_query();
 
         $sdata = $data->result_array();
 
+        //print_r($sdata);
+
+        $aadata = array();
+
+        $bardate = '';
+        $bardev = '';
+        $barcourier = '';
+        $barcity = '';
+        $barzone = '';
+
+        $num = 0;
+
+        foreach($sdata as $key)
+        {
+            $num++;
+
+            $datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
+            $devicefield = ($bardev == $key['device'])?'':$key['device'];
+
+            //$courierlink = '<span class="change_courier" id="'.$key['assignment_date'].'_'.$key['device_id'].'_'.$key['courier_id'].'" style="cursor:pointer;text-decoration:underline;" >'.$key['courier'].'</span>';
+
+            $courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$key['courier'];
+            $cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
+            $zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
+
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
+            $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
+
+            $thumbstat = colorizestatus($key['status']);
+            if($key['status'] == 'pending'){
+                $thumbstat .= '<br />'.$thumbnail;
+            }
+
+            $aadata[] = array(
+                $num,
+                $datefield,
+                $devicefield,
+                $courierfield,
+                $key['delivery_type'],
+                ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
+                $cityfield,
+                $zonefield,
+                $key['merchant'],
+                $key['buyer_name'],
+                $key['recipient_name'],
+                $key['shipping_address'].'<br />'.$direction,
+                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                $key['delivery_id'],
+                $this->hide_trx($key['merchant_trans_id']),
+                $key['delivery_cost'],
+                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                $key['width'].' x '.$key['height'].' x '.$key['length'],
+                (double)$key['width']*(double)$key['height']*(double)$key['length'],
+                get_weight_range($key['weight'],$key['application_id']),
+                $key['status'],
+                $key['pending_count']
+            );
+
+            $bardate = $key['assignment_date'];
+            $bardev =   $key['device'];
+            $barcourier =   $key['courier'];
+            $barcity =  $key['buyerdeliverycity'];
+            $barzone =  $key['buyerdeliveryzone'];
+
+
+        }
+
+
         $fname = date('Y-m-d',time()).'_inprogress.csv';
 
         $fp = fopen(FCPATH.'public/dl/'.$fname, 'w');
 
+        $headrow = array(
+            '#',
+            'Delivery Date',
+            'Device',
+            'Courier',
+            'Type',
+            'COD Value',
+            'City',
+            'Zone',
+            'Merchant',
+            'Buyer',
+            'Delivered To',
+            'Shipping Address',
+            'Phone',
+            'Delivery ID',
+            'No Kode Penjualan Toko',
+            'Delivery Fee',
+            'COD Surcharge',
+            'W x H x L',
+            'Volume',
+            'Weight Range',
+            'Status',
+            'Pending'
+        );
+
+
         $head = 0;
-        foreach ($sdata as $fields) {
+        foreach ($aadata as $fields) {
             if($head == 0){
-                $heads = array_keys($fields);
+                $heads = $headrow;
                 fputcsv($fp, $heads, ',' , '"');
                 fputcsv($fp, $fields, ',' , '"');
             }else{
@@ -262,6 +388,15 @@ class Dl extends Application
         exit;
 
     }
+
+    public function hide_trx($trx_id){
+        if(preg_match('/^TRX_/', $trx_id) || preg_match('/^UP_/', $trx_id)){
+            return '';
+        }else{
+            return $trx_id;
+        }
+    }
+
 
 }
 
