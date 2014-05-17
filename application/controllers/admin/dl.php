@@ -178,6 +178,10 @@ class Dl extends Application
                 $thumbstat .= '<br />'.$thumbnail;
             }
 
+            $phones = ($key['phone'] == '')?'':$key['phone'];
+            $phones .= ($key['mobile1'] == '')?'':';'.$key['mobile1'];
+            $phones .= ($key['mobile2'] == '')?'':';'.$key['mobile2'];
+
             $aadata[] = array(
                 $num,
                 $datefield,
@@ -191,7 +195,7 @@ class Dl extends Application
                 $key['buyer_name'],
                 $key['recipient_name'],
                 $key['shipping_address'].'<br />'.$direction,
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                $phones,
                 $key['delivery_id'],
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
