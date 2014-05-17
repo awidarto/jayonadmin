@@ -734,7 +734,7 @@ function get_sign($delivery_id){
 
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
         $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
-        $thumbnail .= sprintf('<img style="cursor:pointer;width:70px;height:auto;" class="sign" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
+        $thumbnail = sprintf('<img style="cursor:pointer;width:70px;height:auto;" class="sign" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
         return $thumbnail;
     }else{
         return '';
