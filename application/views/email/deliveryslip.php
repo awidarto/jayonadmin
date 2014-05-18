@@ -1,1 +1,1 @@
-This is your delivery slip email.
+<?php print $body;?>

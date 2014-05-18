@@ -916,9 +916,13 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 
 	$CI->email->from($CI->config->item('notify_username'), 'Jayon Express Notification');
 
-	if(is_null($data)){
+	if(is_null($data) || $data == ''){
 		$data['type'] = 'notification';
-	}
+	}{
+        if(is_array($data)){
+            $data['type'] = 'notification';
+        }
+    }
 
 	if(!is_null($reply_to) && $reply_to != ''){
 		$CI->email->reply_to($reply_to);

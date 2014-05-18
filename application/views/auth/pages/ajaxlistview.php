@@ -238,14 +238,45 @@
 
         $('#doSending').click(function(){
             var assigns = '';
+            var addinfo = '';
             var count = 0;
-            $('.assign_check:checked').each(function(){
+
+            var tosend = $('.assign_check:checked').sort(function(a,b){
+                return $(a).data('merchantid') - $(b).data('merchantid');
+            });
+
+            var merchants = [];
+
+            var lastid = '';
+            tosend.each(function(){
+                if( $(this).data('merchantid') !=  lastid ){
+                    merchants.push({
+                        'id': $(this).data('merchantid'),
+                        'name': $(this).data('merchant')
+                    })
+                }
+                lastid = $(this).data('merchantid');
+            });
+
+            console.log(merchants);
+
+            $.each(merchants, function( k, v){
+                addinfo += '<li style="padding:5px;list-style-type:none;border-bottom:thin solid grey;margin-left:0px;">'
+                            + v.id + ' <strong>' + v.name + '</strong><br />'
+                            + 'CC :<br /><textarea class="ccfield" data-merchant="' + v.id + '"></textarea><br />'
+                            + 'Msg :<br /><textarea class="msg" data-merchant="' + v.id + '"></textarea></label>'
+                            + '</li>';
+
+            });
+
+            tosend.each(function(){
                 assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong></li>';
                 count++;
             });
 
             if(count > 0){
                 $('#send_list').html(assigns);
+                $('#send_cc').html(addinfo);
                 $('#sendslip_dialog').dialog('open');
             }else{
                 alert('Please select one or more delivery orders');
@@ -319,20 +350,43 @@
 
         $('#sendslip_dialog').dialog({
             autoOpen: false,
-            height: 300,
-            width: 400,
+            height: 400,
+            width: 800,
             modal: true,
             buttons: {
                 "Send Delivery Slips": function() {
                     var delivery_ids = [];
+                    var ccfields = [];
+                    var merchantids = [];
+                    var admincc = $('#admincc').val();
+                    var messages = [];
+
                     i = 0;
                     $('.assign_check:checked').each(function(){
                         delivery_ids[i] = $(this).val();
                         i++;
                     });
+
+                    j = 0;
+                    $('.ccfield').each(function(){
+                        ccfields[j] = $(this).val();
+                        merchantids[j] = $(this).data('merchant');
+                        j++;
+                    });
+
+                    j = 0;
+                    $('.msg').each(function(){
+                        messages[j] = $(this).val();
+                        j++;
+                    });
+
                     $.post('<?php print site_url('admin/prints/ajaxsendslip');?>',
                         {
-                            'delivery_id[]':delivery_ids
+                            'delivery_id[]':delivery_ids,
+                            'ccfields[]':ccfields,
+                            'mids[]':merchantids,
+                            'msgs[]':messages,
+                            'admincc':admincc
                         }, function(data) {
                         if(data.result == 'OK'){
                             //redraw table
@@ -481,10 +535,24 @@
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
 
-<div id="sendslip_dialog" title="Send Delivery Slip" style="overflow:hidden;padding:8px;">
-    <ul id="send_list">
-
-    </ul>
+<div id="sendslip_dialog" title="Send Delivery Slip" style="overflow:hidden;overflow-y:auto;padding:8px;">
+    <table style="width:100%;vertical-align:top;">
+        <tr>
+            <td style="width:50%;vertical-align:top;">
+                Orders :
+                <ul id="send_list">
+                </ul>
+            </td>
+            <td>
+                CC to :<br /
+                use comma to separate multiple email addresses :<br />
+                <label for="admincc">Admin CC</label><br />
+                <textarea id="admincc" ></textarea>
+                <ul id="send_cc">
+                </ul>
+            </td>
+        </tr>
+    </table>
 </div>
 
 

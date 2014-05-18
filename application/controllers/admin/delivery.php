@@ -2885,7 +2885,8 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                 delivery_cost,
                 delivery_type,cod_cost,
                 reschedule_ref,
-                revoke_ref';
+                revoke_ref,
+                '.$mtab.'.merchant_id';
 
 		$this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -3025,7 +3026,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                 $thumbnail,
                 $key['delivery_note'],
                 colorizestatus($key['status']),
-                form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',

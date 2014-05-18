@@ -761,6 +761,17 @@ class Prints extends Application
 
     public function ajaxsendslip(){
         $ids = $this->input->post('delivery_id');
+        $ccs = $this->input->post('ccfields');
+        $admincc = $this->input->post('admincc');
+        $messages = $this->input->post('msgs');
+
+        $merchants = $this->input->post('mids');
+
+        $mcc = array();
+        for($a = 0;$a < count($merchants);$a++){
+            $mcc[$merchants[$a]] = $ccs[$a];
+            $msg[$merchants[$a]] = $messages[$a];
+        }
 
         $idstring = implode(',',$ids);
 
@@ -777,10 +788,17 @@ class Prints extends Application
 
         $digest = array();
 
+        $minfo = array();
+
         foreach ($res->result() as $r) {
             $result = $this->deliveryslip($r->delivery_id, 'save');
             if(file_exists(FCPATH.'/public/slip/'.$r->delivery_id.'.pdf') && !is_null($r->merchant_email) ){
                 $digest[$r->merchant_email][] = FCPATH.'/public/slip/'.$r->delivery_id.'.pdf';
+                $minfo[$r->merchant_email] = array(
+                    'id'=>$r->merchant_id,
+                    'mcc'=>$mcc[$r->merchant_id],
+                    'msg'=>$msg[$r->merchant_id]
+                );
             }
         }
 
@@ -793,10 +811,32 @@ class Prints extends Application
             $subject = 'JEX Delivery Slip - '.$email;
             //$to = 'andy.awidarto@gmail.com';
             $to = $email;
-            $cc = $this->config->item('admin_username');
+            $cc = array();
+            $cc[] = $this->config->item('admin_username');
+
+            if($minfo[$email]['mcc'] != ''){
+                $ccf = explode(',', $minfo[$email]['mcc']);
+                if(is_array($ccf)){
+                    $cc = array_merge($cc,$ccf);
+                }
+            }
+
+            if($admincc != ''){
+                $cca = explode(',', $admincc);
+                if(is_array($cca)){
+                    $cc = array_merge($cc,$cca);
+                }
+            }
+
+            if($minfo[$email]['msg'] != ''){
+                $body = $minfo[$email]['msg'];
+            }else{
+                $body = 'This is your delivery slip email.';
+            }
+
             $reply_to = $this->config->item('admin_username');
             $template = 'deliveryslip';
-            $data = '';
+            $data = array('body'=>$body);
             $attachment = $attachments;
 
             $result = send_notification(
