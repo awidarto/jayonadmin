@@ -27,6 +27,14 @@ class Prints extends Application
         $buyer = $this->db->get($table)->row_array();
 
 
+        $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+                FROM  delivery_order_active
+                WHERE STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
+                AND latitude !=0 AND longitude !=0';
+        $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address']) );
+
+        $data['suggestions'] = $suggestquery->result_array();
+
         $data['page_title'] = 'Set Location';
         $data['id'] = $buyer['id'];
         $data['latitude'] = $buyer['latitude'];

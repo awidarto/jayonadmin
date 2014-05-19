@@ -56,6 +56,10 @@
         clear: right;
     }
 
+    .use-loc{
+        cursor: pointer;
+    }
+
     </style>
 
     <script>
@@ -70,14 +74,16 @@
         OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+        var new_marker;
+
+        var map;
+
         function setupMap(lat, lon){
 
             var deflat = (lat != null)?lat:-6.17742;
             var deflon = (lon != null)?lon:106.828308;
 
-            var new_marker;
-
-            var map = L.map('map').setView([deflat,deflon], 13);
+            map = L.map('map').setView([deflat,deflon], 13);
 
             var lineWeight = 4;
 
@@ -141,6 +147,31 @@
 
             });
 
+
+
+        }
+
+        function setMarker(lat, lon){
+                var latlng = { lat:lat, lng:lon };
+                if(typeof(new_marker)==='undefined')
+                {
+                    new_marker = new L.marker(latlng,{ draggable: true});
+                    new_marker.on('dragend',function(e){
+                        var marker = e.target;  // you could also simply access the marker through the closure
+                        var result = marker.getLatLng();
+                        console.log(result);
+
+                        $('#latitude').val(result.lat);
+                        $('#longitude').val(result.lng);
+                    }).addTo(map);
+                }
+                else
+                {
+                    new_marker.setLatLng(e.latlng);
+                }
+
+                map.setView([lat,lon], 13)
+
         }
 
         function submitlocation(){
@@ -172,16 +203,26 @@
             <?php else : ?>
                 setupMap();
             <?php endif ?>
+
+            $('.use-loc').on('click',function(){
+                var lat = $(this).data('lat');
+                var lon = $(this).data('lon');
+                $('#latitude').val(lat);
+                $('#longitude').val(lon);
+
+                setMarker(lat,lon);
+            });
+
         });
     </script>
 </head>
 <body>
     <table style="width:100%;border:0;margin:0;">
         <tr>
-            <td style="width:500px;vertical-align:top">
-                <div id="map" style="width:500px;height:450px;display:block;border:thin solid grey;"></div>
+            <td style="width:300px;vertical-align:top">
+                <div id="map" style="width:300px;height:350px;display:block;border:thin solid grey;"></div>
             </td>
-            <td style="vertical-align:top">
+            <td style="width:300px;vertical-align:top">
                 Buyer Info :
                 <dl>
                     <?php foreach ($buyer as $key => $value):?>
@@ -193,6 +234,19 @@
                     <dt>Longitude</dt>
                     <dd><input id='longitude' name='longitude' value='<?=$longitude?>'></dd>
                 </dl>
+            </td>
+            <td style="vertical-align:top;overflow-y:auto;">
+                Similar Locations :
+                <ol>
+                    <?php foreach ($suggestions as $val):?>
+                        <li>
+                            <?= $val['buyer_name']?><br />
+                            <i><?= $val['shipping_address']?></i><br />
+                            <b><?= $val['latitude'].','.$val['longitude'] ?></b>
+                            <span class="use-loc" data-lat="<?=$val['latitude'] ?>" data-lon="<?=$val['longitude'] ?>" >use</span>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
             </td>
         </tr>
     </table>
