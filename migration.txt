@@ -63,3 +63,7 @@ ALTER TABLE  `pickup_tariff` ADD  `note` VARCHAR( 256 ) NOT NULL AFTER  `period_
 28 Mar 2014
 +++++++++++++++++++
 ALTER TABLE `delivery_order_active`  ADD `photolatitude` DECIMAL(18,12) NULL AFTER `longitude`,  ADD `photolongitude` DECIMAL(18,12) NULL AFTER `photolatitude`;
+
+May 19 2014
++++++++++++++++++++
+ALTER TABLE `members`  ADD `mc_pickup_time` TIME NULL AFTER `mc_toscan`,  ADD `mc_pickup_cutoff` TIME NULL AFTER `mc_pickup_time`;

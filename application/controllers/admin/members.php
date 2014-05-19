@@ -1159,6 +1159,9 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_zip', 'ZIP', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_toscan', 'Use barcode scan', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_time', 'Pick Up Time', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_cutoff', 'Pick Up Cut Off', 'trim|xss_clean');
 
 		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
@@ -1204,6 +1207,8 @@ class Members extends Application
 			$mc_phone= set_value('mc_phone');
 			$mc_mobile= set_value('mc_mobile');
             $mc_toscan= set_value('mc_toscan');
+            $mc_pickup_time= set_value('mc_pickup_time');
+            $mc_pickup_cutoff= set_value('mc_pickup_cutoff');
 
 			$mc_first_order = set_value('mc_first_order');
 			$mc_last_order = set_value('mc_last_order');
@@ -1239,6 +1244,8 @@ class Members extends Application
 				'mc_phone'=>$mc_phone,
 				'mc_mobile'=>$mc_mobile,
                 'mc_toscan'=>$mc_toscan,
+                'mc_pickup_time'=>$mc_pickup_time,
+                'mc_pickup_cutoff'=>$mc_pickup_cutoff,
 
 				'mc_first_order' => $mc_first_order,
 				'mc_last_order' => $mc_last_order,
@@ -1321,6 +1328,8 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
         $this->form_validation->set_rules('mc_toscan', 'Use barcode scan', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_time', 'Pick Up Time', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_cutoff', 'Pick Up Cut Off', 'trim|xss_clean');
 
 		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
@@ -1374,6 +1383,8 @@ class Members extends Application
 			$dataset['mc_unlimited_time'] = set_value('mc_unlimited_time');
 
             $dataset['mc_toscan'] = set_value('mc_toscan');
+            $dataset['mc_pickup_time'] = set_value('mc_pickup_time');
+            $dataset['mc_pickup_cutoff'] = set_value('mc_pickup_cutoff');
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)

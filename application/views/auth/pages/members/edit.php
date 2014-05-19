@@ -92,7 +92,14 @@
 			Last Order Time:<br />
 			<input type="text" name="mc_last_order" size="50" class="form" value="<?php echo set_value('mc_last_order',$user['mc_last_order']); ?>" /><?php echo form_error('mc_last_order'); ?><br /><br />
 
+            Pickup Setting :<br />
             <?php echo form_checkbox('mc_toscan', '1', $user['mc_toscan']);?> Use barcode scan for pick up<br /><br />
+
+            Pick Up Time:<br />
+            <input type="text" name="mc_pickup_time" size="50" class="form" value="<?php echo set_value('mc_pickup_time',$user['mc_pickup_time']); ?>" /><?php echo form_error('mc_pickup_time'); ?><br /><br />
+
+            Pick Up Cut Off Time:<br />
+            <input type="text" name="mc_pickup_cutoff" size="50" class="form" value="<?php echo set_value('mc_pickup_cutoff',$user['mc_pickup_cutoff']); ?>" /><?php echo form_error('mc_pickup_cutoff'); ?><br /><br />
 
 			<?php print form_fieldset_close(); ?>
 
