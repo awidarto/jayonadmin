@@ -5,6 +5,14 @@
 
 	$(document).ready(function() {
 
+        $('#assign_all').click(function(){
+            if($('#assign_all').is(':checked')){
+                $('.assign_check').attr('checked', true);
+            }else{
+                $('.assign_check').attr('checked', false);
+            }
+        });
+
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -504,6 +512,8 @@
             Download CSV
         </span>
     </div>
+<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
+
 <?php echo $this->table->generate(); ?>
 
 <div id="archive_dialog" title="Archive Delivery Orders">
