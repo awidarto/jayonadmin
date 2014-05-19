@@ -57,6 +57,10 @@
     }
 
     .use-loc{
+        display: inline-block;
+        background-color: green;
+        color: white;
+        padding: 2px 4px;
         cursor: pointer;
     }
 
