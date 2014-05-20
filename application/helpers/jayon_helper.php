@@ -762,7 +762,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
             }
 		}
 	}else{
-		$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+        $thumbnail = base_url().'assets/images/th_nopic.jpg';
         $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
 	}
 
