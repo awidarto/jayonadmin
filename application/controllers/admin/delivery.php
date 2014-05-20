@@ -238,13 +238,15 @@ class Delivery extends Application
 		}
 
 
-        $this->db->where($this->config->item('incoming_delivery_table').'.pending_count < ',1);
-        $this->db->and_();
 		$this->db->group_start()
 			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
 			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
+        /*
+        $this->db->and_();
+        $this->db->where($this->config->item('incoming_delivery_table').'.pending_count < ',1);
+        */
 
         $dbca = clone $this->db;
 
