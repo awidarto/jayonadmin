@@ -763,6 +763,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 		}
 	}else{
 		$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+        if($pidx > 0){
+            $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+        }
 	}
 
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
