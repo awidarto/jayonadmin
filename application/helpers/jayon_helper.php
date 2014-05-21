@@ -774,15 +774,21 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
 	}
 
+    $has_sign = false;
+
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
         //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
             $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
             $thumbnail .= sprintf('<img style="cursor:pointer;width:100px;height:auto;" class="sign '.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
         //}
+        $has_sign = true;
     }
 
-
-    $gal = '<br />'.$pidx.' pics';
+    if($has_sign){
+        $gal = '<br />'.($pidx - 1).' pics & 1 signature';
+    }else{
+        $gal = '<br />'.$pidx.' pics, no signature';
+    }
 
     if($pidx > 0){
         for($g = 0; $g < $pidx; $g++){
