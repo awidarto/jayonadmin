@@ -906,6 +906,10 @@ class V1 extends Application
             if(isset($_FILES['receiverpic'])){
                 if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
 
+                    if(file_exists($this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+                        unlink($this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg');
+                    }
+
                     $config['image_library'] = 'gd2';
                     $config['source_image'] = $target_path;
                     $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';

@@ -756,8 +756,11 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 			$thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
 			$thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
 		}else{
-			$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
-            if($pidx > 0){
+            if(generate_thumbnail($delivery_id)){
+                $thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
+                $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+            }else{
+                $thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
                 $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
             }
 		}
@@ -786,6 +789,40 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     $thumbnail = $thumbnail.$gal;
 
 	return $thumbnail;
+}
+
+function generate_thumbnail($delivery_id){
+    $CI =& get_instance();
+    $un = true;
+    if(is_null($src)){
+        if(file_exists($this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+            $un = unlink($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg');
+        }
+    }
+
+    if($un){
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $target_path;
+        $config['new_image'] = $CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+        $config['create_thumb'] = false;
+        $config['maintain_ratio'] = TRUE;
+        $config['width']     = 100;
+        $config['height']   = 75;
+
+        $CI->load->library('image_lib', $config);
+
+        $CI->image_lib->resize();
+
+        if(file_exists($this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+            return $CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+        }else{
+            return false;
+        }
+
+    }else{
+        return false;
+    }
+
 }
 
 function delivery_log($data,$upsert = false){
