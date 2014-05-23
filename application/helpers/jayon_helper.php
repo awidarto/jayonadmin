@@ -1001,10 +1001,11 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 				$CI->email->cc($cm);
 			}
             */
+            $cc[] = 'admin@jayonexpress.com';
             $CI->email->cc($cc);
 			$log['cc'] = implode(';',$cc);
 		}else{
-
+            $cc .= ',admin@jayonexpress.com';
         	$CI->email->cc($cc);
 			$log['cc'] = $cc;
 		}
@@ -1022,7 +1023,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 		}
 	}
 
-	$CI->email->cc('admin@jayonexpress.com');
+	//$CI->email->cc('admin@jayonexpress.com');
 	$CI->email->subject($subject);
 
 	$body = $CI->load->view('email/'.$template,$data,TRUE);
