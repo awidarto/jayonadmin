@@ -981,23 +981,31 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 	}
 
 	if(is_array($to)){
-		foreach($to as $em){
+		/*
+        foreach($to as $em){
 			$CI->email->to($em);
 		}
+        */
+        $CI->email->to($to);
 		$log['to'] = implode(';',$to);
 	}else{
+
 		$CI->email->to($to);
 		$log['to'] = $to;
 	}
 
 	if(!is_null($cc) && $cc != ''){
-		if(is_array($cc)){
-			foreach ($cc as $cm) {
+        if(is_array($cc)){
+			/*
+            foreach ($cc as $cm) {
 				$CI->email->cc($cm);
 			}
+            */
+            $CI->email->cc($cc);
 			$log['cc'] = implode(';',$cc);
 		}else{
-			$CI->email->cc($cc);
+
+        	$CI->email->cc($cc);
 			$log['cc'] = $cc;
 		}
 	}

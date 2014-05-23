@@ -836,6 +836,9 @@ class Prints extends Application
                 }
             }
 
+            //print_r($cc);
+            //print_r($mcc);
+
             if($minfo[$email]['msg'] != ''){
                 $body = $minfo[$email]['msg'];
             }else{
