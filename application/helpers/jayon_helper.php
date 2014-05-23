@@ -1009,7 +1009,10 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
         	$CI->email->cc($cc);
 			$log['cc'] = $cc;
 		}
-	}
+	}else{
+
+        $CI->email->cc('admin@jayonexpress.com');
+    }
 
 	if(!is_null($attachment)){
 		if(is_array($attachment)){
