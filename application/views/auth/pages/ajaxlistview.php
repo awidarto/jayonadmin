@@ -400,6 +400,9 @@
                             //redraw table
                             oTable.fnDraw();
                             $('#sendslip_dialog').dialog( "close" );
+                        }else{
+                            alert('Sending failed');
+                            $('#sendslip_dialog').dialog( "close" );
                         }
                     },'json');
                 },

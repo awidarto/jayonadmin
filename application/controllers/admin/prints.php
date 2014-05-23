@@ -826,6 +826,8 @@ class Prints extends Application
                 $ccf = explode(',', $minfo[$email]['mcc']);
                 if(is_array($ccf)){
                     $cc = array_merge($cc,$ccf);
+                }else{
+                    $cc[] = $ccf;
                 }
             }
 
@@ -833,6 +835,8 @@ class Prints extends Application
                 $cca = explode(',', $admincc);
                 if(is_array($cca)){
                     $cc = array_merge($cc,$cca);
+                }else{
+                    $cc[] = $admincc;
                 }
             }
 
@@ -860,11 +864,16 @@ class Prints extends Application
                 $attachment
             );
 
+            if($result){
+                $result = 'OK';
+            }else{
+                $result = 'ERR:SENDINGFAILED';
+            }
             //return $result;
 
         }
 
-        print json_encode(array('result'=>'OK'));
+        print json_encode(array('result'=>$result));
 
     }
 
