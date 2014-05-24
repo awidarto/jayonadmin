@@ -762,18 +762,21 @@ class V1 extends Application
 					->join('members as m','d.merchant_id=m.id','left')
                     ->where('assignment_date',$indate)
                     ->where('device_id',$dev->id)
-					->where('status',$this->config->item('trans_status_admin_courierassigned'))
-                    ->or_()
+                    ->and_()
                     ->group_start()
+                        ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                        ->or_()
+                        ->group_start()
                         ->where('status',$this->config->item('trans_status_new'))
                         ->where('pending_count >', 0)
+                        ->group_end()
                     ->group_end()
 					->get();
 
-					//print $this->db->last_query();
 
 				$out = $orders->result_array();
 
+                //print $this->db->last_query();
 				//print_r($out);
 
 				$output = array();
