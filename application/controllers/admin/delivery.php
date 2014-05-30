@@ -2245,7 +2245,7 @@ class Delivery extends Application
 				'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
-				$app['application_name'],
+				(isset($app['application_name']))?$app['application_name']:'',
 				//$app['domain'],
 				colorizetype($key['delivery_type']),
 				$key['buyer_name'],
