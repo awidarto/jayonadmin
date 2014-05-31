@@ -2767,6 +2767,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 				get_weight_range($key['weight'],$key['application_id']),
 				$thumbstat,
                 $key['pending_count'],
+                $key['delivery_note'],
 				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
 			);
 
@@ -2818,6 +2819,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
             'Weight Range',
             'Status',
             'Pending',
+            'Note',
 			'Actions'
 			); // Setting headings for the table
 
@@ -2840,6 +2842,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
             '',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
+            '',
             '',
             '',
             ''
@@ -2883,6 +2886,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                 merchant_trans_id,
                 delivery_cost,
                 delivery_type,cod_cost,
+                delivery_note,
                 reschedule_ref,
                 revoke_ref,
                 '.$mtab.'.merchant_id';
@@ -3025,6 +3029,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                 $thumbnail,
                 $key['delivery_note'],
                 colorizestatus($key['status']),
+                $key['delivery_note'],
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
@@ -3070,6 +3075,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
             'Receiver Photo',
             'Receiver / Note',
             'Status',
+            'Note',
             'Delivery ID',
             'No Kode Penjualan Toko',
             'Delivery Fee',
@@ -3096,6 +3102,7 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
             '',
             '',
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
+            '',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search kode toko" class="search_init" />',
 			form_button('do_sending','Send Slip','id="doSending"'),

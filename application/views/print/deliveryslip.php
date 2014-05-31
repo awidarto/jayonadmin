@@ -427,7 +427,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
                             <tr>
                                 <td>Catatan Penerimaan</td>
-                                <td><?php print $main_info['delivery_note'];?></td>
+                                <td><?php print ($main_info['status'] == 'delivered')?$main_info['delivery_note']:'-';?></td>
                             </tr>
 
 						</tbody>
