@@ -1049,7 +1049,7 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 
     $debug = $CI->email->print_debugger();
 
-    print $debug;
+    //print $debug;
 
 	return $result;
 }
