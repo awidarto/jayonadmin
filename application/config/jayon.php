@@ -148,10 +148,10 @@ $config['path_colors'] = array(
 $config['smtp_host'] = 'ssl://smtp.googlemail.com';
 $config['smtp_port'] = '465';
 
-$config['notify_username'] = 'notification@jayonexpress.com';
-$config['notify_password'] = 'NotiFier987';
-//$config['notify_username'] = 'bolongsox@gmail.com';
-//$config['notify_password'] = 'masukajadeh';
+//$config['notify_username'] = 'notification@jayonexpress.com';
+//$config['notify_password'] = 'NotiFier987';
+$config['notify_username'] = 'bolongsox@gmail.com';
+$config['notify_password'] = 'masukajadeh';
 
 
 $config['admin_username'] = 'admin@jayonexpress.com';
