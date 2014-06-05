@@ -1047,6 +1047,10 @@ function send_notification($subject,$to,$cc = null,$reply_to = null,$template = 
 
     $CI->email->clear(true); // clear data AND attchments before sending another email
 
+    $debug = $CI->email->print_debugger();
+
+    print $debug;
+
 	return $result;
 }
 
