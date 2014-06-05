@@ -223,10 +223,7 @@
 <body>
     <table style="width:100%;border:0;margin:0;">
         <tr>
-            <td style="width:300px;vertical-align:top">
-                <div id="map" style="width:300px;height:350px;display:block;border:thin solid grey;"></div>
-            </td>
-            <td style="width:300px;vertical-align:top">
+            <td style="width:300px;vertical-align:top;font-size:13px;">
                 Buyer Info :
                 <dl>
                     <?php foreach ($buyer as $key => $value):?>
@@ -239,7 +236,10 @@
                     <dd><input id='longitude' name='longitude' value='<?=$longitude?>'></dd>
                 </dl>
             </td>
-            <td style="vertical-align:top;overflow-y:auto;">
+            <td style="width:300px;vertical-align:top">
+                <div id="map" style="width:300px;height:350px;display:block;border:thin solid grey;"></div>
+            </td>
+            <td style="vertical-align:top;overflow-y:auto;font-size:13px;">
                 Similar Locations :
                 <ol>
                     <?php foreach ($suggestions as $val):?>

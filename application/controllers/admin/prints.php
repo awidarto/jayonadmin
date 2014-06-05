@@ -30,8 +30,12 @@ class Prints extends Application
         $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
                 FROM  delivery_order_active
                 WHERE STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
+                OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) =0
+                AND buyerdeliverycity = ?
+                AND buyerdeliveryzone = ?
                 AND latitude !=0 AND longitude !=0';
-        $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address']) );
+
+        $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone']) );
 
         $data['suggestions'] = $suggestquery->result_array();
 
