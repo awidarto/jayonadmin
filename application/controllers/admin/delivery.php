@@ -2759,16 +2759,18 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
                 $key['shipping_address'].'<br />'.$direction,
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-                $this->hide_trx($key['merchant_trans_id']),
-				$key['delivery_cost'],
-				($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
-				$key['width'].' x '.$key['height'].' x '.$key['length'],
-				(double)$key['width']*(double)$key['height']*(double)$key['length'],
-				get_weight_range($key['weight'],$key['application_id']),
 				$thumbstat,
                 $key['pending_count'],
                 $key['delivery_note'],
-				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog
+				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog,
+
+                $this->hide_trx($key['merchant_trans_id']),
+                $key['delivery_cost'],
+                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                $key['width'].' x '.$key['height'].' x '.$key['length'],
+                (double)$key['width']*(double)$key['height']*(double)$key['length'],
+                get_weight_range($key['weight'],$key['application_id'])
+
 			);
 
 			$bardate = $key['assignment_date'];
@@ -2811,16 +2813,18 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 			'Shipping Address',
 			'Phone',
             'Delivery ID',
+            'Status',
+            'Pending',
+            'Note',
+			'Actions',
+
             'No Kode Penjualan Toko',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
             'Volume',
-            'Weight Range',
-            'Status',
-            'Pending',
-            'Note',
-			'Actions'
+            'Weight Range'
+
 			); // Setting headings for the table
 
 		$this->table->set_footing(
@@ -2838,12 +2842,12 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 			'<input type="text" name="search_shipping_address" id="search_shipping" value="Search Address" class="search_init" />',
             '',
             '<input type="text" name="search_delivery_id" value="Search delivery ID" class="search_init" />',
-            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
             '',
             '',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '',
             ''
 			);

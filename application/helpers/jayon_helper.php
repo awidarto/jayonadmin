@@ -805,6 +805,69 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 	return $thumbnail;
 }
 
+function get_puthumbnail($delivery_id, $class = 'thumb'){
+    $CI =& get_instance();
+
+    $existingpic = glob($CI->config->item('pickuppic_path').$delivery_id.'*.jpg');
+
+    $pictures = array();
+
+    if(file_exists(FCPATH.'public/pickup/'.$delivery_id.'_address.jpg')){
+        $pictures[] = '<img src="'.base_url().'public/pickup/'.$delivery_id.'_address.jpg" style="width:100px;height:auto">';
+    }
+
+    if(file_exists(FCPATH.'public/pickup/'.$delivery_id.'_address.jpg')){
+        $pictures[] = '<img src="'.base_url().'public/pickup/'.$delivery_id.'_1.jpg" style="width:100px;height:auto">';
+    }
+
+    if(file_exists(FCPATH.'public/pickup/'.$delivery_id.'_2.jpg')){
+        $pictures[] = '<img src="'.base_url().'public/pickup/'.$delivery_id.'_2.jpg" style="width:100px;height:auto">';
+    }
+
+    if(file_exists(FCPATH.'public/pickup/'.$delivery_id.'_3.jpg')){
+        $pictures[] = '<img src="'.base_url().'public/pickup/'.$delivery_id.'_3.jpg" style="width:100px;height:auto">';
+    }
+
+    //print_r($existingpic);
+
+    $pidx = count($pictures);
+
+    if($pidx > 0){
+
+        for($g = 0; $g < $pidx; $g++){
+            $img = str_replace($CI->config->item('picture_path'), '', $existingpic[$g]);
+            $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$img.'" >';
+        }
+
+    }else{
+        $thumbnail = base_url().'assets/images/th_nopic.jpg';
+        $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+    }
+
+    $gal = '';
+    /*
+    $has_sign = false;
+
+    if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
+        //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
+            $sthumbnail = base_url().'public/receiver/'.$delivery_id.'_sign.jpg';
+            $thumbnail .= sprintf('<img style="cursor:pointer;width:100px;height:auto;" class="sign '.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
+        //}
+        $has_sign = true;
+    }
+
+    if($has_sign){
+        $gal = '<br />'.($pidx - 1).' pics & 1 signature';
+    }else{
+        $gal = '<br />'.$pidx.' pics, no signature';
+    }
+    */
+
+    $thumbnail = $thumbnail.$gal;
+
+    return $thumbnail;
+}
+
 function generate_thumbnail($delivery_id){
     $CI =& get_instance();
     $un = true;
