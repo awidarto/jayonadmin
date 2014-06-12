@@ -362,6 +362,7 @@
             buttons: {
                 "Mark Orders": function() {
                     var delivery_ids = [];
+                    var device = $('#device-pickup').val();
                     i = 0;
                     $('.assign_check:checked').each(function(){
                         delivery_ids[i] = $(this).val();
@@ -370,7 +371,8 @@
                     $.post('<?php print site_url('admin/delivery/ajaxmarkscan');?>',
                         {
                             'delivery_id[]':delivery_ids,
-                            'setmark':1
+                            'setmark':1,
+                            'device': device
                         }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
@@ -671,7 +673,7 @@
 <?php
 
     print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
-    form_button('do_toscan','Mark for Scanning','id="doMarkscan"').
+    form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
     form_button('do_confirm','Confirm Selection','id="doConfirm"').
     form_button('do_cancel','Cancel Selection','id="doCancel"');
 
@@ -765,6 +767,13 @@
         <tr>
             <td style="overflow:auto;width:250px;vertical-align:top">
                 <ul id="markscan_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
+            </td>
+            <td>
+                <select id="device-pickup">
+                    <?php foreach($devices as $d=>$v):?>
+                        <option value="<?php print $d ?>"><?php print $v;?></option>
+                    <?php endforeach;?>
+                </select>
             </td>
         </tr>
     </table>

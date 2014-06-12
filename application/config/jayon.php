@@ -86,6 +86,9 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
+$config['trans_status_tobepickup'] = 'akan diambil';
+$config['trans_status_pickup'] = 'sudah diambil';
+
 /* status colors */
 
 $config['status_colors'] = array(
@@ -111,7 +114,11 @@ $config['status_colors'] = array(
 	$config['trans_status_admin_dated'] => 'blue',
 	$config['trans_status_admin_devassigned'] => 'black',
 	$config['trans_status_admin_courierassigned'] => 'black',
-	$config['trans_status_admin_dispatched'] => 'green'
+	$config['trans_status_admin_dispatched'] => 'green',
+
+    $config['trans_status_tobepickup'] => 'maroon',
+    $config['trans_status_pickup'] => 'green',
+
 );
 
 $config['actors_code'] = array(

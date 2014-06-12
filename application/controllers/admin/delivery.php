@@ -87,6 +87,8 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />'
             );
 
+        $page['devices'] = $this->get_devices_identifier();
+
         $page['sortdisable'] = '0,2';
         $page['ajaxurl'] = 'admin/delivery/ajaxincoming';
         $page['page_title'] = 'Incoming Delivery Orders';
@@ -334,8 +336,10 @@ class Delivery extends Application
 
             if($key['toscan'] == 1){
                 $markscan = '<img src="'.base_url().'assets/images/barcode-icon.png" style="width:25px;height:auto">';
+                $pick_stat = colorizestatus($key['pickup_status']);
             }else{
                 $markscan = '';
+                $pick_stat = '';
             }
 
 			$aadata[] = array(
@@ -365,7 +369,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$direction,
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).'<br />'.$pick_stat,
 				$reference,
 				$reschedule.'<br />'.$changestatus,
 				//$key['reschedule_ref'],
@@ -1908,10 +1912,11 @@ class Delivery extends Application
     public function ajaxmarkscan(){
         $delivery_id = $this->input->post('delivery_id');
         $mark = $this->input->post('setmark');
+        $device = $this->input->post('device');
 
         if(is_array($delivery_id)){
             foreach($delivery_id as $d){
-                $this->do_scan_mark($d, 1);
+                $this->do_scan_mark($d, 1, $device);
                 $data = array(
                         'timestamp'=>date('Y-m-d H:i:s',time()),
                         'report_timestamp'=>date('Y-m-d H:i:s',time()),
@@ -1928,7 +1933,7 @@ class Delivery extends Application
                 delivery_log($data);
             }
         }else{
-            $this->do_scan_mark($delivery_id, 1);
+            $this->do_scan_mark($delivery_id, 1, $device);
                 $data = array(
                         'timestamp'=>date('Y-m-d H:i:s',time()),
                         'report_timestamp'=>date('Y-m-d H:i:s',time()),
@@ -3917,14 +3922,25 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 		$this->ag_auth->view('message', $data);
 	}
 
-	public function get_devices(){
-		$this->db->select('id,identifier,descriptor,devname,mobile');
-		$result = $this->db->get($this->config->item('jayon_devices_table'));
-		foreach($result->result_array() as $row){
-			$res[$row['id']] = $row['descriptor'].'['.$row['mobile'].']';
-		}
-		return $res;
-	}
+    public function get_devices_identifier(){
+        $this->db->select('id,identifier,descriptor,devname,mobile')
+            ->order_by('identifier','asc');
+        $result = $this->db->get($this->config->item('jayon_devices_table'));
+        foreach($result->result_array() as $row){
+            $res[$row['identifier']] = $row['identifier'].' - '.$row['descriptor'];
+        }
+        return $res;
+    }
+
+    public function get_devices(){
+        $this->db->select('id,identifier,descriptor,devname,mobile')
+            ->order_by('identifier','asc');
+        $result = $this->db->get($this->config->item('jayon_devices_table'));
+        foreach($result->result_array() as $row){
+            $res[$row['id']] = $row['identifier'].' - '.$row['descriptor'].'['.$row['mobile'].']';
+        }
+        return $res;
+    }
 
 	public function get_device_info($device_id){
 		$result = $this->db->where('id',$device_id)->get($this->config->item('jayon_devices_table'));
@@ -4139,14 +4155,14 @@ SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`applicati
 
 	}
 
-    private function do_scan_mark($delivery_id, $mark){
+    private function do_scan_mark($delivery_id, $mark, $device){
         /*
         $incoming = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
         $dataset = $incoming->row_array();
         unset($dataset['id']);
         */
 
-        $dataset = array('toscan'=>$mark);
+        $dataset = array('toscan'=>$mark, 'pickup_dev_id'=>$device);
 
         if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
         {
