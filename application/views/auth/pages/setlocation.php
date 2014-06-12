@@ -78,9 +78,7 @@
         OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-        var new_marker;
-
-        var map;
+        var new_marker,map;
 
         function setupMap(lat, lon){
 
@@ -171,7 +169,7 @@
                 }
                 else
                 {
-                    new_marker.setLatLng(e.latlng);
+                    new_marker.setLatLng(latlng);
                 }
 
                 map.setView([lat,lon], 13)
@@ -207,10 +205,23 @@
             <?php else : ?>
                 setupMap();
             <?php endif ?>
-
+            /*
             $('.use-loc').on('click',function(){
                 var lat = $(this).data('lat');
                 var lon = $(this).data('lon');
+                $('#latitude').val(lat);
+                $('#longitude').val(lon);
+
+                setMarker(lat,lon);
+            });
+            */
+
+            $('#similar-list').on('click',function(ev){
+
+                var cl = ev.target;
+
+                var lat = $(cl).data('lat');
+                var lon = $(cl).data('lon');
                 $('#latitude').val(lat);
                 $('#longitude').val(lon);
 
@@ -241,19 +252,60 @@
             </td>
             <td style="vertical-align:top;overflow-y:auto;font-size:13px;">
                 Similar Locations :
-                <ol>
-                    <?php foreach ($suggestions as $val):?>
-                        <li>
-                            <?= $val['buyer_name']?><br />
-                            <i><?= $val['shipping_address']?></i><br />
-                            <b><?= $val['latitude'].','.$val['longitude'] ?></b>
-                            <span class="use-loc" data-lat="<?=$val['latitude'] ?>" data-lon="<?=$val['longitude'] ?>" >use</span>
-                        </li>
-                    <?php endforeach; ?>
-                </ol>
+                <div style="max-height:320px;height:320px;overflow-y:auto;">
+                    <ol id="similar-list">
+                        <?php foreach ($suggestions as $val):?>
+                            <li>
+                                <?= $val['buyer_name']?><br />
+                                <i><?= $val['shipping_address']?></i><br />
+                                <b><?= $val['latitude'].','.$val['longitude'] ?></b>
+                                <span class="use-loc" data-lat="<?=$val['latitude'] ?>" data-lon="<?=$val['longitude'] ?>" >use</span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ol>
+                </div>
+                <div style="width:320px;background-color:white;">
+                    <input type="text" id="similar-search" style="width:250px;float:left" ><button id="do-similar-search">search</button>
+                </div>
             </td>
         </tr>
     </table>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#do-similar-search').on('click',function(){
+
+                ajaxsearch();
+
+            });
+
+            $('#similar-search').on('keyup',function(ev){
+                if(ev.keyCode == '13'){
+                    ajaxsearch();
+                }
+            });
+
+            function ajaxsearch(){
+                $.post('<?php print site_url('ajaxpos/mapsearch/incoming/'.$id );?>',
+                {
+                    search: $('#similar-search').val()
+                },
+                function(data) {
+                    if(data.result == 'OK'){
+
+                        $('#similar-list').html(data.data);
+
+                    }else{
+                        alert('Failed to set Location');
+                    }
+                    //alert(data.status);
+                },'json');
+            }
+
+        });
+
+    </script>
+
 </body>
 
 <?php
