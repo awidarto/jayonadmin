@@ -43,6 +43,11 @@ function normalphone($number){
     return $number;
 }
 
+function escapeVars($str){
+    $str = str_replace(array('/','.',':'), '',$str);
+    return $str;
+}
+
 function idr($in){
 	return number_format((double) $in,2,',','.');
 }

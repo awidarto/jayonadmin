@@ -205,7 +205,9 @@
 						<tbody>
 							<tr><h2>DELIVERY NOTE</h2><br />
 								<td id="jayon_logo"><?php
-										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
+										//print $this->ag_asset->load_image('plogo.png', 'assets/images');
+                                        print '<img  src="'.base_url().'assets/images/plogo.png?'.time().'" alt="JEX" />';
+                                        ?><br />
 										<?php print get_option('jex_hq_address');?>
 								</td>
 								<td style="align:right;vertical-align:top;"><?php print $qr;?></td>

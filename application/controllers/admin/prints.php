@@ -54,7 +54,7 @@ class Prints extends Application
         $this->load->view('auth/pages/setlocation',$data); // Load the view
     }
 
-	public function deliveryslip($delivery_id,$pdf = false)
+	public function deliveryslip($delivery_id,$pdf = false, $filename = null)
 	{
 			$main = $this->db
 					->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
@@ -282,9 +282,15 @@ class Prints extends Application
             }else if($pdf == 'save'){
                 $html = $this->load->view('print/deliveryslip',$data,true);
                 //print $html; // Load the view
-                $saved = @pdf_create($html, $delivery_id.'.pdf','A4','landscape', false);
 
-                @file_put_contents(FCPATH.'/public/slip/'.$delivery_id.'.pdf', $saved);
+                if(isset($filename) && !is_null($filename)){
+                    $saved = @pdf_create($html, $filename.'.pdf','A4','landscape', false);
+                    @file_put_contents(FCPATH.'/public/slip/'.$filename.'.pdf', $saved);
+                }else{
+                    $saved = @pdf_create($html, $delivery_id.'.pdf','A4','landscape', false);
+                    @file_put_contents(FCPATH.'/public/slip/'.$delivery_id.'.pdf', $saved);
+                }
+
 
                 return file_exists(FCPATH.'/public/slip/'.$delivery_id.'.pdf');
 
@@ -792,7 +798,7 @@ class Prints extends Application
         $merchant_table = $this->config->item('jayon_members_table');
         $delivery_table = $this->config->item('incoming_delivery_table');
 
-        $this->db->select($delivery_table.'.*, m.email as merchant_email');
+        $this->db->select($delivery_table.'.*, m.email as merchant_email, m.merchantname as merchantname');
         $this->db->join( $merchant_table.' as m', $delivery_table.'.merchant_id = m.id', 'left' );
         $res = $this->db->get($this->config->item('incoming_delivery_table'));
 
@@ -803,10 +809,14 @@ class Prints extends Application
         $minfo = array();
 
         foreach ($res->result() as $r) {
-            $result = $this->deliveryslip($r->delivery_id, 'save');
-            if(file_exists(FCPATH.'/public/slip/'.$r->delivery_id.'.pdf') && !is_null($r->merchant_email) ){
-                $digest[$r->merchant_email][] = FCPATH.'/public/slip/'.$r->delivery_id.'.pdf';
+            $dtime = date('dmY',strtotime($r->deliverytime));
+            $filename = strtoupper(escapeVars($r->merchantname)).'-'.$dtime.'-'.strtoupper(escapeVars($r->buyer_name)).'-'.strtoupper(escapeVars($r->merchant_trans_id));
+
+            $result = $this->deliveryslip($r->delivery_id, 'save', $filename);
+            if(file_exists(FCPATH.'/public/slip/'.$filename.'.pdf') && !is_null($r->merchant_email) ){
+                $digest[$r->merchant_email][] = FCPATH.'/public/slip/'.$filename.'.pdf';
                 $minfo[$r->merchant_email] = array(
+                    'merchantname'=>$r->merchantname,
                     'id'=>$r->merchant_id,
                     'mcc'=>$mcc[$r->merchant_id],
                     'msg'=>$msg[$r->merchant_id]
@@ -820,7 +830,7 @@ class Prints extends Application
 
             //print_r($attachments);
 
-            $subject = 'JEX Delivery Slip - '.$email;
+            $subject = 'Delivery Note - '.$minfo[$email]['merchantname'].' '.date('d-m-Y',time());
             //$to = 'andy.awidarto@gmail.com';
             $to = $email;
             $cc = array();
@@ -850,7 +860,7 @@ class Prints extends Application
             if($minfo[$email]['msg'] != ''){
                 $body = $minfo[$email]['msg'];
             }else{
-                $body = 'This is your delivery slip email.';
+                $body = 'Dear valued customer, please find attached your delivery notes for date : '.date('d-m-Y',time()).'.';
             }
 
             $reply_to = $this->config->item('admin_username');
