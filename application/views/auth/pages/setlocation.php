@@ -21,7 +21,11 @@
 
     <?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
 
-    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+
+    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+
+    <?php echo $this->ag_asset->load_script('leaflet-google.js');?>
 
     <?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
     <?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
@@ -64,6 +68,15 @@
         cursor: pointer;
     }
 
+    /*google map tile tweak*/
+    .leaflet-google-layer{
+        z-index: 0 !important;
+    }
+    .leaflet-map-pane{
+        z-index: 100;
+    }
+    </style>
+
     </style>
 
     <script>
@@ -89,10 +102,15 @@
 
             var lineWeight = 4;
 
+            var googleLayer = new L.Google('ROADMAP');
+            map.addLayer(googleLayer);
+
+            /*
             L.tileLayer(OSM_URL, {
                 attribution: OSM_ATTRIB,
                 maxZoom: 18
             }).addTo(map);
+            */
 
             new L.Control.GeoSearch({
                 provider: new L.GeoSearch.Provider.Google(),
