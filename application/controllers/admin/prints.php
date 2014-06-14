@@ -284,7 +284,7 @@ class Prints extends Application
 				$html = $this->load->view('print/deliveryslip',$data,true);
 
 				//print $html; // Load the view
-				pdf_create($html, $pdffilename.'.pdf','A4','landscape', true);
+				pdf_create($html, $pdffilename,'A4','landscape', true);
             }else if($pdf == 'save'){
                 $html = $this->load->view('print/deliveryslip',$data,true);
                 //print $html; // Load the view
@@ -293,7 +293,7 @@ class Prints extends Application
                     $saved = @pdf_create($html, $filename.'.pdf','A4','landscape', false);
                     @file_put_contents(FCPATH.'/public/slip/'.$filename.'.pdf', $saved);
                 }else{
-                    $saved = @pdf_create($html, $pdffilename.'.pdf','A4','landscape', false);
+                    $saved = @pdf_create($html, $pdffilename,'A4','landscape', false);
                     @file_put_contents(FCPATH.'/public/slip/'.$pdffilename.'.pdf', $saved);
                 }
 
