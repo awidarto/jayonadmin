@@ -887,6 +887,7 @@ class V1 extends Application
         }else{
 
             $res = '';
+            $metafile = '';
 
             $delivery_id = $this->input->post('delivery_id');
 
@@ -895,12 +896,14 @@ class V1 extends Application
 
             if(count($existingpic) == 0){
                 $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+                $metafile = $this->config->item('picture_path').$delivery_id.'.json';
             }else{
                 $pidx = count($existingpic);
                 if(in_array($this->config->item('picture_path').$delivery_id.'_sign.jpg', $existingpic)){
                     $pidx = $pidx - 1;
                 }
                 $target_path = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.jpg';
+                $metafile = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.json';
             }
 
 
@@ -934,6 +937,8 @@ class V1 extends Application
                             ->where('latitude', null)
                             ->where('longitude', null)
                             ->update($this->config->item('incoming_delivery_table'),$ploc);
+
+                        @file_put_contents($metafile, json_encode($ploc));
 
                     }
 

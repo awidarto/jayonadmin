@@ -275,10 +275,16 @@ class Prints extends Application
 
 			//print_r($data['main_info']);
 
+
+            $dtime = date('dmY',strtotime($data['main_info']['deliverytime'] ));
+
+            $pdffilename = strtoupper(escapeVars($data['main_info']['merchant'])).'-'.$dtime.'-'.strtoupper(escapeVars($data['main_info']['buyer_name'])).'-'.strtoupper(escapeVars($data['main_info']['merchant_trans_id']));
+
 			if($pdf == 'pdf'){
 				$html = $this->load->view('print/deliveryslip',$data,true);
+
 				//print $html; // Load the view
-				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
+				pdf_create($html, $pdffilename.'.pdf','A4','landscape', true);
             }else if($pdf == 'save'){
                 $html = $this->load->view('print/deliveryslip',$data,true);
                 //print $html; // Load the view
@@ -287,8 +293,8 @@ class Prints extends Application
                     $saved = @pdf_create($html, $filename.'.pdf','A4','landscape', false);
                     @file_put_contents(FCPATH.'/public/slip/'.$filename.'.pdf', $saved);
                 }else{
-                    $saved = @pdf_create($html, $delivery_id.'.pdf','A4','landscape', false);
-                    @file_put_contents(FCPATH.'/public/slip/'.$delivery_id.'.pdf', $saved);
+                    $saved = @pdf_create($html, $pdffilename.'.pdf','A4','landscape', false);
+                    @file_put_contents(FCPATH.'/public/slip/'.$pdffilename.'.pdf', $saved);
                 }
 
 
