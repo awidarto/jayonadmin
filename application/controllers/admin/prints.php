@@ -278,7 +278,7 @@ class Prints extends Application
 
             $dtime = date('dmY',strtotime($data['main_info']['deliverytime'] ));
 
-            $pdffilename = strtoupper(escapeVars($data['main_info']['merchant'])).'-'.$dtime.'-'.strtoupper(escapeVars($data['main_info']['buyer_name'])).'-'.strtoupper(escapeVars($data['main_info']['merchant_trans_id']));
+            $pdffilename = strtoupper(escapeVars($data['main_info']['merchant'],'_')).'-'.$dtime.'-'.strtoupper(escapeVars($data['main_info']['buyer_name'])).'-'.strtoupper(escapeVars($data['main_info']['merchant_trans_id']));
 
 			if($pdf == 'pdf'){
 				$html = $this->load->view('print/deliveryslip',$data,true);
@@ -816,7 +816,7 @@ class Prints extends Application
 
         foreach ($res->result() as $r) {
             $dtime = date('dmY',strtotime($r->deliverytime));
-            $filename = strtoupper(escapeVars($r->merchantname)).'-'.$dtime.'-'.strtoupper(escapeVars($r->buyer_name)).'-'.strtoupper(escapeVars($r->merchant_trans_id));
+            $filename = strtoupper(escapeVars($r->merchantname, '_')).'-'.$dtime.'-'.strtoupper(escapeVars($r->buyer_name)).'-'.strtoupper(escapeVars($r->merchant_trans_id));
 
             $result = $this->deliveryslip($r->delivery_id, 'save', $filename);
             if(file_exists(FCPATH.'/public/slip/'.$filename.'.pdf') && !is_null($r->merchant_email) ){

@@ -43,8 +43,8 @@ function normalphone($number){
     return $number;
 }
 
-function escapeVars($str){
-    $str = str_replace(array('/','.',':'), '',$str);
+function escapeVars($str, $replace = ''){
+    $str = str_replace(array('/','.',':'), $replace,$str);
     return $str;
 }
 
