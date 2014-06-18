@@ -158,7 +158,7 @@
                     </tr>
                     <tr>
                         <td>PERIODE PENGIRIMAN</td>
-                        <td style="text-align:left;"><?php print iddate($from, false) ;?> s/d <?php print iddate($to) ;?></td>
+                        <td style="text-align:left;" colspan="2"><?php print iddate($from, false) ;?> s/d <?php print iddate($to) ;?></td>
                     </tr>
                     <tr>
                         <td>TOTAL</td>
