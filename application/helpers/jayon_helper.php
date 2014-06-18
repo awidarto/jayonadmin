@@ -1,5 +1,20 @@
 <?php
 
+function iddate($date,$withyear = true){
+    $idmonth = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+
+    $tahun = substr($date, 0, 4);
+    $bulan = substr($date, 5, 2);
+    $tgl   = substr($date, 8, 2);
+
+    if($withyear == true){
+        $result = $tgl . " " . $idmonth[(int)$bulan-1] . " ". $tahun;
+    }else{
+        $result = $tgl . " " . $idmonth[(int)$bulan-1];
+    }
+    return $result;
+}
+
 function normalphone($number){
     $numbers = explode('/',$number);
     if(is_array($numbers)){

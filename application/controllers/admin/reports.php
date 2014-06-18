@@ -2299,7 +2299,7 @@ class Reports extends Application
 
 
 
-    public function invoices($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+    public function invoices($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
@@ -2311,6 +2311,16 @@ class Reports extends Application
             $par1 = date('m',time());
         }
 
+        $data['getparams'] = array(
+            'type'=> $type ,
+            'year'=> $year ,
+            'scope'=>$scope ,
+            'par1'=> $par1 ,
+            'par2'=> $par2 ,
+            'par3'=> $par3 ,
+            'par4'=> $par4
+            );
+
         $pdf = null;
 
         if($scope == 'month'){
@@ -2318,6 +2328,9 @@ class Reports extends Application
             $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
             $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
             $pdf = $par2;
+            $invdate = $par3;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = $par1;
             $data['week'] = 1;
@@ -2325,6 +2338,9 @@ class Reports extends Application
             $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
             $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
             $pdf = $par2;
+            $invdate = $par3;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = $par1;
@@ -2332,6 +2348,9 @@ class Reports extends Application
             $from = $par1;
             $to = $par2;
             $pdf = $par3;
+            $invdate = $par4;
+
+            $data['getparams']['par3'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = 1;
@@ -2339,6 +2358,9 @@ class Reports extends Application
             $from = date('Y-m-d',time());
             $to = date('Y-m-d',time());
             $pdf = null;
+            $invdate = null;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = 1;
@@ -2366,12 +2388,25 @@ class Reports extends Application
             $data['type_name'] = '-';
             $data['bank_account'] = 'n/a';
             $data['type'] = 'Global';
+
+            $data['merchantname'] = 'All Merchant';
+
         }else{
             $user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
             //print $this->db->last_query();
             $data['type'] = $user->merchantname.' - '.$user->fullname;
             $data['type_name'] = $user->fullname;
             $data['bank_account'] = 'n/a';
+
+            $data['merchantname'] = $user->merchantname;
+        }
+
+        if(is_null($invdate)){
+            $data['invdate'] = '-';
+            $data['invdatenum'] = '-';
+        }else{
+            $data['invdate'] = iddate($invdate);
+            $data['invdatenum'] = date('dmY',mysql_to_unix($invdate)) ;
         }
 
         $data['period'] = $from.' s/d '.$to;
@@ -2459,24 +2494,40 @@ class Reports extends Application
         //print_r($trans);
 
         //exit();
+        if($pdf == 'print' || $pdf == 'pdf'){
+            $this->table->set_heading(
+                'No.',
+                'Delivery Time',
+                'Delivery ID',
+                'Type',
+                'Delivery Fee',
+                'COD Surchg',
+                'Buyer',
+                'Kode Toko',
+                'Status'
+            ); // Setting headings for the table
 
-        $this->table->set_heading(
-            'No.',
-            'No Kode Penjualan Toko',
-            'Delivery ID',
-            'Merchant Name',
-            'Store',
-            'Delivery Date',
-            'Buyer Name',
-            'Delivery Type',
-            'Status',
-            'Package Value',
-            'Disc',
-            'Tax',
-            'Delivery Chg',
-            'COD Surchg',
-            'Payable Value'
-        ); // Setting headings for the table
+        }else{
+            $this->table->set_heading(
+                'No.',
+                'No Kode Penjualan Toko',
+                'Delivery ID',
+                'Merchant Name',
+                'Store',
+                'Delivery Date',
+                'Buyer Name',
+                'Delivery Type',
+                'Status',
+                'Package Value',
+                'Disc',
+                'Tax',
+                'Delivery Chg',
+                'COD Surchg',
+                'Payable Value'
+            ); // Setting headings for the table
+
+        }
+
 
         $seq = 1;
         $total_billing = 0;
@@ -2507,36 +2558,77 @@ class Reports extends Application
             $total_cod += (int)str_replace('.','',$cod);
             $total_billing += (int)str_replace('.','',$payable);
 
-            $this->table->add_row(
-                $seq,
-                $this->hide_trx($r->merchant_trans_id),
-                $this->short_did($r->delivery_id),
-                $r->fullname.'<hr />'.$r->merchant_name,
-                $r->app_name.'<hr />'.$r->domain,
-                date('d-m-Y',strtotime($r->assignment_date)),
-                $r->buyer_name,
-                $r->delivery_type,
-                $r->status,
-                array('data'=>idr($total),'class'=>'currency'),
-                array('data'=>idr($dsc),'class'=>'currency'),
-                array('data'=>idr($tax),'class'=>'currency'),
-                array('data'=>idr($dc),'class'=>'currency'),
-                array('data'=>idr($cod),'class'=>'currency'),
-                array('data'=>idr($payable),'class'=>'currency')
-            );
+            if($pdf == 'print' || $pdf == 'pdf'){
+
+                $this->table->add_row(
+                    $seq,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $this->short_did($r->delivery_id),
+                    $r->delivery_type,
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    $r->buyer_name,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->status
+                );
+
+
+            }else{
+                $this->table->add_row(
+                    $seq,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $this->short_did($r->delivery_id),
+                    $r->fullname.'<hr />'.$r->merchant_name,
+                    $r->app_name.'<hr />'.$r->domain,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->buyer_name,
+                    $r->delivery_type,
+                    $r->status,
+                    array('data'=>idr($total),'class'=>'currency'),
+                    array('data'=>idr($dsc),'class'=>'currency'),
+                    array('data'=>idr($tax),'class'=>'currency'),
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($payable),'class'=>'currency')
+                );
+
+
+            }
+
+
 
             $seq++;
         }
 
-        $total_span = 12;
-        $say_span = 13;
+            if($pdf == 'print' || $pdf == 'pdf'){
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    '',
+                    '',
+                    ''
+                );
+            }
 
-        $this->table->add_row(
-            array('data'=>'Total','colspan'=>$total_span),
-            array('data'=>idr($total_delivery),'class'=>'total currency'),
-            array('data'=>idr($total_cod),'class'=>'total currency'),
-            array('data'=>idr($total_billing),'class'=>'total currency')
-        );
+
+
+
+        if($pdf == 'print' || $pdf == 'pdf'){
+
+            $total_span = 2;
+            $say_span = 6;
+
+        }else{
+
+            $total_span = 12;
+            $say_span = 13;
+
+        }
+
 
         $this->table->add_row(
             'Terbilang',
@@ -2552,14 +2644,23 @@ class Reports extends Application
         }
 
         $this->table->add_row(
-            'Delivery Charge',
+            array('data'=>'Delivery Charge',
+                'colspan'=>$total_span),
             array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
                 'colspan'=>$say_span)
         );
 
         $this->table->add_row(
-            'COD Surcharge',
+            array('data'=>'COD Surcharge',
+                'colspan'=>$total_span),
             array('data'=>$this->number_words->to_words($total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $this->table->add_row(
+            array('data'=>'Grand Total',
+                'colspan'=>$total_span),
+            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
 
@@ -2579,15 +2680,51 @@ class Reports extends Application
 
         $data['last_query'] = $last_query;
 
+        $data['grand_total'] = $total_delivery + $total_cod;
+
+
+
+        $pdffilename = 'JSM-'.strtoupper($data['merchantname']).'-'.$data['invdatenum'];
+
         if($pdf == 'pdf'){
-            $html = $this->load->view('print/revenue',$data,true);
-            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+            $html = $this->load->view('print/invoiceprint',$data,true);
+            $pdf_name = $pdffilename;
+            $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+
+            file_put_contents(FCPATH.'public/invoices/'.$pdf_name.'.pdf', $pdfbuf);
+
+            return array(file_exists(FCPATH.'public/invoices/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+
         }else if($pdf == 'print'){
-            $this->load->view('print/merchantrecon',$data); // Load the view
+            $this->load->view('print/invoiceprint',$data); // Load the view
         }else{
-            $this->ag_auth->view('merchantrecon',$data); // Load the view
+            $this->ag_auth->view('invoicegenerator',$data); // Load the view
         }
+    }
+
+    public function geninvoice(){
+        $type = null;
+        $year = null;
+        $scope = null;
+        $par1 = null;
+        $par2 = null;
+        $par3 = null;
+        $par4 = null;
+
+        $type = $this->input->post('type');
+        $year = $this->input->post('year');
+        $scope = $this->input->post('scope');
+        $par1 = $this->input->post('par1');
+        $par2 = $this->input->post('par2');
+        $par3 = $this->input->post('par3');
+        $par4 = $this->input->post('par4');
+
+        $result = $this->invoices($type ,$year, $scope, $par1, $par2, $par3,$par4);
+
+        $result[0] = ($result[0])?'OK':'FAILED';
+
+        print json_encode(array('result'=>$result[0], 'file'=>$result[1]));
+
     }
 
     public function manifests($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){

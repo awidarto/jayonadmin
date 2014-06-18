@@ -25,7 +25,7 @@ class Number_words {
 	}
 
 	function to_words($number,$locale = 'id') {
-	    
+
 	    if($locale == 'en'){
 		    $hyphen      = '-';
 		    $conjunction = ' and ';
@@ -117,11 +117,11 @@ class Number_words {
 
 	}
 
-	    
+
 	    if (!is_numeric($number)) {
 	        return false;
 	    }
-	    
+
 	    if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
 	        // overflow
 	        trigger_error(
@@ -134,13 +134,13 @@ class Number_words {
 	    if ($number < 0) {
 	        return $negative . $this->to_words(abs($number));
 	    }
-	    
+
 	    $string = $fraction = null;
-	    
+
 	    if (strpos($number, '.') !== false) {
 	        list($number, $fraction) = explode('.', $number);
 	    }
-	    
+
 	    switch (true) {
 	        case $number < 21:
 	            $string = $dictionary[$number];
@@ -172,7 +172,7 @@ class Number_words {
 	            }
 	            break;
 	    }
-	    
+
 	    if (null !== $fraction && is_numeric($fraction)) {
 	        $string .= $decimal;
 	        $words = array();
@@ -181,7 +181,9 @@ class Number_words {
 	        }
 	        $string .= implode(' ', $words);
 	    }
-	    
+
+        $string = str_replace('satu ratus', 'seratus', $string);
+
 	    return $string;
 	}
 

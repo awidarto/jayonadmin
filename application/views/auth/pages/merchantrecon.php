@@ -66,6 +66,7 @@
                 },
                 'json' );
         });
+
 		//$("#toClone thead").sticky({topSpacing:0});
 
 	});
