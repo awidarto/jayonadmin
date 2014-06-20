@@ -2683,7 +2683,7 @@ class Reports extends Application
         $data['grand_total'] = $total_delivery + $total_cod;
 
 
-        $data['merchantname'] = str_replace( array('http','www',':','/','.com','.net','co.id','.'),'',$data['merchantname']);
+        $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','co.id'),'',$data['merchantname']);
 
         $pdffilename = 'JSM-'.strtoupper($data['merchantname']).'-'.$data['invdatenum'];
 
