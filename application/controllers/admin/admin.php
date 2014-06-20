@@ -81,6 +81,59 @@ class Admin extends Application
 		}
 	}
 
+    public function testjson(){
+        print json_encode(
+                            array( 'api_key' => '68dddf9790b9bb891e5a4a0e875ec37ad2c0843f',
+                                'buyer_name' => 'RICHARD HARISON',
+                                'recipient_name' => 'RICHARD HARISON',
+                                'shipping_address' => 'PT. KARTIKA EKA YUDHA MARITIM WISMA MITRA SUNTER LT.10-04 MITRA SUNTER BOULEVARD BLOCK C.2 JL.YOS SUDARSO KAV.89 SUNTER JAYA, JAKARTA',
+                                'buyerdeliveryzone' => 'Kelapa Gading',
+                                'buyerdeliverycity' => 'Jakarta Utara',
+                                'buyerdeliverytime' => '20140620',
+                                'buyerdeliveryslot' => 1,
+                                'directions' => 'Laksanakan Perintah',
+                                'auto_confirm' => true,
+                                'email' => 'richard@keymaritim.com',
+                                'zip' => '14350',
+                                'phone' => '08129625478',
+                                'mobile1' => '08129625478',
+                                'mobile2' =>'',
+                                'total_price' => 339000,
+                                'total_discount' => 0,
+                                'total_tax' => 0 ,
+                                'chargeable_amount' => 339000 ,
+                                'delivery_cost' => 6500 ,
+                                'cod_cost' => 7500 ,
+                                'currency' => 'IDR' ,
+                                'status' => 'pending',
+                                'merchant_id' => 520,
+                                'buyer_id' => 'C_0096421',
+                                'trx_detail' => array(
+                                    array(
+                                                'unit_description' => 'Antonio Banderas Blue Seduction Man 200 ML',
+                                                'unit_price' => 1 ,
+                                                'unit_quantity' => 1,
+                                                'unit_total' => 325000,
+                                                'unit_pct_discount' => 0,
+                                                'unit_discount' => 0
+                                        )
+                                ),
+                                'width' => 20 ,
+                                'height' => 20 ,
+                                'length' => 20 ,
+                                'weight' => 1 ,
+                                'delivery_type' => 'COD' ,
+                                'show_merchant' => 1 ,
+                                'show_shop' => 1 ,
+                                'cod_bearer' => 'buyer',
+                                'delivery_bearer' => 'buyer',
+                                'cod_method' => 'cash' ,
+                                'ccod_method' => 'full'
+                            )
+
+            );
+    }
+
     public function testglob($delivery_id){
         $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg');
         print_r($existingpic);
