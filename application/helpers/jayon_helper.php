@@ -1229,6 +1229,9 @@ function colorizestatus($status){
 		$class = $colors[$status];
 	}
 
+    $atatus = str_replace('_', ' ', $status);
+    $status = ucwords($status );
+
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 

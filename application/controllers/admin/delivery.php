@@ -40,21 +40,16 @@ class Delivery extends Application
             'Type',
             'Merchant / App Name',
             'W x H x L = V',
-            //'Volume',
             'Weight Range',
             'Delivery Fee',
             'COD Surcharge',
             'COD Value',
-            //'Merchant',
-            //'App Domain',
             'Buyer',
             'Shipping Address',
             'Directions',
             'Phone',
             'Status',
             'Reference',
-            //'Reschedule Ref',
-            //'Revoke Ref',
             'Actions'
             ); // Setting headings for the table
 
@@ -287,6 +282,7 @@ class Delivery extends Application
 			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -342,6 +338,8 @@ class Delivery extends Application
                 $pick_stat = '';
             }
 
+            $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -371,7 +369,7 @@ class Delivery extends Application
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				$reference,
-				$reschedule.'<br />'.$changestatus,
+				$printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -2640,27 +2638,6 @@ class Delivery extends Application
 		if($search){
 			$this->db->and_();
 		}
-/*
-SELECT `delivery_order_active`.*, `m`.`merchantname` as merchant, `a`.`application_name` as app_name, `d`.`identifier` as device, `c`.`fullname` as courier
-    FROM (`delivery_order_active`)
-    LEFT JOIN `members` as m ON `delivery_order_active`.`merchant_id`=`m`.`id`
-    LEFT JOIN `applications` as a ON `delivery_order_active`.`application_id`=`a`.`id`
-    LEFT JOIN `devices` as d ON `delivery_order_active`.`device_id`=`d`.`id`
-    LEFT JOIN `couriers` as c ON `delivery_order_active`.`courier_id`=`c`.`id`
-    WHERE (
-        `status` =  'cr_assigned'
-            OR `status` =  'pickedup'
-            OR `status` =  'enroute'
-            OR
-            (
-                `status` =  'pending'
-                AND `pending_count` > 0
-            )
-    )
-    ORDER BY `assignment_date` desc, `device` asc, `courier` asc, `buyerdeliverycity` asc, `buyerdeliveryzone` asc, `assignment_date` asc
-    LIMIT 10"
-
-*/
 		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_courierassigned'))
 			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
