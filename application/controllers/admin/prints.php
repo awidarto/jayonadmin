@@ -32,7 +32,7 @@ class Prints extends Application
         //print_r($buyer);
 
         if(($buyer['buyerdeliverycity'] == '' || $buyer['buyerdeliverycity'] == 0)  || ($buyer['buyerdeliveryzone'] == '' || $buyer['buyerdeliveryzone'] == 0) ){
-            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude, delivery_id
                     FROM  delivery_order_active
                     WHERE (
                         (
@@ -46,7 +46,7 @@ class Prints extends Application
             $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone'],$buyer['delivery_id']) );
 
         }else{
-            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude, delivery_id
                     FROM  delivery_order_active
                     WHERE (
                         (

@@ -283,6 +283,7 @@
                         <?php foreach ($suggestions as $val):?>
                             <li>
                                 <?= $val['buyer_name']?><br />
+                                delivery id : <?php $val['delivery_id'] ?><br />
                                 <i><?= $val['shipping_address']?></i><br />
                                 <b><?= $val['latitude'].','.$val['longitude'] ?></b>
                                 <span class="use-loc" data-lat="<?=$val['latitude'] ?>" data-lon="<?=$val['longitude'] ?>" >use</span>
