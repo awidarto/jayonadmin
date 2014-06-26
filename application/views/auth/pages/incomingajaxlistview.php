@@ -579,7 +579,7 @@
             width: 1050,
             modal: true,
             buttons: {
-                /*
+
                 Print: function(){
                     var pframe = document.getElementById('print_frame');
                     var pframeWindow = pframe.contentWindow;
@@ -591,7 +591,7 @@
                     window.location = src;
                     //alert(src);
                 },
-                */
+
                 Close: function() {
                     $( this ).dialog( "close" );
                 }
