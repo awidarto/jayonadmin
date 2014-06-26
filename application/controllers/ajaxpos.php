@@ -17,12 +17,12 @@ class Ajaxpos extends CI_Controller
         }
 
         $this->db->where('id',$buyer_id);
-        $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
+        $this->db->select('id,buyer_name,delivery_id,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
         $buyer = $this->db->get($table)->row_array();
 
 
         if($keyword != ''){
-            $suggestql = 'SELECT shipping_address, buyer_name ,latitude, longitude
+            $suggestql = 'SELECT shipping_address, buyer_name ,latitude, longitude, delivery_id
                 FROM  delivery_order_active
                 WHERE (
                     (
@@ -33,21 +33,23 @@ class Ajaxpos extends CI_Controller
                 OR shipping_address LIKE ?
                 AND buyerdeliverycity = ?
                 AND buyerdeliveryzone = ?
+                AND delivery_id != ?
                 AND latitude !=0 AND longitude !=0';
 
-                $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],'%'.$keyword.'%',$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone']) );
+                $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],'%'.$keyword.'%',$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone'],$buyer['delivery_id']) );
 
         }else{
 
-            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude,delivery_id
                 FROM  delivery_order_active
                 WHERE ( STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
                 OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0 )
                 AND buyerdeliverycity = ?
                 AND buyerdeliveryzone = ?
+                AND delivery_id != ?
                 AND latitude !=0 AND longitude !=0';
 
-                $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone']) );
+                $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone'],$buyer['delivery_id']) );
 
         }
 
@@ -59,6 +61,7 @@ class Ajaxpos extends CI_Controller
                     foreach ($suggestions as $val){
                         $l .= '<li>';
                         $l .= $val['buyer_name'].'<br />';
+                        $l .= 'delivery id : '.$val['delivery_id'].'<br />';
                         $l .= '<i>'.$val['shipping_address'].'</i><br />';
                         $l .= '<b>'.$val['latitude'].','.$val['longitude'].'</b>';
                         $l .= '<span class="use-loc" data-lat="'.$val['latitude'].'" data-lon="'.$val['longitude'].'" >use</span>';

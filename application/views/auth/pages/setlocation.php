@@ -75,7 +75,11 @@
     .leaflet-map-pane{
         z-index: 100;
     }
-    </style>
+
+    #do-similar-search{
+        cursor: pointer;
+        margin-left: 20px;
+    }
 
     </style>
 
@@ -266,12 +270,16 @@
                 </dl>
             </td>
             <td style="width:300px;vertical-align:top">
-                <div id="map" style="width:300px;height:350px;display:block;border:thin solid grey;"></div>
+                <div id="map" style="width:500px;height:490px;display:block;border:thin solid grey;"></div>
+
+                <div style="width:100%;background-color:white;">
+                    <input type="text" id="similar-search" style="width:250px;float:left" ><span id="do-similar-search" class="btn">search</span>
+                </div>
             </td>
             <td style="vertical-align:top;overflow-y:auto;font-size:13px;">
                 Similar Locations :
-                <div style="max-height:320px;height:320px;overflow-y:auto;">
-                    <ol id="similar-list">
+                <div style="max-height:300px;min-height:510px;overflow-y:auto;">
+                    <ol id="similar-list" style="padding-left:0px;">
                         <?php foreach ($suggestions as $val):?>
                             <li>
                                 <?= $val['buyer_name']?><br />
@@ -281,9 +289,6 @@
                             </li>
                         <?php endforeach; ?>
                     </ol>
-                </div>
-                <div style="width:320px;background-color:white;">
-                    <input type="text" id="similar-search" style="width:250px;float:left" ><button id="do-similar-search">search</button>
                 </div>
             </td>
         </tr>

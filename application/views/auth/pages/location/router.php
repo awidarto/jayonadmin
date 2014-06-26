@@ -503,8 +503,8 @@
 
         $('#setloc_dialog').dialog({
             autoOpen: false,
-            height: 500,
-            width: 1000,
+            height: 640,
+            width: 1100,
             modal: true,
             buttons: {
                 Save: function(){

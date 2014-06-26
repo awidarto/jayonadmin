@@ -18,26 +18,55 @@ class Prints extends Application
 
         if($type == 'buyer'){
             $table = $this->config->item('jayon_buyers_table');
+            $this->db->where('id',$buyer_id);
+            $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
+
         }else{
             $table = $this->config->item('incoming_delivery_table');
+            $this->db->where('id',$buyer_id);
+            $this->db->select('id,delivery_id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
         }
 
-        $this->db->where('id',$buyer_id);
-        $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
         $buyer = $this->db->get($table)->row_array();
 
+        //print_r($buyer);
 
-        $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
-                FROM  delivery_order_active
-                WHERE ( STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
-                OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0 )
-                AND buyerdeliverycity = ?
-                AND buyerdeliveryzone = ?
-                AND latitude !=0 AND longitude !=0';
+        if(($buyer['buyerdeliverycity'] == '' || $buyer['buyerdeliverycity'] == 0)  || ($buyer['buyerdeliveryzone'] == '' || $buyer['buyerdeliveryzone'] == 0) ){
+            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+                    FROM  delivery_order_active
+                    WHERE (
+                        (
+                            STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
+                            OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0
+                        )
+                    )
+                    AND delivery_id != ?
+                    AND latitude !=0 AND longitude !=0';
 
-        $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone']) );
+            $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone'],$buyer['delivery_id']) );
+
+        }else{
+            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude
+                    FROM  delivery_order_active
+                    WHERE (
+                        (
+                            STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
+                            OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0
+                        )
+                    )
+                    AND buyerdeliverycity = ?
+                    AND buyerdeliveryzone = ?
+                    AND delivery_id != ?
+                    AND latitude !=0 AND longitude !=0';
+
+            $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['delivery_id']) );
+
+        }
+
 
         $data['suggestions'] = $suggestquery->result_array();
+
+        //print $this->db->last_query();
 
         $data['page_title'] = 'Set Location';
         $data['id'] = $buyer['id'];
