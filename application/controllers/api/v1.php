@@ -836,6 +836,11 @@ class V1 extends Application
 
 				//get slot for specified date
 				$result = json_encode(array('status'=>'OK:DEVSYNC','data'=>$output ,'timestamp'=>now()));
+
+                $invalidchar = array("\b","\f","\n","\r","\t");
+
+                $result = str_replace($invalidchar, ' ', $result);
+
 				print $result;
 			}else{
 				$result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
