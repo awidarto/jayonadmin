@@ -67,3 +67,5 @@ ALTER TABLE `delivery_order_active`  ADD `photolatitude` DECIMAL(18,12) NULL AFT
 May 19 2014
 +++++++++++++++++++
 ALTER TABLE `members`  ADD `mc_pickup_time` TIME NULL AFTER `mc_toscan`,  ADD `mc_pickup_cutoff` TIME NULL AFTER `mc_pickup_time`;
+
+ALTER TABLE  `delivery_order_active` ADD  `is_api` INT( 1 ) NOT NULL DEFAULT  '0'

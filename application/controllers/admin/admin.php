@@ -81,6 +81,11 @@ class Admin extends Application
 		}
 	}
 
+    public function jsonarray(){
+        $json = '{"api_key":"68dddf9790b9bb891e5a4a0e875ec37ad2c0843f","buyer_name":"Irlan Charmansyah","recipient_name":"Irlan Charmansyah","shipping_address":"INPEX Corporation TCC (The City Center) Building, 40th Floor, Jl. K.H. Mas Mansyur Kav.126, Jakarta","buyerdeliveryzone":"Tanah Abang","buyerdeliverycity":"Jakarta Pusat","buyerdeliverytime":"20140627","buyerdeliveryslot":"1","directions":"Laksanakan Perintah","auto_confirm":"true","email":"irlancharmansyah@yahoo.co.uk","zip":"10220","phone":"081212348787","mobile1":"081212348787","mobile2":"","total_price":"546500","total_discount":"0","total_tax":"0","chargeable_amount":"546500","delivery_cost":"6500","cod_cost":"15000","currency":"IDR","status":"pending","merchant_id":"520","buyer_id":"C_0096929","trx_detail":[{"unit_description":"Guerlain Guerlain Homme Intense Man","unit_price":"1","unit_quantity":"1","unit_total":"525000","unit_pct_discount":"0","unit_discount":"0"}],"width":20,"height":20,"length":20,"weight":"1","delivery_type":"COD","show_merchant":"1","show_shop":"1","cod_bearer":"buyer","delivery_bearer":"buyer","cod_method":"cash","ccod_method":"full","transaction_id":"TR_0096929"}' ;
+        print_r(json_decode($json));
+    }
+
     public function testjson(){
         print json_encode(
                             array( 'api_key' => '68dddf9790b9bb891e5a4a0e875ec37ad2c0843f',
@@ -172,6 +177,42 @@ class Admin extends Application
 
             $this->db->where('delivery_id',$o->delivery_id)
                 ->update($this->config->item('jayon_buyers_table'),$geodata);
+        }
+
+    }
+
+    public function extractgeo()
+    {
+        set_time_limit(0);
+
+        if ($handle = opendir( $this->config->item('picture_path') )) {
+            echo "Directory handle: $handle\n";
+            echo "Entries:\n";
+
+            /* This is the correct way to loop over the directory. */
+            while (false !== ($entry = readdir($handle))) {
+                if( $entry != '.' && $entry != '..'){
+                    $imgfile =
+                    $latlon = read_gps_location($imgfile);
+                    if($latlon){
+                        $this->config->item('picture_path').$entry;
+                        print_r($exifdata);
+
+                        $data = array('geotag'=>$exifdata);
+
+                    }else{
+                        print "no geotag\r\n";
+
+                        $data = array('geotag'=>'none')
+
+                    }
+
+                    $jfile = str_replace('.jpg', '.json', $entry);
+                    file_put_contents($this->config->item('picture_path').$jfile, json_encode($data));
+                }
+            }
+
+            closedir($handle);
         }
 
     }

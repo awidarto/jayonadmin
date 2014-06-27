@@ -179,9 +179,9 @@ $config['unlimited_order_time'] = true;
 
 if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['public_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/';
-	$config['picture_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/receiver/';
+	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
     $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
-	$config['thumbnail_path'] = '/Applications/XAMPP/htdocs/jayonadmin/public/receiver_thumb/';
+	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
     $config['api_url'] = 'http://localhost/jayonapidev/v2';
 }else{
 	//online version should redirect to main site
