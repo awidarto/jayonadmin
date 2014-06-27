@@ -203,7 +203,7 @@ class Admin extends Application
                     }else{
                         print "no geotag\r\n";
 
-                        $data = array('geotag'=>'none')
+                        $data = array('geotag'=>'none');
 
                     }
 
