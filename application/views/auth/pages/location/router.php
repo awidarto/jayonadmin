@@ -54,16 +54,15 @@
 
         var map = L.map('map').setView([-6.17742,106.828308], 12);
         var lineWeight = 4;
-
+        /*
         var googleLayer = new L.Google('ROADMAP');
         map.addLayer(googleLayer);
+        */
 
-        /*
         L.tileLayer(OSM_URL, {
             attribution: OSM_ATTRIB,
             maxZoom: 18
         }).addTo(map);
-        */
 
         $('#lineWeight').on('change',function(){
             refreshMap();

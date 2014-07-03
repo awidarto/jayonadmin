@@ -106,15 +106,15 @@
 
             var lineWeight = 4;
 
+            /*
             var googleLayer = new L.Google('ROADMAP');
             map.addLayer(googleLayer);
+            */
 
-            /*
             L.tileLayer(OSM_URL, {
                 attribution: OSM_ATTRIB,
                 maxZoom: 18
             }).addTo(map);
-            */
 
             new L.Control.GeoSearch({
                 provider: new L.GeoSearch.Provider.Google(),
