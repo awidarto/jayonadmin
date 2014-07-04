@@ -2694,6 +2694,23 @@ class Reports extends Application
 
             file_put_contents(FCPATH.'public/invoices/'.$pdf_name.'.pdf', $pdfbuf);
 
+            $data['invdate'] = iddate($invdate);
+            $data['invdatenum'] = date('dmY',mysql_to_unix($invdate));
+
+
+            $invdata = array(
+                'merchant_id'=>$type,
+                'merchantname'=>$data['merchantname'],
+                'period_from'=>$data['from'],
+                'period_to'=>$data['to'],
+                'release_date'=>$invdate,
+                'invoice_number'=>$pdffilename,
+                'note'=>'',
+                'filename'=>$pdffilename
+            );
+
+            $inres = $this->db->insert($this->config->item('invoice_table'),$invdata);
+
             return array(file_exists(FCPATH.'public/invoices/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
 
         }else if($pdf == 'print'){
