@@ -249,8 +249,8 @@ class Members extends Application
 			'Username',
 			'Email',
 			'Full Name',
-			//'Merchant Name',
-			//'Bank Account',
+			'Merchant Name',
+			'Bank Account',
 			'Street',
 			'District',
 			'City',
@@ -267,6 +267,10 @@ class Members extends Application
 			'<input type="text" name="search_username" id="search_username" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_email" id="search_email" value="Search email" class="search_init" />',
 			'<input type="text" name="search_fullname" value="Search full name" class="search_init" />',
+
+            '<input type="text" name="search_merchant_name" value="Search merchant name" class="search_init" />',
+            '<input type="text" name="search_bank" value="Search bank" class="search_init" />',
+
 			'<input type="text" name="search_street" value="Search street" class="search_init" />',
 			'<input type="text" name="search_district" value="Search district" class="search_init" />',
 			'<input type="text" name="search_city" value="Search city" class="search_init" />',
@@ -303,7 +307,7 @@ class Members extends Application
 			'username',
 			'email',
 			//'password',
-			//'merchantname',
+			'merchantname',
 			'fullname',
 			'street',
 			'district',
@@ -327,12 +331,12 @@ class Members extends Application
 		);
 
 		// get total count result
-		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
+		//$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
 
-		$this->db->where('group_id',$group_id)
-            ->or_where('group_id',$pending_group_id);
+		//$this->db->where('group_id',$group_id)
+        //    ->or_where('group_id',$pending_group_id);
 
-		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
+		//$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
 
 		//$this->db->select('*,g.description as groupname');
 		//$this->db->join('groups as g','members.group_id = g.id','left');
@@ -363,47 +367,57 @@ class Members extends Application
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_3') != ''){
-			$this->db->like('street',$this->input->post('sSearch_3'));
-			$search = true;
-		}
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like('merchantname',$this->input->post('sSearch_3'));
+            $search = true;
+        }
 
-		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('district',$this->input->post('sSearch_4'));
-			$search = true;
-		}
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like('bank',$this->input->post('sSearch_4'));
+            $search = true;
+        }
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like('city',$this->input->post('sSearch_5'));
+			$this->db->like('street',$this->input->post('sSearch_5'));
 			$search = true;
 		}
+
 		if($this->input->post('sSearch_6') != ''){
-			$this->db->like('province',$this->input->post('sSearch_6'));
+			$this->db->like('district',$this->input->post('sSearch_6'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_7') != ''){
-			$this->db->like('country',$this->input->post('sSearch_7'));
+			$this->db->like('city',$this->input->post('sSearch_7'));
 			$search = true;
 		}
-
 		if($this->input->post('sSearch_8') != ''){
-			$this->db->like('zip',$this->input->post('sSearch_8'));
+			$this->db->like('province',$this->input->post('sSearch_8'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_9') != ''){
-			$this->db->like('mobile',$this->input->post('sSearch_9'));
+			$this->db->like('country',$this->input->post('sSearch_9'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_10') != ''){
-			$this->db->like('phone',$this->input->post('sSearch_10'));
+			$this->db->like('zip',$this->input->post('sSearch_10'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_11') != ''){
-			$this->db->like('created',$this->input->post('sSearch_11'));
+			$this->db->like('mobile',$this->input->post('sSearch_11'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_12') != ''){
+			$this->db->like('phone',$this->input->post('sSearch_12'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_13') != ''){
+			$this->db->like('created',$this->input->post('sSearch_13'));
 			$search = true;
 		}
 
@@ -413,16 +427,25 @@ class Members extends Application
 
         //$group_ids = array(group_id('merchant'),group_id('pendingmerchant'));
 
-		$data = $this->db
-			->where_in('group_id',$group_id)
-            ->or_where('group_id',$pending_group_id)
-			->limit($limit_count, $limit_offset)
+		$this->db->where('group_id',$group_id)
+            ->or_where('group_id',$pending_group_id);
+
+        $dbca = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset)
             ->order_by('created','desc')
             ->order_by('group_id','desc')
-			->order_by($columns[$sort_col],$sort_dir)
-			->get($this->config->item('jayon_members_table'));
+			->order_by($columns[$sort_col],$sort_dir);
+
+        $dbcr = clone $this->db;
+
+        $data = $this->db->get($this->config->item('jayon_members_table'));
 
 		//print $this->db->last_query();
+
+        $count_all = $dbca->count_all_results($this->config->item('jayon_members_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('jayon_members_table'));
+
 
 		$result = $data->result_array();
 
@@ -447,14 +470,14 @@ class Members extends Application
 				$detail,
 			 	$key['email'],
 			 	$key['fullname'],
+                $key['merchantname'],
+                $key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],
 				$key['street'],
 				$key['district'],
 				$key['city'],
 				$key['province'],
 				$key['country'],
 				$key['zip'],
-			 	//$key['merchantname'],
-			 	//$key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],
 			 	$key['mobile'],
 			 	$key['phone'],
                 $groupname,
@@ -559,14 +582,6 @@ class Members extends Application
 			'fail'
 		);
 
-		// get total count result
-		$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
-
-		$this->db->where('group_id',$group_id);
-		$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
-
-		//$this->db->select('*,g.description as groupname');
-		//$this->db->join('groups as g','members.group_id = g.id','left');
 
 		$search = false;
 				//search column
@@ -624,17 +639,22 @@ class Members extends Application
 		}
 
 		if($this->input->post('sSearch_9') != ''){
-			$this->db->like('mobile',$this->input->post('sSearch_9'));
+			$this->db->like('mobile1',$this->input->post('sSearch_9'));
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_10') != ''){
-			$this->db->like('phone',$this->input->post('sSearch_10'));
-			$search = true;
-		}
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like('mobile2',$this->input->post('sSearch_10'));
+            $search = true;
+        }
 
 		if($this->input->post('sSearch_11') != ''){
-			$this->db->like('created',$this->input->post('sSearch_11'));
+			$this->db->like('phone',$this->input->post('sSearch_11'));
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_12') != ''){
+			$this->db->like('created',$this->input->post('sSearch_12'));
 			$search = true;
 		}
 
@@ -642,11 +662,24 @@ class Members extends Application
 			//$this->db->and_();
 		}
 
-		$data = $this->db
-			->where('group_id',$group_id)
-			->limit($limit_count, $limit_offset)
-			->order_by($columns[$sort_col],$sort_dir)
-			->get($this->config->item('jayon_members_table'));
+        $this->db->where('group_id',$group_id)
+            ->or_where('group_id',$pending_group_id);
+
+        $dbca = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset)
+            ->order_by('created','desc')
+            ->order_by('group_id','desc')
+            ->order_by($columns[$sort_col],$sort_dir);
+
+        $dbcr = clone $this->db;
+
+        $data = $this->db->get($this->config->item('jayon_members_table'));
+
+        //print $this->db->last_query();
+
+        $count_all = $dbca->count_all_results($this->config->item('jayon_members_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('jayon_members_table'));
 
 		//print $this->db->last_query();
 
@@ -823,8 +856,6 @@ class Members extends Application
 
         $dbca = clone $this->db;
 
-        $count_all = $dbca->count_all_results();
-
         $search = false;
 
                 //search column
@@ -912,14 +943,15 @@ class Members extends Application
 
         $dbcr = clone $this->db;
 
-        $count_display_all = $dbcr->count_all_results();
-
         $data = $this->db->limit($limit_count, $limit_offset)
             ->get();
 
         $last_query = $this->db->last_query();
 
         $result = $data->result_array();
+
+        $count_all = $dbca->count_all_results();
+        $count_display_all = $dbcr->count_all_results();
 
 
         $aadata = array();

@@ -192,28 +192,109 @@ class Admin extends Application
             /* This is the correct way to loop over the directory. */
             while (false !== ($entry = readdir($handle))) {
                 if( $entry != '.' && $entry != '..'){
-                    $imgfile =
-                    $latlon = read_gps_location($imgfile);
-                    if($latlon){
-                        $this->config->item('picture_path').$entry;
-                        print_r($exifdata);
+                    $imgfile = $entry;
 
+                    $exifdata = $this->read_exif_gps($imgfile);
+
+                    if($exifdata){
                         $data = array('geotag'=>$exifdata);
-
                     }else{
-                        print "no geotag\r\n";
-
                         $data = array('geotag'=>'none');
-
                     }
 
+                    echo( json_encode($data) );
+
                     $jfile = str_replace('.jpg', '.json', $entry);
-                    file_put_contents($this->config->item('picture_path').$jfile, json_encode($data));
+                    @unlink( $this->config->item('picture_path').$jfile );
+                    file_put_contents($this->config->item('picture_path').'/json/'.$jfile, json_encode($data));
+
                 }
             }
 
             closedir($handle);
         }
+
+    }
+
+    public function read_exif_gps($imgfile){
+
+        $imgfile = $this->config->item('picture_path').$imgfile;
+
+        $exif = exif_read_data($imgfile);
+
+        if(strripos($exif['SectionsFound'], 'GPS')){
+            $lat = explode('/' ,$exif['GPSLatitude'][0]);
+            $lon = explode('/' ,$exif['GPSLongitude'][0]);
+
+            if(count($lat) > 1){
+                $lat = $lat[0] / $lat[1];
+            }else{
+                $lat = $lat[0];
+            }
+
+            if(count($lon) > 1){
+                $lon = $lon[0] / $lon[1];
+            }else{
+                $lon = $lon[0];
+            }
+
+            if(strtoupper($exif['GPSLatitudeRef']) == 'S'){
+                $lat = -1 * $lat;
+            }
+
+            if(strtoupper($exif['GPSLongitudeRef']) == 'W'){
+                $lon = -1 * $lon;
+            }
+
+            return array(
+                'lat'=>$lat,
+                'lon'=>$lon
+            );
+        }else{
+
+            return false;
+        }
+        //print_r($exif);
+
+    }
+
+
+    public function testexif(){
+        set_time_limit(0);
+        $imgfile = $this->config->item('picture_path').'IMG_20140704_114738.jpg';
+
+        $exif = exif_read_data($imgfile);
+
+        if(strripos($exif['SectionsFound'], 'GPS')){
+            $lat = explode('/' ,$exif['GPSLatitude'][0]);
+            $lon = explode('/' ,$exif['GPSLongitude'][0]);
+
+            if(count($lat) > 1){
+                $lat = $lat[0] / $lat[1];
+            }else{
+                $lat = $lat[0];
+            }
+
+            if(count($lon) > 1){
+                $lon = $lon[0] / $lon[1];
+            }else{
+                $lon = $lon[0];
+            }
+
+            if(strtoupper($exif['GPSLatitudeRef']) == 'S'){
+                $lat = -1 * $lat;
+            }
+
+            if(strtoupper($exif['GPSLongitudeRef']) == 'W'){
+                $lon = -1 * $lon;
+            }
+
+            print $lat."\r\n".$lon."\r\n";
+
+        }else{
+            print 'no geotag';
+        }
+        //print_r($exif);
 
     }
 
