@@ -422,13 +422,16 @@ class Members extends Application
 		}
 
 		if($search){
-			//$this->db->and_();
+			$this->db->and_();
 		}
 
         //$group_ids = array(group_id('merchant'),group_id('pendingmerchant'));
+        $this->db->group_start();
 
 		$this->db->where('group_id',$group_id)
             ->or_where('group_id',$pending_group_id);
+
+        $this->db->group_end();
 
         $dbca = clone $this->db;
 
