@@ -440,7 +440,7 @@ class Members extends Application
 
         $data = $this->db->limit($limit_count, $limit_offset)->get($this->config->item('jayon_members_table'));
 
-		//print $this->db->last_query();
+		$last_query = $this->db->last_query();
 
         $count_all = $dbca->count_all_results($this->config->item('jayon_members_table'));
         $count_display_all = $dbcr->count_all_results($this->config->item('jayon_members_table'));
@@ -490,7 +490,8 @@ class Members extends Application
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
+			'aaData'=>$aadata,
+            'q'=>$last_query
 		);
 
 		print json_encode($result);
