@@ -432,14 +432,13 @@ class Members extends Application
 
         $dbca = clone $this->db;
 
-        $this->db->limit($limit_count, $limit_offset)
-            ->order_by('created','desc')
+        $this->db->order_by('created','desc')
             ->order_by('group_id','desc')
 			->order_by($columns[$sort_col],$sort_dir);
 
         $dbcr = clone $this->db;
 
-        $data = $this->db->get($this->config->item('jayon_members_table'));
+        $data = $this->db->limit($limit_count, $limit_offset)->get($this->config->item('jayon_members_table'));
 
 		//print $this->db->last_query();
 
