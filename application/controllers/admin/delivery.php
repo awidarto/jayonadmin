@@ -254,15 +254,21 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
 
-        $dbca = clone $this->db;
-
-        $this->db->limit($limit_count, $limit_offset)
-			->order_by($this->config->item('incoming_delivery_table').'.id','desc')
+        $this->db->order_by($this->config->item('incoming_delivery_table').'.id','desc')
 			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
 			->order_by('buyerdeliverytime','desc')
 			->order_by($columns[$sort_col],$sort_dir);
 
+        $dbca = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset);
+
         $dbcr = clone $this->db;
+
+        // get total count result
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
+
 
         $data = $this->db->get($this->config->item('incoming_delivery_table'));
 
@@ -274,9 +280,6 @@ class Delivery extends Application
 
 		$result = $data->result_array();
 
-        // get total count result
-        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
-        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$aadata = array();
 
@@ -2661,30 +2664,31 @@ class Delivery extends Application
                     ->where('pending_count >', 0)
                 ->group_end()
 			->group_end();
-		$data = $this->db->limit($limit_count, $limit_offset)
-			->order_by('assignment_date','desc')
-			->order_by('device','asc')
-			->order_by('courier','asc')
+
+        $dbca = clone $this->db;
+
+		$this->db->order_by('assignment_date','desc')
+			->order_by('d.identifier','asc')
+			->order_by('c.fullname','asc')
 			->order_by('buyerdeliverycity','asc')
 			->order_by('buyerdeliveryzone','asc')
-			->order_by($columns[$sort_col],$sort_dir)
-			->get($this->config->item('assigned_delivery_table'));
+			->order_by($columns[$sort_col],$sort_dir);
+
+
+        $dbcr = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset);
+        $data = $this->db->get($this->config->item('assigned_delivery_table'));
+
+
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
+
 
 		//print $this->db->last_query();
 
         $lastquery = $this->db->last_query();
 
-		$count_display_all = $this->db
-			->where('status',$this->config->item('trans_status_admin_courierassigned'))
-			->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-			->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_()
-                ->group_start()
-                    ->where('status',$this->config->item('trans_status_new'))
-                    ->where('pending_count >', 0)
-                ->group_end()
-            //->group_end()
-			->count_all_results($this->config->item('assigned_delivery_table'));
 
 
 		$result = $data->result_array();
