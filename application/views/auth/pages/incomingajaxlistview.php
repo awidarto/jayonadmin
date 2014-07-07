@@ -169,6 +169,36 @@
 			$('#neworder_dialog').dialog('open');
 		});
 
+        $('#doLabel').click(function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post(
+                    '<?php print base_url().'ajax/printsession'; ?>',
+                    { ids: assigns },
+                    function(data){
+                        if(data.result == 'OK'){
+                            var delivery_id = 'SESS:' + data.session;
+                            var col = $('#label_columns').val();
+                            $('#label_id').val(delivery_id);
+                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+                            $('#label_frame').attr('src',src);
+                            $('#label_dialog').dialog('open');
+                        }
+                    },'json');
+
+                $('#label_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -760,7 +790,8 @@
     print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
     form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
     form_button('do_confirm','Confirm Selection','id="doConfirm"').
-    form_button('do_cancel','Cancel Selection','id="doCancel"');
+    form_button('do_cancel','Cancel Selection','id="doCancel"').
+    form_button('do_label','Print Selection Label','id="doLabel"');
 
 ?>
 </div>
@@ -939,7 +970,7 @@
         <button id="label_default">make default</button>
     </div>
     <input type="hidden" value="" id="label_id" />
-    <iframe id="label_frame" name="label_frame" width="100%" height="100%"
+    <iframe id="label_frame" name="label_frame" width="100%" height="90%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>

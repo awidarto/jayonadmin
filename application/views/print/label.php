@@ -5,9 +5,16 @@
 <?php echo $this->ag_asset->load_css('colors.css');?>
 <style type="text/css">
     .label{
+        float: left;
         font-family: Arial, sans-serif;
-        min-height:160px;
-        height:160px;
+        min-height:175px;
+        height:180px;
+        margin-bottom: 20px;
+        display: table;
+    }
+
+    .label table{
+        width: 75%;
     }
 
     h3{
@@ -18,28 +25,45 @@
         padding: 4px;
         font-size: 12px;
     }
+
+    p.shipping{
+        word-wrap:break-word;
+    }
+
+    img.barcode{
+        height:auto;
+    }
 </style>
 </head>
 <body>
 
 <?php foreach( $main_info as $address ):?>
-    <div class="label" style="width:<?php print 100/$columns ?>%;min-width:<?php print 100/$columns ?>%">
-        <table>
+    <?php
+        // assume resolution in 72 ppi
+        $paper_pw = 1100;
+        if($columns > 1){
+            $min_width = ((int) floor($paper_pw/$columns)).'px';
+            $width = ($min_width - 10).'px';
+        }else{
+            $min_width = ((int) floor($paper_pw/2)).'px';
+            $width = ($min_width - 10).'px';
+        }
+    ?>
+    <div class="label" style="width:<?php print $width ?>;min-width:<?php print $min_width ?>; ">
+        <table width="<?php print $width ?>">
             <tr>
                 <td style="width:50%;text-align:left">
                     <?php print $address['merchant'] ?>
                 </td>
                 <td style="width:50%;text-align:right">
-                    <?php //if( hide_trx($address['merchant_trans_id']) != '' ):?>
-                    <img src="<?php print base_url()?>admin/prints/barcode/<?php print $address['merchant_trans_id'] ?>" alt="<?php print $address['merchant_trans_id'] ?>">
-                    <?php //endif;?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="width:50%;text-align:right">
-                    <h3><?php print $address['recipient_name'] ?></h3>
-                    <h3><?php print $address['shipping_address'] ?></h3>
-                    <h3><?php print $address['buyerdeliverycity'] ?></h3>
+                    <h3><?php print $address['recipient_name'] ?>&nbsp;</h3>
+                    <p class="shipping"><?php print $address['shipping_address'] ?>&nbsp;</p>
+                    <p><?php print $address['buyerdeliverycity'] ?>&nbsp;</p>
+                    <img class="barcode" src="<?php print base_url()?>admin/prints/barcode/<?php print $address['merchant_trans_id'] ?>" alt="<?php print $address['merchant_trans_id'] ?>">
                 </td>
             </tr>
             <tr>

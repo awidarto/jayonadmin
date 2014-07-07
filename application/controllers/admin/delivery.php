@@ -2712,6 +2712,7 @@ class Delivery extends Application
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 			$reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -2739,6 +2740,8 @@ class Delivery extends Application
                 $thumbstat .= '<br />'.$thumbnail;
             }
 
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -2753,11 +2756,12 @@ class Delivery extends Application
                 $key['recipient_name'],
                 $key['shipping_address'].'<br />'.$direction,
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-                '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $delivery_check,
+                //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$thumbstat,
                 $key['pending_count'],
                 $key['delivery_note'],
-				$printslip.' '.$reassign.' '.$changestatus.' '.$viewlog,
+				$printslip.' '.$printlabel.' '.$reassign.' '.$changestatus.' '.$viewlog,
 
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],

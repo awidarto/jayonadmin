@@ -93,8 +93,7 @@ class Prints extends Application
     }
 
     public function label($delivery_id, $columns = 2, $pdf = false, $filename = null){
-            $main = $this->db
-                    ->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+            $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
                         m.merchantname as merchant,
                         m.street as mc_street,
                         m.fullname as mc_pic,
@@ -117,8 +116,15 @@ class Prints extends Application
                         a.application_name as app_name')
                     ->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
                     ->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
-                    ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left')
-                    ->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+                    ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left');
+                if(preg_match('/^SESS:/', $delivery_id)){
+                    $sess = str_replace('SESS:','',$delivery_id);
+                    session_start();
+                    $ids = $_SESSION[$sess];
+                    $main = $this->db->where_in('delivery_id',$ids)->get($this->config->item('assigned_delivery_table'));
+                }else{
+                    $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+                }
 
             $data['main_info'] = $main->result_array();
             $data['columns'] = $columns;

@@ -7,6 +7,20 @@ class Ajax extends Application
 		parent::__construct();
 	}
 
+    public function printsession(){
+        $ids = $this->input->post('ids');
+        $sess = mt_rand( 1000, 9999 );
+        $sess = 'PRINT_'.$sess.time();
+
+        session_start();
+        $_SESSION[ $sess ] = $ids;
+
+        print json_encode(array(
+                'result'=>'OK',
+                'session'=>$sess
+            ));
+    }
+
 	public function getzone(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_zones($q,'district');
