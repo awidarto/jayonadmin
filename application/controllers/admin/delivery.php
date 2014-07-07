@@ -238,8 +238,6 @@ class Delivery extends Application
             $search = true;
         }
 
-
-
         //$search = true;
 
 		if($search == true){
@@ -254,29 +252,31 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
 
+        $dbca = clone $this->db;
+
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+
+        //print $dbca->last_query();
+
+        //print '++++++++++';
+
         $this->db->order_by($this->config->item('incoming_delivery_table').'.id','desc')
 			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
 			->order_by('buyerdeliverytime','desc')
 			->order_by($columns[$sort_col],$sort_dir);
 
-        $dbca = clone $this->db;
+        $dbcr = clone $this->db;
 
         $this->db->limit($limit_count, $limit_offset);
 
-        $dbcr = clone $this->db;
 
-        // get total count result
-        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
         $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
 
+        //print $dbcr->last_query();
 
         $data = $this->db->get($this->config->item('incoming_delivery_table'));
 
-		//print $this->db->last_query();
-
 		$last_query = $this->db->last_query();
-
-		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
 
 		$result = $data->result_array();
 
@@ -833,12 +833,6 @@ class Delivery extends Application
 			'status'
 			);
 
-		// get total count result
-		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
-
-		$count_display_all = $this->db
-			->count_all_results($this->config->item('incoming_delivery_table'));
-
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
 		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
@@ -898,22 +892,21 @@ class Delivery extends Application
 			$this->db->where($this->config->item('incoming_delivery_table').'.created <=',$today);
 		}
 
-		/*
-		$this->db->group_start()
-			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
-			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
-			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
-			->group_end();
-		*/
-		$data = $this->db->limit($limit_count, $limit_offset)
-			->order_by($this->config->item('incoming_delivery_table').'.id','desc')
+        $dbca = clone $this->db;
+
+		$this->db->order_by($this->config->item('incoming_delivery_table').'.id','desc')
 			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
 			->order_by('buyerdeliverytime','desc')
-			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+			->order_by($columns[$sort_col],$sort_dir);
 
-		//print $this->db->last_query();
+        $dbcr = clone $this->db;
 
-		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
+        $this->db->limit($limit_count, $limit_offset);
+
+        $data = $this->db->get($this->config->item('incoming_delivery_table'));
+
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$result = $data->result_array();
 
@@ -2983,10 +2976,11 @@ class Delivery extends Application
 
         $dbca = clone $this->db;
 
-		$this->db->limit($limit_count, $limit_offset)
-			->order_by('deliverytime','desc');
+		$this->db->order_by('deliverytime','desc');
 
         $dbcr = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset);
 
 		$data = $this->db->get($this->config->item('delivered_delivery_table'));
 

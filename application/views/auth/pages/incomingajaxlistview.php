@@ -20,8 +20,8 @@
 		        "bServerSide": true,
 		        "sAjaxSource": "<?php print site_url($ajaxurl);?>",
 				"oLanguage": { "sSearch": "Search "},
-				"sPaginationType": "full_numbers",
-				"sDom": 'T<"clear">lfrtip',
+                "sPaginationType": "full_numbers",
+                "sDom": 'T<"clear">lfrtip',
 				"oTableTools": {
 					"sSwfPath": "<?php print base_url();?>assets/swf/copy_csv_xls_pdf.swf"
 				},
