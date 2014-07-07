@@ -572,7 +572,7 @@ class Ajax extends Application
 		);
 
         if($trx['merchant_trans_id'] == ''){
-            $trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
+            $trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.substr(str_replace(array(' ','.'), '', microtime()), 10 );
         }else{
             $trx['transaction_id'] = $trx['merchant_trans_id'];
         }

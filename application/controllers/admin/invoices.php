@@ -153,6 +153,8 @@ class Invoices extends Application
 
         foreach($result as $value => $key)
         {
+            $num++;
+
             $delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
             $editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
             $dl = anchor(base_url().'public/invoices/'.$key['filename'].'.pdf', 'Download pdf', array('target'=>'_blank')); // Build actions links
@@ -161,7 +163,7 @@ class Invoices extends Application
             $detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['merchantname']); // Build detail links
 
             $aadata[] = array(
-                $num++,
+                $num,
                 $key['merchantname'],
                 $key['period_from'],
                 $key['period_to'],

@@ -1,0 +1,63 @@
+.red{
+    color: white;
+    font-weight:bold;
+    display: block;
+    background-color: red;
+    padding: 3px;
+}
+
+.blue{
+    color: white;
+    font-weight:bold;
+    display: block;
+    background-color: blue;
+    padding: 3px;
+}
+
+.maroon{
+    color: white;
+    font-weight:bold;
+    display: block;
+    background-color: maroon;
+    padding: 3px;
+}
+
+.brown{
+    color: white;
+    font-weight:bold;
+    display: block;
+    background-color: brown;
+    padding: 3px;
+}
+
+.green{
+    color:white;
+    font-weight:bold;
+    display: block;
+    background-color: green;
+    padding: 3px;
+}
+
+.yellow{
+    color:white;
+    font-weight:bold;
+    display: block;
+    background-color: yellow;
+    padding: 3px;
+}
+
+.black{
+    color:white;
+    font-weight:bold;
+    display: block;
+    background-color: black;
+    padding: 3px;
+}
+
+.orange{
+    color:white;
+    font-weight:bold;
+    display: block;
+    background-color: orange;
+    padding: 3px;
+}

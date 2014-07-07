@@ -221,6 +221,14 @@
 			}
 		});
 
+        $('#label_refresh').on('click',function(){
+            var delivery_id = $('#label_id').val();
+            var col = $('#label_columns').val();
+            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+
+            $('#label_frame').attr('src',src);
+        });
+
         $('#doConfirm').click(function(){
             var assigns = '';
             var count = 0;
@@ -271,6 +279,16 @@
 
                 $('#print_frame').attr('src',src);
                 $('#print_dialog').dialog('open');
+            }
+
+            if ($(e.target).is('.printlabel')) {
+                var delivery_id = e.target.id;
+                var col = $('#label_columns').val();
+                $('#label_id').val(delivery_id);
+                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+
+                $('#label_frame').attr('src',src);
+                $('#label_dialog').dialog('open');
             }
 
 			if ($(e.target).is('.cancel_link')) {
@@ -601,6 +619,35 @@
             }
         });
 
+        $('#label_dialog').dialog({
+            autoOpen: false,
+            height: 600,
+            width: 1050,
+            modal: true,
+            buttons: {
+
+                Print: function(){
+                    var pframe = document.getElementById('label_frame');
+                    var pframeWindow = pframe.contentWindow;
+                    pframeWindow.print();
+                },
+                "Download PDF": function(){
+                    var print_id = $('#label_id').val();
+                    var col = $('#label_columns').val();
+                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + col + '/pdf';
+                    window.location = src;
+                    //alert(src);
+                },
+
+                Close: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+
+            }
+        });
+
 
 		$('#view_dialog').dialog({
 			autoOpen: false,
@@ -875,9 +922,24 @@
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
 
-<div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">
+<div id="print_dialog" title="Print Delivery Slip" style="overflow:hidden;padding:8px;">
     <input type="hidden" value="" id="print_id" />
     <iframe id="print_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
+</div>
+
+<div id="label_dialog" title="Print Label" style="overflow:hidden;padding:8px;">
+    <div style="border-bottom:thin solid #ccc;">
+        Print options :
+        <label>Number of columns
+                <input type="text" value="2" id="label_columns" />
+        </label>
+        <button id="label_refresh">refresh</button>
+        <button id="label_default">make default</button>
+    </div>
+    <input type="hidden" value="" id="label_id" />
+    <iframe id="label_frame" name="label_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>

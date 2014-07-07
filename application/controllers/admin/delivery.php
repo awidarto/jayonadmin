@@ -295,6 +295,7 @@ class Delivery extends Application
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -343,7 +344,7 @@ class Delivery extends Application
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
             if($key['toscan'] == 1){
-                $markscan = '<img src="'.base_url().'assets/images/barcode-icon.png" style="width:25px;height:auto">';
+                $markscan = '<img src="'.base_url().'admin/prints/barcode/'.$key['merchant_trans_id'].'" style="width:100px;height:auto">';
                 $pick_stat = colorizestatus($key['pickup_status']);
             }else{
                 $markscan = '';
@@ -366,7 +367,7 @@ class Delivery extends Application
 				$this->hide_trx($key['merchant_trans_id']).$markscan,
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
-                $printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
+                $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat,
                 $direction,

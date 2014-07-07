@@ -83,6 +83,58 @@ class Prints extends Application
         $this->load->view('auth/pages/setlocation',$data); // Load the view
     }
 
+    public function barcode($text){
+
+        $this->load->library('barcode');
+
+        $barcode = new Barcode();
+        $barcode->make($text,'code128',40, 'horizontal' ,true);
+        return $barcode->render('jpg',$text);
+    }
+
+    public function label($delivery_id, $columns = 2, $pdf = false, $filename = null){
+            $main = $this->db
+                    ->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+                        m.merchantname as merchant,
+                        m.street as mc_street,
+                        m.fullname as mc_pic,
+                        m.district as mc_district,
+                        m.city as mc_city,
+                        m.province as mc_province,
+                        m.country as mc_country,
+                        m.zip as mc_zip,
+                        m.phone as mc_phone,
+                        m.mobile as mc_mobile,
+                        a.street as m_street,
+                        a.contact_person as m_pic,
+                        a.district as m_district,
+                        a.city as m_city,
+                        a.province as m_province,
+                        a.country as m_country,
+                        a.zip as m_zip,
+                        a.phone as m_phone,
+                        a.mobile as m_mobile,
+                        a.application_name as app_name')
+                    ->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
+                    ->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
+                    ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left')
+                    ->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+
+            $data['main_info'] = $main->result_array();
+            $data['columns'] = $columns;
+
+            if($pdf){
+                $html = $this->load->view('print/label',$data,true);
+                //print $html; // Load the view
+                pdf_create($html, 'label_'.$delivery_id.'.pdf','A4','portrait', true);
+            }else{
+                $this->load->view('print/label',$data); // Load the view
+            }
+
+            //print $this->db->last_query();
+
+    }
+
 	public function deliveryslip($delivery_id,$pdf = false, $filename = null)
 	{
 			$main = $this->db
