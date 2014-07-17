@@ -762,6 +762,20 @@ function get_sign($delivery_id){
 
 }
 
+function get_logo($merchant_id){
+    $CI =& get_instance();
+
+    if(file_exists($CI->config->item('public_path').'logo/logo_'.$merchant_id.'.jpg')){
+        $exist = true;
+        $thumbnail = base_url().'public/logo/logo_'.$merchant_id.'.jpg';
+    }else{
+        $exist = false;
+        $thumbnail = base_url().'assets/images/th_nopic.jpg';
+    }
+
+    return array('exist'=>$exist,'logo'=>$thumbnail) ;
+}
+
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();
 
@@ -1220,7 +1234,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 	return $result;
 }
 
-function colorizestatus($status){
+function colorizestatus($status, $prefix = '', $suffix = ''){
 
 	$colors = config_item('status_colors');
 	if($status == '' || !in_array($status, array_keys($colors))){
@@ -1231,12 +1245,12 @@ function colorizestatus($status){
 	}
 
     $atatus = str_replace('_', ' ', $status);
-    $status = ucwords($status );
+    $status = $prefix.ucwords($status).$suffix;
 
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
-function colorizetype($type){
+function colorizetype($type, $prefix = '', $suffix = ''){
 
 	if($type == 'COD'){
 		$class = 'brown';
@@ -1249,7 +1263,9 @@ function colorizetype($type){
 		$type = 'DO';
 	}
 
-	return sprintf('<span class="%s" style="text-align:center;">%s</span>',$class,$type);
+    $type = $prefix.$type.$suffix;
+
+    return sprintf('<span class="%s" style="text-align:center;">%s</span>',$class,$type);
 }
 
 function hide_trx($trx_id){

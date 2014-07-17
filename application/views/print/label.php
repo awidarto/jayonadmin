@@ -7,14 +7,22 @@
     .label{
         float: left;
         font-family: Arial, sans-serif;
-        min-height:175px;
-        height:180px;
-        margin-bottom: 20px;
+        max-height:<?php print $cell_height;?>px;
+        min-height:<?php print $cell_height;?>px;
+        height:<?php print $cell_height;?>px;
+
+        max-width:<?php print $cell_width;?>px;
+        min-width:<?php print $cell_width;?>px;
+        width:<?php print $cell_width;?>px;
+
+        margin-right: <?php print $margin_right;?>px;
+        margin-bottom: <?php print $margin_bottom;?>px;
         display: table;
     }
 
     .label table{
-        width: 75%;
+        width: 100%;
+        height: 100%;
     }
 
     h3{
@@ -33,9 +41,15 @@
     img.barcode{
         height:auto;
     }
+
+    #container{
+        width:<?php print ($cell_width * $columns) + ($margin_right * $columns) + 2 ?>;
+    }
+
 </style>
 </head>
 <body>
+<div id="container">
 
 <?php foreach( $main_info as $address ):?>
     <?php
@@ -48,12 +62,27 @@
             $min_width = ((int) floor($paper_pw/2)).'px';
             $width = ($min_width - 10).'px';
         }
+        /*
+        $resolution;
+        $cell_width;
+        $cell_height;
+        $columns;
+        $margin_right;
+        $margin_bottom;
+        */
     ?>
-    <div class="label" style="width:<?php print $width ?>;min-width:<?php print $min_width ?>; ">
-        <table width="<?php print $width ?>">
+    <div class="label">
+        <table>
             <tr>
                 <td style="width:50%;text-align:left">
-                    <?php print $address['merchant'] ?>
+                    <?php
+                        $logo = get_logo($address['merchant_id']);
+                        if($logo['exist'] == true){
+                            print '<img src="'.$logo['logo'].'" />';
+                        }else{
+                            print $address['merchant'];
+                        }
+                    ?>
                 </td>
                 <td style="width:50%;text-align:right">
                 </td>
@@ -68,7 +97,7 @@
             </tr>
             <tr>
                 <td style="width:50%;text-align:left">
-                    <?php print colorizetype( $address['delivery_type'] )?>
+                    <?php print colorizetype( $address['delivery_type'], 'Jayon ' )?>
                 </td>
                 <td style="width:50%;text-align:right;border:thin solid black;">
                     <?php print $address['buyerdeliveryzone'] ?>
@@ -77,5 +106,8 @@
         </table>
     </div>
 <?php endforeach; ?>
+
+</div>
+
 </body>
 </html>

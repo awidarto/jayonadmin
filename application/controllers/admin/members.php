@@ -463,16 +463,24 @@ class Members extends Application
 			}else{
 				$addapp = '&nbsp'; // Build actions links
 			}
+            $uplogo = anchor("admin/members/logo/".$key['id']."/", "Upload Logo"); // Build actions links
 			$edit = anchor("admin/members/merchant/edit/".$key['id']."/", "Edit"); // Build actions links
 			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
 
             $groupname = ($key['group_id'] == group_id('pendingmerchant'))?sprintf('<span class="red">%s</span>',user_group_desc($key['group_id']) ):user_group_desc($key['group_id']);
 
+            $logo = get_logo($key['id']);
+            if($logo['exist'] == true){
+                $logo = '<img src="'.$logo['logo'].'" />';
+            }else{
+                $logo = '';
+            }
+
 			$aadata[] = array(
 				$detail,
 			 	$key['email'],
 			 	$key['fullname'],
-                $key['merchantname'],
+                $logo.'<br />'.$key['merchantname'],
                 $key['bank'].'<br/>'.$key['account_number'].'<br/>'.$key['account_name'],
 				$key['street'],
 				$key['district'],
@@ -484,7 +492,7 @@ class Members extends Application
 			 	$key['phone'],
                 $groupname,
 			 	$key['created'],
-			 	$addapp.' '.$edit.' '.$editpass.' '.$delete
+			 	$addapp.' '.$edit.' '.$uplogo.' '.$editpass.' '.$delete
 			); // Adding row to table
 
 		}
@@ -1438,43 +1446,95 @@ class Members extends Application
 
 	} // public function register()
 
-	public function editpass($id)
+    public function editpass($id)
+    {
+        $this->form_validation->set_rules('password', 'Password', 'min_length[6]|matches[password_conf]');
+        $this->form_validation->set_rules('password_conf', 'Password Confirmation', 'min_length[6]|matches[password]');
+
+        $user = $this->get_user($id);
+        $data['user'] = $user;
+
+        if($this->form_validation->run() == FALSE)
+        {
+            $data['groups'] = $this->get_group();
+            $data['page_title'] = 'Change Member Password';
+            $this->ag_auth->view('members/editpass',$data);
+        }
+        else
+        {
+            $result = TRUE;
+            $dataset['password'] = $this->ag_auth->salt(set_value('password'));
+
+            //if( $result = $this->update_user($id,$dataset))
+            if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
+            {
+                $data['message'] = "The user password has now updated.";
+                $data['page_title'] = 'Edit Member Password Success';
+                $data['back_url'] = anchor('admin/members/manage','Back to list');
+                $this->ag_auth->view('message', $data);
+
+            } // if($this->ag_auth->register($username, $password, $email) === TRUE)
+            else
+            {
+                $data['message'] = "The user account failed to update.";
+                $data['page_title'] = 'Edit Member Password Error';
+                $data['back_url'] = anchor('admin/members/manage','Back to list');
+                $this->ag_auth->view('message', $data);
+            }
+
+        } // if($this->form_validation->run() == FALSE)
+
+    } // public function register()
+
+    public function logo($id)
+    {
+        $data['id'] = $id;
+        $data['page_title'] = 'Upload Logo';
+        $this->ag_auth->view('members/uploadlogo',$data);
+    }
+
+	public function logoupload($id)
 	{
-		$this->form_validation->set_rules('password', 'Password', 'min_length[6]|matches[password_conf]');
-		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'min_length[6]|matches[password]');
 
-		$user = $this->get_user($id);
-		$data['user'] = $user;
+        $uconfig['upload_path'] = $this->config->item('public_path').'logo/';
+        $uconfig['allowed_types'] = 'jpg|png';
+        $uconfig['max_size'] = '100';
+        $uconfig['max_width']  = '1024';
+        $uconfig['max_height']  = '768';
 
-		if($this->form_validation->run() == FALSE)
-		{
-			$data['groups'] = $this->get_group();
-			$data['page_title'] = 'Change Member Password';
-			$this->ag_auth->view('members/editpass',$data);
-		}
-		else
-		{
-			$result = TRUE;
-			$dataset['password'] = $this->ag_auth->salt(set_value('password'));
+        $this->load->library('upload', $uconfig);
 
-			//if( $result = $this->update_user($id,$dataset))
-			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
-			{
-				$data['message'] = "The user password has now updated.";
-				$data['page_title'] = 'Edit Member Password Success';
-				$data['back_url'] = anchor('admin/members/manage','Back to list');
-				$this->ag_auth->view('message', $data);
+        if ( ! $this->upload->do_upload())
+        {
+            $data['message'] = "The logo failed to upload.";
+            $data['page_title'] = 'Upload Logo Error';
+            $data['back_url'] = anchor('admin/members/merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
+        else
+        {
+            $upl = $this->upload->data();
 
-			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
-			else
-			{
-				$data['message'] = "The user account failed to update.";
-				$data['page_title'] = 'Edit Member Password Error';
-				$data['back_url'] = anchor('admin/members/manage','Back to list');
-				$this->ag_auth->view('message', $data);
-			}
+                $target_path = $upl['full_path'];
 
-		} // if($this->form_validation->run() == FALSE)
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $upl['file_path'].'logo_'.$id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+
+
+            $data['message'] = "The logo picture uploaded.";
+            $data['page_title'] = 'Upload Logo Success';
+            $data['back_url'] = anchor('admin/members/merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
 
 	} // public function register()
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS

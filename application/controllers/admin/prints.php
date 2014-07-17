@@ -92,8 +92,9 @@ class Prints extends Application
         return $barcode->render('jpg',$text);
     }
 
-    public function label($delivery_id, $columns = 2, $pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$columns = 2,$margin_right = 20,$margin_bottom = 20, $pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+                        m.id as merchant_id,
                         m.merchantname as merchant,
                         m.street as mc_street,
                         m.fullname as mc_pic,
@@ -127,7 +128,12 @@ class Prints extends Application
                 }
 
             $data['main_info'] = $main->result_array();
+            $data['resolution'] = $resolution;
+            $data['cell_width'] = $cell_width;
+            $data['cell_height'] = $cell_height;
             $data['columns'] = $columns;
+            $data['margin_right'] = $margin_right;
+            $data['margin_bottom'] = $margin_bottom;
 
             if($pdf){
                 $html = $this->load->view('print/label',$data,true);

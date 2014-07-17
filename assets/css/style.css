@@ -266,3 +266,8 @@ td.currency{
     display: block;
     text-align: center;
 }
+
+
+input.label-opt{
+    width:35px;
+}
