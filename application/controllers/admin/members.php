@@ -1506,7 +1506,9 @@ class Members extends Application
 
         if ( ! $this->upload->do_upload())
         {
-            $data['message'] = "The logo failed to upload.";
+            $err = $this->upload->display_errors('<p>', '</p>');
+
+            $data['message'] = "The logo failed to upload.".$err;
             $data['page_title'] = 'Upload Logo Error';
             $data['back_url'] = anchor('admin/members/merchant','Back to list');
             $this->ag_auth->view('message', $data);
