@@ -1498,9 +1498,9 @@ class Members extends Application
 
         $uconfig['upload_path'] = $this->config->item('public_path').'logo/';
         $uconfig['allowed_types'] = 'jpg|png';
-        $uconfig['max_size'] = '2000';
-        $uconfig['max_width']  = '1024';
-        $uconfig['max_height']  = '768';
+        $uconfig['max_size'] = 0;
+        $uconfig['max_width']  = 0;
+        $uconfig['max_height']  = 0;
 
         $this->load->library('upload', $uconfig);
 
