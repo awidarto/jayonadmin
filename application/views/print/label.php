@@ -92,7 +92,7 @@
                     <h3><?php print $address['recipient_name'] ?>&nbsp;</h3>
                     <p class="shipping"><?php print $address['shipping_address'] ?>&nbsp;</p>
                     <p><?php print $address['buyerdeliverycity'] ?>&nbsp;</p>
-                    <img class="barcode" src="<?php print base_url()?>admin/prints/barcode/<?php print urlencode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                    <img class="barcode" src="<?php print base_url()?>admin/prints/barcode/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
                 </td>
             </tr>
             <tr>

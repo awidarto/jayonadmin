@@ -87,6 +87,8 @@ class Prints extends Application
 
         $this->load->library('barcode');
 
+        $text = base64_decode($text);
+
         $barcode = new Barcode();
         $barcode->make($text,'code128',40, 'horizontal' ,true);
         return $barcode->render('jpg',$text);
