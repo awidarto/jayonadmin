@@ -65,7 +65,7 @@
     }
 
     <?php
-        $container = ($cell_width * $columns) + ($margin_right * $columns) + $margin_right + ( 4 * $columns );
+        $container = ($cell_width * $columns) + ($margin_right * $columns) + $margin_right + ( 4 * $columns ) + 20;
     ?>
 
     #container{
