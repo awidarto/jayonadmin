@@ -272,6 +272,38 @@
             $('#label_frame').attr('src',src);
         });
 
+        $('#label_default').on('click',function(){
+            var delivery_id = $('#label_id').val();
+            var res = $('#label_resolution').val();
+            var col = $('#label_columns').val();
+            var cell_height = $('#label_cell_height').val();
+            var cell_width = $('#label_cell_width').val();
+            var mright = $('#label_margin_right').val();
+            var mbottom = $('#label_margin_bottom').val();
+
+            $.post(
+                '<?php print base_url();?>ajax/printdefault',
+                {
+                    delivery_id : delivery_id,
+                    res : res,
+                    col : col,
+                    cell_height : cell_height,
+                    cell_width : cell_width,
+                    mright : mright,
+                    mbottom : mbottom
+                },
+                function(data){
+                    if(data.result == 'OK'){
+                        alert('Setting saved as default');
+                    }else{
+                        alert('Setting can not be saved, sorry.');
+                    }
+                },'json'
+                );
+
+            $('#label_frame').attr('src',src);
+        });
+
         $('#doConfirm').click(function(){
             var assigns = '';
             var count = 0;
@@ -989,22 +1021,22 @@
     <div style="border-bottom:thin solid #ccc;">
         Print options :
         <label>Res
-                <input type="text" class="label-opt" value="200" id="label_resolution" /> ppi
+                <input type="text" class="label-opt" value="<?php print $resolution ?>" id="label_resolution" /> ppi
         </label>
         <label>Width
-                <input type="text" class="label-opt" value="400" id="label_cell_width" /> px
+                <input type="text" class="label-opt" value="<?php print $cell_width ?>" id="label_cell_width" /> px
         </label>
         <label>Height
-                <input type="text" class="label-opt" value="200" id="label_cell_height" /> px
+                <input type="text" class="label-opt" value="<?php print $cell_height ?>" id="label_cell_height" /> px
         </label>
         <label>Columns
-                <input type="text" class="label-opt" value="2" id="label_columns" />
+                <input type="text" class="label-opt" value="<?php print $columns ?>" id="label_columns" />
         </label>
         <label>Right
-                <input type="text" class="label-opt" value="2" id="label_margin_right" /> px
+                <input type="text" class="label-opt" value="<?php print $margin_right ?>" id="label_margin_right" /> px
         </label>
         <label>Bottom
-                <input type="text" class="label-opt" value="2" id="label_margin_bottom" /> px
+                <input type="text" class="label-opt" value="<?php print $margin_bottom ?>" id="label_margin_bottom" /> px
         </label>
 
         <button id="label_refresh">refresh</button>

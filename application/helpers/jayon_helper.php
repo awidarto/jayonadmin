@@ -67,6 +67,24 @@ function idr($in){
 	return number_format((double) $in,2,',','.');
 }
 
+function get_print_default($user_group = 'admin'){
+    $CI =& get_instance();
+
+    $user_id = $CI->session->userdata('userid');
+    $user_group = user_group_id('admin');
+
+    $df = $CI->db->where('user_id',$user_id)
+            ->where('user_group',$user_group)
+            ->get('print_defaults');
+
+    //print $CI->db->last_query();
+
+    $result = $df->row_array();
+
+    return $result;
+}
+
+
 function get_apps($merchant_id){
     $CI =& get_instance();
 

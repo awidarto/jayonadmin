@@ -86,6 +86,25 @@ class Delivery extends Application
 
         $page['devices'] = $this->get_devices_identifier();
 
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 450;
+            $page['cell_height'] = 250;
+            $page['columns'] = 2;
+            $page['margin_right'] = 10;
+            $page['margin_bottom'] = 10;
+        }
+
+
         $page['sortdisable'] = '0,2';
         $page['ajaxurl'] = 'admin/delivery/ajaxincoming';
         $page['page_title'] = 'Incoming Delivery Orders';
@@ -346,11 +365,11 @@ class Delivery extends Application
 
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
+            $markscan = '<img src="'.base_url().'admin/prints/barcode/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
+
             if($key['toscan'] == 1){
-                $markscan = '<img src="'.base_url().'admin/prints/barcode/'.$key['merchant_trans_id'].'" style="width:100px;height:auto">';
                 $pick_stat = colorizestatus($key['pickup_status']);
             }else{
-                $markscan = '';
                 $pick_stat = '';
             }
 

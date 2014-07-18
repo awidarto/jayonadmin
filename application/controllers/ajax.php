@@ -21,6 +21,35 @@ class Ajax extends Application
             ));
     }
 
+    public function printdefault(){
+        $def = $this->input->post();
+        //print_r($this->session->userdata());
+
+        $def['user_id'] = $this->session->userdata('userid');
+        $def['user_group'] = user_group_id('admin');
+
+        $df = $this->db->where('user_id',$def['user_id'])
+                ->where('user_group',$def['user_group'])
+                ->get('print_defaults');
+
+        $result = 'NOK';
+
+        if($df->num_rows() > 0){
+            $this->db->where('user_id',$def['user_id'])
+                ->where('user_group',$def['user_group'])
+                ->update('print_defaults',$def);
+        }else{
+            $res = $this->db->insert('print_defaults', $def);
+        }
+
+        if($this->db->affected_rows() > 0){
+            $result = 'OK';
+        }
+
+        print json_encode(array('result'=>$result, 'rows'=>$this->db->affected_rows()));
+
+    }
+
 	public function getzone(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_zones($q,'district');

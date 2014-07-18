@@ -69,3 +69,19 @@ May 19 2014
 ALTER TABLE `members`  ADD `mc_pickup_time` TIME NULL AFTER `mc_toscan`,  ADD `mc_pickup_cutoff` TIME NULL AFTER `mc_pickup_time`;
 
 ALTER TABLE  `delivery_order_active` ADD  `is_api` INT( 1 ) NOT NULL DEFAULT  '0'
+
+Jul 18 2014
++++++++++++++++++++
+CREATE TABLE IF NOT EXISTS `print_defaults` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `delivery_id` varchar(128) DEFAULT NULL,
+  `res` varchar(10) DEFAULT NULL,
+  `col` varchar(10) DEFAULT NULL,
+  `cell_height` varchar(10) DEFAULT NULL,
+  `cell_width` varchar(10) DEFAULT NULL,
+  `mright` varchar(10) DEFAULT NULL,
+  `mbottom` varchar(10) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `user_group` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

@@ -94,7 +94,7 @@ class Prints extends Application
         return $barcode->render('jpg',$text);
     }
 
-    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$columns = 2,$margin_right = 20,$margin_bottom = 20, $pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
                         m.id as merchant_id,
                         m.merchantname as merchant,
@@ -129,13 +129,28 @@ class Prints extends Application
                     $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
                 }
 
+            //$pd = get_print_default();
+            /*
+            if($pd){
+                $data['resolution'] = $pd['res'];
+                $data['cell_width'] = $pd['cell_width'];
+                $data['cell_height'] = $pd['cell_height'];
+                $data['columns'] = $pd['col'];
+                $data['margin_right'] = $pd['mright'];
+                $data['margin_bottom'] = $pd['mbottom'];
+            }else{
+                */
+                $data['resolution'] = $resolution;
+                $data['cell_width'] = $cell_width;
+                $data['cell_height'] = $cell_height;
+                $data['columns'] = $col;
+                $data['margin_right'] = $margin_right;
+                $data['margin_bottom'] = $margin_bottom;
+            //}
+
+
+
             $data['main_info'] = $main->result_array();
-            $data['resolution'] = $resolution;
-            $data['cell_width'] = $cell_width;
-            $data['cell_height'] = $cell_height;
-            $data['columns'] = $columns;
-            $data['margin_right'] = $margin_right;
-            $data['margin_bottom'] = $margin_bottom;
 
             if($pdf){
                 $html = $this->load->view('print/label',$data,true);
