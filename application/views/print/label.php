@@ -64,8 +64,14 @@
         max-height:25px;
     }
 
+    <?php
+        $container = ($cell_width * $columns) + ($margin_right * $columns) + $margin_right + ( 4 * $columns );
+    ?>
+
     #container{
-        width:<?php print ($cell_width * $columns) + ($margin_right * $columns) + $margin_right + ( 4 * $columns ) ?>;
+        width: <?php print $container;?>px;
+        max-width: <?php print $container;?>px;
+        display: block;
     }
 
 </style>
