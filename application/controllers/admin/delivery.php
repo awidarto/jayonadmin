@@ -2867,6 +2867,26 @@ class Delivery extends Application
             ''
 			);
 
+        $page['devices'] = $this->get_devices_identifier();
+
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 450;
+            $page['cell_height'] = 250;
+            $page['columns'] = 2;
+            $page['margin_right'] = 10;
+            $page['margin_bottom'] = 10;
+        }
+
 		$page['sortdisable'] = '0,1,2,3,11';
 		$page['ajaxurl'] = 'admin/delivery/ajaxdispatched';
 		$page['page_title'] = 'In Progress Orders';
