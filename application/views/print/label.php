@@ -26,11 +26,17 @@
         padding: 4px;/* add padding offset = padding * column count */
     }
 
+    @media print {
+        .label{
+            border: none;
+        }
+    }
+
     .label table{
         width: 100%;
         height: 100%;
         border: none;
-        font-size: 12pt;
+        font-size: <?php print $font_size;?>pt;
     }
 
     h3{
@@ -51,13 +57,25 @@
 
     p.shipping{
         word-wrap:break-word;
-        display: inline-block;
+        <?php if($code_type == 'barcode'):?>
+            display: inline-block;
+        <?php endif ?>
         max-width:<?php print $cell_width;?>px;
     }
 
     img.barcode{
         max-width: 98%;
         height:auto;
+    }
+
+    img.qr{
+        max-width: 80px;
+        height:auto;
+    }
+
+    .code-container{
+        display: inline-block;
+        float: left;
     }
 
     img.logo{
@@ -117,10 +135,19 @@
             </tr>
             <tr>
                 <td colspan="2" style="text-align:right">
-                    <h3><?php print $address['recipient_name'] ?></h3>
-                    <p class="shipping"><?php print $address['shipping_address'] ?></p>
-                    <p><?php print $address['buyerdeliverycity'] ?></p>
-                    <img class="barcode" src="<?php print base_url()?>admin/prints/barcode/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                    <?php if($code_type == 'qr') : ?>
+                    <div class="code-container">
+                        <img class="qr" src="<?php print base_url()?>img/qr/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                    </div>
+                    <?php endif; ?>
+                    <div>
+                        <h3><?php print $address['recipient_name'] ?></h3>
+                        <p class="shipping"><?php print $address['shipping_address'] ?></p>
+                        <p><?php print $address['buyerdeliverycity'] ?></p>
+                        <?php if($code_type == 'barcode') : ?>
+                        <img class="barcode" src="<?php print base_url()?>img/barcode/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                        <?php endif; ?>
+                    </div>
                 </td>
             </tr>
             <tr>

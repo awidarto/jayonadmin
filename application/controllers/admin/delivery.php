@@ -95,6 +95,8 @@ class Delivery extends Application
             $page['columns'] = $pd['col'];
             $page['margin_right'] = $pd['mright'];
             $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
         }else{
             $page['resolution'] = 150;
             $page['cell_width'] = 450;
@@ -102,6 +104,8 @@ class Delivery extends Application
             $page['columns'] = 2;
             $page['margin_right'] = 10;
             $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
         }
 
 
@@ -365,7 +369,7 @@ class Delivery extends Application
 
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
-            $markscan = '<img src="'.base_url().'admin/prints/barcode/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
+            $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
 
             if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
@@ -2897,6 +2901,8 @@ class Delivery extends Application
             $page['columns'] = $pd['col'];
             $page['margin_right'] = $pd['mright'];
             $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
         }else{
             $page['resolution'] = 150;
             $page['cell_width'] = 450;
@@ -2904,6 +2910,8 @@ class Delivery extends Application
             $page['columns'] = 2;
             $page['margin_right'] = 10;
             $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
         }
 
 		$page['sortdisable'] = '0,1,2,3,11';

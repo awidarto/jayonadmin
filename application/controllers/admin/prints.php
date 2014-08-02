@@ -83,18 +83,8 @@ class Prints extends Application
         $this->load->view('auth/pages/setlocation',$data); // Load the view
     }
 
-    public function barcode($text){
 
-        $this->load->library('barcode');
-
-        $text = base64_decode($text);
-
-        $barcode = new Barcode();
-        $barcode->make($text,'code128',40, 'horizontal' ,true);
-        return $barcode->render('jpg',$text);
-    }
-
-    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'barcode',$pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
                         m.id as merchant_id,
                         m.merchantname as merchant,
@@ -146,6 +136,8 @@ class Prints extends Application
                 $data['columns'] = $col;
                 $data['margin_right'] = $margin_right;
                 $data['margin_bottom'] = $margin_bottom;
+                $data['font_size'] = $font_size;
+                $data['code_type'] = $code_type;
             //}
 
 
@@ -371,6 +363,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
+            /*
 			$this->gc_qrcode->size(75)
                 ->data($qr_data)
                 ->output_encoding('UTF-8')
@@ -380,6 +373,9 @@ class Prints extends Application
             $data['qr'] = $this->gc_qrcode->img();
 
             $this->gc_qrcode->clear();
+            */
+
+            $data['qr'] = $qr_data;
 
 			$data['page_title'] = 'Delivery Orders';
 
@@ -637,13 +633,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-			$this->gc_qrcode->size(100)
-                ->data($qr_data)
-                ->output_encoding('UTF-8')
-                ->error_correction_level('L')
-                ->margin(0);
-
-            $data['qr'] = $this->gc_qrcode->img();
+            $data['qr'] = $qr_data;
 
             $this->gc_qrcode->clear();
 

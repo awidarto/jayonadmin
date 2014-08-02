@@ -203,6 +203,12 @@
         .fine{
             font-size: 10px;
         }
+
+        .qr{
+            width: 75px;
+            height:auto;
+        }
+
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -597,7 +603,9 @@
                         <tbody>
 
                             <tr>
-                                <td colspan="2"><?php print $qr;?><br /><strong>Merchant Info</strong></td>
+                                <td colspan="2">
+                                    <img class="qr" src="<?php print base_url().'img/qr/'.urlencode($qr);?>" alt="<?php print $qr;?>">
+                                    <br /><strong>Merchant Info</strong></td>
                             </tr>
 
                             <tr>
