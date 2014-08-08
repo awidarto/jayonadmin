@@ -31057,4 +31057,1993 @@
 <p>Filename: qrcode/qrmask.php</p>
 <p>Line Number: 155</p>
 
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_1.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_21_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_21_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_21_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_21_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_21_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_21_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_21_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_21_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_1.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_21_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_21_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_21_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_21_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_21_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_21_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_21_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_21_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_1.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_21_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_21_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_21_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_21_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_21_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_21_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_21_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_21_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:57: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:58: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:58: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 09:59:58: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 10:00:03: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_2.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_25_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_25_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_25_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_25_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_25_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_25_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_25_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_25_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 10:00:08: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_1.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_21_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_21_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_21_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_21_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_21_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_21_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_21_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_21_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 10:00:25: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_3.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_29_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_29_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_29_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_29_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_29_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_29_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_29_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_29_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div>2014-08-08 10:00:29: <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/frame_1.dat): failed to open stream: Permission denied</p>
+<p>Filename: qrcode/qrspec.php</p>
+<p>Line Number: 568</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_0/mask_21_0.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_1/mask_21_1.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_2/mask_21_2.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_3/mask_21_3.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_4/mask_21_4.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_5/mask_21_5.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_6/mask_21_6.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  mkdir(): Permission denied</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 154</p>
+
+</div><div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Warning</p>
+<p>Message:  file_put_contents(/Library/WebServer/Documents/jayonadmindev/application/cache/mask_7/mask_21_7.dat): failed to open stream: No such file or directory</p>
+<p>Filename: qrcode/qrmask.php</p>
+<p>Line Number: 155</p>
+
 </div>

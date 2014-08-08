@@ -8,6 +8,7 @@ class Img extends Application
     }
 
     public function qr($string){
+        $string = base64_decode($string);
         $params['data'] = $string;
         $params['level'] = 'L';
         $params['size'] = 10;
