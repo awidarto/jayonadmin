@@ -155,7 +155,7 @@
                     <?php print colorizetype( $address['delivery_type'], 'Jayon ' )?>
                 </td>
                 <td style="width:50%;text-align:right;border:thin solid black;">
-                    <?php print $address['buyerdeliveryzone'] ?>
+                    <?php //print $address['buyerdeliveryzone'] ?>
                 </td>
             </tr>
         </table>
