@@ -1178,7 +1178,7 @@ class Ajax extends Application
                 //print_r($app);
 
                 if($app->notify_on_new_order == 1){
-                    send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
+                    //send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
                 }
 
                 if($is_new == true){
