@@ -59,7 +59,8 @@ function normalphone($number){
 }
 
 function escapeVars($str, $replace = ''){
-    $str = str_replace(array('/','.',':'), $replace,$str);
+    $str = str_replace(array('http://','http'), '',$str);
+    $str = str_replace(array('/','.',':',' '), $replace,$str);
     return $str;
 }
 

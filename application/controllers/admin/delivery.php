@@ -3076,6 +3076,8 @@ class Delivery extends Application
             //}else{
             //    $thumbnail = get_thumbnail($key['delivery_id']);
             //}
+            $dtime = date('dmY',strtotime($key['deliverytime']));
+            $slipname = strtoupper(escapeVars($key['merchant'], '_')).'-'.$dtime.'-'.strtoupper(escapeVars($key['buyer_name'],'_')).'-'.strtoupper(escapeVars($key['merchant_trans_id']));
 
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
@@ -3097,7 +3099,7 @@ class Delivery extends Application
                 $key['delivery_note'],
                 colorizestatus($key['status']),
                 $key['delivery_note'],
-                form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',

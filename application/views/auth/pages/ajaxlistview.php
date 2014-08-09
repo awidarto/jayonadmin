@@ -260,13 +260,14 @@
                 if( $(this).data('merchantid') !=  lastid ){
                     merchants.push({
                         'id': $(this).data('merchantid'),
-                        'name': $(this).data('merchant')
+                        'name': $(this).data('merchant'),
+                        'slipname': $(this).data('slipname')
                     })
                 }
                 lastid = $(this).data('merchantid');
             });
 
-            console.log(merchants);
+            //console.log(merchants);
 
             $.each(merchants, function( k, v){
                 addinfo += '<li style="padding:5px;list-style-type:none;border-bottom:thin solid grey;margin-left:0px;">'
@@ -278,7 +279,8 @@
             });
 
             tosend.each(function(){
-                assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong></li>';
+                console.log(this);
+                assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+ $(this).data('slipname') + '</strong></li>';
                 count++;
             });
 
