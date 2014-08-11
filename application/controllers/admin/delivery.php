@@ -1082,15 +1082,37 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_2'));
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_2'));
+            $search = true;
+        }
+
+		if($this->input->post('sSearch_3') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_3'));
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_3') != ''){
-			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_3'));
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_4'));
 			$search = true;
 		}
+
+        if($this->input->post('sSearch_5') != ''){
+            if($this->input->post('sSearch_5') == 'DO'){
+                $term = 'Delivery Only';
+            }else if($this->input->post('sSearch_5') == 'COD') {
+                $term = 'COD';
+            }else{
+                $term = $this->input->post('sSearch_5');
+            }
+            $this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_6') != ''){
+            $this->db->like('a.application_name',$this->input->post('sSearch_6'));
+            $search = true;
+        }
 
 		/*
 		if($this->input->post('sSearch_4') != ''){
@@ -1099,10 +1121,39 @@ class Delivery extends Application
 		}
 		*/
 
-		if($this->input->post('sSearch_4') != ''){
-			$this->db->like('m.merchantname',$this->input->post('sSearch_4'));
+		if($this->input->post('sSearch_7') != ''){
+			$this->db->like('m.merchantname',$this->input->post('sSearch_7'));
 			$search = true;
 		}
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_8'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_11'));
+            $this->db->group_end();
+
+            $search = true;
+        }
+
 
 		if($search){
 			$this->db->and_();
@@ -1122,6 +1173,8 @@ class Delivery extends Application
 		//print $this->db->last_query();
 
 		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
+
+            $last_query = $this->db->last_query();
 
 		$result = $data->result_array();
 
@@ -1205,7 +1258,8 @@ class Delivery extends Application
 			'sEcho'=> $this->input->post('sEcho'),
 			'iTotalRecords'=>$count_all,
 			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
+			'aaData'=>$aadata,
+            'q'=>$last_query
 		);
 
 		print json_encode($result);
@@ -1251,24 +1305,24 @@ class Delivery extends Application
 			'',
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'',
+            '',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			'',
+            '<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zip" value="Search ZIP" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			//'<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+			'<input type="text" name="search_type" value="Search Type" class="search_init" />',
+            '<input type="text" name="search_app" value="Search Application" class="search_init" />',
+            '',
 			'',
 			'',
 			'',
 			'',
 			'',
-			'',
-			'',
-			'',
-			'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
-			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"'),
-			form_button('do_confirm','Confirm Selection','id="doConfirm"'),
-			form_button('do_cancel','Cancel Selection','id="doCancel"')
+            '<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
+            '<input type="text" name="search_buyer" value="Search buyer" class="search_init" />',
+			'<input type="text" name="search_address" value="Search address" class="search_init" />',
+            '<input type="text" name="search_direction" value="Search direction" class="search_init" />',
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
 			);
 
         $pd = get_print_default();
@@ -2221,14 +2275,63 @@ class Delivery extends Application
             $search = true;
         }
 
-		if($this->input->post('sSearch_3') != ''){
-			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_3'));
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_3'));
+            $search = true;
+        }
+
+		if($this->input->post('sSearch_4') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_4'));
 			$search = true;
 		}
 
+        if($this->input->post('sSearch_5') != ''){
+            $this->db->like('a.application_name',$this->input->post('sSearch_5'));
+            $search = true;
+        }
 
-        if($this->input->post('sSearch_4') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+        if($this->input->post('sSearch_6') != ''){
+            if($this->input->post('sSearch_6') == 'DO'){
+                $term = 'Delivery Only';
+            }else if($this->input->post('sSearch_6') == 'COD') {
+                $term = 'COD';
+            }else{
+                $term = $this->input->post('sSearch_6');
+            }
+            $this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like('m.merchantname',$this->input->post('sSearch_8'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_11'));
+            $this->db->group_end();
+
             $search = true;
         }
 
@@ -2362,18 +2465,20 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
-			'',
+            form_button('do_dispatch','Assign Courier','id="doDispatch"'),
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			form_button('do_dispatch','Assign Courier','id="doDispatch"'),
+            '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
+            '<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+            '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
+            '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
+            '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             '',
             '',
             '',
-            '',
-            '',
-            '',
-            '',
-            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />'
+            '<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
+            '<input type="text" name="search_address" value="Search address" class="search_init" />',
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
 
 			);
 
