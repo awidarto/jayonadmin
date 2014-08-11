@@ -1049,12 +1049,6 @@ class Delivery extends Application
 			);
 
 		// get total count result
-		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
-
-		$count_display_all = $this->db
-			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
-			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
-			->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
 		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
@@ -1164,19 +1158,29 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
 
-		$data = $this->db->limit($limit_count, $limit_offset)
-			->order_by($this->config->item('incoming_delivery_table').'.id','desc')
+        $dbca = clone $this->db;
+
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+
+		$this->db->order_by($this->config->item('incoming_delivery_table').'.id','desc')
 			->order_by($this->config->item('incoming_delivery_table').'.ordertime','desc')
 			->order_by('buyerdeliverytime','desc')
-			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+			->order_by($columns[$sort_col],$sort_dir);
 
-		//print $this->db->last_query();
+        $dbcr = clone $this->db;
 
-		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
+        $this->db->limit($limit_count, $limit_offset);
 
-            $last_query = $this->db->last_query();
+        $data = $this->db->get($this->config->item('incoming_delivery_table'));
 
-		$result = $data->result_array();
+        //print $this->db->last_query();
+
+        $last_query = $this->db->last_query();
+
+        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
+
+        $result = $data->result_array();
+
 
 		$aadata = array();
 
