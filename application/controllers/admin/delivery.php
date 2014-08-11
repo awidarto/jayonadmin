@@ -1197,6 +1197,7 @@ class Delivery extends Application
 			$reschedule = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reschedule</span>';
 			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
+            $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -2384,6 +2385,7 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+            $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -2420,7 +2422,7 @@ class Delivery extends Application
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
-				$reassign//$printslip.' '.$edit.' '.$delete
+				$reassign.' '.$changestatus //$printslip.' '.$edit.' '.$delete
 			);
 
 

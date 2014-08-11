@@ -1,7 +1,7 @@
 <script>
 	var asInitVals = new Array();
 	var reassign_id = '';
-	
+
 	$(document).ready(function() {
 
 	    var oTable = $('.dataTable').dataTable(
@@ -21,16 +21,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -43,7 +43,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -72,7 +72,7 @@
 			minLength: 2,
 			select:function(event,ui){
 				$('#assign_courier_id').val(ui.item.id);
-				$('#assign_courier_id_txt').html(ui.item.id);				
+				$('#assign_courier_id_txt').html(ui.item.id);
 			}
 		});
 
@@ -92,6 +92,12 @@
 				$('#view_dialog').dialog('open');
 			}
 
+            if ($(e.target).is('.changestatus')) {
+                var delivery_id = e.target.id;
+                $('#change_id').html(delivery_id);
+                $('#changestatus_dialog').dialog('open');
+            }
+
 			if ($(e.target).is('.reassign')) {
 				var delivery_id = e.target.id;
 
@@ -110,22 +116,22 @@
 
 						var city_assign = data.data.buyerdeliverycity;
 
-						$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ 
+						$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{
 								assignment_date: date_assign,
 								assignment_zone: zone_assign,
-								assignment_city: city_assign 
+								assignment_city: city_assign
 							}, function(data) {
 								$('#dev_list').html(data.html);
-							},'json');						
+							},'json');
 						$('#device_reassign_dialog').dialog('open');
 					}
 				},'json');
 			}
 
 		});
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -133,7 +139,7 @@
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#doDispatch').click(function(){
 			if($('.device_id:checked').val() == undefined || $(".assign_date:checked").val() == undefined ){
 				alert('Please specify Date AND Device.');
@@ -151,7 +157,7 @@
 				$('#assign_dialog').dialog('open');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 200,
@@ -179,7 +185,7 @@
 
 						//console.log(delivery_ids);
 						//alert(device_id);
-						
+
 						$.post('<?php print site_url('admin/delivery/ajaxdispatch');?>',{ assignment_device_id: device_id,assignment_courier_id: courier_id,assignment_date: assignment_date,delivery_id: delivery_ids }, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
@@ -204,6 +210,37 @@
 			}
 		});
 
+        $('#changestatus_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Confirm Delivery Orders": function() {
+                    var delivery_id = $('#change_id').html();
+
+                    $.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
+                        'delivery_id':delivery_id,
+                        'new_status': $('#new_status').val(),
+                        'actor': $('#actor').val()
+                    }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#changestatus_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
+
 		$('#device_reassign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
@@ -213,13 +250,13 @@
 				"Re-Assign to Device": function() {
 
 					$.post('<?php print site_url('ajax/reassign');?>',
-						{ 
+						{
 							delivery_id:$('#reassign_delivery_id').html(),
 							assignment_date:$('#disp_deliverydate').html(),
 							assignment_device_id: $("input[name='dev_id']:checked").val(),
 							assignment_timeslot: $('.timeslot:checked').val(),
 							courier_id: 'unassigned'
-						}, 
+						},
 						function(data) {
 							if(data.status == 'OK:REASSIGNED'){
 								//redraw table
@@ -249,22 +286,22 @@
 					var nframe = document.getElementById('view_frame');
 					var nframeWindow = nframe.contentWindow;
 					nframeWindow.submitorder();
-				}, 
+				},
 				Print: function(){
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
-		
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -274,8 +311,8 @@
 		refresh();
 		*/
 	} );
-	
-	
+
+
 </script>
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
@@ -288,9 +325,9 @@
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:50%;border:0;margin:0;">
-				Date : 
+				Date :
 				<input id="assign_date" type="hidden" value=""><strong><span id="delivery_date"></span></strong><br />
-				Device : 
+				Device :
 				<input id="assign_device" type="hidden" value=""><strong><span id="device_identifier"></span></strong><br />
 				Courier ID: <strong><span id="assign_courier_id_txt"></span></strong><br />
 				<input id="assign_courier" type="text" value=""><br />
@@ -320,6 +357,35 @@
 		</tr>
 	</table>
 </div>
+
+<div id="changestatus_dialog" title="Change Delivery Orders">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
+                <?php
+                    $status_list = $this->config->item('status_colors');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="new_status"');
+
+                ?>
+            </td>
+        </tr>
+    </table>
+</div>
+
 
 <div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
