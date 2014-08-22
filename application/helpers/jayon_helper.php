@@ -804,31 +804,58 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
     $pidx = count($existingpic);
 
-	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
-		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
-			$thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
-			$thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
-		}else{
-            if(generate_thumbnail($delivery_id)){
+    foreach($existingpic as $epic){
+        if(!file_exists($CI->config->item('thumbnail_path').'th_'.$epic )){
+            generate_thumbnail( str_replace('.jpg', '', $epic ) );
+        }
+    }
+
+    if($pidx > 1){
+        $ths = '';
+        foreach($existingpic as $epic){
+            $epic2 = str_replace($CI->config->item('picture_path'), '', $epic);
+
+
+            //if(!file_exists($CI->config->item('thumbnail_path').'th_'.$epic )){
+                $thumb = base_url().'public/receiver/'.$epic2;
+                $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic2.'" src="%s?'.time().'" />',$thumb);
+            //}
+        }
+
+        $class = 'thumb_multi';
+
+        $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
+
+        $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
+
+        $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;">'.$ths.'</div>';
+    }else{
+        if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
+            if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
                 $thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
                 $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
             }else{
-                $thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+                if(generate_thumbnail($delivery_id)){
+                    $thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
+                    $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+                }else{
+                    $thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
+                    $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+                }
+            }
+        }else{
+            if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+                if($pidx > 0){
+                    $class = 'thumb_multi';
+                }
+                $thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
+                $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
+            }else{
+                $thumbnail = base_url().'assets/images/th_nopic.jpg';
                 $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
             }
-		}
-	}else{
-        if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
-            if($pidx > 0){
-                $class = 'thumb_multi';
-            }
-            $thumbnail = base_url().'public/receiver_thumb/th_'.$delivery_id.'.jpg';
-            $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
-        }else{
-            $thumbnail = base_url().'assets/images/th_nopic.jpg';
-            $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" /><br /><span class="rotate" id="r_'.$delivery_id.'" style="cursor:pointer;"  >rotate CW</span>',$thumbnail);
         }
-	}
+    }
 
     $has_sign = false;
 
@@ -857,7 +884,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
 	return $thumbnail;
 }
-
+//pickup thumbnail
 function get_puthumbnail($delivery_id, $class = 'thumb'){
     $CI =& get_instance();
 
@@ -919,6 +946,12 @@ function get_puthumbnail($delivery_id, $class = 'thumb'){
     $thumbnail = $thumbnail.$gal;
 
     return $thumbnail;
+}
+
+function generate_multithumb($pics, $out){
+    $width = 100;
+    $height = 75;
+
 }
 
 function generate_thumbnail($delivery_id){
