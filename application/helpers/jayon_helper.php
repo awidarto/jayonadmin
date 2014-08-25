@@ -828,7 +828,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
         $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
 
-        $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;">'.$ths.'</div>';
+        $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;overflow-y:hidden;">'.$ths.'</div>';
     }else{
         if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
             if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
