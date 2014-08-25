@@ -14,7 +14,7 @@ class Delivery extends Application
 
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 
-        ini_set('memory_limit','1024M');
+        ini_set('memory_limit','1256M');
 
 
 	}
