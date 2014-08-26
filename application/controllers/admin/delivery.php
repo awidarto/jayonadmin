@@ -371,11 +371,11 @@ class Delivery extends Application
 
             $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
 
-            if($key['toscan'] == 1){
+            //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
-            }else{
-                $pick_stat = '';
-            }
+            //}else{
+            //    $pick_stat = '';
+            //}
 
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
@@ -1484,6 +1484,8 @@ class Delivery extends Application
 			$datefield = ($bardate == $key['assignment_date'])?'':$datecheck;
 			$cityfield = ($barcity == trim($key['buyerdeliverycity']) && $bardate == $key['assignment_date'])?'':$citycheck;
 
+            $pick_stat = colorizestatus($key['pickup_status']);
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -1502,7 +1504,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -2398,6 +2400,7 @@ class Delivery extends Application
 
 			$reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
 
+            $pick_stat = colorizestatus($key['pickup_status']);
 
 			$aadata[] = array(
 				$num,
@@ -2419,7 +2422,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				$reassign.' '.$changestatus //$printslip.' '.$edit.' '.$delete
@@ -2619,7 +2622,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				$printslip.' '.$edit.' '.$delete
@@ -2892,6 +2895,10 @@ class Delivery extends Application
 
             $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
+            $pick_stat = colorizestatus($key['pickup_status']);
+
+
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -2908,7 +2915,7 @@ class Delivery extends Application
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $delivery_check,
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-				$thumbstat,
+				$thumbstat.'<br />'.$pick_stat,
                 $key['pending_count'],
                 $key['delivery_note'],
 				$printslip.' '.$printlabel.' '.$reassign.' '.$changestatus.' '.$viewlog,
@@ -3192,6 +3199,8 @@ class Delivery extends Application
 
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
+            $pick_stat = colorizestatus($key['pickup_status']);
+
 			$aadata[] = array(
 				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -3208,7 +3217,7 @@ class Delivery extends Application
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $thumbnail,
                 $key['delivery_note'],
-                colorizestatus($key['status']),
+                colorizestatus($key['status']).'<br />'.$pick_stat,
                 $key['delivery_note'],
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
@@ -4243,6 +4252,12 @@ class Delivery extends Application
 		$dataset['status'] = $this->input->post('new_status');
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
 
+        $incr = false;
+
+        if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
+            $incr = true;
+        }
+
 		if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
 			$dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
 			$dataset['status'] == $this->config->item('trans_status_mobile_noshow')
@@ -4252,6 +4267,14 @@ class Delivery extends Application
 
 		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
 		{
+            if($incr == true){
+
+                $this->db->where('delivery_id',$in->delivery_id)
+                    ->set('pending_count', 'pending_count+1', FALSE)
+                    ->update($this->config->item('incoming_delivery_table'));
+
+            }
+
 			$order_exist = 'ok';
 		}
 		else
