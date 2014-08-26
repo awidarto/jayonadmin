@@ -3063,6 +3063,7 @@ class Delivery extends Application
                 '.$mtab.'.mobile2,
                 delivery_note,
                 status,
+                pickup_status,
                 device_id,
                 deliverytime,
                 chargeable_amount,

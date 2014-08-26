@@ -895,6 +895,8 @@ class V1 extends Application
             $metafile = '';
 
             $delivery_id = $this->input->post('delivery_id');
+            $plat = $this->input->post('lat');
+            $plon = $this->input->post('lon');
 
 
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
@@ -934,7 +936,13 @@ class V1 extends Application
                         $this->image_lib->resize();
                     }
 
-                    $ploc = read_gps_location($target_path);
+                    //$ploc = read_gps_location($target_path);
+                    $ploc =  array(
+                        'latitude' => $plat,
+                        'longitude' => $plon,
+                        'photolatitude' => $plat,
+                        'photolongitude' => $plon,
+                    );
 
                     if($ploc && is_array($ploc)){
 
