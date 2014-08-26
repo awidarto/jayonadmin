@@ -4269,7 +4269,7 @@ class Delivery extends Application
 		{
             if($incr == true){
 
-                $this->db->where('delivery_id',$in->delivery_id)
+                $this->db->where('delivery_id',$delivery_id)
                     ->set('pending_count', 'pending_count+1', FALSE)
                     ->update($this->config->item('incoming_delivery_table'));
 
