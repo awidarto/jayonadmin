@@ -827,6 +827,30 @@ class Delivery extends Application
 			form_button('do_cancel','Cancel Selection','id="doCancel"')
 			);
 
+        $page['devices'] = $this->get_devices_identifier();
+
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 450;
+            $page['cell_height'] = 250;
+            $page['columns'] = 2;
+            $page['margin_right'] = 10;
+            $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
+        }
+
 		$page['sortdisable'] = '0,2';
 		$page['ajaxurl'] = 'admin/delivery/ajaxrunning';
 		$page['page_title'] = 'Last 30 Days Orders';
