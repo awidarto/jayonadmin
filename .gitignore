@@ -1,3 +1,4 @@
 json/*
 upload/*
 application/logs/*
+application/cache/*
