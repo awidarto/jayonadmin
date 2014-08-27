@@ -85,3 +85,15 @@ CREATE TABLE IF NOT EXISTS `print_defaults` (
   `user_group` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+Aug 27 2014
+++++++++++++++++++++
+CREATE TABLE IF NOT EXISTS `delivery_photos` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `delivery_id` varchar(255) DEFAULT NULL,
+  `photo_name` varchar(255) DEFAULT NULL,
+  `photo_lat` decimal(18,12) DEFAULT NULL,
+  `photo_lon` decimal(18,12) DEFAULT NULL,
+  `thumb_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='table to store delivery photo metadata' AUTO_INCREMENT=1 ;

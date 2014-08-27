@@ -902,6 +902,7 @@ class V1 extends Application
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
 
             if(count($existingpic) == 0){
+                $tname = $delivery_id.'.jpg';
                 $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
                 $metafile = $this->config->item('picture_path').$delivery_id.'.json';
             }else{
@@ -909,10 +910,10 @@ class V1 extends Application
                 if(in_array($this->config->item('picture_path').$delivery_id.'_sign.jpg', $existingpic)){
                     $pidx = $pidx - 1;
                 }
+                $tname = $delivery_id.'-'.$pidx.'.jpg';
                 $target_path = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.jpg';
                 $metafile = $this->config->item('picture_path').$delivery_id.'-'.$pidx.'.json';
             }
-
 
             //$target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
 
@@ -943,6 +944,15 @@ class V1 extends Application
                         'photolatitude' => $plat,
                         'photolongitude' => $plon,
                     );
+
+                    $photodata = array(
+                            'delivery_id'=>$delivery_id,
+                            'photo_name'=>$tname,
+                            'photo_lat'=>$plat,
+                            'photo_lon'=>$plon
+                        );
+
+                    $this->db->insert('delivery_photos', $photodata );
 
                     if($ploc && is_array($ploc)){
 
