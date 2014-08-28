@@ -4,7 +4,7 @@ $files = glob( '../../public/pickup/*_address.jpg' );
 
 foreach($files as $file){
     print($file);
-    $tesseract = new TesseractOCR('images/some-words.jpg');
+    $tesseract = new TesseractOCR($file);
     $tesseract->setTempDir(realpath('temp'));
     echo $tesseract->recognize();
 }
