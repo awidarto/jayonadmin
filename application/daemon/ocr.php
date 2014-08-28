@@ -6,7 +6,10 @@ foreach($files as $file){
     print($file);
     $tesseract = new TesseractOCR($file);
     $tesseract->setTempDir(realpath('temp'));
-    echo $tesseract->recognize();
+    $result = $tesseract->recognize();
+    $savefile = str_replace('pickup', 'ocr', $file);
+    $savefile = str_replace('txt', 'jpg', $savefile);
+    file_put_contents($savefile, $result);
 }
 
 ?>
