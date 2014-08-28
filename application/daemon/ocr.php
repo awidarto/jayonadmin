@@ -8,7 +8,7 @@ foreach($files as $file){
     $tesseract->setTempDir(realpath('temp'));
     $result = $tesseract->recognize();
     $savefile = str_replace('pickup', 'ocr', $file);
-    $savefile = str_replace('txt', 'jpg', $savefile);
+    $savefile = str_replace('.jpg', '.txt', $savefile);
     file_put_contents($savefile, $result);
 }
 
