@@ -3906,6 +3906,7 @@ class Delivery extends Application
 
 	public function ajaxlog()
 	{
+        ini_set('memory_limit','1356M');
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
 
