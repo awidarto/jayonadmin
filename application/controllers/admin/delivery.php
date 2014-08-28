@@ -3988,7 +3988,7 @@ class Delivery extends Application
 
         $now = time();
 
-        $lastyear = strtotime("-6 month", $now);
+        $lastyear = strtotime("-3 month", $now);
 
         $this->db->where('timestamp > ', $lastyear);
 
