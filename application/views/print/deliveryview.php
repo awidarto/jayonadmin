@@ -608,6 +608,7 @@
                 <img id="address-pic" src="<?php print base_url(); ?>public/pickup/<?php print $main_info['merchant_trans_id'] ?>_address.jpg?<?php print time();?>" style="width:100%;height:auto">
                 <div style="text-align:center;padding-top:8px;">
                     <span class="button rotate-picture" id="<?php print $main_info['merchant_trans_id'] ?>" style="cursor:pointer;">Rotate Picture</span>
+                    <span class="button rotate-picture" id="do_ocr" style="cursor:pointer;">OCR / Get Shipping Address from Picture</span>
                 </div>
             <?php else : ?>
 
