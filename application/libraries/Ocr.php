@@ -8,7 +8,7 @@ class Ocr{
 
     public function __construct($file){
         $this->ocr = new TesseractOCR($file);
-        $this->ocr->setTempDir(realpath('temp'));
+        $this->ocr->setTempDir(realpath(APPPATH.'daemon/temp'));
     }
 
     public function execute(){
