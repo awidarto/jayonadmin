@@ -8,7 +8,7 @@ class Ocr{
 
     public function __construct($file){
         $this->ocrinstance = new TesseractOCR($file);
-        $this->ocrinstance->setTempDir( realpath(APPPATH.'daemon/temp')  );
+        $this->ocrinstance->setTempDir( '/var/www/beta2/jayonadmin/'.APPPATH.'daemon/temp' );
     }
 
     public function execute(){
