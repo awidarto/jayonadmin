@@ -4,7 +4,7 @@ require_once('TesseractOCR.php');
 
 class Ocr{
 
-    $ocr = null;
+    public var $ocr = null;
 
     public function __construct($file){
         $this->ocr = new TesseractOCR($file);
