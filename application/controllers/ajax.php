@@ -50,6 +50,20 @@ class Ajax extends Application
 
     }
 
+    public function ocr(){
+        $filename = $this->input->post('filename');
+        $file = FCPATH.'public/pickup/'.$filename;
+        $this->load->library('ocr',$file);
+        $result = $this->ocr->execute();
+
+        if($result == ''){
+            print json_encode(array('status'=>'OK:EMPTY','result'=>$result));
+        }else{
+            print json_encode(array('status'=>'OK','result'=>$result));
+        }
+    }
+
+
 	public function getzone(){
 		$q = $this->input->get('term');
 		$zones = ajax_find_zones($q,'district');

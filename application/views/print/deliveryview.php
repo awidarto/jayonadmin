@@ -449,6 +449,19 @@
                 },'json');
             });
 
+            $('#do_ocr').on('click',function(){
+                $.post('<?php print site_url('ajax/ocr');?>',
+                { filename: '<?php print $main_info['merchant_trans_id'].'_address.jpg' ?>'},
+                function(data) {
+                    $('#loader').hide();
+                    if(data.status == 'OK'){
+                        $('#shipping_address').val(data.result);
+                    }else if(data.status == 'OK:EMPTY'){
+                        alert('OCR has empty result.')
+                    }
+                },'json');
+            });
+
             $('#cancel_delivery_bearer').click(function(){
                 $('#delivery_bearer_option').hide();
             });
