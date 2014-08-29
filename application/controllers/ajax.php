@@ -53,7 +53,7 @@ class Ajax extends Application
     public function ocr(){
         $filename = $this->input->post('filename');
         $file = FCPATH.'public/pickup/'.$filename;
-        $this->load->library('ocr',$file);
+        $this->load->library('ocr',array('file'=>$file));
         $result = $this->ocr->execute();
 
         if($result == ''){
