@@ -1,5 +1,5 @@
 <?php
-require_once('/var/www/beta2/jayonadmin/libraries/TesseractOCR.php');
+require_once('/var/www/beta2/jayonadmin/application/libraries/TesseractOCR.php');
 
 $files = glob( '/var/www/beta2/jayonadmin/public/pickup/*_address.jpg' );
 
