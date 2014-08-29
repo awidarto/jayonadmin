@@ -1,6 +1,7 @@
 <?php
-require_once('../libraries/TesseractOCR.php');
-$files = glob( '../../public/pickup/*_address.jpg' );
+require_once('/var/www/beta2/jayonadmin/libraries/TesseractOCR.php');
+
+$files = glob( '/var/www/beta2/jayonadmin/public/pickup/*_address.jpg' );
 
 foreach($files as $file){
     print($file);
