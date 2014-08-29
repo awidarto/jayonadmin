@@ -4,15 +4,15 @@ require_once('TesseractOCR.php');
 
 class Ocr{
 
-    public var $ocr = null;
+    var $ocrinstance;
 
     public function __construct($file){
-        $this->ocr = new TesseractOCR($file);
-        $this->ocr->setTempDir(realpath(APPPATH.'daemon/temp'));
+        $this->ocrinstance = new TesseractOCR($file);
+        $this->ocrinstance->setTempDir(realpath(APPPATH.'daemon/temp'));
     }
 
     public function execute(){
-        $result = $this->ocr->recognize();
+        $result = $this->ocrinstance->recognize();
         return $result;
     }
 
