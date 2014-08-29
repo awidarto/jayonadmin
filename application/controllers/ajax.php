@@ -59,11 +59,10 @@ class Ajax extends Application
 
         if(file_exists($ocrfile)){
             $result = file_get_contents($ocrfile);
+        }else{
+            $this->load->library('ocr',array('file'=>$file));
+            $result = $this->ocr->execute();
         }
-
-
-        $this->load->library('ocr',array('file'=>$file));
-        $result = $this->ocr->execute();
 
         if($result == ''){
             print json_encode(array('status'=>'OK:EMPTY','result'=>$result));
