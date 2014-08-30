@@ -956,10 +956,12 @@ class V1 extends Application
 
                     if($ploc && is_array($ploc)){
 
-                        $this->db->where('delivery_id', $delivery_id)
-                            //->where('latitude', null)
-                            //->where('longitude', null)
-                            ->update($this->config->item('incoming_delivery_table'),$ploc);
+                        //if($ploc['photo_lat'] != 0 && $ploc['photo_lon'] != 0){
+                            $this->db->where('delivery_id', $delivery_id)
+                                //->where('latitude', null)
+                                //->where('longitude', null)
+                                ->update($this->config->item('incoming_delivery_table'),$ploc);
+                        //}
 
                         @file_put_contents($metafile, json_encode($ploc));
 
