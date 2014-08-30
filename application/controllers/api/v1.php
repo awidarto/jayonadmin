@@ -957,8 +957,8 @@ class V1 extends Application
                     if($ploc && is_array($ploc)){
 
                         $this->db->where('delivery_id', $delivery_id)
-                            ->where('latitude', null)
-                            ->where('longitude', null)
+                            //->where('latitude', null)
+                            //->where('longitude', null)
                             ->update($this->config->item('incoming_delivery_table'),$ploc);
 
                         @file_put_contents($metafile, json_encode($ploc));
