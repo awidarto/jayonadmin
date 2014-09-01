@@ -3098,6 +3098,8 @@ class Delivery extends Application
                 delivery_note,
                 reschedule_ref,
                 revoke_ref,
+                latitude,
+                longitude,
                 '.$mtab.'.merchant_id';
 
 		$this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -3219,6 +3221,15 @@ class Delivery extends Application
             //}else{
             //    $thumbnail = get_thumbnail($key['delivery_id']);
             //}
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
             $dtime = date('dmY',strtotime($key['deliverytime']));
             $slipname = strtoupper(escapeVars($key['merchant'], '_')).'-'.$dtime.'-'.strtoupper(escapeVars($key['buyer_name'],'_')).'-'.strtoupper(escapeVars($key['merchant_trans_id']));
 
@@ -3238,7 +3249,7 @@ class Delivery extends Application
                 $key['merchant'],
                 $key['buyer_name'],
                 $key['recipient_name'],
-                $key['shipping_address'],
+                $key['shipping_address'].'<br />'.$direction,
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $thumbnail,
                 $key['delivery_note'],

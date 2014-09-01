@@ -507,6 +507,14 @@
 
 	});
 </script>
+<style type="text/css">
+    .locpick{
+        display: inline-block;
+        padding: 4px;
+        background-color: orange;
+    }
+</style>
+
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
