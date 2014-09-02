@@ -1,6 +1,6 @@
 <script>
 	var asInitVals = new Array();
-	
+
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
 			{
@@ -19,16 +19,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -41,7 +41,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -76,9 +76,9 @@
 			minLength: 2
 		});
 
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -97,8 +97,18 @@
 				$('#view_dialog').dialog('open');
 			}
 
+            if ($(e.target).is('.locpick')) {
+                var buyer_id = e.target.id;
+                $('#setloc_dialog').dialog('open');
+
+                var src = '<?php print base_url() ?>admin/prints/mapview/order/' + buyer_id;
+
+                $('#map_frame').attr('src',src);
+                $('#setloc_dialog').dialog('open');
+            }
+
 		});
-		
+
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var date_assign = $('.assign_date:checked').val();
@@ -108,7 +118,7 @@
 			console.log(city_assign);
 
 
-			
+
 			if(date_assign == '' || city_assign == '' ){
 
 				alert('Please select one or more delivery orders');
@@ -142,7 +152,7 @@
 
 			}
 		});
-		
+
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
@@ -153,7 +163,7 @@
 				},'json');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
@@ -171,14 +181,14 @@
 						$('.id_assign:checked').each(function(){
 							delivery_ids[i] = $(this).val();
 							i++;
-						}); 
+						});
 						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',
-							{ 
+							{
 								assignment_device_id: device_id,
 								'delivery_id[]':delivery_ids,
 								assignment_timeslot: $('.timeslot:checked').val(),
-								assignment_zone: $('#assign_deliveryzone').val(), 
-								assignment_city: $('#disp_deliverycity').html() }, 
+								assignment_zone: $('#assign_deliveryzone').val(),
+								assignment_city: $('#disp_deliverycity').html() },
 								function(data) {
 								if(data.result == 'ok'){
 									//redraw table
@@ -187,7 +197,7 @@
 								}
 						},'json');
 					}
-					
+
 				},
 				Cancel: function() {
 					$('#dev_list').html("");
@@ -210,21 +220,43 @@
 					var nframe = document.getElementById('view_frame');
 					var nframeWindow = nframe.contentWindow;
 					nframeWindow.submitorder();
-				}, 
+				},
 				Print: function(){
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
+
+        $('#setloc_dialog').dialog({
+            autoOpen: false,
+            height: 600,
+            width: 900,
+            modal: true,
+            buttons: {
+                Save: function(){
+                    var nframe = document.getElementById('map_frame');
+                    var nframeWindow = nframe.contentWindow;
+                    nframeWindow.submitlocation();
+                },
+                Close: function() {
+                    oTable.fnDraw();
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+
+            }
+        });
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -234,8 +266,8 @@
 		refresh();
 		*/
 	} );
-	
-	
+
+
 </script>
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
@@ -271,6 +303,13 @@
 <div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
 	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
+</div>
+
+<div id="setloc_dialog" title="Set Location" style="overflow:hidden;padding:8px;">
+    <input type="hidden" value="" id="print_id" />
+    <iframe id="map_frame" name="map_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>

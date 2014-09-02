@@ -20,16 +20,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -42,7 +42,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -112,6 +112,16 @@
 				$('#view_dialog').dialog('open');
 			}
 
+            if ($(e.target).is('.locpick')) {
+                var buyer_id = e.target.id;
+                $('#setloc_dialog').dialog('open');
+
+                var src = '<?php print base_url() ?>admin/prints/mapview/order/' + buyer_id;
+
+                $('#map_frame').attr('src',src);
+                $('#setloc_dialog').dialog('open');
+            }
+
 		});
 
 		$('#doArchive').click(function(){
@@ -124,7 +134,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -145,7 +155,7 @@
 					$('.assign_check:checked').each(function(){
 						delivery_ids[i] = $(this).val();
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -174,16 +184,38 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
+
+
+        $('#setloc_dialog').dialog({
+            autoOpen: false,
+            height: 600,
+            width: 900,
+            modal: true,
+            buttons: {
+                Save: function(){
+                    var nframe = document.getElementById('map_frame');
+                    var nframeWindow = nframe.contentWindow;
+                    nframeWindow.submitlocation();
+                },
+                Close: function() {
+                    oTable.fnDraw();
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+
+            }
+        });
 
 	});
 </script>
@@ -212,6 +244,13 @@
 <div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
 	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
+</div>
+
+<div id="setloc_dialog" title="Set Location" style="overflow:hidden;padding:8px;">
+    <input type="hidden" value="" id="print_id" />
+    <iframe id="map_frame" name="map_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>

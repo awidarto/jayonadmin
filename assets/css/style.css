@@ -271,3 +271,9 @@ td.currency{
 input.label-opt{
     width:35px;
 }
+
+.locpick{
+    display: inline-block;
+    padding: 4px;
+    background-color: orange;
+}

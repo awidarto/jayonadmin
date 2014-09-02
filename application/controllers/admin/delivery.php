@@ -358,8 +358,8 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $direction = $key['directions'].'<br />'.
-                '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $direction = $key['directions'];
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
 
             if(file_exists(FCPATH.'public/pickup/'.$key['merchant_trans_id'].'_address.jpg')){
                 $picture = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
@@ -389,7 +389,7 @@ class Delivery extends Application
 				get_slot_range($key['buyerdeliveryslot']),
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
-                $key['shipping_address'],
+                $key['shipping_address'].'<br />'.$locpicker,
 				$this->hide_trx($key['merchant_trans_id']).$markscan,
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
@@ -1249,6 +1249,14 @@ class Delivery extends Application
 				$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 			}
 
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -1270,7 +1278,7 @@ class Delivery extends Application
 				$key['merchant'],
 				//$app['domain'],
 				$key['buyer_name'],
-				$key['shipping_address'],
+				$key['shipping_address'].'<br />'.$locpicker,
 				$key['directions'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
@@ -1510,6 +1518,15 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
 
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = $key['directions'];
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -1526,7 +1543,7 @@ class Delivery extends Application
 				get_weight_range($key['weight'],$key['application_id']),
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
-				$key['shipping_address'],
+				$key['shipping_address'].'<br />'.$locpicker,
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
@@ -2426,6 +2443,14 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
 
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -2444,7 +2469,7 @@ class Delivery extends Application
 				get_weight_range($key['weight'],$key['application_id']),
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
-				$key['shipping_address'],
+				$key['shipping_address'].'<br />'.$locpicker,
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
@@ -3830,6 +3855,14 @@ class Delivery extends Application
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
 			$aadata[] = array(
 				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -3843,7 +3876,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['device'],
 				$key['courier'],
-				$key['shipping_address'],
+				$key['shipping_address'].'<br />'.$locpicker,
 				get_thumbnail($key['delivery_id']),
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),

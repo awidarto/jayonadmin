@@ -325,7 +325,7 @@
 	</table>
 </div>
 
-<div id="setloc_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
+<div id="setloc_dialog" title="Set Location" style="overflow:hidden;padding:8px;">
     <input type="hidden" value="" id="print_id" />
     <iframe id="map_frame" name="map_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
