@@ -369,7 +369,7 @@ class Delivery extends Application
 
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
-            $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
+            $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';
 
             //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
