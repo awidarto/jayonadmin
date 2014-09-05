@@ -1270,7 +1270,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-                $this->hide_trx($key['merchant_trans_id']).$markscan,
+                $this->hide_trx($key['merchant_trans_id']).'<br />'.$markscan,
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
