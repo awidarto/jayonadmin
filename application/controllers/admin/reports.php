@@ -2864,7 +2864,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3050,6 +3050,9 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
         $total_delivery = 0;
         $total_cod = 0;
 
+        $d = 0;
+        $gt = 0;
+
         $lastdate = '';
 
         $courier_name = '';
@@ -3078,6 +3081,24 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
             $total_cod += (int)str_replace('.','',$cod);
             $total_billing += (int)str_replace('.','',$payable);
 
+
+            if($r->delivery_bearer == 'merchant'){
+                $dc = 0;
+            }
+
+
+            if($r->cod_bearer == 'merchant'){
+                $cod = 0;
+            }
+
+            if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
+                $chg = ($gt - $dsc) + $tax + $dc + $cod;
+            }else{
+                $cod = 0;
+                $chg = $dc;
+            }
+
+
             if($pdf == 'print' || $pdf == 'pdf'){
 
                 $this->table->add_row(
@@ -3086,7 +3107,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                     $r->merchant_name,
                     colorizetype($r->delivery_type),
                     $r->buyer_name,
-                    array('data'=>idr($payable),'class'=>'currency'),
+                    array('data'=>idr($chg),'class'=>'currency'),
                     array('data'=>idr($total),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
