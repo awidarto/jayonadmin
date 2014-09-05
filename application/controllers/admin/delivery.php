@@ -1255,7 +1255,11 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
+            $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';
+
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+
+            $pick_stat = colorizestatus($key['pickup_status']);
 
 			$aadata[] = array(
 				$num,
@@ -1266,7 +1270,7 @@ class Delivery extends Application
 				$key['buyerdeliverycity'],
 				$key['shipping_zip'],
 				$delivery_check,
-//              $this->hide_trx($key['merchant_trans_id']),
+                $this->hide_trx($key['merchant_trans_id']).$markscan,
 				colorizetype($key['delivery_type']),
 				$app['application_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -1281,7 +1285,7 @@ class Delivery extends Application
 				$key['shipping_address'].'<br />'.$locpicker,
 				$key['directions'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				colorizestatus($key['status']),
+				colorizestatus($key['status']).'<br />'.$pick_stat,
 				$reference,
 				($key['status'] == 'canceled')?$purge:$reschedule,
 				//$key['reschedule_ref'],
@@ -1316,7 +1320,7 @@ class Delivery extends Application
 			'City',
 			'ZIP',
 			'Delivery ID',
-			//'No Kode Penjualan Toko',
+			'No Kode Penjualan Toko',
 			'Type',
 			'App Name',
 			'W x H x L',
