@@ -2864,7 +2864,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,buyerdeliveryzone,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3052,8 +3052,12 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
 
         $lastdate = '';
 
+        $courier_name = '';
+
         foreach($rows->result() as $r){
 
+
+            $courier_name = $r->courier_name;
             $total = str_replace(array(',','.'), '', $r->total_price);
             $dsc = str_replace(array(',','.'), '', $r->total_discount);
             $tax = str_replace(array(',','.'), '',$r->total_tax);
@@ -3120,6 +3124,8 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
             $seq++;
         }
 
+        /*
+
             if($pdf == 'print' || $pdf == 'pdf'){
                 $this->table->add_row(
                     '',
@@ -3133,7 +3139,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                     ''
                 );
             }
-
+        */
 
 
 
@@ -3149,7 +3155,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
 
         }
 
-
+        /*
         $this->table->add_row(
             'Terbilang',
             array('data'=>'&nbsp;','colspan'=>$say_span)
@@ -3183,10 +3189,10 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
             array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
+        */
 
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
-
 
         /* end copy */
 
@@ -3202,6 +3208,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
 
         $data['grand_total'] = $total_delivery + $total_cod;
 
+        $data['courier_name'] = $courier_name;
 
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
 
@@ -3229,14 +3236,14 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                 'filename'=>$pdffilename
             );
 
-            $inres = $this->db->insert($this->config->item('invoice_table'),$invdata);
+            $inres = $this->db->insert($this->config->item('manifest_table'),$invdata);
 
             return array(file_exists(FCPATH.'public/manifests/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
 
         }else if($pdf == 'print'){
-            $this->load->view('print/invoiceprint',$data); // Load the view
+            $this->load->view('print/manifestprint',$data); // Load the view
         }else{
-            $this->ag_auth->view('invoicegenerator',$data); // Load the view
+            $this->ag_auth->view('manifestgenerator',$data); // Load the view
         }
     }
 
