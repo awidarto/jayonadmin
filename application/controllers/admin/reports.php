@@ -2882,6 +2882,8 @@ class Reports extends Application
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
         }
 
+        $this->db->order_by('buyerdeliverycity','asc')->order_by('buyerdeliveryzone','asc');
+
         /*
         $this->db->and_();
             $this->db->group_start();
