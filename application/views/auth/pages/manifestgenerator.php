@@ -174,6 +174,25 @@ div.stickyHeader {
 .button{
     cursor: pointer;
 }
+
+#main-tab table td{
+    border: thin solid #EEE;
+}
+
+#main-tab table td.currency{
+    text-align: right;
+}
+
+span.bearer{
+    display: inline-block;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    padding: 2px;
+    background-color: brown;
+    color: white;
+}
+
 </style>
 
 <?php
@@ -294,7 +313,7 @@ div.stickyHeader {
     </div>
 </div>
 
-<div>
+<div  id="main-tab">
     <h3><?php print $type.' '.$period; ?></h3>
     <?php print $recontab; ?>
 </div>

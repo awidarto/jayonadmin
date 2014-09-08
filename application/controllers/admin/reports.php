@@ -2945,6 +2945,7 @@ class Reports extends Application
         //print_r($trans);
 
         //exit();
+
         if($pdf == 'print' || $pdf == 'pdf'){
             $this->table->set_heading(
                 'No.',
@@ -2977,35 +2978,12 @@ class Reports extends Application
                 '',
                 '',
                 '',
-                'TANDA TANGAN',
-                'NAMA'
+                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
+                array('data'=>'NAMA','style'=>'min-width:100px;')
 
             ); // Setting headings for the table
 
         }else{
-/*
-Zone    TOKO ONLINE Type    KEPADA  TOTAL TAGIHAN    Harga Barang   Delivery Fee    COD Surcharge   ALAMAT  Phone   No Kode Penjualan Toko  PENERIMA PAKET
-                                            TANDATANGAN NAMA
-Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanwil DJP Jakarta Khusus, Gedung A2 Lantai 5 Kantor Pusat Pajak, Jalan Jend. Gatot Subroto kav 40-42 Jakarta Selatan       92038
-*/
-
-                /*
-                'Zone',
-                'Merchant Name',
-                'Store',
-                'Delivery Date',
-                'Buyer Name',
-                'Delivery Type',
-                'Status',
-                'Package Value',
-                'Disc',
-                'Tax',
-                'Delivery Chg',
-                'COD Surchg',
-                'Payable Value'
-                */
-
-
 
             $this->table->set_heading(
                 'No.',
@@ -3038,8 +3016,8 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                 '',
                 '',
                 '',
-                'TANDA TANGAN',
-                'NAMA'
+                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
+                array('data'=>'NAMA','style'=>'min-width:100px;')
 
             ); // Setting headings for the table
 
@@ -3083,14 +3061,20 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
             $total_cod += (int)str_replace('.','',$cod);
             $total_billing += (int)str_replace('.','',$payable);
 
-
+            $db = '';
             if($r->delivery_bearer == 'merchant'){
                 $dc = 0;
+                $db = 'M';
+            }else{
+                $db = 'B';
             }
 
-
+            $cb = '';
             if($r->cod_bearer == 'merchant'){
                 $cod = 0;
+                $cb = 'M';
+            }else{
+                $cb = 'B';
             }
 
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
@@ -3109,13 +3093,13 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                     $r->merchant_name,
                     colorizetype($r->delivery_type),
                     $r->buyer_name,
-                    array('data'=>idr($total),'class'=>'currency'),
+                    array('data'=>( $total == 0 )?'-':idr($total),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
-                    array('data'=>idr($chg),'class'=>'currency'),
+                    array('data'=>( $chg == 0 )?'-':idr($chg),'class'=>'currency'),
                     $r->shipping_address,
-                    $r->phone.'<br />'.$r->mobile1.'<br />'.$r->mobile2,
-                    $r->merchant_trans_id,
+                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    $this->hide_trx($r->merchant_trans_id),
                     '',
                     ''
                 );
@@ -3129,12 +3113,12 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
                     colorizetype($r->delivery_type),
                     $r->buyer_name,
                     array('data'=>idr($total),'class'=>'currency'),
-                    array('data'=>idr($dc),'class'=>'currency'),
-                    array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>( $dc == 0 )?'-':idr($dc).'<span class="bearer">'.$db.'</span>','class'=>'currency','style'=>'position:relative;'),
+                    array('data'=>( $cod == 0 )?'-':idr($cod).'<span class="bearer">'.$cb.'</span>','class'=>'currency','style'=>'position:relative;'),
                     array('data'=>idr($payable),'class'=>'currency'),
                     $r->shipping_address,
-                    $r->phone.'<br />'.$r->mobile1.'<br />'.$r->mobile2,
-                    $r->merchant_trans_id,
+                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    $this->hide_trx($r->merchant_trans_id),
                     '',
                     ''
                 );
@@ -3238,7 +3222,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
         $pdffilename = 'JSM-'.strtoupper($data['merchantname']).'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
-            $html = $this->load->view('print/invoiceprint',$data,true);
+            $html = $this->load->view('print/manifestprint',$data,true);
             $pdf_name = $pdffilename;
             $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
 
@@ -3287,7 +3271,7 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->invoices($type ,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->manifests($type ,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
@@ -6729,6 +6713,10 @@ Kebayoran Baru  bukukita.com    DO  Fatkhul Iman (92038)    0               Kanw
     public function short_did($did){
         $did = explode('-',$did);
         return array_pop($did);
+    }
+
+    public function split_phone($phone){
+        return str_replace(array('/','#','|'), '<br />', $phone);
     }
 
 

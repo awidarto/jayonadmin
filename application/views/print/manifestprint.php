@@ -115,12 +115,34 @@
 
             @media screen{
                 body{
-                    width:1002px;
                     margin-right: auto;
                     margin-left: auto;
                 }
             }
 
+            table td.sign-head{
+                min-width: 75px;
+                padding: 2px;
+                text-align: center;
+            }
+
+            #main-tab table td{
+                border: thin solid #EEE;
+            }
+
+            #main-tab table td.currency{
+                text-align: right;
+            }
+
+            span.bearer{
+                display: inline-block;
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                padding: 2px;
+                background-color: brown;
+                color: white;
+            }
         </style>
 
 
@@ -128,7 +150,7 @@
 
     <body>
         <div id="head">
-            <div style="width:450px;display:inline-block;float:left;height:140px;">
+            <div style="width:210px;display:inline-block;float:left;height:140px;">
                 <table border="0" cellpadding="0" cellspacing="0" id="mainLogo">
                     <tbody>
                         <tr>
@@ -147,7 +169,7 @@
                 </table>
 
             </div>
-            <div style="width:400px;display:inline-block;">
+            <div style="width:400px;display:inline-block;float:left;">
                 <h1 style="margin-top:0px;">MANIFEST PENGIRIMAN HARIAN</h1>
                 <table id="address" border="0" cellpadding="0" cellspacing="0">
                     <tr>
@@ -169,8 +191,34 @@
                     </tr>
                 </table>
             </div>
+
+            <div style="display:inline-block;float:left;">
+                <table id="signatures" border="1" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="sign-head" >Dibuat Oleh</td>
+                        <td class="sign-head" >Laporan</td>
+                        <td class="sign-head" >Keuangan</td>
+                        <td class="sign-head" >Staff Dispatch</td>
+                        <td class="sign-head" >Staff Delivery</td>
+                    </tr>
+                    <tr>
+                        <td style="height:75px;" >&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div style="display:block;clear:both;" >
+        <div style="display:block;clear:both;" id="main-tab">
             <?php print $recontab; ?>
         </div>
         <?php

@@ -132,6 +132,31 @@ class MY_Table extends CI_Table {
 			$out .= $this->newline;
 		}
 
+        if (count($this->subheading) > 0)
+        {
+            $out .= $this->template['subheading_row_start'];
+            $out .= $this->newline;
+
+            foreach ($this->subheading as $subheading)
+            {
+                $temp = $this->template['subheading_cell_start'];
+
+                foreach ($subheading as $key => $val)
+                {
+                    if ($key != 'data')
+                    {
+                        $temp = str_replace('<th', "<th $key='$val'", $temp);
+                    }
+                }
+
+                $out .= $temp;
+                $out .= isset($subheading['data']) ? $subheading['data'] : '';
+                $out .= $this->template['subheading_cell_end'];
+            }
+
+            $out .= $this->template['subheading_row_end'];
+            $out .= $this->newline;
+        }
 
 		// Is there a table footing to display?
 		if (count($this->footing) > 0)
@@ -169,33 +194,8 @@ class MY_Table extends CI_Table {
 		{
 			$out .= $this->template['tbody_open'];
 			$out .= $this->newline;
-			
+
 			// Is there a table subheading to display?
-			if (count($this->subheading) > 0)
-			{
-				$out .= $this->template['subheading_row_start'];
-				$out .= $this->newline;
-
-				foreach ($this->subheading as $subheading)
-				{
-					$temp = $this->template['subheading_cell_start'];
-
-					foreach ($subheading as $key => $val)
-					{
-						if ($key != 'data')
-						{
-							$temp = str_replace('<th', "<th $key='$val'", $temp);
-						}
-					}
-
-					$out .= $temp;
-					$out .= isset($subheading['data']) ? $subheading['data'] : '';
-					$out .= $this->template['subheading_cell_end'];
-				}
-
-				$out .= $this->template['subheading_row_end'];
-				$out .= $this->newline;
-			}
 
 			$i = 1;
 			foreach ($this->rows as $row)
@@ -466,7 +466,7 @@ class MY_Table extends CI_Table {
 					'heading_row_end'		=> '</tr>',
 					'heading_cell_start'	=> '<th>',
 					'heading_cell_end'		=> '</th>',
-					
+
 					'subheading_row_start'       => '<thead>',
 		            'subheading_row_end'         => '</thead>',
 		            'subheading_cell_start'      => '<th>',
@@ -484,7 +484,7 @@ class MY_Table extends CI_Table {
 					'row_alt_end'			=> '</tr>',
 					'cell_alt_start'		=> '<td>',
 					'cell_alt_end'			=> '</td>',
-					
+
 					'tfoot_open'    => '<tfoot>',
 		            'tfoot_close'   => '</tfoot>',
 		            'footing_row_start'   => '<tr>',
