@@ -128,35 +128,38 @@ class MY_Table extends CI_Table {
 
 			$out .= $this->template['heading_row_end'];
 			$out .= $this->newline;
+
+            if (count($this->subheading) > 0)
+            {
+                $out .= $this->template['heading_row_start'];
+                $out .= $this->newline;
+
+                foreach ($this->subheading as $subheading)
+                {
+                    $temp = $this->template['subheading_cell_start'];
+
+                    foreach ($subheading as $key => $val)
+                    {
+                        if ($key != 'data')
+                        {
+                            $temp = str_replace('<th', "<th $key='$val'", $temp);
+                        }
+                    }
+
+                    $out .= $temp;
+                    $out .= isset($subheading['data']) ? $subheading['data'] : '';
+                    $out .= $this->template['subheading_cell_end'];
+                }
+
+                $out .= $this->template['heading_row_end'];
+                $out .= $this->newline;
+            }
+
+
 			$out .= $this->template['thead_close'];
 			$out .= $this->newline;
 		}
 
-        if (count($this->subheading) > 0)
-        {
-            $out .= $this->template['subheading_row_start'];
-            $out .= $this->newline;
-
-            foreach ($this->subheading as $subheading)
-            {
-                $temp = $this->template['subheading_cell_start'];
-
-                foreach ($subheading as $key => $val)
-                {
-                    if ($key != 'data')
-                    {
-                        $temp = str_replace('<th', "<th $key='$val'", $temp);
-                    }
-                }
-
-                $out .= $temp;
-                $out .= isset($subheading['data']) ? $subheading['data'] : '';
-                $out .= $this->template['subheading_cell_end'];
-            }
-
-            $out .= $this->template['subheading_row_end'];
-            $out .= $this->newline;
-        }
 
 		// Is there a table footing to display?
 		if (count($this->footing) > 0)
