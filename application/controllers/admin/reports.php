@@ -3069,7 +3069,6 @@ class Reports extends Application
                 $db = 'B';
             }
             //force all DO to zero
-            $dc = 0;
 
             $cb = '';
             if($r->cod_bearer == 'merchant'){
@@ -3082,6 +3081,7 @@ class Reports extends Application
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 $chg = ($total - $dsc) + $tax + $dc + $cod;
             }else{
+                $dc = 0;
                 $cod = 0;
                 $chg = $dc;
             }
