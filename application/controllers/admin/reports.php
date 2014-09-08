@@ -3078,7 +3078,7 @@ class Reports extends Application
             }
 
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
-                $chg = ($gt - $dsc) + $tax + $dc + $cod;
+                $chg = ($total - $dsc) + $tax + $dc + $cod;
             }else{
                 $cod = 0;
                 $chg = $dc;
