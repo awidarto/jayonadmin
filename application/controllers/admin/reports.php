@@ -3068,6 +3068,8 @@ class Reports extends Application
             }else{
                 $db = 'B';
             }
+            //force all DO to zero
+            $dc = 0;
 
             $cb = '';
             if($r->cod_bearer == 'merchant'){
