@@ -618,7 +618,7 @@
 
                             <tr>
                                 <td colspan="2">
-                                    <img class="qr" src="<?php print base_url().'img/qr/'.urlencode($qr);?>" alt="<?php print $qr;?>">
+                                    <img class="qr" src="<?php print base_url().'img/qr/'.$qr;?>" alt="<?php print $qr;?>">
                                     <br /><strong>Merchant Info</strong></td>
                             </tr>
 
