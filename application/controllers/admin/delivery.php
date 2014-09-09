@@ -1461,9 +1461,43 @@ class Delivery extends Application
 		}
 
         if($this->input->post('sSearch_4') != ''){
-            $this->db->like('merchant_trans_id',$this->input->post('sSearch_4'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_4'));
             $search = true;
         }
+
+        if($this->input->post('sSearch_5') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_5'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_6') != ''){
+            $this->db->like('m.merchantname',$this->input->post('sSearch_6'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like('merchant_trans_id',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_8'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_9'));
+            $this->db->group_end();
+
+            $search = true;
+        }
+
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
 		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
@@ -1603,13 +1637,14 @@ class Delivery extends Application
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			'',
-			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"'),
+            '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
+            '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
+            form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"'),
             '',
             '',
-            '',
-            '',
-            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />'
+            '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+            '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '0,1,2';
@@ -1617,6 +1652,134 @@ class Delivery extends Application
 		$page['page_title'] = 'Device Zone Assignment';
 		$this->ag_auth->view('zoneajaxlistview',$page); // Load the view
 	}
+
+    /*
+        if($this->input->post('sSearch_0') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.ordertime',$this->input->post('sSearch_0'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_1') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverytime',$this->input->post('sSearch_1'));
+            $search = true;
+        }
+
+
+        if($this->input->post('sSearch_2') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryslot',$this->input->post('sSearch_2'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_3') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_3'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliverycity',$this->input->post('sSearch_4'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_5') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_6') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_6'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like('a.application_name',$this->input->post('sSearch_8'));
+            $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
+            $this->db->group_end();
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_11'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_12') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_12'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_13') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_13'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_14') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_14'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_15') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_15'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_16') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_16'));
+            $search = true;
+        }
+
+
+        if($this->input->post('sSearch_17') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_17'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_17'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_17'));
+            $this->db->group_end();
+
+            $search = true;
+        }
+
+            '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+            '<input type="text" name="search_buyerdeliveryslot" id="search_buyerdeliveryslot" value="Search Slot" class="search_init" />',
+            '<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
+            '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
+            '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+            '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
+            '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
+            '',
+            '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />',
+            '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
+            '',
+            '',
+            '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
+            '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
+            '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
+            '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
+
+    */
 
 	public function ajaxcancel(){
 		$delivery_id = $this->input->post('delivery_id');
