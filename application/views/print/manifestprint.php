@@ -96,7 +96,8 @@
 
             table.reportTable thead th{
                 text-align: left;
-                background-color: #ccc;
+                background-color: #fff;
+                border: thin solid #222;
             }
 
             table.reportTable{
