@@ -128,7 +128,7 @@
             }
 
             #main-tab table td{
-                border: thin solid #EEE;
+                /*border: thin solid #EEE;*/
             }
 
             #main-tab table td.currency{
