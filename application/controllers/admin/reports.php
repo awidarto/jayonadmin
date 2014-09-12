@@ -3056,7 +3056,7 @@ class Reports extends Application
             $payable = 0;
 
 
-            $details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+            $details = $this->db->where('delivery_id',$r->delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
 
             $details = $details->result_array();
 
