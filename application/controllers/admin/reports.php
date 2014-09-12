@@ -3114,7 +3114,7 @@ class Reports extends Application
                     $r->merchant_name,
                     colorizetype($r->delivery_type),
                     $r->buyer_name,
-                    array('data'=>( $total == 0 )?0:idr($total),'class'=>'currency'),
+                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency'),
                     array('data'=>( $dc == 0 )?0:idr($dc).'<span class="bearer">'.$db.'</span>','class'=>'currency','style'=>'position:relative;'),
                     array('data'=>( $cod == 0 )?0:idr($cod).'<span class="bearer">'.$cb.'</span>','class'=>'currency','style'=>'position:relative;'),
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency'),
