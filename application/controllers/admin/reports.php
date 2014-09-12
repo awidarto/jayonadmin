@@ -3055,7 +3055,26 @@ class Reports extends Application
 
             $payable = 0;
 
-            $payable = ($total - $dsc) + $tax;
+
+            $details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+
+            $details = $details->result_array();
+
+
+            $d = 0;
+            $gt = 0;
+
+            foreach($details as $value => $key)
+            {
+
+                $u_total = str_replace(array(',','.'), '', $key['unit_total']);
+                $u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
+                $gt += (int)$u_total;
+                $d += (int)$u_discount;
+
+            }
+
+            $payable = $gt;
 
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
@@ -3068,6 +3087,7 @@ class Reports extends Application
             }else{
                 $db = 'B';
             }
+
             //force all DO to zero
 
             $cb = '';
@@ -3079,7 +3099,7 @@ class Reports extends Application
             }
 
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
-                $chg = $payable + $dc + $cod;
+                $chg = $gt + $dc + $cod;
             }else{
                 $dc = 0;
                 $cod = 0;
