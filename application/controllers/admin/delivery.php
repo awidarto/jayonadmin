@@ -3091,7 +3091,7 @@ class Delivery extends Application
 
 			$courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$courierlink;
 			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
-			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
+			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':'<input type="checkbox" class="zone_select" data-device="'.$key['device_id'].'" value="'.str_replace(' ', '-', $key['buyerdeliveryzone'] ).'" > '.$key['buyerdeliveryzone'];
 
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
@@ -3109,7 +3109,7 @@ class Delivery extends Application
                 $thumbstat .= '<br />'.$thumbnail;
             }
 
-            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
             $pick_stat = colorizestatus($key['pickup_status']);
 

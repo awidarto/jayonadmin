@@ -320,6 +320,27 @@
                 $('#courier_reassign_dialog').dialog('open');
             }
 
+            if ($(e.target).is('.zone_select')) {
+                var tar = $(e.target);
+                var zone = tar.val();
+                var device = tar.data('device');
+
+
+                if(tar.is(':checked')){
+                    console.log(zone + ' - '+ device);
+                    console.log('.assign_check .' + device + ' .' + zone);
+                    $('.assign_check.' + tar.data('device') + '.' + tar.val() ).attr('checked', true);
+                }else{
+                    $('.assign_check.' + tar.data('device') + '.' + tar.val() ).attr('checked', false);
+                }
+
+                /*
+                var previous_courier = e.target.id;
+                $('#previous_courier').val(previous_courier);
+                $('#courier_reassign_dialog').dialog('open');
+                */
+            }
+
 
 			if ($(e.target).is('.reassign')) {
 				var delivery_id = e.target.id;
