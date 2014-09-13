@@ -489,6 +489,7 @@ class V1 extends Application
 					}
 
 
+
 					$data = array(
 						'timestamp'=>date('Y-m-d H:i:s',strtotime($in->capture_time)),
 						'report_timestamp'=>date('Y-m-d H:i:s',time()),
@@ -1256,6 +1257,20 @@ class V1 extends Application
 		}
 		return $res;
 	}
+
+    public function get_phototag($delivery_id){
+        $tag = $this->db->where('delivery_id',$delivery_id)
+                ->where('photo_lat != ',0)
+                ->where('photo_lon != ',0)
+                ->from($this->config->item('phototag_table'))->get()->result_array();
+        if(count($tag) > 0){
+            print_r( $tag[0]);
+            return $tag[0];
+        }else{
+            print 'no';
+            return false;
+        }
+    }
 
 	private function log_access($api_key,$query,$result,$args = null){
 		$data['timestamp'] = date('Y-m-d H:i:s',time());
