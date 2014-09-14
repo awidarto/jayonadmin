@@ -814,10 +814,12 @@ class V1 extends Application
 					$dsc = str_replace(array(',','.'), '', $o['tot_disc']);
 					$tax = str_replace(array(',','.'), '',$o['tot_tax']);
 					$cod = str_replace(array(',','.'), '',$o['cod_cost']);
+                    $dc = str_replace(array(',','.'), '',$o['delivery_cost']);
 
 					$dsc = (int)$dsc;
 					$tax = (int)$tax;
 					$cod = (int)$cod;
+                    $dc = (int)$dc;
 
                     //
                         $payable = $gt;
