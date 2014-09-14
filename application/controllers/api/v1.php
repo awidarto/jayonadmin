@@ -751,6 +751,8 @@ class V1 extends Application
 							d.total_tax	as tot_tax,
 							d.chargeable_amount as chg_amt,
                             d.delivery_cost as delivery_cost,
+                            d.cod_bearer as cod_bearer,
+                            d.delivery_bearer as delivery_bearer,
 							d.cod_cost as cod_cost,
 							d.currency as cod_curr,
 							d.shipping_address as ship_addr,
@@ -830,7 +832,7 @@ class V1 extends Application
                             $cod = 0;
                         }
 
-                        if($o['delivery_type'] == 'COD' || $o['delivery_type'] == 'CCOD'){
+                        if($o['dl_type'] == 'COD' || $o['dl_type'] == 'CCOD'){
                             $chg = $gt + $dc + $cod;
                         }else{
                             $dc = 0;
