@@ -144,6 +144,11 @@
                 background-color: brown;
                 color: white;
             }
+
+            td.cod{
+                font-size: 13px;
+                font-weight: bold;
+            }
         </style>
 
 

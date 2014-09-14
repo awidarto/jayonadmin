@@ -3098,8 +3098,13 @@ class Reports extends Application
                 $cb = 'B';
             }
 
+            $codclass = '';
+
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 $chg = $gt + $dc + $cod;
+
+                $codclass = 'cod';
+
             }else{
                 $dc = 0;
                 $cod = 0;
@@ -3113,12 +3118,12 @@ class Reports extends Application
                     $seq,
                     $r->buyerdeliveryzone,
                     $r->merchant_name,
-                    colorizetype($r->delivery_type),
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
                     $r->buyer_name,
-                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency'),
-                    array('data'=>( $dc == 0 )?0:idr($dc),'class'=>'currency','style'=>'position:relative;'),
-                    array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency','style'=>'position:relative;'),
-                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency'),
+                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
+                    array('data'=>( $dc == 0 )?0:idr($dc),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $this->hide_trx($r->merchant_trans_id),
@@ -3132,12 +3137,12 @@ class Reports extends Application
                     $seq,
                     $r->buyerdeliveryzone,
                     $r->merchant_name,
-                    colorizetype($r->delivery_type),
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
                     $r->buyer_name,
-                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency'),
-                    array('data'=>( $dc == 0 )?0:idr($dc).'<span class="bearer">'.$db.'</span>','class'=>'currency','style'=>'position:relative;'),
-                    array('data'=>( $cod == 0 )?0:idr($cod).'<span class="bearer">'.$cb.'</span>','class'=>'currency','style'=>'position:relative;'),
-                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency'),
+                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
+                    array('data'=>( $dc == 0 )?0:idr($dc).'<span class="bearer">'.$db.'</span>','class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $cod == 0 )?0:idr($cod).'<span class="bearer">'.$cb.'</span>','class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $this->hide_trx($r->merchant_trans_id),

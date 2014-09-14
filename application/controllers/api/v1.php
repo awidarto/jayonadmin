@@ -452,8 +452,16 @@ class V1 extends Application
 
 
                         if($in->status == $this->config->item('trans_status_mobile_delivered')){
-                            $locdata['dir_lat'] = $in->lat;
-                            $locdata['dir_lon'] = $in->lon;
+                            /*
+                            if($photo_tag = $this->get_phototag($delivery_id)){
+                                $locdata['dir_lat'] = $photo_tag['photo_lat'];
+                                $locdata['dir_lon'] = $photo_tag['photo_lon'];
+                            }else{
+                                */
+                                $locdata['dir_lat'] = $in->lat;
+                                $locdata['dir_lon'] = $in->lon;
+                            /*}*/
+
                             $locdata['latitude'] = $in->lat;
                             $locdata['longitude'] = $in->lon;
                             $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
@@ -487,7 +495,6 @@ class V1 extends Application
 					}else{
 						$delivery_id = "N/A";
 					}
-
 
 
 					$data = array(
@@ -799,10 +806,9 @@ class V1 extends Application
 						$d += (int)$u_discount;
 					}
 
-
-					$total = str_replace(array(',','.'), '', $o['tot_price']);
-					$total = (int)$total;
-					$gt = ($total < $gt)?$gt:$total;
+					//$total = str_replace(array(',','.'), '', $o['tot_price']);
+					//$total = (int)$total;
+					//$gt = ($total < $gt)?$gt:$total;
 					$dsc = str_replace(array(',','.'), '', $o['tot_disc']);
 					$tax = str_replace(array(',','.'), '',$o['tot_tax']);
 					$cod = str_replace(array(',','.'), '',$o['cod_cost']);
@@ -811,12 +817,38 @@ class V1 extends Application
 					$tax = (int)$tax;
 					$cod = (int)$cod;
 
-					$chg = ($gt - $dsc) + $tax + $cod;
+                    //
+                        $payable = $gt;
 
+                        if($o['delivery_bearer'] == 'merchant'){
+                            $dc = 0;
+                        }
+
+                        //force all DO to zero
+
+                        if($o['cod_bearer'] == 'merchant'){
+                            $cod = 0;
+                        }
+
+                        if($o['delivery_type'] == 'COD' || $o['delivery_type'] == 'CCOD'){
+                            $chg = $gt + $dc + $cod;
+                        }else{
+                            $dc = 0;
+                            $cod = 0;
+                            $chg = $dc;
+                        }
+
+                    //
+
+					//$chg = ($gt - $dsc) + $tax + $cod;
 		            //$o['tot_price'] =>
 		            //$o['tot_disc'] =>
 		            //$o['tot_tax'] =>
 		            //$o['chg_amt'] =>
+                    $o['delivery_cost'] = $dc;
+                    $o['delivery_cost_fmt'] = number_format($dc,2,',','.');
+
+                    $o['cod_cost'] = $chg;
 					$o['cod_cost_fmt'] = number_format($chg,2,',','.');
 					$output[] = $o;
 				}
@@ -1258,16 +1290,14 @@ class V1 extends Application
 		return $res;
 	}
 
-    public function get_phototag($delivery_id){
+    private function get_phototag($delivery_id){
         $tag = $this->db->where('delivery_id',$delivery_id)
                 ->where('photo_lat != ',0)
                 ->where('photo_lon != ',0)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
         if(count($tag) > 0){
-            print_r( $tag[0]);
             return $tag[0];
         }else{
-            print 'no';
             return false;
         }
     }
@@ -1309,6 +1339,14 @@ class V1 extends Application
         $ord = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get();
 
         print $this->db->last_query();
+    }
+
+    public function testphototag($delivery_id){
+        if($ptag = $this->get_phototag($delivery_id)){
+            print_r($ptag);
+        }else{
+            print "no tag";
+        }
     }
 
 }
