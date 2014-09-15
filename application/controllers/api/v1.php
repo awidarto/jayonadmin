@@ -452,15 +452,15 @@ class V1 extends Application
 
 
                         if($in->status == $this->config->item('trans_status_mobile_delivered')){
-                            /*
+
                             if($photo_tag = $this->get_phototag($delivery_id)){
                                 $locdata['dir_lat'] = $photo_tag['photo_lat'];
                                 $locdata['dir_lon'] = $photo_tag['photo_lon'];
                             }else{
-                                */
+
                                 $locdata['dir_lat'] = $in->lat;
                                 $locdata['dir_lon'] = $in->lon;
-                            /*}*/
+                            }
 
                             $locdata['latitude'] = $in->lat;
                             $locdata['longitude'] = $in->lon;

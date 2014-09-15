@@ -2747,7 +2747,7 @@ class Reports extends Application
 
     //manifest
 
-    public function manifests($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function manifests($type = null,$zone = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
@@ -2761,6 +2761,7 @@ class Reports extends Application
 
         $data['getparams'] = array(
             'type'=> $type ,
+            'zone'=> $zone,
             'year'=> $year ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
@@ -2825,6 +2826,7 @@ class Reports extends Application
             $cs[$ckey->id] = $ckey->identifier;
         }
 
+        $data['zone'] = urldecode($zone);
         $data['merchants'] = $cs;
         $data['id'] = $id;
 
@@ -2880,6 +2882,11 @@ class Reports extends Application
 
         if($id != 'noid'){
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
+        }
+
+        if($zone != 'all'){
+            $zone = urldecode($zone);
+            $this->db->where($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$zone);
         }
 
         $this->db->order_by('buyerdeliverycity','asc')->order_by('buyerdeliveryzone','asc');
@@ -3235,12 +3242,17 @@ class Reports extends Application
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
         $page['page_title'] = 'Manifest';
         $data['select_title'] = 'Device';
+        $data['zone_select_title'] = 'Zone';
+
 
         $data['controller'] = 'admin/reports/manifests/';
 
         $data['last_query'] = $last_query;
 
         $data['grand_total'] = $total_delivery + $total_cod;
+
+
+        $data['zones'] = array_merge( array('all'=>'All'), get_zone_options() ) ;
 
         $data['courier_name'] = $courier_name;
 
@@ -3283,6 +3295,7 @@ class Reports extends Application
 
     public function genmanifest(){
         $type = null;
+        $zone = null;
         $year = null;
         $scope = null;
         $par1 = null;
@@ -3291,6 +3304,7 @@ class Reports extends Application
         $par4 = null;
 
         $type = $this->input->post('type');
+        $zone = $this->input->post('zone');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -3298,7 +3312,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->manifests($type ,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->manifests($type ,$zone,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 

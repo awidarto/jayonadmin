@@ -11,9 +11,10 @@
         $('#get_week').click(function(){
 
                 var user_scopes = $('#user_scopes').val();
+                var zone_scopes = $('#zone_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
-                var link = user_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ zone_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -22,9 +23,10 @@
         $('#get_month').click(function(){
 
                 var user_scopes = $('#user_scopes').val();
+                var zone_scopes = $('#zone_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
-                var link = user_scopes +'/'+ year +'/month/'+ week;
+                var link = user_scopes +'/'+ zone_scopes +'/'+ year +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -32,10 +34,11 @@
 
         $('#get_date_range').click(function(){
                 var user_scopes = $('#user_scopes').val();
+                var zone_scopes = $('#zone_scopes').val();
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+                var link = user_scopes +'/'+ zone_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
         );
@@ -79,6 +82,7 @@
 
             var params = {
                 'type': '<?= $getparams['type'] ?>',
+                'zone': '<?= $getparams['zone'] ?>',
                 'year': '<?= $getparams['year'] ?>',
                 'scope': '<?= $getparams['scope'] ?>',
                 'par1': '<?= $getparams['par1'] ?>',
@@ -230,8 +234,12 @@ td.cod{
 
                         <table style="width:500px;" id="recon_select" cellspacing="0" >
                             <tr>
-                                <td><?php print (isset($select_title))?$select_title:'Merchant'; ?></td>
+                                <td><?php print (isset($select_title))?$select_title:'Device'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php print (isset($zone_select_title))?$zone_select_title:'Zone'; ?></td>
+                                <td colspan="3"><?php print form_dropdown('zone_scopes',$zones,$zone,'id = "zone_scopes"'); ?></td>
                             </tr>
                             <tr>
                                 <td>Year</td>

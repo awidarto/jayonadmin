@@ -223,7 +223,7 @@ function get_city_status(){
 	return $res;
 }
 
-function get_zone_options(){
+function get_zone_options( $enc = false){
 	$CI =& get_instance();
 	$CI->db->where('is_on',1);
 	$q = $CI->db->select('district,city')->get('districts');
@@ -232,7 +232,11 @@ function get_zone_options(){
 
 	$city = '';
 	foreach($q->result_array() as $val){
-		$result[$val['city']][$val['district']] = $val['district'];
+        if($enc){
+            $result[$val['city']][$val['district']] = urlencode($val['district']);
+        }else{
+            $result[$val['city']][$val['district']] = $val['district'];
+        }
 	}
 
 	//print_r($result);
