@@ -941,9 +941,9 @@ class V1 extends Application
                 $pftime = DateTime::createFromFormat( 'Y:m:d H:i:s' , $ptime );
                 $ptime = $pftime->format('Y-m-d H:i:s');
             }
+            $ptime = str_replace(':', '-', $ptime,2);
             */
 
-            $ptime = str_replace(':', '-', $ptime,2);
 
 
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
