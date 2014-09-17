@@ -934,7 +934,7 @@ class V1 extends Application
             $delivery_id = $this->input->post('delivery_id');
             $plat = $this->input->post('lat');
             $plon = $this->input->post('lon');
-
+            $ptime = $this->input->post('timestamp');
 
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
 
@@ -986,7 +986,8 @@ class V1 extends Application
                             'delivery_id'=>$delivery_id,
                             'photo_name'=>$tname,
                             'photo_lat'=>$plat,
-                            'photo_lon'=>$plon
+                            'photo_lon'=>$plon,
+                            'photo_timestamp'=>$ptime
                         );
 
                     $this->db->insert('delivery_photos', $photodata );
