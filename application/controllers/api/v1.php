@@ -936,6 +936,13 @@ class V1 extends Application
             $plon = $this->input->post('lon');
             $ptime = $this->input->post('timestamp');
 
+            if( $ptime != false && ($ptime != '' || $ptime != '0000:00:00 00:00:00')){
+                $pftime = DateTime::createFromFormat( 'Y:m:d H:i:s' , $ptime );
+                $ptime = $pftime->format('Y-m-d H:i:s');
+            }
+
+
+
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
 
             if(count($existingpic) == 0){
