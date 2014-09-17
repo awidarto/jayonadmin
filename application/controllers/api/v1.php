@@ -849,6 +849,7 @@ class V1 extends Application
 		            //$o['tot_disc'] =>
 		            //$o['tot_tax'] =>
 		            //$o['chg_amt'] =>
+                    $o['tot_price'] = ($o['tot_price'] == '' || is_null($o['tot_price']))?0:$o['tot_price'];
                     $o['delivery_cost'] = $dc;
                     $o['delivery_cost_fmt'] = number_format($dc,2,',','.');
 
