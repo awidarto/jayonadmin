@@ -2891,15 +2891,18 @@ class Reports extends Application
 
         $this->db->order_by('buyerdeliverycity','asc')->order_by('buyerdeliveryzone','asc');
 
-        /*
         $this->db->and_();
-            $this->db->group_start();
-                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
-            $this->db->group_end();
-        */
+        $this->db->group_start()
+            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
+            ->group_end();
+
         //print $this->db->last_query();
 
         if($pdf == 'csv'){
@@ -3159,8 +3162,6 @@ class Reports extends Application
 
 
             }
-
-
 
             $seq++;
         }

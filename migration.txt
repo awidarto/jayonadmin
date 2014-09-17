@@ -97,3 +97,5 @@ CREATE TABLE IF NOT EXISTS `delivery_photos` (
   `thumb_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='table to store delivery photo metadata' AUTO_INCREMENT=1 ;
+
+ALTER TABLE  `delivery_photos` ADD  `photo_timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;

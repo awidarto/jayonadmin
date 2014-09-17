@@ -185,7 +185,7 @@
                     </tr>
                     <tr>
                         <td>DELIVERY DATE</td>
-                        <td style="text-align:left;"><?php print iddate($from, false) ;?></td>
+                        <td style="text-align:left;"><?php print iddate($from, true) ;?></td>
                     </tr>
                     <tr>
                         <td>DEVICE</td>
