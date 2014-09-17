@@ -943,7 +943,7 @@ class V1 extends Application
             }
             */
 
-            $ptime = str_replace('-', ':', $ptime);
+            $ptime = str_replace(':', '-', $ptime,2);
 
 
             $existingpic = glob($this->config->item('picture_path').$delivery_id.'*.jpg', GLOB_NOSORT);
