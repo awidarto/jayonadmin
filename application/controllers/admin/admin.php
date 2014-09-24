@@ -75,19 +75,22 @@ class Admin extends Application
                 ->where('photo_lon != ',0)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
 
+        $lastid = '';
+
         foreach($tagged as $tag){
+            if($tag['delivery_id'] != $lastid){
+                if($photo_tag = $this->get_phototag($tag['delivery_id'])){
+                    $locdata['dir_lat'] = $photo_tag['photo_lat'];
+                    $locdata['dir_lon'] = $photo_tag['photo_lon'];
+                    $locdata['latitude'] = $photo_tag['photo_lat'];
+                    $locdata['longitude'] = $photo_tag['photo_lon'];
 
-            if($photo_tag = $this->get_phototag($tag['delivery_id'])){
-                $locdata['dir_lat'] = $photo_tag['photo_lat'];
-                $locdata['dir_lon'] = $photo_tag['photo_lon'];
-                $locdata['latitude'] = $photo_tag['photo_lat'];
-                $locdata['longitude'] = $photo_tag['photo_lon'];
+                    print $tag['delivery_id'].' : '.$photo_tag['photo_lat'].' : '.$photo_tag['photo_lon']."\r\n";
 
-                print $tag['delivery_id'].' : '.$photo_tag['photo_lat'].' : '.$photo_tag['photo_lon']."\r\n";
-
-                //$this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
+                    //$this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
+                }
             }
-
+            $lastid = $tag['delivery_id'];
         }
 
     }
