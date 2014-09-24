@@ -75,7 +75,7 @@ class Admin extends Application
                 ->where('photo_lon != ',0)
                 ->distinct('delivery_id,photo_lat,photo_lon')
                 ->group_by('delivery_id')
-                ->limit(100)
+                //->limit(100)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
 
         $lastid = '';
