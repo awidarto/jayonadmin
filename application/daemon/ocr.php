@@ -6,6 +6,7 @@ $files = glob( '/var/www/beta2/jayonadmin/public/pickup/*_address.jpg' );
 foreach($files as $file){
 
     $tesseract = new TesseractOCR($file);
+    $tesseract->setLanguage('ind');
     $tesseract->setTempDir(realpath('temp'));
     $savefile = str_replace('pickup', 'ocr', $file);
     $savefile = str_replace('.jpg', '.txt', $savefile);
