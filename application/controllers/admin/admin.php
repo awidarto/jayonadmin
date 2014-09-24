@@ -69,6 +69,27 @@ class Admin extends Application
 		print json_encode(array('total_changed'=>$total_changed,'query'=>$this->db->last_query() ));
 	}
 
+    public function geoprocess(){
+
+        $tagged = $this->db->where('delivery_id',$delivery_id)
+                ->where('photo_lat != ',0)
+                ->where('photo_lon != ',0)
+                ->from($this->config->item('phototag_table'))->get()->result_array();
+
+        foreach($tagged as $tag){
+            if($photo_tag = $this->get_phototag($delivery_id)){
+                $locdata['dir_lat'] = $photo_tag['photo_lat'];
+                $locdata['dir_lon'] = $photo_tag['photo_lon'];
+                $locdata['latitude'] = $photo_tag['photo_lat'];
+                $locdata['longitude'] = $photo_tag['photo_lon'];
+            }
+
+            $this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
+
+        }
+
+    }
+
 	public function testmail(){
 		$subject = 'Processed order';
 		$to = 'andy.awidarto@gmail.com';
@@ -475,6 +496,19 @@ class Admin extends Application
 		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
 		return $result;
 	}
+
+    private function get_phototag($delivery_id){
+        $tag = $this->db->where('delivery_id',$delivery_id)
+                ->where('photo_lat != ',0)
+                ->where('photo_lon != ',0)
+                ->from($this->config->item('phototag_table'))->get()->result_array();
+        if(count($tag) > 0){
+            return $tag[0];
+        }else{
+            return false;
+        }
+    }
+
 
 }
 

@@ -456,14 +456,16 @@ class V1 extends Application
                             if($photo_tag = $this->get_phototag($delivery_id)){
                                 $locdata['dir_lat'] = $photo_tag['photo_lat'];
                                 $locdata['dir_lon'] = $photo_tag['photo_lon'];
+                                $locdata['latitude'] = $photo_tag['photo_lat'];
+                                $locdata['longitude'] = $photo_tag['photo_lon'];
                             }else{
                                 $locdata['dir_lat'] = $in->lat;
                                 $locdata['dir_lon'] = $in->lon;
+                                $locdata['latitude'] = $in->lat;
+                                $locdata['longitude'] = $in->lon;
                             }
 
-                            $locdata['latitude'] = $in->lat;
-                            $locdata['longitude'] = $in->lon;
-                            $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('jayon_buyers_table'),$locdata);
+                            $this->db->where('delivery_id',$in->delivery_id)->update($this->config->item('assigned_delivery_table'),$locdata);
                         }
 
                         if($incr == true){
