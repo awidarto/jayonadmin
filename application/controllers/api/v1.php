@@ -457,7 +457,6 @@ class V1 extends Application
                                 $locdata['dir_lat'] = $photo_tag['photo_lat'];
                                 $locdata['dir_lon'] = $photo_tag['photo_lon'];
                             }else{
-
                                 $locdata['dir_lat'] = $in->lat;
                                 $locdata['dir_lon'] = $in->lon;
                             }

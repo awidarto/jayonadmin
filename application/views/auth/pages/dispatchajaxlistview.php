@@ -165,6 +165,34 @@
             }
         });
 
+        $('#doReassignDeviceMulti').click(function(){
+            var assigns = '';
+            var date_assign = '';
+            var zone_assign = '';
+            var city_assign = '';
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
+                count++;
+            });
+
+            if(count > 0){
+                $('#reassign_order_list').html(assigns);
+
+                $.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{
+                        assignment_date: date_assign,
+                        assignment_zone: zone_assign,
+                        assignment_city: city_assign
+                    }, function(data) {
+                        $('#reassign_dev_list').html(data.html);
+                    },'json');
+
+                $('#device_reassign_multi_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
         $('#label_refresh').on('click',function(){
             var delivery_id = $('#label_id').val();
             var res = $('#label_resolution').val();
@@ -234,6 +262,7 @@
 				alert('Please select one or more delivery orders');
 			}
 		});
+
 
         refreshTab = function(){
             oTable.fnDraw();
@@ -325,11 +354,22 @@
                 var zone = tar.val();
                 var device = tar.data('device');
 
+                var deliverydate = tar.data('deliverydate');
+                var city = tar.data('city');
+                var devicename = tar.data('devicename');
+                var courier = tar.data('courier');
+
 
                 if(tar.is(':checked')){
                     console.log(zone + ' - '+ device);
                     console.log('.assign_check .' + device + ' .' + zone);
                     $('.assign_check.' + tar.data('device') + '.' + tar.val() ).attr('checked', true);
+
+                    $('#disp_multi_deliverycity').html(city);
+                    $('#disp_multi_deliverydate').html(deliverydate);
+                    $('#multi_current_device').html(devicename);
+                    $('#multi_current_courier').html(courier);
+
                 }else{
                     $('.assign_check.' + tar.data('device') + '.' + tar.val() ).attr('checked', false);
                 }
@@ -477,6 +517,41 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
+
+        $('#device_reassign_multi_dialog').dialog({
+            autoOpen: false,
+            height: 500,
+            width: 800,
+            modal: true,
+            buttons: {
+                "Re-Assign Order to Device": function() {
+
+                    $.post('<?php print site_url('ajax/reassign');?>',
+                        {
+                            delivery_id:$('#reassign_delivery_id').html(),
+                            assignment_date:$('#disp_deliverydate').html(),
+                            assignment_device_id: $("input[name='dev_id']:checked").val(),
+                            assignment_timeslot: $('.timeslot:checked').val(),
+                            courier_id: 'current'
+                        },
+                        function(data) {
+                            if(data.status == 'OK:REASSIGNED'){
+                                //redraw table
+                                oTable.fnDraw();
+                                $('#device_reassign_dialog').dialog( 'close' );
+                            }
+                        },'json');
+                },
+                Cancel: function() {
+                    $('#dev_list').html('');
+                    $( this ).dialog( 'close' );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#assign_deliverytime').val('');
+            }
+        });
 
         $('#courier_reassign_dialog').dialog({
             autoOpen: false,
@@ -687,6 +762,7 @@
 <?php
 
     print form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
+    form_button('do_label','Reassign Selection to Device','id="doReassignDeviceMulti"').
     form_button('do_label','Print Selection Label','id="doLabel"');
 
 ?>
@@ -779,6 +855,33 @@
 			</td>
 		</tr>
 	</table>
+</div>
+
+<div id="device_reassign_multi_dialog" title="Re-Assign Device">
+    <table style="margin: 0px;border: 0px;">
+        <tr>
+            <td colspan="2">
+                City : <span id="disp_multi_deliverycity" style="font-weight: bold"></span><br />
+                Delivery Date : <span id="disp_multi_deliverydate" style="font-weight: bold" ></span><br />
+                Current Device : <span id="multi_current_device" style="font-weight: bold" ></span><br />
+                Assigned To : <span id="multi_current_courier" style="font-weight: bold" ></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Orders :<br />
+                <ul id="reassign_order_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
+                    Loading...
+                </ul>
+            </td>
+            <td>
+                Available Devices :<br />
+                <ul id="reassign_dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
+                    Loading...
+                </ul>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">

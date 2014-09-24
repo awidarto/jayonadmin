@@ -3091,7 +3091,7 @@ class Delivery extends Application
 
 			$courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$courierlink;
 			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
-			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':'<input type="checkbox" class="zone_select" data-device="'.$key['device_id'].'" value="'.str_replace(' ', '-', $key['buyerdeliveryzone'] ).'" > '.$key['buyerdeliveryzone'];
+			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':'<input type="checkbox" class="zone_select" data-device="'.$key['device_id'].'" data-deliverydate="'.$key['assignment_date'].'"  data-city="'.$key['buyerdeliverycity'].'" data-devicename="'.$key['device'].'" data-courier="'.$key['courier'].'" value="'.str_replace(' ', '-', $key['buyerdeliveryzone'] ).'" > '.$key['buyerdeliveryzone'];
 
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];

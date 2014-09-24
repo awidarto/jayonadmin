@@ -10,7 +10,14 @@ foreach($files as $file){
     $savefile = str_replace('pickup', 'ocr', $file);
     $savefile = str_replace('.jpg', '.txt', $savefile);
     if(file_exists($savefile)){
-        print $savefile." exists, skipping\r\n";
+        $content = file_get_contents($savefile);
+        if(trim($content) == ''){
+            print $savefile." empty, retry\r\n";
+            $result = $tesseract->recognize();
+            file_put_contents($savefile, $result);
+        }else{
+            print $savefile." exists, skipping\r\n";
+        }
     }else{
         $result = $tesseract->recognize();
         file_put_contents($savefile, $result);
