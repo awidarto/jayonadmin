@@ -82,11 +82,11 @@ class Admin extends Application
                 $locdata['dir_lon'] = $photo_tag['photo_lon'];
                 $locdata['latitude'] = $photo_tag['photo_lat'];
                 $locdata['longitude'] = $photo_tag['photo_lon'];
+                $this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
             }
 
             print $tag['delivery_id'].' : '.$photo_tag['photo_lat'].' : '.$photo_tag['photo_lon']."\r\n";
 
-            //$this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
 
         }
 
