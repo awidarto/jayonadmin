@@ -74,7 +74,7 @@ class Admin extends Application
         $tagged = $this->db->where('photo_lat != ',0)
                 ->where('photo_lon != ',0)
                 ->distinct('delivery_id,photo_lat,photo_lon')
-                ->groupby('delivery_id')
+                ->group_by('delivery_id')
                 ->limit(100)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
 
