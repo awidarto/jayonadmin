@@ -71,18 +71,20 @@ class Admin extends Application
 
     public function geoprocess(){
 
-        $tagged = $this->db->where('delivery_id',$delivery_id)
-                ->where('photo_lat != ',0)
+        $tagged = $this->db->where('photo_lat != ',0)
                 ->where('photo_lon != ',0)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
 
         foreach($tagged as $tag){
+
             if($photo_tag = $this->get_phototag($delivery_id)){
                 $locdata['dir_lat'] = $photo_tag['photo_lat'];
                 $locdata['dir_lon'] = $photo_tag['photo_lon'];
                 $locdata['latitude'] = $photo_tag['photo_lat'];
                 $locdata['longitude'] = $photo_tag['photo_lon'];
             }
+
+            print $tag['delivery_id'].' : '.$photo_tag['photo_lat'].' : '.$photo_tag['photo_lon'];
 
             $this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
 
