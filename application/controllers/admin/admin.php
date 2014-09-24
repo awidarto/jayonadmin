@@ -70,16 +70,19 @@ class Admin extends Application
 	}
 
     public function geoprocess(){
-
+        set_time_limit(0);
         $tagged = $this->db->where('photo_lat != ',0)
                 ->where('photo_lon != ',0)
+                ->distinct('delivery_id,photo_lat,photo_lon')
+                ->groupby('delivery_id')
                 ->limit(100)
                 ->from($this->config->item('phototag_table'))->get()->result_array();
 
         $lastid = '';
 
         foreach($tagged as $tag){
-            if($tag['delivery_id'] != $lastid){
+
+        //    if($tag['delivery_id'] != $lastid){
                 if($photo_tag = $this->get_phototag($tag['delivery_id'])){
                     $locdata['dir_lat'] = $photo_tag['photo_lat'];
                     $locdata['dir_lon'] = $photo_tag['photo_lon'];
@@ -88,9 +91,9 @@ class Admin extends Application
 
                     print $tag['delivery_id'].' : '.$photo_tag['photo_lat'].' : '.$photo_tag['photo_lon']."\r\n";
 
-                    $this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
+                    //$this->db->where('delivery_id',$tag['delivery_id'])->update($this->config->item('incoming_delivery_table'),$locdata);
                 }
-            }
+        //    }
             $lastid = $tag['delivery_id'];
         }
 
