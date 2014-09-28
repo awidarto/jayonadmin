@@ -2839,7 +2839,7 @@ class Reports extends Application
             $data['bank_account'] = 'n/a';
             $data['type'] = 'Global';
 
-            $data['merchantname'] = 'All Merchant';
+            $data['merchantname'] = 'All Device';
 
         }else{
             $user = $this->db->where('id',$id)->get($this->config->item('jayon_devices_table'))->row();
@@ -2849,6 +2849,10 @@ class Reports extends Application
             $data['bank_account'] = 'n/a';
 
             $data['merchantname'] = $user->identifier;
+        }
+
+        if($data['zone'] == 'all'){
+            $data['zone'] = 'All zones';
         }
 
         if(is_null($invdate)){
@@ -2976,6 +2980,8 @@ class Reports extends Application
             ); // Setting headings for the table
 
             $this->table->set_subheading(
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>12),
+                /*
                 '',
                 '',
                 '',
@@ -2987,7 +2993,7 @@ class Reports extends Application
                 '',
                 '',
                 '',
-                '',
+                */
                 array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
                 array('data'=>'NAMA','style'=>'min-width:100px;')
 
@@ -3259,12 +3265,15 @@ class Reports extends Application
 
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
 
-        $pdffilename = 'JSM-'.strtoupper($data['merchantname']).'-'.$data['invdatenum'];
+        $zonename = strtoupper(str_replace(' ', '_', $data['zone']));
+        $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
+
+        $pdffilename = 'JSM-'.$mname.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('print/manifestprint',$data,true);
             $pdf_name = $pdffilename;
-            $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+            $pdfbuf = pdf_create($html, $pdf_name,'A3','landscape', false);
 
             file_put_contents(FCPATH.'public/manifests/'.$pdf_name.'.pdf', $pdfbuf);
 
