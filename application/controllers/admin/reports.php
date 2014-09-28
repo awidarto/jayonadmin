@@ -2685,7 +2685,9 @@ class Reports extends Application
 
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
 
-        $pdffilename = 'JSM-'.strtoupper($data['merchantname']).'-'.$data['invdatenum'];
+        $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
+
+        $pdffilename = 'JSM-'.$mname.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('print/invoiceprint',$data,true);
