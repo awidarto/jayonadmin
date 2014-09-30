@@ -4479,6 +4479,42 @@ class Delivery extends Application
 
 	}
 
+    public function ajaxdevicecapmulti(){
+
+        $assignment_date = $this->input->post('assignment_date');
+        $assignment_city = $this->input->post('assignment_city');
+
+        $dev = $this->db->select('id,identifier,descriptor,devname')->like('city',trim($assignment_city))->get($this->config->item('jayon_devices_table'));
+
+        $sql = $this->db->last_query();
+
+        $result = array();
+
+        $slots = get_option('daily_shifts');
+
+        $slotradio = '<input type="radio" name="timeslot[]" value="%s" class="timeslot" > %s [ %s ]';
+
+        foreach($dev->result_array() as $device){
+
+            $slotform = '';
+            for($sl = 1;$sl <= $slots;$sl++){
+                $count_dev = $this->db
+                    ->where('assignment_date',$assignment_date)
+                    ->where('assignment_timeslot',$sl)
+                    ->where('device_id',$device['id'])
+                    ->count_all_results($this->config->item('assigned_delivery_table'));
+                //$result[] = array('id'=>$device['id'],'device'=>$device['identifier'],'assignment'=>$count_dev);
+                $slotform .= sprintf($slotradio,$sl, get_slot_range($sl),$count_dev);
+            }
+            $result[] = sprintf('<li style="padding:5px;border-bottom:thin solid grey;margin-left:16px;"><input type="radio" name="dev_id" value="%s">%s <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delivery Slot :<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%s</li>',
+                $device['id'],
+                $device['identifier'].' - '.$device['devname'],
+                $slotform );
+        }
+        print json_encode(array('html'=>implode('',$result),'sql'=>$sql));
+
+    }
+
 	public function ajaxassign(){
 
 	}

@@ -500,6 +500,61 @@ class Ajax extends Application
 
 	}
 
+    function reassignmulti(){
+        $delivery_id = $this->input->post('delivery_id');
+        $courier_id = $this->input->post('courier_id');
+        $assignment_device_id = $this->input->post('assignment_device_id');
+        $assignment_timeslot = $this->input->post('assignment_timeslot');
+        $assignment_date = $this->input->post('assignment_date');
+
+        if($courier_id == 'current'){
+
+            /*
+                $courier = $this->db
+                    ->distinct()
+                    ->select('courier_id')
+                    ->where('device_id',$assignment_device_id)
+                    ->where('assignment_date',$assignment_date)
+                    ->get($this->config->item('assigned_delivery_table'));
+            */
+
+            $courier = $this->db
+                ->select('courier_id')
+                ->where('device_id',$assignment_device_id)
+                ->where('delivery_date',$assignment_date)
+                ->get($this->config->item('device_assignment_table'));
+
+            //print $this->db->last_query();
+
+            if($courier->num_rows() > 0){
+                $courier_id = $courier->row()->courier_id;
+                $dataset['courier_id'] = $courier_id;
+            }else{
+                $dataset['courier_id'] = '';
+                $dataset['status'] = $this->config->item('trans_status_admin_devassigned');
+            }
+        }
+
+        $dataset['device_id'] = $assignment_device_id;
+        $dataset['assignment_timeslot'] = $assignment_timeslot;
+
+        $success = 0;
+        foreach($delivery_id as $did){
+            if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+                $success++;
+            }
+        }
+
+        if($success > 0){
+            $result = json_encode(array('status'=>'OK:REASSIGNED','timestamp'=>now(),'delivery_id'=>$delivery_id,'courier_id'=>$courier_id));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NOREASSIGN','timestamp'=>now(),'delivery_id'=>'','buyer_id'=>''));
+        }
+
+        print $result;
+
+    }
+
 	public function editdetail(){
 		$delivery_id = $this->input->post('delivery_id');
 

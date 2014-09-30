@@ -167,10 +167,16 @@
 
         $('#doReassignDeviceMulti').click(function(){
             var assigns = '';
-            var date_assign = '';
+            var date_assign = $('#disp_multi_deliverydate').html();
             var zone_assign = '';
-            var city_assign = '';
+            var city_assign = $('#disp_multi_deliverycity').html();
             var count = 0;
+                    /*
+                    $('#disp_multi_deliverycity').html(city);
+                    $('#disp_multi_deliverydate').html(deliverydate);
+                    $('#multi_current_device').html(devicename);
+                    $('#multi_current_courier').html(courier);
+                    */
             $('.assign_check:checked').each(function(){
                 assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
                 count++;
@@ -179,12 +185,13 @@
             if(count > 0){
                 $('#reassign_order_list').html(assigns);
 
-                $.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{
+                $.post('<?php print site_url('admin/delivery/ajaxdevicecapmulti');?>',{
                         assignment_date: date_assign,
                         assignment_zone: zone_assign,
                         assignment_city: city_assign
                     }, function(data) {
-                        $('#reassign_dev_list').html(data.html);
+                        console.log(data);
+                        $('#reassign_dev_list_multi').html(data.html);
                     },'json');
 
                 $('#device_reassign_multi_dialog').dialog('open');
@@ -366,6 +373,7 @@
                     $('.assign_check.' + tar.data('device') + '.' + tar.val() ).attr('checked', true);
 
                     $('#disp_multi_deliverycity').html(city);
+                    $('#disp_multi_deliveryzone').html(zone);
                     $('#disp_multi_deliverydate').html(deliverydate);
                     $('#multi_current_device').html(devicename);
                     $('#multi_current_courier').html(courier);
@@ -525,11 +533,17 @@
             modal: true,
             buttons: {
                 "Re-Assign Order to Device": function() {
+                    var ids = [];
+                    var count = 0;
+                    $('.assign_check:checked').each(function(){
+                        ids.push(this.value);
+                        count++;
+                    });
 
-                    $.post('<?php print site_url('ajax/reassign');?>',
+                    $.post('<?php print site_url('ajax/reassignmulti');?>',
                         {
-                            delivery_id:$('#reassign_delivery_id').html(),
-                            assignment_date:$('#disp_deliverydate').html(),
+                            delivery_id:ids,
+                            assignment_date:$('#disp_multi_deliverydate').html(),
                             assignment_device_id: $("input[name='dev_id']:checked").val(),
                             assignment_timeslot: $('.timeslot:checked').val(),
                             courier_id: 'current'
@@ -538,7 +552,7 @@
                             if(data.status == 'OK:REASSIGNED'){
                                 //redraw table
                                 oTable.fnDraw();
-                                $('#device_reassign_dialog').dialog( 'close' );
+                                $('#device_reassign_multi_dialog').dialog( 'close' );
                             }
                         },'json');
                 },
@@ -868,7 +882,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td style="vertical-align:top;min-width:50%;">
                 Orders :<br />
                 <ul id="reassign_order_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
                     Loading...
@@ -876,7 +890,7 @@
             </td>
             <td>
                 Available Devices :<br />
-                <ul id="reassign_dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
+                <ul id="reassign_dev_list_multi" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;">
                     Loading...
                 </ul>
             </td>
