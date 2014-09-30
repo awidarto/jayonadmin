@@ -305,6 +305,8 @@ class Dl extends Application
                     $this->db->like('d.identifier', $f['value'],'both');
                 }elseif($field == 'merchant'){
                     $this->db->like('m.merchantname', $f['value'],'both');
+                }elseif($field == 'buyer'){
+                    $this->db->like('buyer_name', $f['value'],'both');
                 }else{
                     $this->db->like($field, $f['value'],'both');
                 }
