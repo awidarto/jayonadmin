@@ -137,7 +137,7 @@
                 <td colspan="2" style="text-align:right">
                     <?php if($code_type == 'qr') : ?>
                     <div class="code-container">
-                        <img class="qr" src="<?php print base_url()?>img/qr/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                        <img class="qr" src="<?php print base_url()?>img/qr/<?php print base64_encode($address['delivery_id'].'|'.$address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
                     </div>
                     <?php endif; ?>
                     <div>
