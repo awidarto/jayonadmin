@@ -367,6 +367,14 @@ class Delivery extends Application
                 $picture = '';
             }
 
+            /*
+            if(file_exists(FCPATH.'public/pickup_sign/'.$key['merchant_id'].'_'.$key['application_id'].'_address.jpg')){
+                $pusign = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
+            }else{
+                $pusign = '';
+            }
+            */
+
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
             $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';

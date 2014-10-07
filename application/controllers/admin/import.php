@@ -769,8 +769,8 @@ class Import extends Application
 
                 }
 
-                if(isset($in->transaction_id) && $in->transaction_id != ""){
-                    $transaction_id = $in->transaction_id;
+                if(isset($in->merchant_trans_id) && $in->merchant_trans_id != ""){
+                    $transaction_id = $in->merchant_trans_id;
                 }
 
 
