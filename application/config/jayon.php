@@ -128,6 +128,36 @@ $config['status_colors'] = array(
 
 );
 
+$config['status_changes'] = array(
+    $config['trans_status_new'] => 'orange',
+    $config['trans_status_tobeconfirmed'] => 'orange',
+    $config['trans_status_purged'] => 'red',
+    $config['trans_status_archived'] => 'brown',
+    $config['trans_status_confirmed'] => 'green',
+    $config['trans_status_canceled'] => 'red',
+
+    $config['trans_status_mobile_departure'] => 'green',
+    $config['trans_status_mobile_return'] => 'red',
+    $config['trans_status_mobile_rescheduled'] => 'brown',
+    $config['trans_status_mobile_delivered'] => 'green',
+    $config['trans_status_mobile_revoked'] => 'red',
+    $config['trans_status_mobile_noshow'] => 'orange',
+    /*
+    $config['trans_status_admin_zoned'] => 'brown',
+    $config['trans_status_admin_dated'] => 'blue',
+    $config['trans_status_admin_devassigned'] => 'black',
+    $config['trans_status_admin_courierassigned'] => 'black',
+    $config['trans_status_admin_dispatched'] => 'green',
+    */
+);
+
+$config['pickup_status_changes'] = array(
+
+    $config['trans_status_canceled'] => 'red',
+    $config['trans_status_tobepickup'] => 'maroon',
+    $config['trans_status_pickup'] => 'green',
+);
+
 $config['actors_code'] = array(
 	'mobile'=>'MB',
 	'admin'=>'AD',

@@ -827,7 +827,7 @@
 			<td style="width:250px;vertical-align:top">
 				<strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
 				<?php
-					$status_list = $this->config->item('status_colors');
+					$status_list = $this->config->item('status_changes');
 					$status_list = array_keys($status_list);
 
 					$sl = array();
