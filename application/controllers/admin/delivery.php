@@ -323,6 +323,7 @@ class Delivery extends Application
 			$changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
             $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
+            $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -402,7 +403,7 @@ class Delivery extends Application
 				$this->hide_trx($key['merchant_trans_id']).$markscan,
 				colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
-                $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus,
+                $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat,
                 $direction,
@@ -1231,6 +1232,7 @@ class Delivery extends Application
 			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+            $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -1296,7 +1298,7 @@ class Delivery extends Application
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				$reference,
-				($key['status'] == 'canceled')?$purge:$reschedule,
+				($key['status'] == 'canceled')?$purge.'<br />'.$viewlog:$reschedule,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -2605,6 +2607,7 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+            $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -2650,7 +2653,7 @@ class Delivery extends Application
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
-				$reassign.' '.$changestatus //$printslip.' '.$edit.' '.$delete
+				$reassign.'<br />'.$changestatus.'<br />'.$viewlog //$printslip.' '.$edit.' '.$delete
 			);
 
 

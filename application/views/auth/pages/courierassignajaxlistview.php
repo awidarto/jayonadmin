@@ -128,6 +128,32 @@
 				},'json');
 			}
 
+            $('#view_dialog').dialog({
+                autoOpen: false,
+                height: 600,
+                width: 900,
+                modal: true,
+                buttons: {
+                    Save: function(){
+                        var nframe = document.getElementById('view_frame');
+                        var nframeWindow = nframe.contentWindow;
+                        nframeWindow.submitorder();
+                    },
+                    Print: function(){
+                        var pframe = document.getElementById('view_frame');
+                        var pframeWindow = pframe.contentWindow;
+                        pframeWindow.print();
+                    },
+                    Close: function() {
+                        oTable.fnDraw();
+                        $( this ).dialog( "close" );
+                    }
+                },
+                close: function() {
+
+                }
+            });
+
             if ($(e.target).is('.locpick')) {
                 var buyer_id = e.target.id;
                 $('#setloc_dialog').dialog('open');

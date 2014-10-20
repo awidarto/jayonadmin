@@ -445,6 +445,16 @@
 				$('#view_dialog').dialog('open');
 			}
 
+            if ($(e.target).is('.view_log')) {
+                var delivery_id = e.target.id;
+                var src = '<?php print base_url() ?>admin/log/deliverylog/' + delivery_id;
+
+                $('#view_dialog').attr('title','Delivery Log : ' + delivery_id);
+                $('#ui-dialog-title-view_dialog').html('Delivery Log : ' + delivery_id);
+                $('#view_frame').attr('src',src);
+                $('#view_dialog').dialog('open');
+            }
+
             if ($(e.target).is('.locpick')) {
                 var buyer_id = e.target.id;
                 $('#setloc_dialog').dialog('open');
@@ -886,7 +896,7 @@
 			<td style="width:250px;vertical-align:top">
 				<strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
 				<?php
-					$status_list = $this->config->item('status_colors');
+					$status_list = $this->config->item('status_changes');
 					$status_list = array_keys($status_list);
 
 					$sl = array();
