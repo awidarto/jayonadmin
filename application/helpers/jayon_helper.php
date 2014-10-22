@@ -790,7 +790,7 @@ function get_pusign($merchant_id, $app_id, $date){
 
     if(file_exists($CI->config->item('public_path').'pickup_sign/'.$merchant_id.'_'.$app_id.'_'.$date.'_sign.jpg')){
         $exist = true;
-        $thumbnail = base_url().'pickup_sign/'.$merchant_id.'_'.$app_id.'_'.$date.'_sign.jpg';
+        $thumbnail = base_url().'public/pickup_sign/'.$merchant_id.'_'.$app_id.'_'.$date.'_sign.jpg';
     }else{
         $exist = false;
         $thumbnail = base_url().'assets/images/th_nopic.jpg';
