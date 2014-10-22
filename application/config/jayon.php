@@ -95,6 +95,13 @@ $config['trans_status_admin_dispatched'] = 'dispatched';
 $config['trans_status_tobepickup'] = 'akan diambil';
 $config['trans_status_pickup'] = 'sudah diambil';
 
+$config['trans_status_atmerchant'] = 'At Merchant';
+$config['trans_status_pu2wh'] = 'PU to WH';
+$config['trans_status_inwh'] = 'In WH';
+$config['trans_status_wh2ds'] = 'WH to DS';
+$config['trans_status_ds2wh'] = 'DS to WH';
+$config['trans_status_return2merchant'] = 'return to merchant';
+
 /* status colors */
 
 $config['status_colors'] = array(
@@ -125,6 +132,13 @@ $config['status_colors'] = array(
 
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
+
+    $config['trans_status_atmerchant'] = 'maroon';
+    $config['trans_status_pu2wh'] = 'green';
+    $config['trans_status_inwh'] = 'black';
+    $config['trans_status_wh2ds'] = 'orange';
+    $config['trans_status_ds2wh'] = 'brown';
+    $config['trans_status_return2merchant'] = 'red';
 
 );
 
@@ -157,6 +171,17 @@ $config['pickup_status_changes'] = array(
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
 );
+
+$config['warehouse_status_changes'] = array(
+
+    $config['trans_status_atmerchant'] => 'maroon',
+    $config['trans_status_pu2wh'] => 'green',
+    $config['trans_status_inwh'] => 'black',
+    $config['trans_status_wh2ds'] => 'orange',
+    $config['trans_status_ds2wh'] => 'brown',
+    $config['trans_status_return2merchant'] => 'red'
+);
+
 
 $config['actors_code'] = array(
 	'mobile'=>'MB',
