@@ -110,3 +110,9 @@ Oct 3 2014
  `thumb_name` varchar( 255  )  DEFAULT NULL ,
  `photo_timestamp` timestamp NULL  DEFAULT CURRENT_TIMESTAMP ,
  PRIMARY  KEY (  `id`  )  ) ENGINE  = InnoDB  DEFAULT CHARSET  = latin1 COMMENT  =  'table to store delivery photo metadata';
+
+ Ovt 22 2014
+ +++++++++++++++++++
+ALTER TABLE  `delivery_order_active` ADD  `warehouse_status` VARCHAR( 25 ) NULL DEFAULT  'At Merchant' AFTER  `pickup_status` ,
+ADD  `warehouse_in` DATETIME NULL AFTER  `warehouse_status` ,
+ADD  `warehouse_out` DATETIME NULL AFTER  `warehouse_in` ;
