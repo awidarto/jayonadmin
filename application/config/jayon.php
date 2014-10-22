@@ -133,12 +133,12 @@ $config['status_colors'] = array(
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
 
-    $config['trans_status_atmerchant'] = 'maroon';
-    $config['trans_status_pu2wh'] = 'green';
-    $config['trans_status_inwh'] = 'black';
-    $config['trans_status_wh2ds'] = 'orange';
-    $config['trans_status_ds2wh'] = 'brown';
-    $config['trans_status_return2merchant'] = 'red';
+    $config['trans_status_atmerchant'] = 'maroon',
+    $config['trans_status_pu2wh'] = 'green',
+    $config['trans_status_inwh'] = 'black',
+    $config['trans_status_wh2ds'] = 'orange',
+    $config['trans_status_ds2wh'] = 'brown',
+    $config['trans_status_return2merchant'] = 'red'
 
 );
 
