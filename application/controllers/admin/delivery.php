@@ -394,7 +394,7 @@ class Delivery extends Application
 
             //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
-                $pick_stat = colorizestatus($key['warehouse_status']);
+                $wh_stat = colorizestatus($key['warehouse_status']);
             //}else{
             //    $pick_stat = '';
             //}
@@ -417,7 +417,7 @@ class Delivery extends Application
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
                 $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
-                colorizestatus($key['status']).'<br />'.$pick_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $direction,
 				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
 				//(double)$key['width']*(double)$key['height']*(double)$key['length'],
