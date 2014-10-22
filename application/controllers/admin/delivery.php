@@ -42,15 +42,15 @@ class Delivery extends Application
             'Delivery ID',
             'Status',
             'Directions',
-            'W x H x L = V',
-            'Weight Range',
+            'TTD Toko',
             'Delivery Fee',
             'COD Surcharge',
             'COD Value',
             'Buyer',
             'ZIP',
             'Phone',
-            'Reference'
+            'W x H x L = V',
+            'Weight Range'
             ); // Setting headings for the table
 
 
@@ -73,7 +73,6 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
             '',
-            '',
             '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
             '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
@@ -81,7 +80,9 @@ class Delivery extends Application
             //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
             '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
 
-            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '',
+            ''
             );
 
         $page['devices'] = $this->get_devices_identifier();
@@ -380,6 +381,8 @@ class Delivery extends Application
                 $picture = '';
             }
 
+            $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
+
             /*
             if(file_exists(FCPATH.'public/pickup_sign/'.$key['merchant_id'].'_'.$key['application_id'].'_address.jpg')){
                 $pusign = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
@@ -419,9 +422,8 @@ class Delivery extends Application
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $direction,
-				$key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+                '<img src="'.$sign['sign'].'" />',
 				//(double)$key['width']*(double)$key['height']*(double)$key['length'],
-				get_weight_range($key['weight'],$key['application_id']),
 				$key['delivery_cost'],
 				($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
 				($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
@@ -430,7 +432,8 @@ class Delivery extends Application
 				$key['buyer_name'],
                 $key['shipping_zip'],
 				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-				$reference
+                $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+                get_weight_range($key['weight'],$key['application_id'])
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete

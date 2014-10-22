@@ -95,12 +95,12 @@ $config['trans_status_admin_dispatched'] = 'dispatched';
 $config['trans_status_tobepickup'] = 'akan diambil';
 $config['trans_status_pickup'] = 'sudah diambil';
 
-$config['trans_status_atmerchant'] = 'At Merchant';
-$config['trans_status_pu2wh'] = 'PU to WH';
-$config['trans_status_inwh'] = 'In WH';
-$config['trans_status_wh2ds'] = 'WH to DS';
-$config['trans_status_ds2wh'] = 'DS to WH';
-$config['trans_status_return2merchant'] = 'return to merchant';
+$config['trans_status_atmerchant'] = 'belum di gudang';
+$config['trans_status_pu2wh'] = 'diterima di gudang';
+$config['trans_status_inwh'] = 'di gudang';
+$config['trans_status_wh2ds'] = 'di delivery';
+$config['trans_status_ds2wh'] = 'kembali di gudang';
+$config['trans_status_return2merchant'] = 'kembali ke merchant';
 
 /* status colors */
 

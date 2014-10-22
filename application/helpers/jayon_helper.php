@@ -785,6 +785,20 @@ function get_sign($delivery_id){
 
 }
 
+function get_pusign($merchant_id, $app_id, $date){
+    $CI =& get_instance();
+
+    if(file_exists($CI->config->item('public_path').'pickup_sign/'.$merchant_id.'_'.$app_id.'_'.$date.'_sign.jpg')){
+        $exist = true;
+        $thumbnail = base_url().'pickup_sign/'.$merchant_id.'_'.$app_id.'_'.$date.'_sign.jpg';
+    }else{
+        $exist = false;
+        $thumbnail = base_url().'assets/images/th_nopic.jpg';
+    }
+
+    return array('exist'=>$exist,'sign'=>$thumbnail) ;
+}
+
 function get_logo($merchant_id){
     $CI =& get_instance();
 
