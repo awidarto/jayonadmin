@@ -277,3 +277,8 @@ input.label-opt{
     padding: 4px;
     background-color: orange;
 }
+
+img.sign{
+    width:100px;
+    height:auto;
+}
