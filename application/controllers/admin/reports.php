@@ -2872,7 +2872,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -2908,6 +2908,7 @@ class Reports extends Application
                     ->where('pending_count >', 0)
                 ->group_end()
             ->group_end();
+
 
         //print $this->db->last_query();
 
@@ -2968,6 +2969,7 @@ class Reports extends Application
                 'Zone',
                 'TOKO ONLINE',
                 'Type',
+                'Status',
                 'KEPADA',
                 'Total Price',
                 'Delivery Charge',
@@ -2976,13 +2978,13 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                array('data'=>'PENERIMA PAKET','colspan'=>2)
+                array('data'=>'PENERIMA PAKET','colspan'=>3)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
-                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>12),
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
                 /*
                 '',
                 '',
@@ -3008,6 +3010,7 @@ class Reports extends Application
                 'Zone',
                 'TOKO ONLINE',
                 'Type',
+                'Status',
                 'KEPADA',
                 'Total Price',
                 'Delivery Charge',
@@ -3016,12 +3019,13 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                array('data'=>'PENERIMA PAKET','colspan'=>2)
+                array('data'=>'PENERIMA PAKET','colspan'=>3)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
+                '',
                 '',
                 '',
                 '',
@@ -3130,6 +3134,7 @@ class Reports extends Application
             }
 
 
+
             if($pdf == 'print' || $pdf == 'pdf'){
 
                 $this->table->add_row(
@@ -3137,6 +3142,7 @@ class Reports extends Application
                     $r->buyerdeliveryzone,
                     $r->merchant_name,
                     array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    $r->status.'<br /><br />'.$r->pickup_status.'<br /><br />'.$r->warehouse_status,
                     $r->buyer_name,
                     array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
                     array('data'=>( $dc == 0 )?0:idr($dc),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
@@ -3156,6 +3162,7 @@ class Reports extends Application
                     $r->buyerdeliveryzone,
                     $r->merchant_name,
                     array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    $r->status.'<br /><br />'.$r->pickup_status.'<br /><br />'.$r->warehouse_status,
                     $r->buyer_name,
                     array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
                     array('data'=>( $dc == 0 )?0:idr($dc).'<span class="bearer">'.$db.'</span>','class'=>'currency '.$codclass,'style'=>'position:relative;'),

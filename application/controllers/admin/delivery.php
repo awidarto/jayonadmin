@@ -4207,6 +4207,7 @@ class Delivery extends Application
                 delivery_note,
                 status,
                 pickup_status,
+                warehouse_status,
                 device_id,
                 deliverytime,
                 chargeable_amount,
