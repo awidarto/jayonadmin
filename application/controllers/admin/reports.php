@@ -2978,7 +2978,7 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                array('data'=>'PENERIMA PAKET','colspan'=>3)
+                array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
@@ -3019,7 +3019,7 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                array('data'=>'PENERIMA PAKET','colspan'=>3)
+                array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
