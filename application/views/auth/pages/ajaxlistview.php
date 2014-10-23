@@ -212,16 +212,9 @@
 				$('#view_dialog').dialog('open');
 			}
 
-			if ($(e.target).is('.changestatus')) {
-				var delivery_id = e.target.id;
-				var device_id = e.target.dev_id;
-
-				console.log(e.target);
-
-				$('#changedev_id').val(device_id);
-				$('#change_id').html(delivery_id);
-				$('#changestatus_dialog').dialog('open');
-			}
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
+?>
 
             if ($(e.target).is('.locpick')) {
                 var buyer_id = e.target.id;
@@ -456,37 +449,9 @@
 			}
 		});
 
-		$('#changestatus_dialog').dialog({
-			autoOpen: false,
-			height: 250,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Confirm Delivery Orders": function() {
-					var delivery_id = $('#change_id').html();
-					var device_id = $('#changedev_id').val();
-
-					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
-						'delivery_id':delivery_id,
-						'new_status': $('#new_status').val(),
-						'actor': $('#actor').val()
-					}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#changestatus_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#confirm_list').html('');
-			}
-		});
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
+?>
 
 		$('#view_dialog').dialog({
 			autoOpen: false,
@@ -611,34 +576,9 @@
 </div>
 
 
-<div id="changestatus_dialog" title="Change Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				<strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
-				<?php
-					$status_list = $this->config->item('status_colors');
-					$status_list = array_keys($status_list);
-
-					$sl = array();
-					foreach($status_list as $s){
-						$sl[$s]=$s;
-					}
-
-					$actor = $this->config->item('actors_title');
-
-					print form_hidden('changedev_id','','id="changedev_id"');
-
-					print 'Actor <br />';
-					print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
-					print ' New Status<br />';
-					print form_dropdown('new_status',$sl,'','id="new_status"');
-
-				?>
-			</td>
-		</tr>
-	</table>
-</div>
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
+?>
 
 <div id="setloc_dialog" title="Set Location" style="overflow:hidden;padding:8px;">
     <input type="hidden" value="" id="print_id" />
