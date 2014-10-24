@@ -3123,7 +3123,9 @@ class Reports extends Application
             $codclass = '';
 
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
-                $chg = $gt + $dc + $cod;
+                $chg = ($gt - $dsc) + $tax + $dc + $cod;
+
+                //$chg = $gt + $dc + $cod;
 
                 $codclass = 'cod';
 
