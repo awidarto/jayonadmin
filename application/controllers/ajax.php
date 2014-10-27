@@ -1059,6 +1059,7 @@ class Ajax extends Application
 
                 $order['created'] = date('Y-m-d H:i:s',time());
                 $order['ordertime'] = date('Y-m-d H:i:s',time());
+                $order['pickuptime'] = date('Y-m-d H:i:s',time());
                 $order['application_id'] = $app->id;
                 $order['application_key'] = $app->key;
                 $order['buyer_id'] = $buyer_id;
