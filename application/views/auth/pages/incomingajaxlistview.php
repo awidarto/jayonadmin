@@ -345,10 +345,16 @@
 				alert('Please select one or more delivery orders');
 			}
 		});
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_button_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_button_js');
+?>
+
 		//put all action link functions here
 		$('table.dataTable').click(function(e){
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_tab_js');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
 ?>
 
@@ -659,6 +665,7 @@
 		});
 
         <?php
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog_init');
             $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
         ?>
 
@@ -835,6 +842,7 @@
 
     print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
     form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
+    form_button('do_pickupassign','Assign Pickup Date to Selection','id="doPickup"').
     form_button('do_confirm','Confirm Selection','id="doConfirm"').
     form_button('do_cancel','Cancel Selection','id="doCancel"').
     form_button('do_label','Print Selection Label','id="doLabel"');
@@ -865,6 +873,7 @@
 
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
 ?>
 
