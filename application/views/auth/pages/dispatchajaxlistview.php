@@ -1,6 +1,10 @@
 <script>
 	var asInitVals = new Array();
+    var dateBlock = <?php print getdateblock();?>;
+    var rescheduled_id = 0;
     var refreshTab;
+    //var reschedulemode = 'dispatched';
+    var reschedulemode = 'incoming';
 
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
@@ -75,6 +79,46 @@
 			method: 'post',
 			minLength: 2
 		});
+
+        function getBlocking(d){
+            /*
+                $.datepicker.formatDate('yy-mm-dd', d);
+            */
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth() + 1; //months are zero based
+            var curr_year = d.getFullYear();
+
+            curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+            curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+            var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+            var select = 1;
+            var css = 'open';
+            var popup = 'working day';
+
+            if(window.dateBlock[indate] == 'weekend'){
+                select = 0;
+                css = 'weekend';
+                popup = 'weekend';
+            }else if(window.dateBlock[indate] == 'holiday'){
+                select = 0;
+                css = 'weekend';
+                popup = 'holiday';
+            }else if(window.dateBlock[indate] == 'blocked'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else if(window.dateBlock[indate] == 'full'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else{
+                select = 1;
+                css = '';
+                popup = 'working day';
+            }
+            return [select,css,popup];
+        }
 
 
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
@@ -270,6 +314,11 @@
 			}
 		});
 
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_button_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_button_js');
+?>
+
 
         refreshTab = function(){
             oTable.fnDraw();
@@ -310,6 +359,7 @@
             }
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_tab_js');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
 ?>
 
@@ -606,61 +656,10 @@
         });
 
 
-<?php
-        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
-?>
-
-		$('#print_dialog').dialog({
-			autoOpen: false,
-			height: 400,
-			width: 1050,
-			modal: true,
-			buttons: {
-				Print: function(){
-					var pframe = document.getElementById('print_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				"Download PDF": function(){
-					var print_id = $('#print_id').val();
-					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
-					window.location = src;
-					//alert(src);
-				},
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
-
-		$('#view_dialog').dialog({
-			autoOpen: false,
-			height: 600,
-			width: 900,
-			modal: true,
-			buttons: {
-				Save: function(){
-					var nframe = document.getElementById('view_frame');
-					var nframeWindow = nframe.contentWindow;
-					nframeWindow.submitorder();
-				},
-				Print: function(){
-					var pframe = document.getElementById('print_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				Close: function() {
-					oTable.fnDraw();
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
+        <?php
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog_init');
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
+        ?>
 
         $('#setloc_dialog').dialog({
             autoOpen: false,
@@ -682,41 +681,6 @@
 
             }
         });
-
-        $('#label_dialog').dialog({
-            autoOpen: false,
-            height: 600,
-            width: 1050,
-            modal: true,
-            buttons: {
-
-                Print: function(){
-                    var pframe = document.getElementById('label_frame');
-                    var pframeWindow = pframe.contentWindow;
-                    pframeWindow.print();
-                },
-                /*
-                "Download PDF": function(){
-                    var print_id = $('#label_id').val();
-                    var col = $('#label_columns').val();
-                    var res = $('#label_resolution').val();
-                    var cell_height = $('#label_cell_height').val();
-                    var cell_width = $('#label_cell_width').val();
-                    var mright = $('#label_margin_right').val();
-                    var mbottom = $('#label_margin_bottom').val();
-                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
-                    window.location = src;
-                },
-                */
-                Close: function() {
-                    $( this ).dialog( "close" );
-                }
-            },
-            close: function() {
-
-            }
-        });
-
 
 		/*
 		function refresh(){
@@ -747,6 +711,7 @@
 <?php
 
     print form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
+    form_button('do_multi','Change Selection','id="doMultiAction"').
     form_button('do_label','Reassign Selection to Device','id="doReassignDeviceMulti"').
     form_button('do_label','Print Selection Label','id="doLabel"');
 
@@ -793,6 +758,7 @@
 
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
 ?>
 
@@ -843,58 +809,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">
-	<input type="hidden" value="" id="print_id" />
-	<iframe id="print_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
-<div id="label_dialog" title="Print Label" style="overflow:hidden;padding:8px;">
-    <div style="border-bottom:thin solid #ccc;">
-        Print options :
-        <label>Res
-                <input type="text" class="label-opt" value="<?php print $resolution ?>" id="label_resolution" /> ppi
-        </label>
-        <label>Width
-                <input type="text" class="label-opt" value="<?php print $cell_width ?>" id="label_cell_width" /> px
-        </label>
-        <label>Height
-                <input type="text" class="label-opt" value="<?php print $cell_height ?>" id="label_cell_height" /> px
-        </label>
-        <label>Columns
-                <input type="text" class="label-opt" value="<?php print $columns ?>" id="label_columns" />
-        </label>
-        <label>Right
-                <input type="text" class="label-opt" value="<?php print $margin_right ?>" id="label_margin_right" /> px
-        </label>
-        <label>Bottom
-                <input type="text" class="label-opt" value="<?php print $margin_bottom ?>" id="label_margin_bottom" /> px
-        </label>
-        <label>Font Size
-                <input type="text" class="label-opt" value="<?php print $font_size ?>" id="label_font_size" /> pt
-        </label>
-
-        <label>Code Type
-                <?php print form_dropdown('', array( 'barcode'=>'Barcode', 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
-        </label>
-
-        <button id="label_refresh">refresh</button>
-        <button id="label_default">make default</button>
-    </div>
-    <input type="hidden" value="" id="label_id" />
-    <iframe id="label_frame" name="label_frame" width="100%" height="90%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
-<div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
-	<input type="hidden" value="" id="print_id" />
-	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
 </div>
 
 <div id="setloc_dialog" title="Set Location" style="overflow:hidden;padding:8px;">

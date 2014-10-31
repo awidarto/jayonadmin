@@ -1088,7 +1088,12 @@ function full_reschedule($delivery_id, $datachanged){
 	$old_order = $CI->db->where('delivery_id',$delivery_id)->get($CI->config->item('assigned_delivery_table'));
 	$old_order = $old_order->row_array();
 
-	$new_order = array_replace($old_order,$datachanged);
+	if(empty($datachanged) || is_null($datachanged)){
+        $new_order = $old_order;
+    }else{
+        $new_order = array_replace($old_order,$datachanged);
+    }
+
 	$new_order['status'] = $CI->config->item('trans_status_new');
 	$new_order['reschedule_ref'] = $delivery_id;
 	$new_order['reattemp'] = (int) $new_order['reattemp'] + 1;
@@ -1099,17 +1104,18 @@ function full_reschedule($delivery_id, $datachanged){
 
 	$CI->db->insert($CI->config->item('assigned_delivery_table'),$new_order);
 
-	$sequence = $this->db->insert_id();
+	$sequence = $CI->db->insert_id();
 
 	$year_count = str_pad($sequence, 10, '0', STR_PAD_LEFT);
 	$merchant_id = str_pad($new_order['merchant_id'], 8, '0', STR_PAD_LEFT);
 	$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
 
-	$this->db->where('id',$sequence)->update($this->config->item('assigned_delivery_table'),array('delivery_id'=>$delivery_id));
+	$CI->db->where('id',$sequence)->update($CI->config->item('assigned_delivery_table'),array('delivery_id'=>$delivery_id));
 
 	$old_details = $CI->db->where('delivery_id',$old_delivery_id)->get($CI->config->item('delivery_details_table'));
 
 	foreach ($old_details->result_array() as $detail){
+        unset($detail['id']);
 		$detail['delivery_id'] = $delivery_id;
 		$CI->db->insert($CI->config->item('delivery_details_table'),$detail);
 	}

@@ -7,8 +7,10 @@ class Img extends Application
         parent::__construct();
     }
 
-    public function qr($string){
-        $string = base64_decode($string);
+    public function qr($string,$type = 'base64'){
+        if($type == 'base64'){
+            $string = base64_decode($string);
+        }
         $params['data'] = $string;
         $params['level'] = 'L';
         $params['size'] = 10;
@@ -25,6 +27,23 @@ class Img extends Application
         $barcode = new Barcode();
         $barcode->make($text,'code128',40, 'horizontal' ,true);
         return $barcode->render('jpg',$text);
+    }
+
+    public function qrtest($in){
+
+        $string = array();
+
+        $string[] = '000245-29-102014-00066702';
+        $string[] = 'BCV098765342';
+        $string[] = 'BCV098765342|000245-29-102014-00066702';
+        $string[] = '000245-29-102014-00066702|BCV098765342';
+
+        $params['data'] = $string[$in];
+        $params['level'] = 'L';
+        $params['size'] = 10;
+        header("Content-Type: image/png");
+        $this->ciqrcode->generate($params);
+
     }
 
 }

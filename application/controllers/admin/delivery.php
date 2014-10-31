@@ -2853,9 +2853,13 @@ class Delivery extends Application
 			foreach($buyeremail as $b){
 				$edata = $b;
 				$edata['detail'] = false;
-				send_notification('Rescheduled Orders',$b['buyeremail'],null,null,'rescheduled_order_buyer',$nedata,null);
+                if(is_null($b['buyeremail'])){
+                      $b['buyeremail'] = 'noemail';
+                }
+				@send_notification('Rescheduled Orders',$b['buyeremail'],null,null,'rescheduled_order_buyer',$edata,null);
 			}
 		}
+
 
 	}
 
@@ -5926,29 +5930,36 @@ class Delivery extends Application
 	private function do_reschedule($delivery_id,$buyerdeliverytime,$status,$stage){
 
 		if($stage == 'dispatched'){
+            $actor = $this->session->userdata('userid');
+            $change_actor = 'A:'.$actor;
+            $this->db->where('delivery_id',$delivery_id)
+                ->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
 
-			$this->db->select('*,b.email as buyeremail');
-			$this->db->join('members as b','delivery_order_incoming.buyer_id=b.id','left');
+			$this->db->select($this->config->item('incoming_delivery_table').'.*,b.email as buyeremail');
+			$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 
 			$incomingcomplete = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
 			$datasetcomplete = $incomingcomplete->row_array();
 			$buyeremail = $datasetcomplete['buyeremail'];
 
 			//generate new delivery id
-			full_reschedule($delivery_id, $datachanged);
+			full_reschedule($delivery_id, null);
+
+            $order_exist = $incomingcomplete->row_array();
 
 		}else if($stage == 'incoming'){
 			$actor = $this->session->userdata('userid');
 			$change_actor = 'A:'.$actor;
-			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
+			$this->db->where('delivery_id',$delivery_id)
+                ->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
 
-			$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.* as app');
+			$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.application_name as app');
 			$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 			$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 			$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
 
 
-			$fullorder = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$fullorder = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
 
 			$fullorder = $fullorder->row_array();
 

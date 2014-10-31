@@ -3,6 +3,7 @@
 	var dateBlock = <?php print getdateblock();?>;
 	var rescheduled_id = 0;
     var refreshTab;
+    var reschedulemode = 'incoming';
 
 	$(document).ready(function() {
 
@@ -522,241 +523,11 @@
             }
         });
 
-
-		$('#assign_dialog').dialog({
-			autoOpen: false,
-			height: 400,
-			width: 800,
-			modal: true,
-			buttons: {
-				"Assign Delivery Date": function() {
-					if($('#assign_deliverytime').val() == ''){
-						alert('Please specify date.');
-					}else{
-						var delivery_ids = [];
-						i = 0;
-						$('.assign_check:checked').each(function(){
-							delivery_ids[i] = $(this).val();
-							i++;
-						});
-						$.post('<?php print site_url('admin/delivery/ajaxassigndate');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
-							if(data.result == 'ok'){
-								//redraw table
-								oTable.fnDraw();
-								$('#assign_dialog').dialog( "close" );
-							}
-						},'json');
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#assign_deliverytime').val('');
-			}
-		});
-
-		$('#confirm_dialog').dialog({
-			autoOpen: false,
-			height: 400,
-			width: 600,
-			modal: true,
-			buttons: {
-				"Confirm Delivery Orders": function() {
-					var delivery_ids = [];
-					i = 0;
-					$('.assign_check:checked').each(function(){
-						delivery_ids[i] = $(this).val();
-						i++;
-					});
-					$.post('<?php print site_url('admin/delivery/ajaxconfirm');?>',
-						{ assignment_date: $('#assign_deliverytime').val(),
-							'delivery_id[]':delivery_ids,
-							req_by : $('#cf_req_by').val(),
-							req_name : $('#cf_req_name').val(),
-							req_note : $('#cf_req_note').val()
-						}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#confirm_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#confirm_list').html('');
-			}
-		});
-
-		$('#cancel_dialog').dialog({
-			autoOpen: false,
-			height: 400,
-			width: 600,
-			modal: true,
-			buttons: {
-				"Cancel Delivery Orders": function() {
-					var delivery_ids = [];
-					i = 0;
-					$('.assign_check:checked').each(function(){
-						delivery_ids[i] = $(this).val();
-						i++;
-					});
-					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',
-						{ assignment_date: $('#assign_deliverytime').val(),
-							'delivery_id[]':delivery_ids,
-							req_by : $('#cl_req_by').val(),
-							req_name :$('#cl_req_name').val(),
-							req_note :$('#cl_req_note').val()
-						}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#cancel_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#cancel_list').html('');
-			}
-		});
-
-		$('#reschedule_dialog').dialog({
-			autoOpen: false,
-			height: 420,
-			width: 600,
-			modal: true,
-			buttons: {
-				"Reschedule Delivery Orders": function() {
-					$.post('<?php print site_url('admin/delivery/ajaxreschedule/incoming');?>',
-						{'delivery_id':rescheduled_id,
-							'buyerdeliverytime':$('#rescheduled_deliverytime').val(),
-							req_by : $('#rs_req_by').val(),
-							req_name : $('#rs_req_name').val(),
-							req_note : $('#rs_req_note').val()
-						},
-						function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#reschedule_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#cancel_list').html('');
-			}
-		});
-
         <?php
             $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog_init');
             $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
         ?>
 
-        $('#print_dialog').dialog({
-            autoOpen: false,
-            height: 600,
-            width: 1050,
-            modal: true,
-            buttons: {
-
-                Print: function(){
-                    var pframe = document.getElementById('print_frame');
-                    var pframeWindow = pframe.contentWindow;
-                    pframeWindow.print();
-                },
-                "Download PDF": function(){
-                    var print_id = $('#print_id').val();
-                    var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
-                    window.location = src;
-                    //alert(src);
-                },
-
-                Close: function() {
-                    $( this ).dialog( "close" );
-                }
-            },
-            close: function() {
-
-            }
-        });
-
-        $('#label_dialog').dialog({
-            autoOpen: false,
-            height: 600,
-            width: 1050,
-            modal: true,
-            buttons: {
-
-                Print: function(){
-                    var pframe = document.getElementById('label_frame');
-                    var pframeWindow = pframe.contentWindow;
-                    pframeWindow.print();
-                },
-                /*
-                "Download PDF": function(){
-                    var print_id = $('#label_id').val();
-                    var col = $('#label_columns').val();
-                    var res = $('#label_resolution').val();
-                    var cell_height = $('#label_cell_height').val();
-                    var cell_width = $('#label_cell_width').val();
-                    var mright = $('#label_margin_right').val();
-                    var mbottom = $('#label_margin_bottom').val();
-                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
-                    window.location = src;
-                },
-                */
-                Close: function() {
-                    $( this ).dialog( "close" );
-                }
-            },
-            close: function() {
-
-            }
-        });
-
-
-		$('#view_dialog').dialog({
-			autoOpen: false,
-			height: 600,
-			width: 900,
-			modal: true,
-			buttons: {
-				Save: function(){
-					var nframe = document.getElementById('view_frame');
-					var nframeWindow = nframe.contentWindow;
-					nframeWindow.submitorder();
-				},
-				Print: function(){
-					var pframe = document.getElementById('view_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				Close: function() {
-					oTable.fnDraw();
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
 
 		$('#neworder_dialog').dialog({
 			autoOpen: false,
@@ -841,6 +612,7 @@
 <?php
 
     print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
+    form_button('do_multi','Change Selection','id="doMultiAction"').
     form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
     form_button('do_pickupassign','Assign Pickup Date to Selection','id="doPickup"').
     form_button('do_confirm','Confirm Selection','id="doConfirm"').
@@ -877,34 +649,6 @@
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
 ?>
 
-<div id="reschedule_dialog" title="Reschedule Order">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
-			</td>
-			<td>
-				Reschedule Delivery Date to :<br />
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;width:250px;vertical-align:top">
-				<ul id="rescheduled_trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-			<td style="border:0;margin:0;">
-				<input id="rescheduled_deliverytime" type="text" value=""><br />
-				<div id="date_time_display"></div>
-				Requested by :<br />
-				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="rs_req_by"');?><br />
-				Requester name :<br />
-				<?php print form_input('req_name','','id="rs_req_name"');?><br />
-				Request Note :<br />
-				<?php print form_textarea('req_note','','id="rs_req_note"');?><br />
-			</td>
-		</tr>
-	</table>
-</div>
-
 <div id="markscan_dialog" title="Mark Orders for Scanning">
     <table style="width:100%;border:0;margin:0;">
         <tr>
@@ -928,107 +672,6 @@
 </div>
 
 
-<div id="confirm_dialog" title="Confirm Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
-			</td>
-			<td style="width:250px;vertical-align:top">
-				Requested by :
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;width:250px;vertical-align:top">
-				<ul id="confirm_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-			<td style="width:250px;vertical-align:top">
-				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="cf_req_by"');?><br />
-				Requester name :<br />
-				<?php print form_input('req_name','','id="cf_req_name"');?><br />
-				Request Note :<br />
-				<?php print form_textarea('req_note','','id="cf_req_note"');?><br />
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="cancel_dialog" title="Cancel Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
-			</td>
-			<td style="width:250px;vertical-align:top">
-				Requested by :
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;width:250px;vertical-align:top">
-				<ul id="cancel_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-			<td style="width:250px;vertical-align:top">
-				<?php print form_dropdown('req_by',$this->config->item('actors_title'),'','id="cl_req_by"');?><br />
-				Requester name :<br />
-				<?php print form_input('req_name','','id="cl_req_name"');?><br />
-				Request Note :<br />
-				<?php print form_textarea('req_note','','id="cl_req_note"');?><br />
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
-	<input type="hidden" value="" id="print_id" />
-	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
-<div id="print_dialog" title="Print Delivery Slip" style="overflow:hidden;padding:8px;">
-    <input type="hidden" value="" id="print_id" />
-    <iframe id="print_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
-<div id="label_dialog" title="Print Label" style="overflow:hidden;padding:8px;">
-    <div style="border-bottom:thin solid #ccc;">
-        Print options :
-        <label>Res
-                <input type="text" class="label-opt" value="<?php print $resolution ?>" id="label_resolution" /> ppi
-        </label>
-        <label>Width
-                <input type="text" class="label-opt" value="<?php print $cell_width ?>" id="label_cell_width" /> px
-        </label>
-        <label>Height
-                <input type="text" class="label-opt" value="<?php print $cell_height ?>" id="label_cell_height" /> px
-        </label>
-        <label>Columns
-                <input type="text" class="label-opt" value="<?php print $columns ?>" id="label_columns" />
-        </label>
-        <label>Right
-                <input type="text" class="label-opt" value="<?php print $margin_right ?>" id="label_margin_right" /> px
-        </label>
-        <label>Bottom
-                <input type="text" class="label-opt" value="<?php print $margin_bottom ?>" id="label_margin_bottom" /> px
-        </label>
-        <label>Font Size
-                <input type="text" class="label-opt" value="<?php print $font_size ?>" id="label_font_size" /> pt
-        </label>
-
-        <label>Code Type
-                <?php print form_dropdown('', array( 'barcode'=>'Barcode', 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
-        </label>
-
-        <button id="label_refresh">refresh</button>
-        <button id="label_default">make default</button>
-    </div>
-    <input type="hidden" value="" id="label_id" />
-    <iframe id="label_frame" name="label_frame" width="100%" height="90%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
 
 <div id="neworder_dialog" title="New Order" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />

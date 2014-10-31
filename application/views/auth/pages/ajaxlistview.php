@@ -3,6 +3,11 @@
 
     var dl = false;
 
+    var dateBlock = <?php print getdateblock();?>;
+    var rescheduled_id = 0;
+    var refreshTab;
+    var reschedulemode = 'incoming';
+
 	$(document).ready(function() {
 
         $('#assign_all').click(function(){
@@ -85,6 +90,53 @@
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
 
+        function getBlocking(d){
+            /*
+                $.datepicker.formatDate('yy-mm-dd', d);
+            */
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth() + 1; //months are zero based
+            var curr_year = d.getFullYear();
+
+            curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+            curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+            var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+            var select = 1;
+            var css = 'open';
+            var popup = 'working day';
+
+            if(window.dateBlock[indate] == 'weekend'){
+                select = 0;
+                css = 'weekend';
+                popup = 'weekend';
+            }else if(window.dateBlock[indate] == 'holiday'){
+                select = 0;
+                css = 'weekend';
+                popup = 'holiday';
+            }else if(window.dateBlock[indate] == 'blocked'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else if(window.dateBlock[indate] == 'full'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else{
+                select = 1;
+                css = '';
+                popup = 'working day';
+            }
+            return [select,css,popup];
+        }
+
+
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_button_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_button_js');
+?>
+
+
 		$('table.dataTable').click(function(e){
             /*
 			if($(e.target).is('.thumb')){
@@ -99,6 +151,11 @@
 
 			}
             */
+
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_tab_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
+?>
 
             if($(e.target).is('.thumb')){
                 var delivery_id = e.target.alt;
@@ -213,6 +270,7 @@
 			}
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_tab_js');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
 ?>
 
@@ -423,56 +481,10 @@
         });
 
 
-		$('#print_dialog').dialog({
-			autoOpen: false,
-			height: 400,
-			width: 1050,
-			modal: true,
-			buttons: {
-				Print: function(){
-					var pframe = document.getElementById('print_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				"Download PDF": function(){
-					var print_id = $('#print_id').val();
-					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
-					window.location = src;
-					//alert(src);
-				},
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
-
-<?php
-        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
-?>
-
-		$('#view_dialog').dialog({
-			autoOpen: false,
-			height: 600,
-			width: 900,
-			modal: true,
-			buttons: {
-				Print: function(){
-					var pframe = document.getElementById('print_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				Close: function() {
-					oTable.fnDraw();
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
+        <?php
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog_init');
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
+        ?>
 
         $('#setloc_dialog').dialog({
             autoOpen: false,
