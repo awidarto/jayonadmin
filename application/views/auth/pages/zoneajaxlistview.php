@@ -210,7 +210,7 @@
 				},'json');
 
 				$('#trans_list').html(assigns);
-				$('#assign_dialog').dialog('open');
+				$('#assign_device_dialog').dialog('open');
 
 			}
 		});
@@ -277,6 +277,51 @@
             $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
         ?>
 
+        $('#assign_device_dialog').dialog({
+            autoOpen: false,
+            height: 300,
+            width: 800,
+            modal: true,
+            buttons: {
+                "Assign to Device": function() {
+                    var device_id = $("input[name='dev_id']:checked").val();
+                    if($('#assign_deliverytime').val() == '' || device_id == '' || device_id == undefined){
+                        alert('Please specify date and or device.');
+                    }else{
+                        var delivery_ids = [];
+                        i = 0;
+                        $('.id_assign:checked').each(function(){
+                            delivery_ids[i] = $(this).val();
+                            i++;
+                        });
+                        $.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',
+                            {
+                                assignment_device_id: device_id,
+                                'delivery_id[]':delivery_ids,
+                                assignment_timeslot: $('.timeslot:checked').val(),
+                                assignment_zone: $('#assign_deliveryzone').val(),
+                                assignment_city: $('#disp_deliverycity').html() },
+                                function(data) {
+                                if(data.result == 'ok'){
+                                    //redraw table
+                                    oTable.fnDraw();
+                                    $('#assign_device_dialog').dialog( "close" );
+                                }
+                        },'json');
+                    }
+
+                },
+                Cancel: function() {
+                    $('#dev_list').html("");
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#assign_deliverytime').val('');
+            }
+        });
+
         $('#setloc_dialog').dialog({
             autoOpen: false,
             height: 600,
@@ -333,7 +378,7 @@
 ?>
 </div>
 
-<div id="assign_dialog" title="Assign Selection to Device">
+<div id="assign_device_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
 			<td style="width:50%;border:0;margin:0;vertical-align: top">
