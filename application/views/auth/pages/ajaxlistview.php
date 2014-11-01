@@ -567,20 +567,6 @@
 	</table>
 </div>
 
-<div id="print_dialog" title="Print" style="overflow:hidden;padding:8px;">
-	<input type="hidden" value="" id="print_id" />
-	<iframe id="print_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
-<div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
-	<input type="hidden" value="" id="print_id" />
-	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
-    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
-    title="Dialog Title">Your browser does not suppr</iframe>
-</div>
-
 <div id="sendslip_dialog" title="Send Delivery Slip" style="overflow:hidden;overflow-y:auto;padding:8px;">
     <table style="width:100%;vertical-align:top;">
         <tr>
