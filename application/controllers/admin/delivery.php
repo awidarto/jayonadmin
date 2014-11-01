@@ -232,7 +232,14 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_13') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
             $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_13'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_13'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_13'));
+            $this->db->group_end();
             $search = true;
         }
 
@@ -1008,9 +1015,17 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_12') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
             $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_12'));
+            $this->db->group_end();
             $search = true;
         }
+
 
         if($this->input->post('sSearch_13') != ''){
             $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_13'));
@@ -1736,7 +1751,14 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_12') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
             $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_12'));
+            $this->db->group_end();
             $search = true;
         }
 
@@ -1911,6 +1933,8 @@ class Delivery extends Application
 
             //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
+                $wh_stat = colorizestatus($key['warehouse_status']);
+
             //}else{
             //    $pick_stat = '';
             //}
@@ -1933,7 +1957,7 @@ class Delivery extends Application
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
                 $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
-                colorizestatus($key['status']).'<br />'.$pick_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $direction,
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
                 //(double)$key['width']*(double)$key['height']*(double)$key['length'],
@@ -2433,6 +2457,20 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_10') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_10'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_10'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_10'));
+            $this->db->group_end();
+
+            $search = true;
+        }
+
+
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name');
 		//$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
@@ -2582,7 +2620,9 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
-            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />'
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />'
 			);
         $pd = get_print_default();
 
@@ -3559,6 +3599,18 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_12') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_12'));
+            $this->db->group_end();
+            $search = true;
+        }
+
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
@@ -3717,7 +3769,8 @@ class Delivery extends Application
             '<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '<input type="text" name="search_address" value="Search address" class="search_init" />',
-            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />'
 
 			);
         $pd = get_print_default();
@@ -4018,17 +4071,41 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_9') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_9'));
+            $this->db->group_end();
 
-		if($this->input->post('sSearch_9') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_9'));
-			$search = true;
-		}
-
-        if($this->input->post('sSearch_10') != ''){
-            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_10'));
             $search = true;
         }
 
+		if($this->input->post('sSearch_10') != ''){
+			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_10'));
+			$search = true;
+		}
+
+
+        if($this->input->post('sSearch_11') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_11'));
+            $this->db->group_end();
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_12') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_12'));
+            $search = true;
+        }
 
 		/* handle pulldown type filter , hacky thing but should work for now */
 
@@ -4252,9 +4329,9 @@ class Delivery extends Application
             '<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
 			'<input type="text" name="search_recipient_name" id="search_recipient" value="Search Recipient" class="search_init" />',
 			'<input type="text" name="search_shipping_address" id="search_shipping" value="Search Address" class="search_init" />',
-            '',
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
             '<input type="text" name="search_delivery_id" value="Search delivery ID" class="search_init" />',
-            '',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
             '',
@@ -4425,8 +4502,14 @@ class Delivery extends Application
 
 
         if($this->input->post('sSearch_12') != ''){
-            $this->db->like($this->config->item('assigned_delivery_table').'.status',$this->input->post('sSearch_12'));
-            $this->db->or_like($this->config->item('assigned_delivery_table').'.pickup_status',$this->input->post('sSearch_12'));
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_12'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_12'));
+            $this->db->group_end();
             $search = true;
         }
 
