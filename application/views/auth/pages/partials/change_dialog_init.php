@@ -38,6 +38,8 @@
                 "Confirm Changes": function() {
                     var delivery_id = $('#puchange_id').html();
 
+                    console.log($('#punew_status').val());
+
                     $.post('<?php print site_url('admin/delivery/ajaxpuchangestatus');?>',{
                         'delivery_id':delivery_id,
                         'new_status': $('#punew_status').val(),

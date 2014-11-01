@@ -310,3 +310,87 @@
 
         });
 
+        $('#doMultiChangeStatus').on('click',function(){
+            var multi_reschedule_id = [];
+            $('.assign_check:checked').each(function(){
+                multi_reschedule_id.push(this.value);
+            });
+
+            $('#process_chgstatus').show();
+
+            $.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
+                'delivery_id':multi_reschedule_id,
+                'new_status': $('#multi_new_status').val(),
+                'actor': $('#multi_chgactor').val(),
+                'req_by' : $('#multi_rs_req_by').val(),
+                'req_name' : $('#multi_rs_req_name').val(),
+                'req_note' : $('#multi_rs_req_note').val()
+            }, function(data) {
+                if(data.result == 'ok'){
+                    //redraw table
+                    oTable.fnDraw();
+                    $('#process_chgstatus').hide();
+                    $('#multi_action_dialog').dialog( "close" );
+                }else{
+                    $('#process_chgstatus').hide();
+                }
+            },'json');
+
+        });
+
+        $('#doMultiPUChangeStatus').on('click',function(){
+            var multi_reschedule_id = [];
+            $('.assign_check:checked').each(function(){
+                multi_reschedule_id.push(this.value);
+            });
+
+            $('#process_puchgstatus').show();
+
+            $.post('<?php print site_url('admin/delivery/ajaxpuchangestatus');?>',{
+                'delivery_id':multi_reschedule_id,
+                'new_status': $('#multi_punew_status').val(),
+                'actor': $('#multi_puactor').val(),
+                'req_by' : $('#multi_rs_req_by').val(),
+                'req_name' : $('#multi_rs_req_name').val(),
+                'req_note' : $('#multi_rs_req_note').val()
+            }, function(data) {
+                if(data.result == 'ok'){
+                    //redraw table
+                    oTable.fnDraw();
+                    $('#process_puchgstatus').hide();
+                    $('#multi_action_dialog').dialog( "close" );
+                }else{
+                    $('#process_puchgstatus').hide();
+                }
+            },'json');
+
+        });
+
+        $('#doMultiWHChangeStatus').on('click',function(){
+            var multi_reschedule_id = [];
+            $('.assign_check:checked').each(function(){
+                multi_reschedule_id.push(this.value);
+            });
+
+            $('#process_whchgstatus').show();
+
+            $.post('<?php print site_url('admin/delivery/ajaxwhchangestatus');?>',{
+                'delivery_id':multi_reschedule_id,
+                'new_status': $('#multi_whnew_status').val(),
+                'actor': $('#multi_whactor').val(),
+                'req_by' : $('#multi_rs_req_by').val(),
+                'req_name' : $('#multi_rs_req_name').val(),
+                'req_note' : $('#multi_rs_req_note').val()
+            }, function(data) {
+                if(data.result == 'ok'){
+                    //redraw table
+                    oTable.fnDraw();
+                    $('#process_whchgstatus').hide();
+                    $('#multi_action_dialog').dialog( "close" );
+                }else{
+                    $('#process_whchgstatus').hide();
+                }
+            },'json');
+
+        });
+

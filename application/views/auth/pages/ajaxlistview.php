@@ -538,6 +538,20 @@
 
 <?php echo $this->table->generate(); ?>
 
+<div style="text-align:right;margin-top:12px;">
+<?php
+
+    print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
+    form_button('do_multi','Change Selection','id="doMultiAction"').
+    form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
+    form_button('do_pickupassign','Assign Pickup Date to Selection','id="doPickup"').
+    form_button('do_confirm','Confirm Selection','id="doConfirm"').
+    form_button('do_cancel','Cancel Selection','id="doCancel"').
+    form_button('do_label','Print Selection Label','id="doLabel"');
+
+?>
+</div>
+
 <div id="archive_dialog" title="Archive Delivery Orders">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
@@ -589,6 +603,7 @@
 
 
 <?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog');
         $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
 ?>
 

@@ -172,6 +172,79 @@
                 <input id="multi_reschedule" class="multi_date" type="text" value=""><br /><br />
                 <button id="doMultiReschedule" class="ui-button-text">Reschedule</button>
                 &nbsp;&nbsp;<span id="process_reschedule" style="display:none;">processing...</span>
+                <br />
+                <hr>
+                <b>Change Status</b>
+                <br />
+                <?php
+                    $status_list = $this->config->item('status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="multi_chgactor"').'<br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="multi_new_status"');
+
+                ?>
+                <button id="doMultiChangeStatus" class="ui-button-text">Change</button>
+                &nbsp;&nbsp;<span id="process_chgstatus" style="display:none;">processing...</span>
+                <br /><br />
+                <hr>
+                <b>Change Pick Up Status</b>
+                <br />
+                <?php
+                    $status_list = $this->config->item('pickup_status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="multi_puactor"').'<br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="multi_punew_status"');
+
+                ?>
+                <button id="doMultiPUChangeStatus" class="ui-button-text">Change</button>
+                &nbsp;&nbsp;<span id="process_puchgstatus" style="display:none;">processing...</span>
+                <br /><br />
+                <hr>
+                <b>Change Warehouse Status</b>
+                <br />
+                <?php
+                    $status_list = $this->config->item('warehouse_status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="multi_whactor"').'<br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="multi_whnew_status"');
+
+                ?>
+                <button id="doMultiWHChangeStatus" class="ui-button-text">Change</button>
+                &nbsp;&nbsp;<span id="process_whchgstatus" style="display:none;">processing...</span>
+
             </td>
             <td style="overflow:auto;max-width:350px;width:350px;vertical-align:top">
                 Requested by :<br />

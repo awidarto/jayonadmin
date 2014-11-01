@@ -1,8 +1,19 @@
 <script>
 	var asInitVals = new Array();
 	var reassign_id = '';
+    var dateBlock = <?php print getdateblock();?>;
+    var rescheduled_id = 0;
+    var refreshTab;
+    var reschedulemode = 'incoming';
 
 	$(document).ready(function() {
+        $('#assign_all').click(function(){
+            if($('#assign_all').is(':checked')){
+                $('.assign_check').attr('checked', true);
+            }else{
+                $('.assign_check').attr('checked', false);
+            }
+        });
 
 	    var oTable = $('.dataTable').dataTable(
 			{
@@ -82,7 +93,57 @@
 			minLength: 2
 		});
 
+        function getBlocking(d){
+            /*
+                $.datepicker.formatDate('yy-mm-dd', d);
+            */
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth() + 1; //months are zero based
+            var curr_year = d.getFullYear();
+
+            curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
+            curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
+            var indate = curr_year + '-' + curr_month + '-' + curr_date;
+
+            var select = 1;
+            var css = 'open';
+            var popup = 'working day';
+
+            if(window.dateBlock[indate] == 'weekend'){
+                select = 0;
+                css = 'weekend';
+                popup = 'weekend';
+            }else if(window.dateBlock[indate] == 'holiday'){
+                select = 0;
+                css = 'weekend';
+                popup = 'holiday';
+            }else if(window.dateBlock[indate] == 'blocked'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else if(window.dateBlock[indate] == 'full'){
+                select = 0;
+                css = 'blocked';
+                popup = 'zero time slot';
+            }else{
+                select = 1;
+                css = '';
+                popup = 'working day';
+            }
+            return [select,css,popup];
+        }
+
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_button_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_button_js');
+?>
+
 		$('table.dataTable').click(function(e){
+
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_tab_js');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_tab_js');
+?>
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
@@ -194,88 +255,10 @@
 			}
 		});
 
-		$('#assign_dialog').dialog({
-			autoOpen: false,
-			height: 200,
-			width: 300,
-			modal: true,
-			buttons: {
-				"Dispatch Device": function() {
-					if($("#assign_date").val() == ''){
-						alert('Please specify Courier.')
-					}else{
-						var device_id = $("#assign_device").val();
-						var courier_id = $("#assign_courier_id").val();
-						var assignment_date = $("#assign_date").val();
-						var id_class = "."+assignment_date+"-"+device_id;
-
-
-						//console.log($(id_class).html());
-
-						var delivery_ids = new Array();
-
-						$(id_class).each(function(){
-							var d = $(this).html();
-							delivery_ids.push(d);
-						});
-
-						//console.log(delivery_ids);
-						//alert(device_id);
-
-						$.post('<?php print site_url('admin/delivery/ajaxdispatch');?>',{ assignment_device_id: device_id,assignment_courier_id: courier_id,assignment_date: assignment_date,delivery_id: delivery_ids }, function(data) {
-							if(data.result == 'ok'){
-								//redraw table
-								oTable.fnDraw();
-								$('#assign_dialog').dialog( "close" );
-							}
-						},'json');
-
-					}
-				},
-				Cancel: function() {
-					$('#assign_courier').val('');
-					$('#assign_courier_id_txt').html('');
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#assign_courier').val('');
-				$('#assign_courier_id_txt').html('');
-				$('#assign_deliverytime').val('');
-			}
-		});
-
-        $('#changestatus_dialog').dialog({
-            autoOpen: false,
-            height: 250,
-            width: 400,
-            modal: true,
-            buttons: {
-                "Confirm Delivery Orders": function() {
-                    var delivery_id = $('#change_id').html();
-
-                    $.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
-                        'delivery_id':delivery_id,
-                        'new_status': $('#new_status').val(),
-                        'actor': $('#actor').val()
-                    }, function(data) {
-                        if(data.result == 'ok'){
-                            //redraw table
-                            oTable.fnDraw();
-                            $('#changestatus_dialog').dialog( "close" );
-                        }
-                    },'json');
-                },
-                Cancel: function() {
-                    $( this ).dialog( "close" );
-                }
-            },
-            close: function() {
-                //allFields.val( "" ).removeClass( "ui-state-error" );
-                $('#confirm_list').html('');
-            }
-        });
+        <?php
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog_init');
+            $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog_init');
+        ?>
 
 		$('#device_reassign_dialog').dialog({
 			autoOpen: false,
@@ -311,33 +294,6 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-
-		$('#view_dialog').dialog({
-			autoOpen: false,
-			height: 600,
-			width: 900,
-			modal: true,
-			buttons: {
-				Save: function(){
-					var nframe = document.getElementById('view_frame');
-					var nframeWindow = nframe.contentWindow;
-					nframeWindow.submitorder();
-				},
-				Print: function(){
-					var pframe = document.getElementById('view_frame');
-					var pframeWindow = pframe.contentWindow;
-					pframeWindow.print();
-				},
-				Close: function() {
-					oTable.fnDraw();
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-
-			}
-		});
-
 
         $('#setloc_dialog').dialog({
             autoOpen: false,
@@ -377,7 +333,27 @@
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
 <?php endif;?>
+<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
+
 <?php echo $this->table->generate(); ?>
+<div style="text-align:right;margin-top:12px;">
+<?php
+
+    print form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"').
+    form_button('do_multi','Change Selection','id="doMultiAction"').
+    form_button('do_toscan','Mark for Scanning & Assign to Pick Up Device','id="doMarkscan"').
+    form_button('do_pickupassign','Assign Pickup Date to Selection','id="doPickup"').
+    form_button('do_confirm','Confirm Selection','id="doConfirm"').
+    form_button('do_cancel','Cancel Selection','id="doCancel"').
+    form_button('do_label','Print Selection Label','id="doLabel"');
+
+?>
+</div>
+
+<?php
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/common_dialog');
+        $this->load->view($this->config->item('auth_views_root') . 'pages/partials/change_dialog');
+?>
 
 <div id="assign_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
@@ -414,34 +390,6 @@
 			</td>
 		</tr>
 	</table>
-</div>
-
-<div id="changestatus_dialog" title="Change Delivery Orders">
-    <table style="width:100%;border:0;margin:0;">
-        <tr>
-            <td style="width:250px;vertical-align:top">
-                <strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
-                <?php
-                    $status_list = $this->config->item('status_colors');
-                    $status_list = array_keys($status_list);
-
-                    $sl = array();
-                    foreach($status_list as $s){
-                        $sl[$s]=$s;
-                    }
-
-                    $actor = $this->config->item('actors_title');
-
-
-                    print 'Actor <br />';
-                    print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
-                    print ' New Status<br />';
-                    print form_dropdown('new_status',$sl,'','id="new_status"');
-
-                ?>
-            </td>
-        </tr>
-    </table>
 </div>
 
 

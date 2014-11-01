@@ -2500,13 +2500,15 @@ class Delivery extends Application
 
             $direction = $key['directions'];
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check  '.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).' '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
 			$aadata[] = array(
 				$num,
 				$datefield,
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
 				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
-				'<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $delivery_check,
+				//'<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
 				//$app['application_name'],
 				//$app['domain'],
@@ -2582,6 +2584,27 @@ class Delivery extends Application
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />'
 			);
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 480;
+            $page['cell_height'] = 245;
+            $page['columns'] = 2;
+            $page['margin_right'] = 18;
+            $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
+        }
 
 		$page['sortdisable'] = '0,1,2';
 		$page['ajaxurl'] = 'admin/delivery/ajaxzoning';
@@ -3604,6 +3627,8 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
 
 			$aadata[] = array(
@@ -3612,7 +3637,8 @@ class Delivery extends Application
 				$devicefield,
 				get_slot_range($key['assignment_timeslot']),
 				//$key['delivery_id'],
-				'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $delivery_check,
+				//'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
 				(isset($app['application_name']))?$app['application_name']:'',
@@ -3694,6 +3720,27 @@ class Delivery extends Application
             '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
 
 			);
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 480;
+            $page['cell_height'] = 245;
+            $page['columns'] = 2;
+            $page['margin_right'] = 18;
+            $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
+        }
 
 		$page['sortdisable'] = '0,1,2,9,10,11';
 		$page['ajaxurl'] = 'admin/delivery/ajaxcourierassign';
@@ -4561,6 +4608,27 @@ class Delivery extends Application
 
 			);
 
+        $pd = get_print_default();
+
+        if($pd){
+            $page['resolution'] = $pd['res'];
+            $page['cell_width'] = $pd['cell_width'];
+            $page['cell_height'] = $pd['cell_height'];
+            $page['columns'] = $pd['col'];
+            $page['margin_right'] = $pd['mright'];
+            $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
+        }else{
+            $page['resolution'] = 150;
+            $page['cell_width'] = 480;
+            $page['cell_height'] = 245;
+            $page['columns'] = 2;
+            $page['margin_right'] = 18;
+            $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
+        }
 
 		$page['ajaxurl'] = 'admin/delivery/ajaxdelivered';
 		$page['laststatus'] = $this->config->item('trans_status_mobile_delivered');
@@ -5558,53 +5626,122 @@ class Delivery extends Application
 		$device_id = $this->input->post('device_id');
 		$dataset['status'] = $this->input->post('new_status');
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
+        $req_by = $this->input->post('req_by');
+        $req_name = $this->input->post('req_name');
+        $req_note = $this->input->post('req_note');
 
-        $incr = false;
+        if(is_array($delivery_id)){
+            foreach($delivery_id as $did){
 
-        if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
-            $incr = true;
-        }
+                $incr = false;
 
-		if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
-			$dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
-			$dataset['status'] == $this->config->item('trans_status_mobile_noshow')
-			){
-			$dataset['deliverytime'] = date('Y-m-d H:i:s', time());
-		}
+                if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
+                    $incr = true;
+                }
 
-		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
-		{
-            if($incr == true){
+                if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
+                    $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
+                    $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
+                    ){
+                    $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
+                }
 
-                $this->db->where('delivery_id',$delivery_id)
-                    ->set('pending_count', 'pending_count+1', FALSE)
-                    ->update($this->config->item('incoming_delivery_table'));
+                if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+                {
+                    if($incr == true){
+
+                        $this->db->where('delivery_id',$did)
+                            ->set('pending_count', 'pending_count+1', FALSE)
+                            ->update($this->config->item('incoming_delivery_table'));
+
+                    }
+
+                    $order_exist = 'ok';
+                }
+                else
+                {
+                    $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+                }
+
+                $data = array(
+                    'timestamp'=>date('Y-m-d H:i:s',time()),
+                    'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                    'delivery_id'=>$did,
+                    'device_id'=>$device_id,
+                    'courier_id'=>0,
+                    'actor_type'=>$this->input->post('actor'),
+                    'actor_id'=>$this->session->userdata('userid'),
+                    'latitude'=>0.000000,
+                    'longitude'=>0.000000,
+                    'status'=>$this->input->post('new_status'),
+                    'api_event'=>'admin_change_status',
+                    'req_by' => $req_by,
+                    'req_name' => $req_name,
+                    'req_note' => $req_note,
+                    'notes'=>$order_exist
+                );
+
+                delivery_log($data);
+
 
             }
 
-			$order_exist = 'ok';
-		}
-		else
-		{
-			$order_exist = 'ORDER_FAILED_ASSIGNMENT';
-		}
+        }else{
 
-				$data = array(
-					'timestamp'=>date('Y-m-d H:i:s',time()),
-					'report_timestamp'=>date('Y-m-d H:i:s',time()),
-					'delivery_id'=>$delivery_id,
-					'device_id'=>$device_id,
-					'courier_id'=>0,
-					'actor_type'=>$this->input->post('actor'),
-					'actor_id'=>$this->session->userdata('userid'),
-					'latitude'=>0.000000,
-					'longitude'=>0.000000,
-					'status'=>$this->input->post('new_status'),
-					'api_event'=>'admin_change_status',
-					'notes'=>$order_exist
-				);
+            $incr = false;
 
-			delivery_log($data);
+            if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
+                $incr = true;
+            }
+
+            if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
+                $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
+                $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
+                ){
+                $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
+            }
+
+            if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+            {
+                if($incr == true){
+
+                    $this->db->where('delivery_id',$delivery_id)
+                        ->set('pending_count', 'pending_count+1', FALSE)
+                        ->update($this->config->item('incoming_delivery_table'));
+
+                }
+
+                $order_exist = 'ok';
+            }
+            else
+            {
+                $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+            }
+
+            $data = array(
+                'timestamp'=>date('Y-m-d H:i:s',time()),
+                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                'delivery_id'=>$delivery_id,
+                'device_id'=>$device_id,
+                'courier_id'=>0,
+                'actor_type'=>$this->input->post('actor'),
+                'actor_id'=>$this->session->userdata('userid'),
+                'latitude'=>0.000000,
+                'longitude'=>0.000000,
+                'status'=>$this->input->post('new_status'),
+                'api_event'=>'admin_change_status',
+                'req_by' => $req_by,
+                'req_name' => $req_name,
+                'req_note' => $req_note,
+                'notes'=>$order_exist
+            );
+
+            delivery_log($data);
+
+        }
+
+
+
 
 		print json_encode(array('result'=>$order_exist));
 	}
@@ -5614,45 +5751,27 @@ class Delivery extends Application
         $device_id = $this->input->post('device_id');
         $dataset['pickup_status'] = $this->input->post('new_status');
         $dataset['puchange_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
+        $req_by = $this->input->post('req_by');
+        $req_name = $this->input->post('req_name');
+        $req_note = $this->input->post('req_note');
 
-        /*
-        $incr = false;
+        if(is_array($delivery_id)){
+            foreach($delivery_id as $did){
 
-        if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
-            $incr = true;
-        }
+                if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+                {
 
-        if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
-            $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
-            $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
-            ){
-            $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
-        }
-        */
-
-        if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
-        {
-            /*
-            if($incr == true){
-
-                $this->db->where('delivery_id',$delivery_id)
-                    ->set('pending_count', 'pending_count+1', FALSE)
-                    ->update($this->config->item('incoming_delivery_table'));
-
-            }
-            */
-
-            $order_exist = 'ok';
-        }
-        else
-        {
-            $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-        }
+                    $order_exist = 'ok';
+                }
+                else
+                {
+                    $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+                }
 
                 $data = array(
                     'timestamp'=>date('Y-m-d H:i:s',time()),
                     'report_timestamp'=>date('Y-m-d H:i:s',time()),
-                    'delivery_id'=>$delivery_id,
+                    'delivery_id'=>$did,
                     'device_id'=>$device_id,
                     'courier_id'=>0,
                     'actor_type'=>$this->input->post('actor'),
@@ -5661,10 +5780,51 @@ class Delivery extends Application
                     'longitude'=>0.000000,
                     'status'=>$this->input->post('new_status'),
                     'api_event'=>'admin_change_pu_status',
+                    'req_by' => $req_by,
+                    'req_name' => $req_name,
+                    'req_note' => $req_note,
                     'notes'=>$order_exist
                 );
 
+                delivery_log($data);
+
+
+            }
+
+        }else{
+
+
+            if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+            {
+
+                $order_exist = 'ok';
+            }
+            else
+            {
+                $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+            }
+
+            $data = array(
+                'timestamp'=>date('Y-m-d H:i:s',time()),
+                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                'delivery_id'=>$delivery_id,
+                'device_id'=>$device_id,
+                'courier_id'=>0,
+                'actor_type'=>$this->input->post('actor'),
+                'actor_id'=>$this->session->userdata('userid'),
+                'latitude'=>0.000000,
+                'longitude'=>0.000000,
+                'status'=>$this->input->post('new_status'),
+                'api_event'=>'admin_change_pu_status',
+                'notes'=>$order_exist
+            );
+
             delivery_log($data);
+
+
+        }
+
+
 
         print json_encode(array('result'=>$order_exist));
     }
@@ -5674,45 +5834,27 @@ class Delivery extends Application
         $device_id = $this->input->post('device_id');
         $dataset['warehouse_status'] = $this->input->post('new_status');
         $dataset['whchange_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
+        $req_by = $this->input->post('req_by');
+        $req_name = $this->input->post('req_name');
+        $req_note = $this->input->post('req_note');
 
-        /*
-        $incr = false;
+        if(is_array($delivery_id)){
+            foreach($delivery_id as $did){
 
-        if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
-            $incr = true;
-        }
+                if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+                {
 
-        if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
-            $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
-            $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
-            ){
-            $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
-        }
-        */
-
-        if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
-        {
-            /*
-            if($incr == true){
-
-                $this->db->where('delivery_id',$delivery_id)
-                    ->set('pending_count', 'pending_count+1', FALSE)
-                    ->update($this->config->item('incoming_delivery_table'));
-
-            }
-            */
-
-            $order_exist = 'ok';
-        }
-        else
-        {
-            $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-        }
+                    $order_exist = 'ok';
+                }
+                else
+                {
+                    $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+                }
 
                 $data = array(
                     'timestamp'=>date('Y-m-d H:i:s',time()),
                     'report_timestamp'=>date('Y-m-d H:i:s',time()),
-                    'delivery_id'=>$delivery_id,
+                    'delivery_id'=>$did,
                     'device_id'=>$device_id,
                     'courier_id'=>0,
                     'actor_type'=>$this->input->post('actor'),
@@ -5724,7 +5866,43 @@ class Delivery extends Application
                     'notes'=>$order_exist
                 );
 
+                delivery_log($data);
+
+            }
+
+        }else{
+
+
+            if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+            {
+
+                $order_exist = 'ok';
+            }
+            else
+            {
+                $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+            }
+
+            $data = array(
+                'timestamp'=>date('Y-m-d H:i:s',time()),
+                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                'delivery_id'=>$delivery_id,
+                'device_id'=>$device_id,
+                'courier_id'=>0,
+                'actor_type'=>$this->input->post('actor'),
+                'actor_id'=>$this->session->userdata('userid'),
+                'latitude'=>0.000000,
+                'longitude'=>0.000000,
+                'status'=>$this->input->post('new_status'),
+                'api_event'=>'admin_change_wh_status',
+                'notes'=>$order_exist
+            );
+
             delivery_log($data);
+
+
+        }
+
 
         print json_encode(array('result'=>$order_exist));
     }
