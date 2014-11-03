@@ -438,8 +438,8 @@ class Ajaxpos extends CI_Controller
 				$key['timestamp'],
 				$key['identifier'],
 				$key['courier'],
-				$key['latitude'],
-				$key['longitude'],
+				colorizelatlon($key['latitude']),
+				colorizelatlon($key['longitude']),
 				$key['status']
 			);
 		}
