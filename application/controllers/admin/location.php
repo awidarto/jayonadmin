@@ -137,8 +137,8 @@ class Location extends Application
 				$key['timestamp'],
 				$key['identifier'],
 				$key['courier'],
-				$key['latitude'],
-				$key['longitude'],
+				colorizelatlon($key['latitude']),
+				colorizelatlon($key['longitude']),
 				$key['status']
 			);
 		}

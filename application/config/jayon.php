@@ -182,6 +182,10 @@ $config['warehouse_status_changes'] = array(
     $config['trans_status_return2merchant'] => 'red'
 );
 
+$config['max_lat'] = -6.288176;
+$config['min_lat'] = -6.286224;
+$config['max_lon'] = 106.703041;
+$config['min_lon'] = 106.699688;
 
 $config['actors_code'] = array(
 	'mobile'=>'MB',

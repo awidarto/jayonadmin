@@ -1326,6 +1326,32 @@ function colorizestatus($status, $prefix = '', $suffix = ''){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
+function colorizelatlon($coord, $combined = false){
+    $CI =& get_instance();
+
+    if($combined == true){
+        $coord = explode(',',$coord);
+
+        if( $CI->config->item('max_lat') > $coord && $coord > $CI->config->item('min_lat') ){
+            $coord[0] = sprintf('<span class="%s">%s</span>','red',$coord[0]);
+        }
+
+        if( $CI->config->item('max_lon') > $coord && $coord > $CI->config->item('min_lon') ){
+            $coord[1] =  sprintf('<span class="%s">%s</span>','red',$coord[1]);
+        }
+
+        return implode(',', $coord);
+    }else{
+        if( $CI->config->item('max_lat') > $coord && $coord > $CI->config->item('min_lat') ){
+            return sprintf('<span class="%s">%s</span>','red',$coord);
+        }
+
+        if( $CI->config->item('max_lon') > $coord && $coord > $CI->config->item('min_lon') ){
+            return sprintf('<span class="%s">%s</span>','red',$coord);
+        }
+    }
+}
+
 function colorizetype($type, $prefix = '', $suffix = ''){
 
 	if($type == 'COD'){
