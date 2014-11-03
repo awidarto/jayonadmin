@@ -1349,6 +1349,8 @@ function colorizelatlon($coord, $combined = false){
         if( $CI->config->item('max_lon') > $coord && $coord > $CI->config->item('min_lon') ){
             return sprintf('<span class="%s">%s</span>','red',$coord);
         }
+
+        return $coord;
     }
 }
 
