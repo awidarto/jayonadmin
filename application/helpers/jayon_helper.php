@@ -1332,11 +1332,11 @@ function colorizelatlon($lat, $lon, $field = 'lat'){
     if(distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' ) < 1 ){
 
         if($field == 'lat'){
-            return sprintf('<span class="%s">%s</span>','red',$lat);
+            return sprintf('<span class="%s">%s</span>','textred',$lat);
         }elseif ($field == 'lon') {
-            return sprintf('<span class="%s">%s</span>','red',$lon);
+            return sprintf('<span class="%s">%s</span>','textred',$lon);
         }else{
-            return sprintf('<span class="%s">%s</span>','red',$lat.','.$lon);
+            return sprintf('<span class="%s">%s</span>','textred',$lat.','.$lon);
         }
     }else{
         if($field == 'lat'){
