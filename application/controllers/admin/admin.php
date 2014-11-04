@@ -103,6 +103,10 @@ class Admin extends Application
 
     }
 
+    public function testdistance(){
+
+    }
+
 	public function testmail(){
 		$subject = 'Processed order';
 		$to = 'andy.awidarto@gmail.com';
