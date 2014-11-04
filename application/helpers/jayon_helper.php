@@ -1329,7 +1329,7 @@ function colorizestatus($status, $prefix = '', $suffix = ''){
 function colorizelatlon($lat, $lon, $field = 'lat'){
     $CI =& get_instance();
 
-    if(distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' ) < 1 ){
+    if(distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' ) < 0.1 ){
 
         if($field == 'lat'){
             return sprintf('<span class="%s">%s</span>','textred',$lat);
