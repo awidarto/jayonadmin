@@ -1326,32 +1326,29 @@ function colorizestatus($status, $prefix = '', $suffix = ''){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
-function colorizelatlon($coord, $combined = false){
+function colorizelatlon($lat, $lon, $field = 'lat'){
     $CI =& get_instance();
 
-    if($combined == true){
-        $coord = explode(',',$coord);
+    if(distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' ) < 1 ){
 
-        if( $CI->config->item('max_lat') > $coord && $coord > $CI->config->item('min_lat') ){
-            $coord[0] = sprintf('<span class="%s">%s</span>','red',$coord[0]);
+        if($field == 'lat'){
+            return sprintf('<span class="%s">%s</span>','red',$lat);
+        }elseif ($field == 'lon') {
+            return sprintf('<span class="%s">%s</span>','red',$lon);
+        }else{
+            return sprintf('<span class="%s">%s</span>','red',$lat.','.$lon);
         }
-
-        if( $CI->config->item('max_lon') > $coord && $coord > $CI->config->item('min_lon') ){
-            $coord[1] =  sprintf('<span class="%s">%s</span>','red',$coord[1]);
-        }
-
-        return implode(',', $coord);
     }else{
-        if( $CI->config->item('max_lat') > $coord && $coord > $CI->config->item('min_lat') ){
-            return sprintf('<span class="%s">%s</span>','red',$coord);
+        if($field == 'lat'){
+            return $lat;
+        }elseif ($field == 'lon') {
+            return $lon;
+        }else{
+            return $lat.','.$lon;
         }
 
-        if( $CI->config->item('max_lon') > $coord && $coord > $CI->config->item('min_lon') ){
-            return sprintf('<span class="%s">%s</span>','red',$coord);
-        }
-
-        return $coord;
     }
+
 }
 
 function colorizetype($type, $prefix = '', $suffix = ''){
@@ -1738,5 +1735,26 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 	//$series = str_replace('"', '', json_encode($series)) ;
 	return $series;
 }
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit = 'K') {
+    $lat1 = (int) $lat1;
+    $lon1 = (int) $lon1;
+    $lat2 = (int) $lat2;
+    $lon2 = (int) $lon2;
+    $theta = $lon1 - $lon2;
+    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    $dist = acos($dist);
+    $dist = rad2deg($dist);
+    $miles = $dist * 60 * 1.1515;
+    $unit = strtoupper($unit);
+    if ($unit == 'K') {
+        return ($miles * 1.609344);
+    } else if ($unit == 'N') {
+        return ($miles * 0.8684);
+    } else {
+        return $miles;
+    }
+}
+
 
 ?>
