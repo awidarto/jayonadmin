@@ -4230,7 +4230,7 @@ class Delivery extends Application
             $pick_stat = colorizestatus($key['pickup_status']);
                 $wh_stat = colorizestatus($key['warehouse_status']);
 
-
+            $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
 			$aadata[] = array(
 				$num,
@@ -4249,6 +4249,7 @@ class Delivery extends Application
                 $delivery_check,
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
+                '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
                 $key['delivery_note'],
 				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
@@ -4303,6 +4304,7 @@ class Delivery extends Application
 			'Phone',
             'Delivery ID',
             'Status',
+            'TTD Toko',
             'Pending',
             'Note',
 			'Actions',
@@ -4334,6 +4336,7 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
+            '',
             '',
             '',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
