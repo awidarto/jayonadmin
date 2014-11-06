@@ -1330,11 +1330,17 @@ function colorizelatlon($lat, $lon, $field = 'lat'){
     $CI =& get_instance();
 
     //$d = distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' );
+    $d = 0;
+    $loc_set = true;
+    if($lat == 'Set Loc'){
+        $loc_set = false;
+    }else{
+        $d = vincentyGreatCircleDistance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon );
+    }
 
-    $d = vincentyGreatCircleDistance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon );
     //print $d;
 
-    if($d < 3000 ){
+    if($d < 3000 && $loc_set == true){
 
         if($field == 'lat'){
             return sprintf('<span class="%s">%s</span>','textred',$lat);

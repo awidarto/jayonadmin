@@ -391,7 +391,8 @@ class Delivery extends Application
             $class = ($lat == 'Set Loc')?' red':'';
 
             $direction = $key['directions'];
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             if(file_exists(FCPATH.'public/pickup/'.$key['merchant_trans_id'].'_address.jpg')){
                 $picture = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
@@ -1185,7 +1186,8 @@ class Delivery extends Application
             $class = ($lat == 'Set Loc')?' red':'';
 
             $direction = $key['directions'];
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             if(file_exists(FCPATH.'public/pickup/'.$key['merchant_trans_id'].'_address.jpg')){
                 $picture = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
@@ -1911,7 +1913,8 @@ class Delivery extends Application
             $class = ($lat == 'Set Loc')?' red':'';
 
             $direction = $key['directions'];
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             if(file_exists(FCPATH.'public/pickup/'.$key['merchant_trans_id'].'_address.jpg')){
                 $picture = ($key['pic_address'] = '')?'':'<img src="'.base_url().'public/pickup/'.$key['merchant_trans_id'].'_address.jpg" style="width:100px;height:auto">';
@@ -2537,7 +2540,8 @@ class Delivery extends Application
             $class = ($lat == 'Set Loc')?' red':'';
 
             $direction = $key['directions'];
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
             $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check  '.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).' '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
 			$aadata[] = array(
@@ -3681,7 +3685,8 @@ class Delivery extends Application
 
             $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
 			$aadata[] = array(
 				$num,
@@ -4216,7 +4221,7 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
 
@@ -4585,7 +4590,8 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             $dtime = date('dmY',strtotime($key['deliverytime']));
             $slipname = strtoupper(escapeVars($key['merchant'], '_')).'-'.$dtime.'-'.strtoupper(escapeVars($key['buyer_name'],'_')).'-'.strtoupper(escapeVars($key['merchant_trans_id']));
@@ -5216,7 +5222,8 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
 			$aadata[] = array(
 				$num,
@@ -5430,8 +5437,8 @@ class Delivery extends Application
 				$key['req_by'],
 				$key['req_name'],
 				$key['req_note'],
-				$key['latitude'],
-				$key['longitude'],
+                colorizelatlon($key['latitude'],$key['longitude'],'lat'),
+				colorizelatlon($key['latitude'],$key['longitude'],'lon'),
 				colorizestatus($key['status']),
 				$key['notes']
 			);
