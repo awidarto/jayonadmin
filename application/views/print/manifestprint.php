@@ -195,6 +195,10 @@
                         <td>COURIER</td>
                         <td style="text-align:left;"><?php print $courier_name;?></td>
                     </tr>
+                    <tr>
+                        <td>TOKO ONLINE</td>
+                        <td style="text-align:left;"><?php print strtoupper($merchantinfo) ?></td>
+                    </tr>
                 </table>
             </div>
 

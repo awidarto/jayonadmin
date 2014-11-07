@@ -2749,10 +2749,11 @@ class Reports extends Application
 
     //manifest
 
-    public function manifests($type = null,$zone = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function manifests($type = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $mid = (is_null($merchant))?'noid':$merchant;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -2764,6 +2765,7 @@ class Reports extends Application
         $data['getparams'] = array(
             'type'=> $type ,
             'zone'=> $zone,
+            'merchant'=> $merchant,
             'year'=> $year ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
@@ -2832,6 +2834,17 @@ class Reports extends Application
         $data['merchants'] = $cs;
         $data['id'] = $id;
 
+
+        $mclist = get_merchant(null,false);
+
+        $mcs = array('noid'=>'All');
+        foreach ($mclist as $mckey) {
+            $mcs[$mckey['id']] = $mckey['merchantname'].' - '.$mckey['fullname'];
+        }
+
+        $data['merchantlist'] = $mcs;
+        $data['mid'] = $mid;
+
         /* copied from print controller */
 
         $this->load->library('number_words');
@@ -2851,6 +2864,18 @@ class Reports extends Application
             $data['bank_account'] = 'n/a';
 
             $data['merchantname'] = $user->identifier;
+        }
+
+        if($mid == 'noid'){
+            $data['merchantinfo'] = 'All Merchant';
+        }else{
+            $member = $this->db->where('id',$mid)->get($this->config->item('jayon_members_table'))->row();
+            //print $this->db->last_query();
+            //$data['type'] = $member->merchantname.' - '.$member->fullname;
+            //$data['type_name'] = $member->fullname;
+            //$data['bank_account'] = 'n/a';
+
+            $data['merchantinfo'] = $member->merchantname;
         }
 
         if($data['zone'] == 'all'){
@@ -2888,6 +2913,10 @@ class Reports extends Application
 
         if($id != 'noid'){
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
+        }
+
+        if($mid != 'noid'){
+            $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$mid);
         }
 
         if($zone != 'all'){
@@ -3275,11 +3304,13 @@ class Reports extends Application
         $data['courier_name'] = $courier_name;
 
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
+        $data['merchantinfo'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantinfo']);
 
         $zonename = strtoupper(str_replace(' ', '_', $data['zone']));
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
+        $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
 
-        $pdffilename = 'JSM-'.$mname.'-'.$zonename.'-'.$data['invdatenum'];
+        $pdffilename = 'JSM-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('print/manifestprint',$data,true);
@@ -3295,6 +3326,7 @@ class Reports extends Application
             $invdata = array(
                 'merchant_id'=>$type,
                 'merchantname'=>$data['merchantname'],
+                'merchantinfo'=>$data['merchantinfo'],
                 'period_from'=>$data['from'],
                 'period_to'=>$data['to'],
                 'release_date'=>$invdate,
@@ -3317,6 +3349,7 @@ class Reports extends Application
     public function genmanifest(){
         $type = null;
         $zone = null;
+        $merchant = null;
         $year = null;
         $scope = null;
         $par1 = null;
@@ -3326,6 +3359,7 @@ class Reports extends Application
 
         $type = $this->input->post('type');
         $zone = $this->input->post('zone');
+        $merchant = $this->input->post('merchant');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -3333,7 +3367,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->manifests($type ,$zone,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->manifests($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
