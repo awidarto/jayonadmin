@@ -2861,10 +2861,16 @@ class Delivery extends Application
 		$single = true;
 
 		if(is_array($delivery_id)){
-			foreach ($delivery_id as $d) {
-				$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+            $this->db->where_in('delivery_id',$delivery_id)
+                ->update($this->config->item('incoming_delivery_table'),array(
+                    //'status'=>$this->config->item('trans_status_rescheduled'),
+                    'assignment_date'=>$buyerdeliverytime, 'change_actor'=>$req_by));
 
-				$data = array(
+            $data = array();
+			foreach ($delivery_id as $d) {
+				//$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+
+				$data[] = array(
 						'timestamp'=>date('Y-m-d H:i:s',time()),
 						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
@@ -2881,12 +2887,19 @@ class Delivery extends Application
 						'notes'=>''
 						);
 
-				delivery_log($data);
+				//delivery_log($data);
 			}
+
+            $this->db->insert_batch($this->config->item('delivery_log_table'),$data);
 
 			$single = false;
 		}else{
 			$buyeremail = $this->do_reschedule($delivery_id,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
+
+            $this->db->where('delivery_id',$delivery_id)
+                ->update($this->config->item('incoming_delivery_table'),array(
+                    //'status'=>$this->config->item('trans_status_rescheduled'),
+                    'assignment_date'=>$buyerdeliverytime, 'change_actor'=>$req_by));
 
 				$data = array(
 						'timestamp'=>date('Y-m-d H:i:s',time()),
@@ -2912,6 +2925,7 @@ class Delivery extends Application
 
 		$edata = array();
 
+        /*
 		if($single){
 			$edata = $buyeremail;
 			$edata['detail'] = false;
@@ -2926,6 +2940,7 @@ class Delivery extends Application
 				@send_notification('Rescheduled Orders',$b['buyeremail'],null,null,'rescheduled_order_buyer',$edata,null);
 			}
 		}
+        */
 
 
 	}
@@ -6222,7 +6237,7 @@ class Delivery extends Application
 			$actor = $this->session->userdata('userid');
 			$change_actor = 'A:'.$actor;
 			$this->db->where('delivery_id',$delivery_id)
-                ->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
+                ->update($this->config->item('incoming_delivery_table'),array('assignment_date'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
 
 			$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.application_name as app');
 			$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
