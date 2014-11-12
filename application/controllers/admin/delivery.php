@@ -423,6 +423,10 @@ class Delivery extends Application
 
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
+            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
+            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
+            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
+
 			$aadata[] = array(
 				$num,
 				$key['ordertime'],
@@ -3703,6 +3707,7 @@ class Delivery extends Application
             //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -4252,6 +4257,10 @@ class Delivery extends Application
 
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
+            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
+            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
+            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -4271,9 +4280,8 @@ class Delivery extends Application
 				$thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
-                $key['delivery_note'],
+                $notes,
 				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
-
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
@@ -4429,6 +4437,8 @@ class Delivery extends Application
                 delivery_cost,
                 delivery_type,cod_cost,
                 delivery_note,
+                pickup_note,
+                warehouse_note,
                 reschedule_ref,
                 revoke_ref,
                 latitude,
@@ -4616,6 +4626,9 @@ class Delivery extends Application
             $pick_stat = colorizestatus($key['pickup_status']);
             $wh_stat = colorizestatus($key['warehouse_status']);
 
+            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
+            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
+            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
 
 			$aadata[] = array(
 				$num,
@@ -4634,7 +4647,7 @@ class Delivery extends Application
                 $thumbnail,
                 $key['delivery_note'],
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
-                $key['delivery_note'],
+                $notes,
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['delivery_cost'],
@@ -5745,6 +5758,7 @@ class Delivery extends Application
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                     $incr = true;
+                    $dataset['delivery_note'] = $req_note;
                 }
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
@@ -5800,6 +5814,7 @@ class Delivery extends Application
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
+                $dataset['delivery_note'] = $req_note;
             }
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
@@ -5862,6 +5877,8 @@ class Delivery extends Application
         $req_by = $this->input->post('req_by');
         $req_name = $this->input->post('req_name');
         $req_note = $this->input->post('req_note');
+
+        $dataset['pickup_note'] = $req_note;
 
         if(is_array($delivery_id)){
             foreach($delivery_id as $did){
@@ -5945,6 +5962,8 @@ class Delivery extends Application
         $req_by = $this->input->post('req_by');
         $req_name = $this->input->post('req_name');
         $req_note = $this->input->post('req_note');
+
+        $dataset['warehouse_note'] = $req_note;
 
         if(is_array($delivery_id)){
             foreach($delivery_id as $did){

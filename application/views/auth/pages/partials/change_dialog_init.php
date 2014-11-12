@@ -1,7 +1,7 @@
         $('#changestatus_dialog').dialog({
             autoOpen: false,
             height: 250,
-            width: 400,
+            width: 600,
             modal: true,
             buttons: {
                 "Confirm Changes": function() {
@@ -10,7 +10,8 @@
                     $.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
                         'delivery_id':delivery_id,
                         'new_status': $('#new_status').val(),
-                        'actor': $('#actor').val()
+                        'actor': $('#actor').val(),
+                        'req_note' : $('#chg_note').val()
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
@@ -32,7 +33,7 @@
         $('#puchangestatus_dialog').dialog({
             autoOpen: false,
             height: 250,
-            width: 400,
+            width: 600,
             modal: true,
             buttons: {
                 "Confirm Changes": function() {
@@ -43,7 +44,8 @@
                     $.post('<?php print site_url('admin/delivery/ajaxpuchangestatus');?>',{
                         'delivery_id':delivery_id,
                         'new_status': $('#punew_status').val(),
-                        'actor': $('#actor').val()
+                        'actor': $('#actor').val(),
+                        'req_note' : $('#puchg_note').val()
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
@@ -65,7 +67,7 @@
         $('#whchangestatus_dialog').dialog({
             autoOpen: false,
             height: 250,
-            width: 400,
+            width: 600,
             modal: true,
             buttons: {
                 "Confirm Changes": function() {
@@ -74,7 +76,8 @@
                     $.post('<?php print site_url('admin/delivery/ajaxwhchangestatus');?>',{
                         'delivery_id':delivery_id,
                         'new_status': $('#whnew_status').val(),
-                        'actor': $('#actor').val()
+                        'actor': $('#actor').val(),
+                        'req_note' : $('#whchg_note').val()
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table

@@ -22,6 +22,10 @@
 
                 ?>
             </td>
+            <td>
+                <label for="chg_note">Note</label>
+                <textarea name="chg_note" id="chg_note" style="width:100%;height:100%"></textarea>
+            </td>
         </tr>
     </table>
 </div>
@@ -50,6 +54,10 @@
 
                 ?>
             </td>
+            <td>
+                <label for="puchg_note">Note</label>
+                <textarea name="puchg_note" id="puchg_note" style="width:100%;height:100%"></textarea>
+            </td>
         </tr>
     </table>
 </div>
@@ -77,6 +85,10 @@
                     print form_dropdown('new_status',$sl,'','id="whnew_status"');
 
                 ?>
+            </td>
+            <td>
+                <label for="whchg_note">Note</label>
+                <textarea name="whchg_note" id="whchg_note" style="width:100%;height:100%"></textarea>
             </td>
         </tr>
     </table>
