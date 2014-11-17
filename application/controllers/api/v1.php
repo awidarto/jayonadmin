@@ -778,8 +778,8 @@ class V1 extends Application
                         ->where('status',$this->config->item('trans_status_admin_courierassigned'))
                         ->or_()
                         ->group_start()
-                        ->where('status',$this->config->item('trans_status_new'))
-                        ->where('pending_count >', 0)
+                            ->where('status',$this->config->item('trans_status_new'))
+                            ->where('pending_count >', 0)
                         ->group_end()
                     ->group_end()
 					->get();

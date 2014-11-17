@@ -4226,17 +4226,17 @@ class Delivery extends Application
 
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
-			$devicefield = ($bardev == $key['device'])?'':$key['device'];
+			$devicefield = ($bardev == $key['device'])?'&nbsp;':$key['device'];
 
             $courierlink = '<span class="change_courier" id="'.$key['assignment_date'].'_'.$key['device_id'].'_'.$key['courier_id'].'" style="cursor:pointer;text-decoration:underline;" >'.$key['courier'].'</span>';
 
 			$courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$courierlink;
-			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
-			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':'<input type="checkbox" class="zone_select" data-device="'.$key['device_id'].'" data-deliverydate="'.$key['assignment_date'].'"  data-city="'.$key['buyerdeliverycity'].'" data-devicename="'.$key['device'].'" data-courier="'.$key['courier'].'" value="'.str_replace(' ', '-', $key['buyerdeliveryzone'] ).'" > '.$key['buyerdeliveryzone'];
+			$cityfield = ($barcity == $key['buyerdeliverycity'])?'&nbsp;':$key['buyerdeliverycity'];
+			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'&nbsp;':'<input type="checkbox" class="zone_select" data-device="'.$key['device_id'].'" data-deliverydate="'.$key['assignment_date'].'"  data-city="'.$key['buyerdeliverycity'].'" data-devicename="'.$key['device'].'" data-courier="'.$key['courier'].'" value="'.str_replace(' ', '-', $key['buyerdeliveryzone'] ).'" > '.$key['buyerdeliveryzone'];
 
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
-            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+            $lon = ($key['longitude'] == 0)? '&nbsp;':$key['longitude'];
 
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
@@ -4257,9 +4257,9 @@ class Delivery extends Application
 
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
-            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
-            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
-            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
+            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'&nbsp;';
+            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'&nbsp;';
+            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'&nbsp;';
 
 			$aadata[] = array(
 				$num,
