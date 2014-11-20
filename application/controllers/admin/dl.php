@@ -11,6 +11,36 @@ class Dl extends Application
         parent::__construct();        # code...
     }
 
+    public function test(){
+        $this->load->library('xlswrite');
+
+        $xlswrite = new Xlswrite();
+// Set properties
+        echo date('H:i:s') . " Set properties\n";
+        $xlswrite->getProperties()->setCreator("Maarten Balliauw");
+        $xlswrite->getProperties()->setLastModifiedBy("Maarten Balliauw");
+        $xlswrite->getProperties()->setTitle("Office 2007 XLSX Test Document");
+        $xlswrite->getProperties()->setSubject("Office 2007 XLSX Test Document");
+        $xlswrite->getProperties()->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.");
+
+
+        // Add some data
+        echo date('H:i:s') . " Add some data\n";
+        $xlswrite->setActiveSheetIndex(0);
+        $xlswrite->getActiveSheet()->SetCellValue('A1', 'Hello');
+        $xlswrite->getActiveSheet()->SetCellValue('B2', 'world!');
+        $xlswrite->getActiveSheet()->SetCellValue('C1', 'Hello');
+        $xlswrite->getActiveSheet()->SetCellValue('D2', 'world!');
+
+        // Rename sheet
+        echo date('H:i:s') . " Rename sheet\n";
+        $xlswrite->getActiveSheet()->setTitle('Simple');
+
+        $xlswrite->xlsx(FCPATH.'/public/test.xlsx');
+
+
+    }
+
     public function dispatch(){
 
         $filter = $this->input->post('datafilter');
@@ -46,7 +76,16 @@ class Dl extends Application
             length,
             height,
             application_id,
+            device_id,
+            courier_id,
             pending_count,
+            status,
+            pickup_status,
+            warehouse_status,
+            delivery_note,
+            pickup_note,
+            warehouse_note,
+            ordertime,
             chargeable_amount';
 
         // sorting columns
@@ -150,7 +189,7 @@ class Dl extends Application
         $barzone = '';
 
         $num = 0;
-
+        /*
         foreach($sdata as $key)
         {
             $num++;
@@ -217,12 +256,7 @@ class Dl extends Application
 
 
         }
-
-
-        $fname = date('Y-m-d',time()).'_inprogress.csv';
-
-        $fp = fopen(FCPATH.'public/dl/'.$fname, 'w');
-
+        */
         $headrow = array(
             '#',
             'Delivery Date',
@@ -238,15 +272,145 @@ class Dl extends Application
             'Shipping Address',
             'Phone',
             'Delivery ID',
+            'Status',
+            'Pending',
+            'Note',
             'No Kode Penjualan Toko',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
             'Volume',
-            'Weight Range',
-            'Status',
-            'Pending'
+            'Weight Range'
         );
+
+
+
+        $this->load->library('xlswrite');
+        $xlswrite = new Xlswrite();
+        $xlswrite->setActiveSheetIndex(0);
+
+
+        $colnames = $this->config->item('xls_columns');
+
+        $colindex = 0;
+        foreach($headrow as $d){
+            $cellname = $colnames[$colindex]."1";
+            $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+            $colindex++;
+        }
+
+
+        foreach($sdata as $value => $key)
+        {
+            $num++;
+
+            $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
+            $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+            //$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
+            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+            $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
+            $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
+
+            $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
+
+            $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
+
+
+            $datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
+            $devicefield = ($bardev == $key['device'])?' ':$key['device'];
+
+            $courierlink = '<span class="change_courier" id="'.$key['assignment_date'].'_'.$key['device_id'].'_'.$key['courier_id'].'" style="cursor:pointer;text-decoration:underline;" >'.$key['courier'].'</span>';
+
+            $courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$key['courier'];
+            $cityfield = ($barcity == $key['buyerdeliverycity'])?' ':$key['buyerdeliverycity'];
+            $zonefield = ($barzone == $key['buyerdeliveryzone'])?' ':$key['buyerdeliveryzone'];
+
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? ' ':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
+
+            $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
+
+            $thumbstat = colorizestatus($key['status']);
+            if($key['status'] == 'pending'){
+                $thumbstat .= '<br />'.$thumbnail;
+            }
+
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+
+            $pick_stat = colorizestatus($key['pickup_status']);
+                $wh_stat = colorizestatus($key['warehouse_status']);
+
+            $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
+
+            $notes = ($key['delivery_note'] != '')?'Delivery Note:'.$key['delivery_note']:' ';
+            $notes .= ($key['pickup_note'] != '')?'PU Note:'.$key['pickup_note']:' ';
+            $notes .= ($key['warehouse_note'] != '')?'WH Note:'.$key['warehouse_note']:' ';
+
+            $xdata = array(
+                $num,
+                $datefield,
+                $devicefield,
+                $courierfield,
+                $key['delivery_type'],
+                ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
+                $cityfield,
+                $zonefield,
+                $key['merchant'],
+                $key['buyer_name'],
+                $key['recipient_name'],
+                $key['shipping_address'],
+                $key['phone'].', '.$key['mobile1'].', '.$key['mobile2'],
+                $key['delivery_id'],
+                //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $key['status'],
+                $key['pending_count'],
+                $key['delivery_note'],
+                //$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
+                $this->hide_trx($key['merchant_trans_id']),
+                $key['delivery_cost'],
+                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                $key['width'].' x '.$key['height'].' x '.$key['length'],
+                (double)$key['width']*(double)$key['height']*(double)$key['length'],
+                get_weight_range($key['weight'],$key['application_id'])
+
+            );
+
+            $aadata[] = $xdata;
+
+            $colindex = 0;
+            foreach($xdata as $d){
+                $cellname = $colnames[$colindex].($num + 1);
+                $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+                $colindex++;
+            }
+
+
+            $bardate = $key['assignment_date'];
+            $bardev =   $key['device'];
+            $barcourier =   $key['courier'];
+            $barcity =  $key['buyerdeliverycity'];
+            $barzone =  $key['buyerdeliveryzone'];
+
+
+        }
+
+
+
+        $fname = date('Y-m-d',time()).'_inprogress.csv';
+        $xname = date('Y-m-d',time()).'_inprogress.xlsx';
+
+        $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
+
+        $fp = fopen(FCPATH.'public/dl/'.$fname, 'w');
+
 
 
         $head = 0;
@@ -263,7 +427,7 @@ class Dl extends Application
 
         fclose($fp);
 
-        $urlcsv = base_url().'admin/dl/out/'.$fname;
+        $urlcsv = base_url().'admin/dl/out/'.$xname;
         $result = array( 'status'=>'OK','data'=>array('urlcsv'=>$urlcsv), 'q'=>$last_query );
         print json_encode($result);
     }
