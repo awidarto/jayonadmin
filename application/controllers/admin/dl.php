@@ -432,13 +432,10 @@ class Dl extends Application
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
-        if($search == false && $has_date == false){
-            $this->db->like('ordertime', date('Y-m-d',time()),'both');
-        }
 
-        //if($search){
+        if($search){
             $this->db->and_();
-        //}
+        }
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
