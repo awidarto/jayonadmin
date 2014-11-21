@@ -709,7 +709,7 @@
     <?php endif;?>
     <div class="button_nav">
         <span id="download-csv" class="button" style="cursor:pointer">
-            Download CSV
+            Download Excel
         </span>
     </div>
 <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All

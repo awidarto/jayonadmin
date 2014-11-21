@@ -136,15 +136,6 @@ class Dl extends Application
             $this->db->and_();
         }
 
-        /*
-        $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_where('pending_count >', 0)
-            ->group_end();
-        */
-
         $this->db->group_start()
                 ->where('status',$this->config->item('trans_status_admin_courierassigned'))
                 ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
@@ -164,16 +155,6 @@ class Dl extends Application
             ->order_by('buyerdeliveryzone','asc')
             ->get($this->config->item('assigned_delivery_table'));
 
-        /*
-        $data = $this->db->order_by('assignment_date','desc')
-            ->order_by('device','asc')
-            ->order_by('courier','asc')
-            ->order_by('buyerdeliverycity','asc')
-            ->order_by('buyerdeliveryzone','asc')
-            //->order_by($sort,$sort_dir)
-            ->get($this->config->item('assigned_delivery_table'));
-        */
-
             $last_query = $this->db->last_query();
 
         $sdata = $data->result_array();
@@ -189,74 +170,7 @@ class Dl extends Application
         $barzone = '';
 
         $num = 0;
-        /*
-        foreach($sdata as $key)
-        {
-            $num++;
 
-            $datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
-            $devicefield = ($bardev == $key['device'])?'':$key['device'];
-
-            //$courierlink = '<span class="change_courier" id="'.$key['assignment_date'].'_'.$key['device_id'].'_'.$key['courier_id'].'" style="cursor:pointer;text-decoration:underline;" >'.$key['courier'].'</span>';
-
-            $courierfield = ($barcourier == $key['courier'] && $barzone == $key['buyerdeliveryzone'])?'':$key['courier'];
-            $cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
-            $zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
-
-
-            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
-            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
-
-            $style = 'style="cursor:pointer;padding:2px;display:block;"';
-            $class = ($lat == 'Set Loc')?' red':'';
-
-            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
-
-            $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
-
-            $thumbstat = colorizestatus($key['status']);
-            if($key['status'] == 'pending'){
-                $thumbstat .= '<br />'.$thumbnail;
-            }
-
-            $phones = ($key['phone'] == '')?'':$key['phone'];
-            $phones .= ($key['mobile1'] == '')?'':';'.$key['mobile1'];
-            $phones .= ($key['mobile2'] == '')?'':';'.$key['mobile2'];
-
-            $aadata[] = array(
-                $num,
-                $datefield,
-                $devicefield,
-                $courierfield,
-                $key['delivery_type'],
-                ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
-                $cityfield,
-                $zonefield,
-                $key['merchant'],
-                $key['buyer_name'],
-                $key['recipient_name'],
-                $key['shipping_address'].'<br />'.$direction,
-                $phones,
-                $key['delivery_id'],
-                $this->hide_trx($key['merchant_trans_id']),
-                $key['delivery_cost'],
-                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
-                $key['width'].' x '.$key['height'].' x '.$key['length'],
-                (double)$key['width']*(double)$key['height']*(double)$key['length'],
-                get_weight_range($key['weight'],$key['application_id']),
-                $key['status'],
-                $key['pending_count']
-            );
-
-            $bardate = $key['assignment_date'];
-            $bardev =   $key['device'];
-            $barcourier =   $key['courier'];
-            $barcity =  $key['buyerdeliverycity'];
-            $barzone =  $key['buyerdeliveryzone'];
-
-
-        }
-        */
         $headrow = array(
             '#',
             'Delivery Date',
@@ -433,6 +347,280 @@ class Dl extends Application
     }
 
     public function delivered(){
+
+        $filter = $this->input->post('datafilter');
+        $sorts = $this->input->post('sort');
+
+
+        $mtab = $this->config->item('assigned_delivery_table');
+
+        $mfields = $mtab.'.id as id,delivery_type,
+                buyerdeliverycity,
+                buyerdeliveryzone,
+                buyer_name,
+                recipient_name,
+                shipping_address,
+                '.$mtab.'.phone,
+                '.$mtab.'.mobile1,
+                '.$mtab.'.mobile2,
+                delivery_note,
+                status,
+                pickup_status,
+                warehouse_status,
+                device_id,
+                deliverytime,
+                chargeable_amount,
+                delivery_id,
+                merchant_trans_id,
+                delivery_cost,
+                delivery_type,cod_cost,
+                delivery_note,
+                pickup_note,
+                warehouse_note,
+                reschedule_ref,
+                revoke_ref,
+                latitude,
+                longitude,
+                '.$mtab.'.merchant_id';
+        // sorting columns
+        $sort = $sorts[0];
+        $sort_dir = $sorts[1];
+
+        $sortcolumns = array(
+            'assignment_date',
+            'buyerdeliveryzone',
+            'delivery_id',
+            'device',
+            'courier',
+            'buyer',
+            'shipping_address',
+            'phone',
+            '',
+            'status',
+            'merchant_id',
+            'merchant_trans_id'
+            );
+
+        $search = false;
+        $has_date = false;
+        foreach ($filter as $f) {
+            if(!preg_match('/^Search/i', $f['value'])){
+                $field = str_replace('search_', '', $f['name']);
+                if($field == 'device'){
+                    $this->db->like('d.identifier', $f['value'],'both');
+                }elseif($field == 'merchant'){
+                    $this->db->like('m.merchantname', $f['value'],'both');
+                }elseif($field == 'buyer'){
+                    $this->db->like('buyer_name', $f['value'],'both');
+                }elseif($field == 'deliverytime'){
+                    if($f['value'] != ''){
+                        $has_date = true;
+                    }
+                }else{
+                    $this->db->like($field, $f['value'],'both');
+                }
+
+                $search = true;
+            }
+
+        }
+
+        $this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+        //$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+        $this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+        $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
+        $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+        $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+        if($search == false && $has_date == false){
+            $this->db->like('ordertime', date('Y-m-d',time()),'both');
+        }
+
+        //if($search){
+            $this->db->and_();
+        //}
+        $this->db->group_start()
+            ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
+            ->group_end();
+
+        if($search == false && $has_date == false){
+            $this->db->limit(1000,0);
+        }
+
+        $data = $this->db->order_by('deliverytime','desc')
+                    ->get($this->config->item('assigned_delivery_table'));
+
+        $last_query = $this->db->last_query();
+
+        $result = $data->result_array();
+
+        //print_r($sdata);
+
+        $aadata = array();
+
+        $bardate = '';
+        $bardev = '';
+        $barcourier = '';
+        $barcity = '';
+        $barzone = '';
+
+        $num = 0;
+
+        $headrow = array(
+            '#',
+            'Delivery Time',
+            'Device',
+            'Courier',
+            'Type',
+            'COD Value',
+            'City',
+            'Zone',
+            'Merchant',
+            'Buyer',
+            'Delivered To',
+            'Shipping Address',
+            'Phone',
+            'Receiver / Note',
+            'Status',
+            'Note',
+            'Delivery ID',
+            'No Kode Penjualan Toko',
+            'Delivery Fee',
+            'COD Surcharge',
+            'Reschedule Ref',
+            'Revoke Ref'
+        );
+
+
+
+        $this->load->library('xlswrite');
+        $xlswrite = new Xlswrite();
+        $xlswrite->setActiveSheetIndex(0);
+
+
+        $colnames = $this->config->item('xls_columns');
+
+        $colindex = 0;
+        foreach($headrow as $d){
+            $cellname = $colnames[$colindex]."1";
+            $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+            $colindex++;
+        }
+
+        $num = 0;
+        //foreach($result as $value => $key)
+        for($i = 0; $i < count($result);$i++)
+        {
+            $key = $result[$i];
+
+            $num++;
+            $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
+            $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+
+            $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
+
+            $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
+
+            //if($key['status'] == 'pending'){
+            $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
+            //}else{
+            //    $thumbnail = get_thumbnail($key['delivery_id']);
+            //}
+
+            $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
+            $lon = ($key['longitude'] == 0)? '':$key['longitude'];
+
+            $style = 'style="cursor:pointer;padding:2px;display:block;"';
+            $class = ($lat == 'Set Loc')?' red':'';
+
+            //$direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
+
+            $dtime = date('dmY',strtotime($key['deliverytime']));
+            $slipname = strtoupper(escapeVars($key['merchant'], '_')).'-'.$dtime.'-'.strtoupper(escapeVars($key['buyer_name'],'_')).'-'.strtoupper(escapeVars($key['merchant_trans_id']));
+
+            $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+
+            $pick_stat = colorizestatus($key['pickup_status']);
+            $wh_stat = colorizestatus($key['warehouse_status']);
+
+            $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
+            $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
+            $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
+
+            $xdata = array(
+                $num,
+                $key['deliverytime'],
+                $key['device'],
+                $key['courier'],
+                $key['delivery_type'],
+                ($key['delivery_type'] == 'COD')?$key['chargeable_amount']:'',
+                $key['buyerdeliverycity'],
+                $key['buyerdeliveryzone'],
+                $key['merchant'],
+                $key['buyer_name'],
+                $key['recipient_name'],
+                $key['shipping_address'],
+                $key['phone'].', '.$key['mobile1'].', '.$key['mobile2'],
+                $key['delivery_note'],
+                $key['status'],
+                $key['delivery_note'],
+                $key['delivery_id'],
+                $this->hide_trx($key['merchant_trans_id']),
+                $key['delivery_cost'],
+                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                $key['reschedule_ref'],
+                $key['revoke_ref']
+            );
+
+            $aadata[] = $xdata;
+
+            $colindex = 0;
+            foreach($xdata as $d){
+                $cellname = $colnames[$colindex].($num + 1);
+                $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+                $colindex++;
+            }
+
+
+        }
+
+
+
+        $fname = date('Y-m-d',time()).'_deliveystatus.csv';
+        $xname = date('Y-m-d',time()).'_deliveystatus.xlsx';
+
+        $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
+
+        $fp = fopen(FCPATH.'public/dl/'.$fname, 'w');
+
+
+
+        $head = 0;
+        foreach ($aadata as $fields) {
+            if($head == 0){
+                $heads = $headrow;
+                fputcsv($fp, $heads, ',' , '"');
+                fputcsv($fp, $fields, ',' , '"');
+            }else{
+                fputcsv($fp, $fields, ',' , '"');
+            }
+            $head++;
+        }
+
+        fclose($fp);
+
+        $urlcsv = base_url().'admin/dl/out/'.$xname;
+        $result = array( 'status'=>'OK','data'=>array('urlcsv'=>$urlcsv), 'q'=>$last_query );
+        print json_encode($result);
+    }
+
+    public function __delivered(){
 
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
