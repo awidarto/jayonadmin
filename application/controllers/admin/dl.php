@@ -577,8 +577,8 @@ class Dl extends Application
 
 
 
-        $fname = date('Y-m-d',time()).'_deliveystatus.csv';
-        $xname = date('Y-m-d',time()).'_deliveystatus.xlsx';
+        $fname = date('Y-m-d',time()).'_deliverystatus.csv';
+        $xname = date('Y-m-d',time()).'_deliverystatus.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
