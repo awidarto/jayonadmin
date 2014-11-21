@@ -402,7 +402,6 @@ class Dl extends Application
             );
 
         $search = false;
-        $has_date = false;
         foreach ($filter as $f) {
             if(!preg_match('/^Search/i', $f['value'])){
                 $field = str_replace('search_', '', $f['name']);
@@ -412,17 +411,12 @@ class Dl extends Application
                     $this->db->like('m.merchantname', $f['value'],'both');
                 }elseif($field == 'buyer'){
                     $this->db->like('buyer_name', $f['value'],'both');
-                }elseif($field == 'deliverytime'){
-                    if($f['value'] != ''){
-                        $has_date = true;
-                    }
                 }else{
                     $this->db->like($field, $f['value'],'both');
                 }
 
                 $search = true;
             }
-
         }
 
         $this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -431,7 +425,6 @@ class Dl extends Application
         $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
-
 
         if($search){
             $this->db->and_();
@@ -442,11 +435,6 @@ class Dl extends Application
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
             ->group_end();
-
-        if($search == false && $has_date == false){
-            $this->db->limit(1000,0);
-        }
-
         $data = $this->db->order_by('deliverytime','desc')
                     ->get($this->config->item('assigned_delivery_table'));
 
