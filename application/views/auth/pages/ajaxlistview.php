@@ -3,7 +3,7 @@
 
     var dl = false;
 
-    var dateBlock = <?php print getdateblock();?>;
+    var dateBlock = '';
     var rescheduled_id = 0;
     var refreshTab;
     var reschedulemode = 'incoming';
