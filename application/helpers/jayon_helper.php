@@ -696,8 +696,12 @@ function overquota($date){
 	$quota = $CI->db->count_all_results();
 	*/
 
-	$sqlf = "SELECT COUNT( * ) AS  numrows FROM %s WHERE  (buyerdeliverytime LIKE  '%s%%' AND  assignment_date =  '%s') OR  assignment_date =  '%s'";
-	$sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date,'0000-00-00',$date);
+	//$sqlf = "SELECT COUNT( * ) AS  numrows FROM %s WHERE  (buyerdeliverytime LIKE  '%s%%' AND  assignment_date =  '%s') OR  assignment_date =  '%s'";
+	//$sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date,'0000-00-00',$date);
+
+    $sqlf = "SELECT COUNT( * ) AS  numrows FROM %s WHERE  assignment_date =  '%s'";
+    $sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date);
+
 	$quota = $CI->db->query($sql);
 	$quota = $quota->row()->numrows;
 
