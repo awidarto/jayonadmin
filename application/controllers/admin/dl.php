@@ -59,7 +59,7 @@ class Dl extends Application
             status,
             '.$mtab.'.merchant_id as merchant_id,
             merchant_trans_id,
-            delivery_type,
+            '.$mtab.'.delivery_type,
             delivery_cost,
             cod_cost,
             total_price';
@@ -137,20 +137,20 @@ class Dl extends Application
         }
 
         $this->db->group_start()
-                ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-                ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-                ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-                ->or_()
-                    ->group_start()
-                        ->where('status',$this->config->item('trans_status_new'))
-                        ->where('pending_count >', 0)
-                    ->group_end()
+            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
             ->group_end();
 
         $data = $this->db
             ->order_by('assignment_date','desc')
-            ->order_by('device','asc')
-            ->order_by('courier','asc')
+            ->order_by('d.identifier','asc')
+            ->order_by('c.fullname','asc')
             ->order_by('buyerdeliverycity','asc')
             ->order_by('buyerdeliveryzone','asc')
             ->get($this->config->item('assigned_delivery_table'));
