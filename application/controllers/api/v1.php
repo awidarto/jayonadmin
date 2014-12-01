@@ -836,7 +836,7 @@ class V1 extends Application
                         }
 
                         if($o['dl_type'] == 'COD' || $o['dl_type'] == 'CCOD'){
-                            $chg = ($gt - $dsc) + $dc + $cod;
+                            $chg = ($gt - $dsc) + $tax + $dc + $cod;
                         }else{
                             $dc = 0;
                             $cod = 0;
