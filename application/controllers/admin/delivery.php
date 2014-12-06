@@ -1089,10 +1089,10 @@ class Delivery extends Application
             $today = date('Y-m-d H:i:s',time());
             $then = date('Y-m-d H:i:s',(time() - 30*24*60*60 ));
 
-            $this->db->group_start()
+            $this->db->group_start();
                 $this->db->where($this->config->item('incoming_delivery_table').'.created >=',$then);
                 $this->db->where($this->config->item('incoming_delivery_table').'.created <=',$today);
-            ->group_end();
+            $this->db->group_end();
 
         /*
 
