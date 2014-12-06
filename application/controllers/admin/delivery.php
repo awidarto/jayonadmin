@@ -1082,20 +1082,24 @@ class Delivery extends Application
             $this->db->and_();
         }else{
             //$this->db->
+
+            //$this->db->and_();
+        }
+
             $today = date('Y-m-d H:i:s',time());
             $then = date('Y-m-d H:i:s',(time() - 30*24*60*60 ));
 
-            $this->db->where($this->config->item('incoming_delivery_table').'.created >=',$then);
-            $this->db->where($this->config->item('incoming_delivery_table').'.created <=',$today);
+            $this->db->group_start()
+                $this->db->where($this->config->item('incoming_delivery_table').'.created >=',$then);
+                $this->db->where($this->config->item('incoming_delivery_table').'.created <=',$today);
+            ->group_end();
 
-            $this->db->and_();
-        }
+        /*
 
         $this->db->group_start()
             ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
             ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
             ->group_end();
-        /*
         $this->db->group_start()
             ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
             ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
