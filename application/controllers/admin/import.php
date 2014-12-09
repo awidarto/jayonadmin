@@ -852,10 +852,30 @@ class Import extends Application
                 $order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
                 $order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
+                // check out who is bearing the cost
                 if($order['delivery_type'] == 'COD' || $order['delivery_type'] == 'CCOD'){
-                    $order['chargeable_amount'] = $order['total_price'] + $order['delivery_cost'] + $order['cod_cost'];
+                    if($order['delivery_bearer'] == 'merchant'){
+                        $dcost = 0;
+                    }else{
+                        $dcost = $order['delivery_cost'];
+                    }
+
+                    if($order['cod_bearer'] == 'merchant'){
+                        $codcost = 0;
+                    }else{
+                        $codcost = $order['cod_cost'];
+                    }
+
+                    $order['chargeable_amount'] = $order['total_price'] + $dcost + $codcost;
                 }else{
-                    $order['chargeable_amount'] = $order['delivery_cost'];
+
+                    if($order['delivery_bearer'] == 'merchant'){
+                        $dcost = 0;
+                    }else{
+                        $dcost = $order['delivery_cost'];
+                    }
+
+                    $order['chargeable_amount'] = $dcost;
                 }
 
                 if(isset($in->show_shop)){
