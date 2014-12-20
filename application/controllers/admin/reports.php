@@ -3789,8 +3789,8 @@ class Reports extends Application
                 if($d['api_event'] == 'admin_change_status'){
                     $n = $d['req_note'];
                 }else{
-                    if($d['note'] != ''){
-                        $n = $d['note'];
+                    if($d['notes'] != ''){
+                        $n = $d['notes'];
                     }
                 }
 
