@@ -3559,6 +3559,8 @@ class Reports extends Application
             ->where('status',   $this->config->item('trans_status_mobile_delivered'))
             //->where('status',$this->config->item('trans_status_admin_courierassigned'))
             ->or_where('status',$this->config->item('trans_status_new'))
+            ->or_where('status',$this->config->item('trans_status_rescheduled'))
+            ->or_where('status',$this->config->item('trans_status_mobile_return'))
             //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
             /*
             ->or_()
@@ -3762,7 +3764,14 @@ class Reports extends Application
 
 
 
-            $details = $this->db->where('delivery_id',$r->delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+            $details = $this->db->where('delivery_id',$r->delivery_id)
+                            ->and_()
+                            ->group_start()
+                                ->where('status','pending')
+                                ->or_where('status','returned')
+                            ->group_end()
+                            ->order_by('timestamp','desc')
+                            ->get($this->config->item('delivery_log_table'));
 
             $details = $details->result_array();
 
@@ -3770,16 +3779,17 @@ class Reports extends Application
             $d = 0;
             $gt = 0;
 
-            foreach($details as $value => $key)
+            $notes = '';
+
+            foreach($details as $d )
             {
-
-                $u_total = str_replace(array(',','.'), '', $key['unit_total']);
-                $u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
-                $gt += (int)$u_total;
-                $d += (int)$u_discount;
-
+                if($d['notes'] != ''){
+                    $notes .= $d['timestamp'].'<br />';
+                    $notes .= $d['notes'].'<br />';
+                }
             }
 
+            /*
             $payable = $gt;
 
             $total_delivery += (int)str_replace('.','',$dc);
@@ -3818,6 +3828,7 @@ class Reports extends Application
                 $cod = 0;
                 $chg = $dc;
             }
+            */
 
 
 
@@ -3859,7 +3870,7 @@ class Reports extends Application
                 $this->table->add_row(
                     $seq,
                     $r->merchant_name,
-                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency'),
                     $r->ordertime,
                     $order2assign->d,
                     $r->assignment_date,
@@ -3868,7 +3879,7 @@ class Reports extends Application
                     $order2delivery->d,
                     $r->status,
                     $r->pending_count,
-                    $r->delivery_note,
+                    $r->delivery_note.'<br />'.$notes,
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $this->hide_trx($r->merchant_trans_id)
                 );
