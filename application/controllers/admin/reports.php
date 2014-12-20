@@ -3796,6 +3796,7 @@ class Reports extends Application
 
                 if($n != ''){
                     $notes .= $d['timestamp'].'<br />';
+                    $notes .= '<b>'.$d['status'].'</b><br />';
                     $notes .= $n.'<br />';
                 }
 
