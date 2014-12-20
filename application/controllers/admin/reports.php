@@ -3881,7 +3881,7 @@ class Reports extends Application
                     $order2delivery->d,
                     $r->status,
                     $r->pending_count,
-                    $r->delivery_note.'<br />'.$notes,
+                    $notes,
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $this->hide_trx($r->merchant_trans_id)
                 );
