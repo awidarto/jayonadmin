@@ -100,6 +100,7 @@
                     <li class="<?php print set_hilite('admin\/reports\/invoices')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/invoices', 'Invoices'); } ?></li>
                     <li class="<?php print set_hilite('admin\/invoices\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/invoices/listing', 'Released Invoices'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/manifests')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/manifests', 'Manifests'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/reports\/deliverytime')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/deliverytime', 'Delivery Time'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/zonerevenue')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/zonerevenue', 'Zone Revenue Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/cityrevenue')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/cityrevenue', 'City Revenue Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/location\/distribution')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/distribution', 'Buyer Distributions'); } ?></li>

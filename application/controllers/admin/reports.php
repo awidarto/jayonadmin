@@ -3375,11 +3375,13 @@ class Reports extends Application
 
     }
 
+    //delivery time report
 
-    public function ___manifests($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+    public function deliverytime($type = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $mid = (is_null($merchant))?'noid':$merchant;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -3388,6 +3390,18 @@ class Reports extends Application
             $par1 = date('m',time());
         }
 
+        $data['getparams'] = array(
+            'type'=> $type ,
+            'zone'=> $zone,
+            'merchant'=> $merchant,
+            'year'=> $year ,
+            'scope'=>$scope ,
+            'par1'=> $par1 ,
+            'par2'=> $par2 ,
+            'par3'=> $par3 ,
+            'par4'=> $par4
+            );
+
         $pdf = null;
 
         if($scope == 'month'){
@@ -3395,6 +3409,9 @@ class Reports extends Application
             $from = date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
             $to =   date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
             $pdf = $par2;
+            $invdate = $par3;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = $par1;
             $data['week'] = 1;
@@ -3402,6 +3419,9 @@ class Reports extends Application
             $from = date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
             $to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
             $pdf = $par2;
+            $invdate = $par3;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = $par1;
@@ -3409,6 +3429,9 @@ class Reports extends Application
             $from = $par1;
             $to = $par2;
             $pdf = $par3;
+            $invdate = $par4;
+
+            $data['getparams']['par3'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = 1;
@@ -3416,6 +3439,9 @@ class Reports extends Application
             $from = date('Y-m-d',time());
             $to = date('Y-m-d',time());
             $pdf = null;
+            $invdate = null;
+
+            $data['getparams']['par2'] = 'pdf';
 
             $data['month'] = 1;
             $data['week'] = 1;
@@ -3425,8 +3451,6 @@ class Reports extends Application
         $data['from'] = $from;
         $data['to'] = $to;
 
-        $clist = get_merchant(null,false);
-
         $clist = get_device_list();
 
         $cs = array('noid'=>'All');
@@ -3434,8 +3458,20 @@ class Reports extends Application
             $cs[$ckey->id] = $ckey->identifier;
         }
 
+        $data['zone'] = urldecode($zone);
         $data['merchants'] = $cs;
         $data['id'] = $id;
+
+
+        $mclist = get_merchant(null,false);
+
+        $mcs = array('noid'=>'All');
+        foreach ($mclist as $mckey) {
+            $mcs[$mckey['id']] = $mckey['merchantname'].' - '.$mckey['fullname'];
+        }
+
+        $data['merchantlist'] = $mcs;
+        $data['mid'] = $mid;
 
         /* copied from print controller */
 
@@ -3445,12 +3481,41 @@ class Reports extends Application
             $data['type_name'] = '-';
             $data['bank_account'] = 'n/a';
             $data['type'] = 'Global';
+
+            $data['merchantname'] = 'All Device';
+
         }else{
             $user = $this->db->where('id',$id)->get($this->config->item('jayon_devices_table'))->row();
             //print $this->db->last_query();
             $data['type'] = $user->identifier;
             $data['type_name'] = $user->identifier;
             $data['bank_account'] = 'n/a';
+
+            $data['merchantname'] = $user->identifier;
+        }
+
+        if($mid == 'noid'){
+            $data['merchantinfo'] = 'All Merchant';
+        }else{
+            $member = $this->db->where('id',$mid)->get($this->config->item('jayon_members_table'))->row();
+            //print $this->db->last_query();
+            //$data['type'] = $member->merchantname.' - '.$member->fullname;
+            //$data['type_name'] = $member->fullname;
+            //$data['bank_account'] = 'n/a';
+
+            $data['merchantinfo'] = $member->merchantname;
+        }
+
+        if($data['zone'] == 'all'){
+            $data['zone'] = 'All zones';
+        }
+
+        if(is_null($invdate)){
+            $data['invdate'] = '-';
+            $data['invdatenum'] = '-';
+        }else{
+            $data['invdate'] = iddate($invdate);
+            $data['invdatenum'] = date('dmY',mysql_to_unix($invdate)) ;
         }
 
         $data['period'] = $from.' s/d '.$to;
@@ -3458,7 +3523,9 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname,d.identifier as device_name, c.fullname as courier_name ,a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $mtab = $this->config->item('assigned_delivery_table');
+
+        $this->db->select('assignment_date,ordertime,deliverytime,delivery_note,pending_count,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3476,15 +3543,30 @@ class Reports extends Application
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
         }
 
-        /*
+        if($mid != 'noid'){
+            $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$mid);
+        }
+
+        if($zone != 'all'){
+            $zone = urldecode($zone);
+            $this->db->where($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$zone);
+        }
+
+        $this->db->order_by('buyerdeliverycity','asc')->order_by('buyerdeliveryzone','asc');
+
         $this->db->and_();
-            $this->db->group_start();
-                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
-            $this->db->group_end();
-        */
+        $this->db->group_start()
+            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
+            ->group_end();
+
+
         //print $this->db->last_query();
 
         if($pdf == 'csv'){
@@ -3538,34 +3620,108 @@ class Reports extends Application
 
         //exit();
 
-        $this->table->set_heading(
-            'No.',
-            'Device Name',
-            'Courier',
-            'No Kode Penjualan Toko',
-            'Delivery ID',
-            'Store',
-            'Delivery Date',
-            'Buyer Name',
-            'Delivery Type',
-            'Status',
-            'Package Value',
-            'Disc',
-            'Tax',
-            'Delivery Chg',
-            'COD Surchg',
-            'Payable Value'
-        ); // Setting headings for the table
+        if($pdf == 'print' || $pdf == 'pdf'){
+            $this->table->set_heading(
+                'No.',
+                'TOKO ONLINE',
+                'Type',
+                'Tgl Upload',
+                '',
+                'Tgl Kirim',
+                '',
+                'Tgl Diterima',
+                'Status',
+                'Pending',
+                'Catatan',
+                'ALAMAT',
+                'Phone',
+                'No Kode Penjualan Toko'
+
+
+            ); // Setting headings for the table
+            /*
+            $this->table->set_subheading(
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
+
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+
+                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
+                array('data'=>'NAMA','style'=>'min-width:100px;')
+
+            );*/ // Setting headings for the table
+
+        }else{
+
+            $this->table->set_heading(
+                'No.',
+                'TOKO ONLINE',
+                'Type',
+                'Tgl Upload',
+                '',
+                'Tgl Kirim',
+                '',
+                'Tgl Diterima',
+                'Status',
+                'Pending',
+                'Catatan',
+                'ALAMAT',
+                'Phone',
+                'No Kode Penjualan Toko'
+            ); // Setting headings for the table
+
+            /*
+            $this->table->set_subheading(
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
+                array('data'=>'NAMA','style'=>'min-width:100px;')
+
+            ); */ // Setting headings for the table
+
+        }
+
+
 
         $seq = 1;
         $total_billing = 0;
         $total_delivery = 0;
         $total_cod = 0;
 
+        $d = 0;
+        $gt = 0;
+
         $lastdate = '';
+
+        $courier_name = '';
+
+        $order2assigndays = 0;
+        $assign2deliverydays = 0;
 
         foreach($rows->result() as $r){
 
+
+            $courier_name = $r->courier_name;
             $total = str_replace(array(',','.'), '', $r->total_price);
             $dsc = str_replace(array(',','.'), '', $r->total_discount);
             $tax = str_replace(array(',','.'), '',$r->total_tax);
@@ -3580,47 +3736,172 @@ class Reports extends Application
 
             $payable = 0;
 
-            if($r->status == 'delivered'){
-                $payable = ($total - $dsc) + $tax;
+            $ordertime = new DateTime($r->ordertime);
+            $assignment_date = new DateTime($r->assignment_date);
+            $deliverytime = new DateTime($r->deliverytime);
 
-                $total_delivery += (int)str_replace('.','',$dc);
-                $total_cod += (int)str_replace('.','',$cod);
-                $total_billing += (int)str_replace('.','',$payable);
+            $order2assign = $ordertime->diff($assignment_date);
+
+            $assign2delivery = $assignment_date->diff($deliverytime);
+
+            if(is_null($deliverytime) || $deliverytime == ''){
+                $assign2delivery->d = 0;
+            }
+
+
+            $details = $this->db->where('delivery_id',$r->delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+
+            $details = $details->result_array();
+
+
+            $d = 0;
+            $gt = 0;
+
+            foreach($details as $value => $key)
+            {
+
+                $u_total = str_replace(array(',','.'), '', $key['unit_total']);
+                $u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
+                $gt += (int)$u_total;
+                $d += (int)$u_discount;
 
             }
 
-            $this->table->add_row(
-                $seq,
-                $r->device_name,
-                $r->courier_name,
-                $this->hide_trx($r->merchant_trans_id),
-                $this->short_did($r->delivery_id),
-                $r->app_name.'<hr />'.$r->domain,
-                date('d-m-Y',strtotime($r->assignment_date)),
-                $r->buyer_name,
-                $r->delivery_type,
-                $r->status,
-                array('data'=>idr($total),'class'=>'currency'),
-                array('data'=>idr($dsc),'class'=>'currency'),
-                array('data'=>idr($tax),'class'=>'currency'),
-                array('data'=>idr($dc),'class'=>'currency'),
-                array('data'=>idr($cod),'class'=>'currency'),
-                array('data'=>idr($payable),'class'=>'currency')
-            );
+            $payable = $gt;
+
+            $total_delivery += (int)str_replace('.','',$dc);
+            $total_cod += (int)str_replace('.','',$cod);
+            $total_billing += (int)str_replace('.','',$payable);
+
+            $db = '';
+            if($r->delivery_bearer == 'merchant'){
+                $dc = 0;
+                $db = 'M';
+            }else{
+                $db = 'B';
+            }
+
+            //force all DO to zero
+
+            $cb = '';
+            if($r->cod_bearer == 'merchant'){
+                $cod = 0;
+                $cb = 'M';
+            }else{
+                $cb = 'B';
+            }
+
+            $codclass = '';
+
+            if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
+                $chg = ($gt - $dsc) + $tax + $dc + $cod;
+
+                //$chg = $gt + $dc + $cod;
+
+                $codclass = 'cod';
+
+            }else{
+                $dc = 0;
+                $cod = 0;
+                $chg = $dc;
+            }
+
+
+
+            if($pdf == 'print' || $pdf == 'pdf'){
+
+                $this->table->add_row(
+                    $seq,
+                    $r->buyerdeliveryzone,
+                    $r->merchant_name,
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    $r->status.'<br /><br />'.$r->pickup_status.'<br /><br />'.$r->warehouse_status,
+                    $r->buyer_name,
+                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
+                    array('data'=>( $dc == 0 )?0:idr($dc),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
+                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
+                    $r->shipping_address,
+                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    $this->hide_trx($r->merchant_trans_id),
+                    '',
+                    ''
+                );
+
+
+            }else{
+                /*
+                'No.',
+                'TOKO ONLINE',
+                'Type',
+                'Tgl Upload',
+                ''
+                'Tgl Kirim',
+                ''
+                'Tgl Diterima',
+                'Status',
+                'Catatan',
+                'ALAMAT',
+                'Phone',
+                'No Kode Penjualan Toko'
+                */
+                $this->table->add_row(
+                    $seq,
+                    $r->merchant_name,
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    $r->ordertime,
+                    $order2assign->d,
+                    $r->assignment_date,
+                    $assign2delivery->d,
+                    $r->deliverytime,
+                    $r->status,
+                    $r->pending_count,
+                    $r->delivery_note,
+                    $r->shipping_address,
+                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    $this->hide_trx($r->merchant_trans_id),
+                    '',
+                    ''
+                );
+
+
+            }
 
             $seq++;
         }
 
-        $total_span = 14;
-        $say_span = 14;
+        /*
 
-        $this->table->add_row(
-            array('data'=>'Total','colspan'=>$total_span),
-            array('data'=>idr($total_delivery),'class'=>'total currency'),
-            array('data'=>idr($total_cod),'class'=>'total currency'),
-            array('data'=>idr($total_billing),'class'=>'total currency')
-        );
+            if($pdf == 'print' || $pdf == 'pdf'){
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    '',
+                    '',
+                    ''
+                );
+            }
+        */
 
+
+
+        if($pdf == 'print' || $pdf == 'pdf'){
+
+            $total_span = 2;
+            $say_span = 6;
+
+        }else{
+
+            $total_span = 12;
+            $say_span = 13;
+
+        }
+
+        /*
         $this->table->add_row(
             'Terbilang',
             array('data'=>'&nbsp;','colspan'=>$say_span)
@@ -3635,43 +3916,123 @@ class Reports extends Application
         }
 
         $this->table->add_row(
-            'Delivery Charge',
+            array('data'=>'Delivery Charge',
+                'colspan'=>$total_span),
             array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
                 'colspan'=>$say_span)
         );
 
         $this->table->add_row(
-            'COD Surcharge',
+            array('data'=>'COD Surcharge',
+                'colspan'=>$total_span),
             array('data'=>$this->number_words->to_words($total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
 
+        $this->table->add_row(
+            array('data'=>'Grand Total',
+                'colspan'=>$total_span),
+            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+        */
+
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
-
         /* end copy */
 
-        $this->breadcrumb->add_crumb('Manifests','admin/reports/manifests');
+        $this->breadcrumb->add_crumb('Manifest','admin/reports/deliverytime');
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
-        $page['page_title'] = 'Manifests';
+        $page['page_title'] = 'Manifest';
         $data['select_title'] = 'Device';
+        $data['zone_select_title'] = 'Zone';
 
-        $data['controller'] = 'admin/reports/manifests/';
+
+        $data['controller'] = 'admin/reports/deliverytime/';
 
         $data['last_query'] = $last_query;
 
+        $data['grand_total'] = $total_delivery + $total_cod;
+
+
+        $data['zones'] = array_merge( array('all'=>'All'), get_zone_options() ) ;
+
+        $data['courier_name'] = $courier_name;
+
+        $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
+        $data['merchantinfo'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantinfo']);
+
+        $zonename = strtoupper(str_replace(' ', '_', $data['zone']));
+        $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
+        $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
+
+        $pdffilename = 'JSM-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
+
         if($pdf == 'pdf'){
-            $html = $this->load->view('print/revenue',$data,true);
-            $pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
-            pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+            $html = $this->load->view('print/manifestprint',$data,true);
+            $pdf_name = $pdffilename;
+            $pdfbuf = pdf_create($html, $pdf_name,'A3','landscape', false);
+
+            file_put_contents(FCPATH.'public/manifests/'.$pdf_name.'.pdf', $pdfbuf);
+
+            $data['invdate'] = iddate($invdate);
+            $data['invdatenum'] = date('dmY',mysql_to_unix($invdate));
+
+
+            $invdata = array(
+                'merchant_id'=>$type,
+                'merchantname'=>$data['merchantname'],
+                'merchantinfo'=>$data['merchantinfo'],
+                'period_from'=>$data['from'],
+                'period_to'=>$data['to'],
+                'release_date'=>$invdate,
+                'invoice_number'=>$pdffilename,
+                'note'=>'',
+                'filename'=>$pdffilename
+            );
+
+            $inres = $this->db->insert($this->config->item('manifest_table'),$invdata);
+
+            return array(file_exists(FCPATH.'public/manifests/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+
         }else if($pdf == 'print'){
-            $this->load->view('print/merchantrecon',$data); // Load the view
+            $this->load->view('print/manifestprint',$data); // Load the view
         }else{
-            $this->ag_auth->view('merchantrecon',$data); // Load the view
+            $this->ag_auth->view('manifestgenerator',$data); // Load the view
         }
     }
+
+    public function gendeliverytime(){
+        $type = null;
+        $zone = null;
+        $merchant = null;
+        $year = null;
+        $scope = null;
+        $par1 = null;
+        $par2 = null;
+        $par3 = null;
+        $par4 = null;
+
+        $type = $this->input->post('type');
+        $zone = $this->input->post('zone');
+        $merchant = $this->input->post('merchant');
+        $year = $this->input->post('year');
+        $scope = $this->input->post('scope');
+        $par1 = $this->input->post('par1');
+        $par2 = $this->input->post('par2');
+        $par3 = $this->input->post('par3');
+        $par4 = $this->input->post('par4');
+
+        $result = $this->manifests($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
+
+        $result[0] = ($result[0])?'OK':'FAILED';
+
+        print json_encode(array('result'=>$result[0], 'file'=>$result[1]));
+
+    }
+
 
     public function courierrecap($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
