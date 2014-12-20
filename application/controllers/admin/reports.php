@@ -3788,6 +3788,9 @@ class Reports extends Application
                 if($d['notes'] != ''){
                     $notes .= $d['timestamp'].'<br />';
                     $notes .= $d['notes'].'<br />';
+                }elseif($d['api_event'] == 'admin_change_status'){
+                    $notes .= $d['timestamp'].'<br />';
+                    $notes .= $d['req_note'].'<br />';
                 }
             }
 
