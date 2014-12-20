@@ -3525,7 +3525,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,ordertime,deliverytime,delivery_note,pending_count,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
+        $this->db->select('assignment_date,ordertime,deliverytime,delivery_note,pending_count,recipient_name,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3721,6 +3721,7 @@ class Reports extends Application
 
         $order2assigndays = 0;
         $assign2deliverydays = 0;
+        $order2deliverydays = 0;
 
         foreach($rows->result() as $r){
 
@@ -3752,7 +3753,12 @@ class Reports extends Application
 
             if(is_null($deliverytime) || $deliverytime == ''){
                 $assign2delivery->d = 0;
+                $order2delivery->d = 0;
             }
+
+            $order2assigndays += (int)$order2assign->d ;
+            $assign2deliverydays += (int)$assign2delivery->d ;
+            $order2deliverydays += (int)$order2delivery->d;
 
 
             $details = $this->db->where('delivery_id',$r->delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
@@ -3864,7 +3870,7 @@ class Reports extends Application
                     $r->status,
                     $r->pending_count,
                     $r->delivery_note,
-                    $r->shipping_address,
+                    '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address,
                     $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $this->hide_trx($r->merchant_trans_id),
                     '',
@@ -3876,6 +3882,46 @@ class Reports extends Application
 
             $seq++;
         }
+
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    $order2assigndays,
+                    '',
+                    $assign2deliverydays,
+                    '',
+                    $order2deliverydays,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                );
+
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    $order2assigndays,
+                    '',
+                    $assign2deliverydays,
+                    '',
+                    $order2deliverydays,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                );
 
         /*
 
