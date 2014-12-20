@@ -3556,16 +3556,19 @@ class Reports extends Application
 
         $this->db->and_();
         $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->where('status',   $this->config->item('trans_status_mobile_delivered'))
+            //->where('status',$this->config->item('trans_status_admin_courierassigned'))
+            ->or_where('status',$this->config->item('trans_status_new'))
+            //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            /*
             ->or_()
                 ->group_start()
                     ->where('status',$this->config->item('trans_status_new'))
                     ->where('pending_count >', 0)
                 ->group_end()
-            ->group_end();
+            */
 
+            ->group_end();
 
         //print $this->db->last_query();
 
@@ -3626,9 +3629,9 @@ class Reports extends Application
                 'TOKO ONLINE',
                 'Type',
                 'Tgl Upload',
-                '',
+                'Upload -> Kirim',
                 'Tgl Kirim',
-                '',
+                'Kirim -> Diterima',
                 'Tgl Diterima',
                 'Status',
                 'Pending',
@@ -3667,10 +3670,11 @@ class Reports extends Application
                 'TOKO ONLINE',
                 'Type',
                 'Tgl Upload',
-                '',
+                'Upload -> Kirim',
                 'Tgl Kirim',
-                '',
+                'Kirim -> Diterima',
                 'Tgl Diterima',
+                'Upload -> Diterima',
                 'Status',
                 'Pending',
                 'Catatan',
@@ -3743,6 +3747,8 @@ class Reports extends Application
             $order2assign = $ordertime->diff($assignment_date);
 
             $assign2delivery = $assignment_date->diff($deliverytime);
+
+            $order2delivery = $ordertime->diff($deliverytime);
 
             if(is_null($deliverytime) || $deliverytime == ''){
                 $assign2delivery->d = 0;
@@ -3854,6 +3860,7 @@ class Reports extends Application
                     $r->assignment_date,
                     $assign2delivery->d,
                     $r->deliverytime,
+                    $order2delivery->d,
                     $r->status,
                     $r->pending_count,
                     $r->delivery_note,
