@@ -3785,13 +3785,20 @@ class Reports extends Application
 
             foreach($details as $d )
             {
-                if($d['notes'] != '' && $d['api_event'] != 'admin_change_status'){
-                    $notes .= $d['timestamp'].'<br />';
-                    $notes .= $d['notes'].'<br />';
+                $n = '';
+                if($d['api_event'] == 'admin_change_status'){
+                    $n = $d['req_note'];
                 }else{
-                    $notes .= $d['timestamp'].'<br />';
-                    $notes .= $d['req_note'].'<br />';
+                    if($d['note'] != ''){
+                        $n = $d['note'];
+                    }
                 }
+
+                if($n != ''){
+                    $notes .= $d['timestamp'].'<br />';
+                    $notes .= $n.'<br />';
+                }
+
             }
 
             /*
