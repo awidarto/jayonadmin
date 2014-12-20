@@ -3767,8 +3767,10 @@ class Reports extends Application
             $details = $this->db->where('delivery_id',$r->delivery_id)
                             ->and_()
                             ->group_start()
-                                ->where('status','pending')
-                                ->or_where('status','returned')
+                                ->where('status',   $this->config->item('trans_status_mobile_delivered'))
+                                ->or_where('status',$this->config->item('trans_status_new'))
+                                ->or_where('status',$this->config->item('trans_status_rescheduled'))
+                                ->or_where('status',$this->config->item('trans_status_mobile_return'))
                             ->group_end()
                             ->order_by('timestamp','desc')
                             ->get($this->config->item('delivery_log_table'));
