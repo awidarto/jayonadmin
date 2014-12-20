@@ -3889,7 +3889,7 @@ class Reports extends Application
                     '',
                     '',
                     '',
-                    '',
+                    'Rata-rata',
                     $order2assigndays / $seq,
                     '',
                     $assign2deliverydays / $seq,
