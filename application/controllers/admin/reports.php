@@ -3754,11 +3754,13 @@ class Reports extends Application
             if(is_null($deliverytime) || $deliverytime == ''){
                 $assign2delivery->d = 0;
                 $order2delivery->d = 0;
+                $order2assigndays += (int)$order2assign->d ;
+            }else{
+                $order2assigndays += (int)$order2assign->d ;
+                $assign2deliverydays += (int)$assign2delivery->d ;
+                $order2deliverydays += (int)$order2delivery->d;
             }
 
-            $order2assigndays += (int)$order2assign->d ;
-            $assign2deliverydays += (int)$assign2delivery->d ;
-            $order2deliverydays += (int)$order2delivery->d;
 
 
             $details = $this->db->where('delivery_id',$r->delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
@@ -3888,11 +3890,11 @@ class Reports extends Application
                     '',
                     '',
                     '',
-                    $order2assigndays,
+                    $order2assigndays / $seq,
                     '',
-                    $assign2deliverydays,
+                    $assign2deliverydays / $seq,
                     '',
-                    $order2deliverydays,
+                    $order2deliverydays / $seq,
                     '',
                     '',
                     '',
@@ -3902,13 +3904,13 @@ class Reports extends Application
                     '',
                     ''
                 );
-
+                /*
                 $this->table->add_row(
                     '',
                     '',
                     '',
                     '',
-                    $order2assigndays,
+                    $order2assigndays ,
                     '',
                     $assign2deliverydays,
                     '',
@@ -3922,6 +3924,7 @@ class Reports extends Application
                     '',
                     ''
                 );
+                */
 
         /*
 
