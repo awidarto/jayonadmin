@@ -3681,7 +3681,7 @@ class Reports extends Application
                 'Pending',
                 'Catatan',
                 'ALAMAT',
-                'Delivery ID<br />No Kode Penjualan Toko'
+                'Delivery ID<hr />No Kode Penjualan Toko'
             ); // Setting headings for the table
 
             /*
@@ -3884,7 +3884,7 @@ class Reports extends Application
                     $r->pending_count,
                     $notes,
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $r->delivery_id.'<br />'.$this->hide_trx($r->merchant_trans_id)
+                    $r->delivery_id.'<hr />'.$this->hide_trx($r->merchant_trans_id)
                 );
 
 
