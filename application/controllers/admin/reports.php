@@ -3681,7 +3681,7 @@ class Reports extends Application
                 'Pending',
                 'Catatan',
                 'ALAMAT',
-                'No Kode Penjualan Toko'
+                'Delivery ID<br />No Kode Penjualan Toko'
             ); // Setting headings for the table
 
             /*
@@ -3838,18 +3838,19 @@ class Reports extends Application
 
                 $this->table->add_row(
                     $seq,
-                    $r->buyerdeliveryzone,
                     $r->merchant_name,
-                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
-                    $r->status.'<br /><br />'.$r->pickup_status.'<br /><br />'.$r->warehouse_status,
-                    $r->buyer_name,
-                    array('data'=>( $payable == 0 )?0:idr($payable),'class'=>'currency '.$codclass),
-                    array('data'=>( $dc == 0 )?0:idr($dc),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
-                    array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
-                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
-                    $r->shipping_address,
-                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $this->hide_trx($r->merchant_trans_id)
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency'),
+                    $r->ordertime,
+                    $order2assign->d,
+                    $r->assignment_date,
+                    $assign2delivery->d,
+                    $r->deliverytime,
+                    $order2delivery->d,
+                    $r->status,
+                    $r->pending_count,
+                    $notes,
+                    '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    $r->delivery_id.'<br />'.$this->hide_trx($r->merchant_trans_id)
                 );
 
 
@@ -3883,7 +3884,7 @@ class Reports extends Application
                     $r->pending_count,
                     $notes,
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $this->hide_trx($r->merchant_trans_id)
+                    $r->delivery_id.'<br />'.$this->hide_trx($r->merchant_trans_id)
                 );
 
 
