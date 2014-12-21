@@ -3908,7 +3908,7 @@ class Reports extends Application
                     '',
                     '',
                     '',
-                    'Rata-rata',
+                    'Rata-rata<br />( dlm satuan hari )',
                     number_format($order2assigndays / $seq, 2, ',','.' ),
                     '',
                     number_format($assign2deliverydays / $seq, 2, ',','.' ),
