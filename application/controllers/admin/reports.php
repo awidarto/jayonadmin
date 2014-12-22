@@ -3589,6 +3589,51 @@ class Reports extends Application
 
             $result = $this->db->get()->result_array();
 
+            if(!empty($result)){
+                $addhead = array('order2assign'=>'order2assign', 'assign2delivery'=>'assign2delivery', 'order2delivery'=>'order2delivery');
+
+                $order2deliverydays = 0;
+                $order2assigndays = 0;
+                $assign2deliverydays = 0;
+
+                for($i = 0; $i < count($result) ; $i++){
+                    /*
+                    if($i == 0){
+                        $result[$i] = array_merge($addhead, $result[$i]);
+                    }else{
+                    */
+                        $ordertime = new DateTime($result[$i]['ordertime']);
+                        $assignment_date = new DateTime($result[$i]['assignment_date']);
+                        $deliverytime = new DateTime($result[$i]['deliverytime']);
+
+                        $order2assign = $ordertime->diff($assignment_date);
+
+                        $assign2delivery = $assignment_date->diff($deliverytime);
+
+                        $order2delivery = $ordertime->diff($deliverytime);
+
+                        if(is_null($deliverytime) || $deliverytime == ''){
+                            $assign2delivery->d = 0;
+                            $order2delivery->d = 0;
+                            $order2assigndays += (int)$order2assign->d ;
+                        }else{
+                            $order2assigndays += (int)$order2assign->d ;
+                            $assign2deliverydays += (int)$assign2delivery->d ;
+                            $order2deliverydays += (int)$order2delivery->d;
+                        }
+
+                        $addres = array('order2assign'=>$order2assign->d,
+                            'assign2delivery'=>$assign2delivery->d,
+                            'order2delivery'=>$order2delivery->d);
+                        $result[$i]['shipping_address'] = str_replace(array('"',"/n","/r"), '', $result[$i]['shipping_address']);
+                        $result[$i] = array_merge($addres, $result[$i]);
+
+                    //}
+
+                }
+
+            }
+
             // Open the output stream
             $fh = fopen('php://output', 'w');
 
@@ -3598,9 +3643,9 @@ class Reports extends Application
             // Loop over the * to export
             if (! empty($result)) {
                 $headers = array_keys($result[0]);
-                    fputcsv($fh, $headers);
+                    fputcsv($fh, $headers,',','"');
                 foreach ($result as $item) {
-                    fputcsv($fh, $item);
+                    fputcsv($fh, $item,',','"');
                 }
             }
 
@@ -3646,13 +3691,12 @@ class Reports extends Application
                 'Tgl Kirim',
                 'Kirim -> Diterima',
                 'Tgl Diterima',
+                'Upload -> Diterima',
                 'Status',
                 'Pending',
                 'Catatan',
                 'ALAMAT',
-                'Phone',
-                'No Kode Penjualan Toko'
-
+                'Delivery ID<hr />No Kode Penjualan Toko'
 
             ); // Setting headings for the table
             /*
@@ -3857,7 +3901,6 @@ class Reports extends Application
 
 
             if($pdf == 'print' || $pdf == 'pdf'){
-
                 $this->table->add_row(
                     $seq,
                     $r->merchant_name,
@@ -3872,26 +3915,11 @@ class Reports extends Application
                     $r->pending_count,
                     $notes,
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $r->delivery_id.'<br />'.$this->hide_trx($r->merchant_trans_id)
+                    $r->delivery_id.'<hr />'.$this->hide_trx($r->merchant_trans_id)
                 );
 
-
             }else{
-                /*
-                'No.',
-                'TOKO ONLINE',
-                'Type',
-                'Tgl Upload',
-                ''
-                'Tgl Kirim',
-                ''
-                'Tgl Diterima',
-                'Status',
-                'Catatan',
-                'ALAMAT',
-                'Phone',
-                'No Kode Penjualan Toko'
-                */
+
                 $this->table->add_row(
                     $seq,
                     $r->merchant_name,
@@ -3932,44 +3960,6 @@ class Reports extends Application
                     '',
                     ''
                 );
-                /*
-                $this->table->add_row(
-                    '',
-                    '',
-                    '',
-                    '',
-                    $order2assigndays ,
-                    '',
-                    $assign2deliverydays,
-                    '',
-                    $order2deliverydays,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                );
-                */
-
-        /*
-
-            if($pdf == 'print' || $pdf == 'pdf'){
-                $this->table->add_row(
-                    '',
-                    '',
-                    '',
-                    '',
-                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
-                    '',
-                    '',
-                    ''
-                );
-            }
-        */
 
 
 
@@ -4055,11 +4045,11 @@ class Reports extends Application
         $pdffilename = 'JSM-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
-            $html = $this->load->view('print/manifestprint',$data,true);
+            $html = $this->load->view('print/deliverytimeprint',$data,true);
             $pdf_name = $pdffilename;
             $pdfbuf = pdf_create($html, $pdf_name,'A3','landscape', false);
 
-            file_put_contents(FCPATH.'public/manifests/'.$pdf_name.'.pdf', $pdfbuf);
+            file_put_contents(FCPATH.'public/deliverytime/'.$pdf_name.'.pdf', $pdfbuf);
 
             $data['invdate'] = iddate($invdate);
             $data['invdatenum'] = date('dmY',mysql_to_unix($invdate));
@@ -4079,12 +4069,12 @@ class Reports extends Application
 
             $inres = $this->db->insert($this->config->item('manifest_table'),$invdata);
 
-            return array(file_exists(FCPATH.'public/manifests/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+            return array(file_exists(FCPATH.'public/deliverytime/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
 
         }else if($pdf == 'print'){
-            $this->load->view('print/manifestprint',$data); // Load the view
+            $this->load->view('print/deliverytimeprint',$data); // Load the view
         }else{
-            $this->ag_auth->view('manifestgenerator',$data); // Load the view
+            $this->ag_auth->view('deliverytimegenerator',$data); // Load the view
         }
     }
 
@@ -4109,7 +4099,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->manifests($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->deliverytime($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
@@ -4216,7 +4206,7 @@ class Reports extends Application
             $this->db->where($this->config->item('assigned_delivery_table').'.courier_id',$id);
         }
 
-                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+        $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
 
         /*
         $this->db->and_();
