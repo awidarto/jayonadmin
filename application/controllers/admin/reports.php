@@ -2055,6 +2055,7 @@ class Reports extends Application
             '',
             '',
             '',
+            '',
             array('data'=>'DO','colspan'=>'3'),
             array('data'=>'COD','colspan'=>'4'),
             array('data'=>'CCOD','colspan'=>'4'),
@@ -2067,6 +2068,7 @@ class Reports extends Application
         $this->table->set_subheading(
             'No.',
             'Date',
+            'Incoming',
             'Device',
 
             'count',
@@ -2119,6 +2121,8 @@ class Reports extends Application
 
         $lastdate = '';
 
+        $tinc = 0;
+
         foreach($trans as $r){
 
             $revtotal = ( $r['do_delivery_cost'] + $r['cod_delivery_cost'] + $r['cod_cod_cost'] + $r['ccod_delivery_cost'] + $r['ccod_cod_cost'] + $r['ps_delivery_cost']);
@@ -2126,10 +2130,17 @@ class Reports extends Application
 
             $total_value = $r['do_total_price'] + $r['cod_total_price'] + $r['ccod_total_price'] + $r['ps_total_price'];
 
+            if($lastdate == $r['assignment_date']){
+                $inc = '';
+            }else{
+                $inc = $this->db->like('ordertime', $r['assignment_date'],'after')->count_all_results($this->config->item('delivered_delivery_table'));
+                $tinc += $inc;
+            }
 
             $this->table->add_row(
                 $counter,
                 ($lastdate == $r['assignment_date'])?'': date( 'd-m-Y' ,strtotime($r['assignment_date']) ) ,
+                $inc,
                 $r['device_name'],
                 array('data'=>$r['do_count'],'class'=>'count'),
                 array('data'=>idr($r['do_delivery_cost']),'class'=>'currency'),
@@ -2183,7 +2194,7 @@ class Reports extends Application
             $this->table->add_row(
                 '',
                 '',
-
+                $tinc,
                 array('data'=>'Totals','class'=>'total'),
 
                 array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
@@ -2213,7 +2224,7 @@ class Reports extends Application
             $this->table->add_row(
                 '',
                 '',
-
+                '',
                 array('data'=>'Percentage (%)','class'=>'total'),
 
                 array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
@@ -2243,7 +2254,7 @@ class Reports extends Application
             $this->table->add_row(
                 '',
                 '',
-
+                '',
                 array('data'=>'Summary','class'=>'total'),
 
                 array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
@@ -6283,8 +6294,28 @@ class Reports extends Application
 
         $last_query = $this->db->last_query();
 
+        //get incoming counts
+        /*
+        $sql = 'SELECT DISTINCT DATE_FORMAT( ordertime,  \'%Y-%m-%d\' ) AS incoming, COUNT( * ) as count FROM  `delivery_order_active` WHERE ordertime BETWEEN ? AND ? GROUP BY incoming';
 
-		//print $this->db->last_query();
+        $ql = $this->db->query($sql, array($from.' 00:00:00', $to.' 11:59:59'));
+
+        $incomings = $ql->result_array();
+
+
+
+        $incoming_array = array();
+
+        foreach($incomings as $i){
+            $incoming_array[$i['incoming']] = $i['count'];
+        }
+
+        print_r($incoming_array);
+        */
+
+        //print $this->db->last_query();
+
+
 
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
@@ -6296,6 +6327,7 @@ class Reports extends Application
 		$this->table->set_heading(
 			'No.',
 			'Date',
+            'Incoming',
 			'Delivered',
 			'No Show',
 			'Rescheduled',
@@ -6324,7 +6356,7 @@ class Reports extends Application
 		$seq = 1;
 		$aseq = 0;
 
-
+        $tinc = 0;
 		$tdl = 0;
 		$tns = 0;
 		$trs = 0;
@@ -6339,9 +6371,14 @@ class Reports extends Application
 			$tns += $ns;
 			$trs += $rs;
 
+            $inc = $this->db->like('ordertime', $r['assignment_date'],'after')->count_all_results($this->config->item('delivered_delivery_table'));
+
+            $tinc += $inc;
+
 			$this->table->add_row(
 				$seq,
 				date('d M Y',strtotime($r['assignment_date'])),
+                $inc,
 				$dl,
 				$ns,
 				$rs,
@@ -6357,6 +6394,7 @@ class Reports extends Application
 		$this->table->add_row(
 			'',
 			array('data'=>'Total','style'=>'border-top:thin solid grey'),
+            array('data'=>$tinc,'style'=>'border-top:thin solid grey'),
 			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),
 			array('data'=>$tns,'style'=>'border-top:thin solid grey'),
 			array('data'=>$trs,'style'=>'border-top:thin solid grey'),
