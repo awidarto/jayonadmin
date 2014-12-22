@@ -187,8 +187,8 @@ $config['min_lat'] = -6.286224;
 $config['max_lon'] = 106.703041;
 $config['min_lon'] = 106.699688;
 
-$config['origin_lat'] =  -6.288040700000;
-$config['origin_lon'] =  106.693567900000;
+$config['origin_lat'] =  -6.28776600000;
+$config['origin_lon'] =  106.69635800000;
 
 $config['actors_code'] = array(
 	'mobile'=>'MB',
