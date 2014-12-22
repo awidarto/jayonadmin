@@ -3585,7 +3585,8 @@ class Reports extends Application
 
         //print $this->db->last_query();
 
-        if($pdf == 'csv'){
+        if($pdf == 'ocsv'){
+
 
             $result = $this->db->get()->result_array();
 
@@ -3720,6 +3721,26 @@ class Reports extends Application
 
             );*/ // Setting headings for the table
 
+        }else if($pdf == 'csv'){
+            $csv_header = array(
+                'No.',
+                'TOKO ONLINE',
+                'Type',
+                'Tgl Upload',
+                'Upload -> Kirim',
+                'Tgl Kirim',
+                'Kirim -> Diterima',
+                'Tgl Diterima',
+                'Upload -> Diterima',
+                'Status',
+                'Pending',
+                'Catatan',
+                'ALAMAT',
+                'Delivery ID',
+                'No Kode Penjualan Toko'
+            );
+
+
         }else{
 
             $this->table->set_heading(
@@ -3778,6 +3799,8 @@ class Reports extends Application
         $order2assigndays = 0;
         $assign2deliverydays = 0;
         $order2deliverydays = 0;
+
+        $csv_data = array();
 
         foreach($rows->result() as $r){
 
@@ -3850,9 +3873,16 @@ class Reports extends Application
                 }
 
                 if($n != ''){
-                    $notes .= $d['timestamp'].'<br />';
-                    $notes .= '<b>'.$d['status'].'</b><br />';
-                    $notes .= $n.'<br />';
+                    if($pdf == 'csv'){
+                        $notes .= $d['timestamp']."\n";
+                        $notes .= $d['status']."\n";
+                        $notes .= $n." |\n";
+                    }else{
+                        $notes .= $d['timestamp'].'<br />';
+                        $notes .= '<b>'.$d['status'].'</b><br />';
+                        $notes .= $n.'<br />';
+
+                    }
                 }
 
             }
@@ -3917,8 +3947,26 @@ class Reports extends Application
                     '<b>'.$r->recipient_name.'</b><br />'.$r->shipping_address.'<br />'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
                     $r->delivery_id.'<hr />'.$this->hide_trx($r->merchant_trans_id)
                 );
-
+            }else if($pdf == 'csv'){
+                $csv_data[] = array(
+                    $seq,
+                    $r->merchant_name,
+                    $r->delivery_type,
+                    $r->ordertime,
+                    $order2assign->d,
+                    $r->assignment_date,
+                    $assign2delivery->d,
+                    $r->deliverytime,
+                    $order2delivery->d,
+                    $r->status,
+                    $r->pending_count,
+                    $notes,
+                    $r->recipient_name.' | '.str_replace(array(",",'"',"\n","\r"), '', $r->shipping_address ).' '.$this->split_phone($r->phone).' '.$this->split_phone($r->mobile1).' '.$this->split_phone($r->mobile2),
+                    $r->delivery_id,
+                    $this->hide_trx($r->merchant_trans_id)
+                );
             }else{
+
 
                 $this->table->add_row(
                     $seq,
@@ -3943,23 +3991,75 @@ class Reports extends Application
             $seq++;
         }
 
-                $this->table->add_row(
-                    '',
-                    '',
-                    '',
-                    'Rata-rata<br />( dlm satuan hari )',
-                    number_format($order2assigndays / $seq, 2, ',','.' ),
-                    '',
-                    number_format($assign2deliverydays / $seq, 2, ',','.' ),
-                    '',
-                    number_format($order2deliverydays / $seq, 2, ',','.' ),
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                );
+        $csv_data[] = array(
+            '',
+            '',
+            '',
+            'Rata-rata ( dlm satuan hari )',
+            number_format($order2assigndays / $seq, 2, ',','.' ),
+            '',
+            number_format($assign2deliverydays / $seq, 2, ',','.' ),
+            '',
+            number_format($order2deliverydays / $seq, 2, ',','.' ),
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+        );
+
+        if($pdf == 'csv'){
+                        // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($csv_data)) {
+                $headers = $csv_header;
+                    fputcsv($fh, $headers,',','"');
+                foreach ($csv_data as $item) {
+                    fputcsv($fh, $item,',','"');
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+
+        }
+
+        $this->table->add_row(
+            '',
+            '',
+            '',
+            'Rata-rata<br />( dlm satuan hari )',
+            number_format($order2assigndays / $seq, 2, ',','.' ),
+            '',
+            number_format($assign2deliverydays / $seq, 2, ',','.' ),
+            '',
+            number_format($order2deliverydays / $seq, 2, ',','.' ),
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+        );
 
 
 
@@ -4042,7 +4142,7 @@ class Reports extends Application
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
         $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
 
-        $pdffilename = 'JSM-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
+        $pdffilename = 'JSM-TR-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('print/deliverytimeprint',$data,true);
@@ -4067,7 +4167,7 @@ class Reports extends Application
                 'filename'=>$pdffilename
             );
 
-            $inres = $this->db->insert($this->config->item('manifest_table'),$invdata);
+            $inres = $this->db->insert($this->config->item('deliverytime_table'),$invdata);
 
             return array(file_exists(FCPATH.'public/deliverytime/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
 

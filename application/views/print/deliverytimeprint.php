@@ -176,7 +176,7 @@
 
             </div>
             <div style="width:400px;display:inline-block;float:left;">
-                <h1 style="margin-top:0px;">MANIFEST PENGIRIMAN HARIAN</h1>
+                <h1 style="margin-top:0px;">REPORT WAKTU PENGIRIMAN</h1>
                 <table id="address" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td>REPORT DATE</td>

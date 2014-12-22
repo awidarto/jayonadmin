@@ -35,7 +35,9 @@ $config['device_assignment_table'] = 'device_courier_log';
 
 $config['invoice_table'] = 'released_invoices';
 $config['manifest_table'] = 'released_manifests';
+$config['deliverytime_table'] = 'released_deliverytime';
 $config['phototag_table'] = 'delivery_photos';
+
 
 
 $config['jayon_delivery_fee_table'] = 'weight_tariff';
