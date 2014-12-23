@@ -3544,7 +3544,7 @@ class Reports extends Application
             //->like('assignment_date',$date,'before')
             ->from($this->config->item('incoming_delivery_table'));
 
-        $column = 'assignment_date';
+        $column = 'ordertime';
         $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
 
         $this->db->where($daterange, null, false);
