@@ -2056,6 +2056,9 @@ class Reports extends Application
             '',
             '',
             '',
+            '',
+            '',
+            '',
             array('data'=>'DO','colspan'=>'3'),
             array('data'=>'COD','colspan'=>'4'),
             array('data'=>'CCOD','colspan'=>'4'),
@@ -2069,6 +2072,9 @@ class Reports extends Application
             'No.',
             'Date',
             'Incoming',
+            'Assigned',
+            'Pending',
+            '% Delivered',
             'Device',
 
             'count',
@@ -2123,6 +2129,9 @@ class Reports extends Application
 
         $tinc = 0;
 
+        $t_assigned = 0;
+        $t_pending = 0;
+
         foreach($trans as $r){
 
             $revtotal = ( $r['do_delivery_cost'] + $r['cod_delivery_cost'] + $r['cod_cod_cost'] + $r['ccod_delivery_cost'] + $r['ccod_cod_cost'] + $r['ps_delivery_cost']);
@@ -2137,10 +2146,24 @@ class Reports extends Application
                 $tinc += $inc;
             }
 
+            $assignment_count = $this->db->like('assignment_date', $r['assignment_date'],'after')
+                                    ->where('device_id',$r['device_id'])
+                                    ->count_all_results($this->config->item('delivered_delivery_table'));
+            $pending_count = $assignment_count - $total_count;
+
+
+            $delivered_pct = ($total_count / $assignment_count) * 100;
+
+            $t_assigned += $assignment_count;
+            $t_pending += $pending_count;
+
             $this->table->add_row(
                 $counter,
                 ($lastdate == $r['assignment_date'])?'': date( 'd-m-Y' ,strtotime($r['assignment_date']) ) ,
                 $inc,
+                $assignment_count,
+                $pending_count,
+                number_format($delivered_pct,2),
                 $r['device_name'],
                 array('data'=>$r['do_count'],'class'=>'count'),
                 array('data'=>idr($r['do_delivery_cost']),'class'=>'currency'),
@@ -2190,11 +2213,14 @@ class Reports extends Application
             $counter++;
 
         }
-
+            $t_delivered_pct = ($total['total_delivery_count'] / $t_assigned) * 100;
             $this->table->add_row(
                 '',
                 '',
                 $tinc,
+                $t_assigned,
+                $t_pending,
+                number_format($t_delivered_pct,2),
                 array('data'=>'Totals','class'=>'total'),
 
                 array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
@@ -2225,6 +2251,9 @@ class Reports extends Application
                 '',
                 '',
                 '',
+                '',
+                '',
+                '',
                 array('data'=>'Percentage (%)','class'=>'total'),
 
                 array('data'=>($total['Delivery Only']['count'] == 0)?idr(0):idr(($total['Delivery Only']['count'] / $total['total_delivery_count'])* 100),'class'=>'total count c-orange'),
@@ -2252,6 +2281,9 @@ class Reports extends Application
 
 
             $this->table->add_row(
+                '',
+                '',
+                '',
                 '',
                 '',
                 '',
