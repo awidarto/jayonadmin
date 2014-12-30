@@ -30,7 +30,7 @@
                 var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -44,7 +44,7 @@
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
         );
