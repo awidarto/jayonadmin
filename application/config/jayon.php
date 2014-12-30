@@ -18,6 +18,13 @@ $config['site_title']	= 'Jayon Express Admin';
 
 $config['infinite_scroll'] = false;
 
+$config['deliverytype_selector'] = array(
+    'noid'=>'All',
+    'COD'=>'COD/CCOD',
+    'DO'=>'DO',
+    'PS'=>'PS'
+    );
+
 /*table names*/
 $config['incoming_delivery_table'] = 'delivery_order_active';
 $config['assigned_delivery_table'] = 'delivery_order_active';

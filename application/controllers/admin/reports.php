@@ -2792,11 +2792,12 @@ class Reports extends Application
 
     //manifest
 
-    public function manifests($type = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function manifests($type = null,$deliverytype = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
         $mid = (is_null($merchant))?'noid':$merchant;
+        $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -2807,6 +2808,7 @@ class Reports extends Application
 
         $data['getparams'] = array(
             'type'=> $type ,
+            'deliverytype'=>$deliverytype,
             'zone'=> $zone,
             'merchant'=> $merchant,
             'year'=> $year ,
@@ -2885,6 +2887,8 @@ class Reports extends Application
             $mcs[$mckey['id']] = $mckey['merchantname'].' - '.$mckey['fullname'];
         }
 
+        $data['deliverytypes'] = $this->config->item('deliverytype_selector');
+
         $data['merchantlist'] = $mcs;
         $data['mid'] = $mid;
 
@@ -2907,6 +2911,12 @@ class Reports extends Application
             $data['bank_account'] = 'n/a';
 
             $data['merchantname'] = $user->identifier;
+        }
+
+        if($deliverytype == 'noid'){
+            $data['dtype'] = 'All Type';
+        }else{
+            $data['dtype'] = $deliverytype;
         }
 
         if($mid == 'noid'){
@@ -2956,6 +2966,15 @@ class Reports extends Application
 
         if($id != 'noid'){
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
+        }
+
+        if($deliverytype != 'noid'){
+            if($deliverytype == 'DO'){
+                $deliverytype = 'Delivery Only';
+                $this->db->where($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype);
+            }else if($deliverytype == 'COD'){
+                $this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype,'before');
+            }
         }
 
         if($mid != 'noid'){
@@ -3391,6 +3410,7 @@ class Reports extends Application
 
     public function genmanifest(){
         $type = null;
+        $deliverytype = null;
         $zone = null;
         $merchant = null;
         $year = null;
@@ -3401,6 +3421,7 @@ class Reports extends Application
         $par4 = null;
 
         $type = $this->input->post('type');
+        $deliverytype = $this->input->post('deliverytype');
         $zone = $this->input->post('zone');
         $merchant = $this->input->post('merchant');
         $year = $this->input->post('year');
@@ -3410,7 +3431,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->manifests($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->manifests($type,$deliverytype ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
@@ -3420,11 +3441,12 @@ class Reports extends Application
 
     //delivery time report
 
-    public function deliverytime($type = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function deliverytime($type = null,$deliverytype = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
         $mid = (is_null($merchant))?'noid':$merchant;
+        $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -3435,6 +3457,7 @@ class Reports extends Application
 
         $data['getparams'] = array(
             'type'=> $type ,
+            'deliverytype'=>$deliverytype,
             'zone'=> $zone,
             'merchant'=> $merchant,
             'year'=> $year ,
@@ -3513,6 +3536,8 @@ class Reports extends Application
             $mcs[$mckey['id']] = $mckey['merchantname'].' - '.$mckey['fullname'];
         }
 
+        $data['deliverytypes'] = $this->config->item('deliverytype_selector');
+
         $data['merchantlist'] = $mcs;
         $data['mid'] = $mid;
 
@@ -3535,6 +3560,13 @@ class Reports extends Application
             $data['bank_account'] = 'n/a';
 
             $data['merchantname'] = $user->identifier;
+        }
+
+
+        if($deliverytype == 'noid'){
+            $data['dtype'] = 'All Type';
+        }else{
+            $data['dtype'] = $deliverytype;
         }
 
         if($mid == 'noid'){
@@ -3584,6 +3616,15 @@ class Reports extends Application
 
         if($id != 'noid'){
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
+        }
+
+        if($deliverytype != 'noid'){
+            if($deliverytype == 'DO'){
+                $deliverytype = 'Delivery Only';
+                $this->db->where($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype);
+            }else if($deliverytype == 'COD'){
+                $this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype,'before');
+            }
         }
 
         if($mid != 'noid'){
@@ -3724,7 +3765,7 @@ class Reports extends Application
                 'Tgl Kirim',
                 'Kirim -> Diterima',
                 'Tgl Diterima',
-                'Upload -> Diterima',
+                //'Upload -> Diterima',
                 'Status',
                 'Pending',
                 'Catatan',
@@ -3763,7 +3804,7 @@ class Reports extends Application
                 'Tgl Kirim',
                 'Kirim -> Diterima',
                 'Tgl Diterima',
-                'Upload -> Diterima',
+                //'Upload -> Diterima',
                 'Status',
                 'Pending',
                 'Catatan',
@@ -3784,7 +3825,7 @@ class Reports extends Application
                 'Tgl Kirim',
                 'Kirim -> Diterima',
                 'Tgl Diterima',
-                'Upload -> Diterima',
+                //'Upload -> Diterima',
                 'Status',
                 'Pending',
                 'Catatan',
@@ -3852,9 +3893,12 @@ class Reports extends Application
 
             $payable = 0;
 
-            $ordertime = new DateTime($r->ordertime);
+            $otime = date('Y-m-d',strtotime($r->ordertime));
+            $dtime = date('Y-m-d',strtotime($r->deliverytime));
+
+            $ordertime = new DateTime($otime);
             $assignment_date = new DateTime($r->assignment_date);
-            $deliverytime = new DateTime($r->deliverytime);
+            $deliverytime = new DateTime($dtime);
 
             $order2assign = $ordertime->diff($assignment_date);
 
@@ -3972,7 +4016,7 @@ class Reports extends Application
                     $r->assignment_date,
                     $assign2delivery->d,
                     $r->deliverytime,
-                    $order2delivery->d,
+                    //$order2delivery->d,
                     $r->status,
                     $r->pending_count,
                     $notes,
@@ -3989,7 +4033,7 @@ class Reports extends Application
                     $r->assignment_date,
                     $assign2delivery->d,
                     $r->deliverytime,
-                    $order2delivery->d,
+                    //$order2delivery->d,
                     $r->status,
                     $r->pending_count,
                     $notes,
@@ -4009,7 +4053,7 @@ class Reports extends Application
                     $r->assignment_date,
                     $assign2delivery->d,
                     $r->deliverytime,
-                    $order2delivery->d,
+                    //$order2delivery->d,
                     $r->status,
                     $r->pending_count,
                     $notes,
@@ -4032,7 +4076,7 @@ class Reports extends Application
             '',
             number_format($assign2deliverydays / $seq, 2, ',','.' ),
             '',
-            number_format($order2deliverydays / $seq, 2, ',','.' ),
+            //number_format($order2deliverydays / $seq, 2, ',','.' ),
             '',
             '',
             '',
@@ -4084,7 +4128,7 @@ class Reports extends Application
             '',
             number_format($assign2deliverydays / $seq, 2, ',','.' ),
             '',
-            number_format($order2deliverydays / $seq, 2, ',','.' ),
+            //number_format($order2deliverydays / $seq, 2, ',','.' ),
             '',
             '',
             '',
@@ -4212,6 +4256,7 @@ class Reports extends Application
 
     public function gendeliverytime(){
         $type = null;
+        $deliverytype = null;
         $zone = null;
         $merchant = null;
         $year = null;
@@ -4222,6 +4267,7 @@ class Reports extends Application
         $par4 = null;
 
         $type = $this->input->post('type');
+        $deliverytype = $this->input->post('deliverytype');
         $zone = $this->input->post('zone');
         $merchant = $this->input->post('merchant');
         $year = $this->input->post('year');
@@ -4231,7 +4277,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->deliverytime($type ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->deliverytime($type, $deliverytype ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 

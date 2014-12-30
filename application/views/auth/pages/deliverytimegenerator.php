@@ -13,9 +13,10 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
-                var link = user_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -26,9 +27,10 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
-                var link = user_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/month/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -38,10 +40,11 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
         );
@@ -85,6 +88,7 @@
 
             var params = {
                 'type': '<?= $getparams['type'] ?>',
+                'deliverytype': '<?= $getparams['deliverytype'] ?>',
                 'zone': '<?= $getparams['zone'] ?>',
                 'merchant': '<?= $getparams['merchant'] ?>',
                 'year': '<?= $getparams['year'] ?>',
@@ -240,6 +244,10 @@ td.cod{
                             <tr>
                                 <td><?php print (isset($select_title))?$select_title:'Device'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php print (isset($type_select_title))?$type_select_title:'Delivery Type'; ?></td>
+                                <td colspan="3"><?php print form_dropdown('type_scopes',$deliverytypes,$dtype,'id = "type_scopes"'); ?></td>
                             </tr>
                             <tr>
                                 <td><?php print (isset($merchant_select_title))?$merchant_select_title:'Merchant'; ?></td>
