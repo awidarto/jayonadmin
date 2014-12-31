@@ -4245,7 +4245,7 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
+            $direction = '<span id="'.$key['id'].'" '.$style.' class="locpick '.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
 
             $thumbnail = get_thumbnail($key['delivery_id'],'thumb_multi');
 

@@ -1344,7 +1344,7 @@ function colorizelatlon($lat, $lon, $field = 'lat'){
 
     //print $d;
 
-    if($d < 2000 && $loc_set == true){
+    if($d < 1000 && $loc_set == true){
 
         if($field == 'lat'){
             return sprintf('<span class="%s">%s</span>','textred',$lat);
