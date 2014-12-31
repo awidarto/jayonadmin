@@ -1347,11 +1347,11 @@ function colorizelatlon($lat, $lon, $field = 'lat'){
     if($d < 1000 && $loc_set == true){
 
         if($field == 'lat'){
-            return sprintf('<span class="%s">%s</span>','textred',$lat);
+            return sprintf('<span class="locpick %s">%s</span>','textred',$lat);
         }elseif ($field == 'lon') {
-            return sprintf('<span class="%s">%s</span>','textred',$lon);
+            return sprintf('<span class="locpick %s">%s</span>','textred',$lon);
         }else{
-            return sprintf('<span class="%s">%s</span>','textred',$lat.','.$lon);
+            return sprintf('<span class="locpick %s">%s</span>','textred',$lat.','.$lon);
         }
     }else{
         if($field == 'lat'){
