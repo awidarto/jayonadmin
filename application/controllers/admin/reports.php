@@ -2342,10 +2342,11 @@ class Reports extends Application
 
 
 
-    public function invoices($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function invoices($type = null,$deliverytype = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -2356,6 +2357,7 @@ class Reports extends Application
 
         $data['getparams'] = array(
             'type'=> $type ,
+            'deliverytype'=>$deliverytype,
             'year'=> $year ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
@@ -2423,6 +2425,8 @@ class Reports extends Application
         $data['merchants'] = $cs;
         $data['id'] = $id;
 
+        $data['deliverytypes'] = $this->config->item('deliverytype_selector');
+
         /* copied from print controller */
 
         $this->load->library('number_words');
@@ -2452,6 +2456,12 @@ class Reports extends Application
             $data['invdatenum'] = date('dmY',mysql_to_unix($invdate)) ;
         }
 
+        if($deliverytype == 'noid'){
+            $data['dtype'] = 'All Type';
+        }else{
+            $data['dtype'] = $deliverytype;
+        }
+
         $data['period'] = $from.' s/d '.$to;
 
         $sfrom = date('Y-m-d',strtotime($from));
@@ -2473,6 +2483,15 @@ class Reports extends Application
 
         if($id != 'noid'){
             $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$id);
+        }
+
+        if($deliverytype != 'noid'){
+            if($deliverytype == 'DO'){
+                $deliverytype = 'Delivery Only';
+                $this->db->where($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype);
+            }else if($deliverytype == 'COD'){
+                $this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$deliverytype,'before');
+            }
         }
 
         $this->db->and_();
@@ -2667,7 +2686,7 @@ class Reports extends Application
 
         }else{
 
-            $total_span = 12;
+            $total_span = 2;
             $say_span = 13;
 
         }
@@ -2767,6 +2786,7 @@ class Reports extends Application
 
     public function geninvoice(){
         $type = null;
+        $deliverytype = null;
         $year = null;
         $scope = null;
         $par1 = null;
@@ -2775,6 +2795,7 @@ class Reports extends Application
         $par4 = null;
 
         $type = $this->input->post('type');
+        $deliverytype = $this->input->post('deliverytype');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -2782,7 +2803,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->invoices($type ,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->invoices($type ,$deliverytype ,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
@@ -4192,7 +4213,7 @@ class Reports extends Application
 
         /* end copy */
 
-        $this->breadcrumb->add_crumb('Manifest','admin/reports/deliverytime');
+        $this->breadcrumb->add_crumb('Delivery Time','admin/reports/deliverytime');
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
         $page['page_title'] = 'Manifest';

@@ -11,9 +11,10 @@
         $('#get_week').click(function(){
 
                 var user_scopes = $('#user_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
-                var link = user_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -22,9 +23,10 @@
         $('#get_month').click(function(){
 
                 var user_scopes = $('#user_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
-                var link = user_scopes +'/'+ year +'/month/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ year +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -32,10 +34,11 @@
 
         $('#get_date_range').click(function(){
                 var user_scopes = $('#user_scopes').val();
+                var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
         );
@@ -79,6 +82,7 @@
 
             var params = {
                 'type': '<?= $getparams['type'] ?>',
+                'deliverytype': '<?= $getparams['deliverytype'] ?>',
                 'year': '<?= $getparams['year'] ?>',
                 'scope': '<?= $getparams['scope'] ?>',
                 'par1': '<?= $getparams['par1'] ?>',
@@ -208,6 +212,10 @@ div.stickyHeader {
                             <tr>
                                 <td><?php print (isset($select_title))?$select_title:'Merchant'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php print (isset($type_select_title))?$type_select_title:'Delivery Type'; ?></td>
+                                <td colspan="3"><?php print form_dropdown('type_scopes',$deliverytypes,$dtype,'id = "type_scopes"'); ?></td>
                             </tr>
                             <tr>
                                 <td>Year</td>
