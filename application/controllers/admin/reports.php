@@ -2803,7 +2803,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->invoices($type ,$deliverytype ,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->invoices($type ,$deliverytype,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 

@@ -1330,7 +1330,7 @@ function colorizestatus($status, $prefix = '', $suffix = ''){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
-function colorizelatlon($lat, $lon, $field = 'lat'){
+function colorizelatlon($lat, $lon, $field = 'lat', $id = 0){
     $CI =& get_instance();
 
     //$d = distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' );
@@ -1347,11 +1347,11 @@ function colorizelatlon($lat, $lon, $field = 'lat'){
     if($d < 1000 && $loc_set == true){
 
         if($field == 'lat'){
-            return sprintf('<span class="locpick %s">%s</span>','textred',$lat);
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lat);
         }elseif ($field == 'lon') {
-            return sprintf('<span class="locpick %s">%s</span>','textred',$lon);
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lon);
         }else{
-            return sprintf('<span class="locpick %s">%s</span>','textred',$lat.','.$lon);
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lat.','.$lon);
         }
     }else{
         if($field == 'lat'){
