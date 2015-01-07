@@ -3923,7 +3923,7 @@ class Reports extends Application
 
             $order2assign = $ordertime->diff($assignment_date);
 
-            $assign2delivery = $assignment_date->diff($deliverytime);
+            $assign2delivery = $assignment_date->diff($dtime);
 
             $order2delivery = $ordertime->diff($deliverytime);
 
