@@ -3208,6 +3208,10 @@ class Reports extends Application
 
             }
 
+            if($gt == 0 ){
+                $gt = $total;
+            }
+
             $payable = $gt;
 
             $total_delivery += (int)str_replace('.','',$dc);
@@ -3923,7 +3927,7 @@ class Reports extends Application
 
             $order2assign = $ordertime->diff($assignment_date);
 
-            $assign2delivery = $assignment_date->diff($dtime);
+            $assign2delivery = $assignment_date->diff($deliverytime);
 
             $order2delivery = $ordertime->diff($deliverytime);
 
