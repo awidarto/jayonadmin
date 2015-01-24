@@ -809,7 +809,12 @@ class V1 extends Application
 						$d += (int)$u_discount;
 					}
 
-					//$total = str_replace(array(',','.'), '', $o['tot_price']);
+                    $total = str_replace(array(',','.'), '', $o['tot_price']);
+
+                    if($gt == 0 ){
+                        $gt = (int)$total;
+                    }
+
 					//$total = (int)$total;
 					//$gt = ($total < $gt)?$gt:$total;
 					$dsc = str_replace(array(',','.'), '', $o['tot_disc']);
