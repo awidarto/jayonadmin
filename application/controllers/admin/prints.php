@@ -222,6 +222,7 @@ class Prints extends Application
 
 			}
 
+
 			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
 			$total = (int)$total;
 			//$gt = ($total < $gt)?$gt:$total;
@@ -234,6 +235,10 @@ class Prints extends Application
 			$tax = (int)$tax;
 			$dc = (int)$dc;
 			$cod = (int)$cod;
+
+            if($gt == 0){
+                $gt = $total;
+            }
 
             if($data['main_info']['delivery_bearer'] == 'merchant'){
                 $dc = 0;
@@ -559,12 +564,17 @@ class Prints extends Application
 			$dc = (int)$dc;
 			$cod = (int)$cod;
 
+            if($gt == 0){
+                $gt = $total;
+            }
+
             if($data['main_info']['delivery_type'] == 'COD' || $data['main_info']['delivery_type'] == 'CCOD'){
                 $chg = ($gt - $dsc) + $tax + $dc + $cod;
             }else{
                 $cod = 0;
                 $chg = $dc;
             }
+
 
 
 			$this->table->add_row(
