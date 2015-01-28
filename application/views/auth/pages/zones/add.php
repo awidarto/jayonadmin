@@ -27,8 +27,8 @@
 		});
 
 	});
-	
-	
+
+
 </script>
 
 <div id="form">
@@ -45,6 +45,9 @@
 
 			Country:<br />
 			<input type="text" name="country" id="country" size="50" class="form" value="<?php echo set_value('country'); ?>" /><?php echo form_error('country'); ?><br /><br />
+
+            ZIP :<br />
+            <input type="text" name="zips" id="zips" size="50" class="form" value="<?php echo set_value('zips'); ?>" /><?php echo form_error('country'); ?><br /><br />
 
 			<input type="submit" value="Add" name="register" />
 			<?php

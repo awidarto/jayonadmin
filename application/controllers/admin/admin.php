@@ -195,6 +195,71 @@ class Admin extends Application
 
     }
 
+    public function zonezip(){
+        ini_set("auto_detect_line_endings", true);
+
+        $zone = '';
+        $city = '';
+        if (($handle = fopen(FCPATH."public/DKI_postal_code_2.csv", "r")) !== FALSE) {
+
+            $idx = 0;
+            $xdata = array();
+            while (($data = fgetcsv($handle, 1000, ',','"')) !== FALSE) {
+                if($idx > 0){
+                    $xdata[] = $data;
+                    /*
+                    if($city == $data[1] && $zone == $data[2]){
+                        $zips[] = $data[4];
+                    }else{
+                        print_r( array_unique($zips) );
+
+                        print $city.' '.$zone.' '. implode(',', array_unique($zips)) ."\r\n";
+
+                        $z = implode(',', array_unique($zips));
+
+                        if($city != '' && $zone != ''){
+                            $this->db->where('city', $city)
+                                    ->where('district',$zone)
+                                    ->update('districts',array('zips'=>$z));
+                        }
+
+                        $zips = array();
+
+                    }
+
+                    $city = $data[1];
+                    $zone = $data[2];
+                    */
+                }
+                $idx++;
+            }
+
+            //print_r($xdata);
+
+            $zdata = array();
+            foreach ($xdata as $key => $v) {
+                $zdata[$v[1]][$v[2]][] = $v[4];
+            }
+
+            foreach ($zdata as $k => $v) {
+                foreach($v as $y => $z){
+                    $z = array_unique($z);
+                    $m = implode(',', $z);
+                    print $k.' '.$y.' -> '.$m."\r\n";
+
+                    $this->db->where('city', $k)
+                            ->where('district',$y)
+                            ->update('districts',array('zips'=>$m));
+
+                }
+            }
+
+            print_r($zdata);
+
+            fclose($handle);
+        }
+    }
+
     public function geoinsert(){
 
         set_time_limit(0);
