@@ -3171,8 +3171,21 @@ class Reports extends Application
 
         $courier_name = '';
 
+        $counts = array(
+                'Delivery Only'=>0,
+                'COD'=>0,
+                'CCOD'=>0,
+                'PS'=>0,
+                'pending'=>0
+            );
+
         foreach($rows->result() as $r){
 
+            $counts[$r->delivery_type] += 1;
+
+            if( $r->status == 'pending'){
+                $counts['pending'] += 1;
+            }
 
             $courier_name = $r->courier_name;
             $total = str_replace(array(',','.'), '', $r->total_price);
@@ -3250,6 +3263,7 @@ class Reports extends Application
                 $cod = 0;
                 $chg = $dc;
             }
+
 
 
 
@@ -3369,6 +3383,7 @@ class Reports extends Application
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
+        $data['summary_count'] = $counts;
         /* end copy */
 
         $this->breadcrumb->add_crumb('Manifest','admin/reports/manifests');
@@ -4097,8 +4112,8 @@ class Reports extends Application
             '',
             '',
             'Rata-rata ( dlm satuan hari )',
-            number_format($order2assigndays / $seq, 2, ',','.' ),
-            '',
+            //number_format($order2assigndays / $seq, 2, ',','.' ),
+            //'',
             number_format($assign2deliverydays / $seq, 2, ',','.' ),
             '',
             //number_format($order2deliverydays / $seq, 2, ',','.' ),
@@ -4148,9 +4163,9 @@ class Reports extends Application
             '',
             '',
             '',
-            'Rata-rata<br />( dlm satuan hari )',
-            number_format($order2assigndays / $seq, 2, ',','.' ),
+            //number_format($order2assigndays / $seq, 2, ',','.' ),
             '',
+            'Rata-rata<br />( dlm satuan hari )',
             number_format($assign2deliverydays / $seq, 2, ',','.' ),
             '',
             //number_format($order2deliverydays / $seq, 2, ',','.' ),

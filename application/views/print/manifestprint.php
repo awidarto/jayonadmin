@@ -146,7 +146,7 @@
             }
 
             td.cod{
-                font-size: 13px;
+                font-size: 16px;
                 font-weight: bold;
             }
         </style>
@@ -200,6 +200,28 @@
                         <td style="text-align:left;"><?php print strtoupper($merchantinfo) ?></td>
                     </tr>
                 </table>
+                <br />
+                <table style="width:100%;text-align:center;" border="1" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>DO</th>
+                            <th>COD</th>
+                            <th>CCOD</th>
+                            <th>PS</th>
+                            <th>Pending</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?php print $summary_count['Delivery Only']?></td>
+                            <td><?php print $summary_count['COD']?></td>
+                            <td><?php print $summary_count['CCOD']?></td>
+                            <td><?php print $summary_count['PS']?></td>
+                            <td><?php print $summary_count['pending']?></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
             </div>
 
             <div style="display:inline-block;float:left;">
