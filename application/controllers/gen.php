@@ -169,8 +169,19 @@ class Gen extends Application
 
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
+
+
+            $sfrom = date('Y-m-d 00:00:00',strtotime($date));
+            $sto = date('Y-m-d 23:59:59',strtotime($date));
+
+            $column = 'assignment_date';
+            $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+
             $this->db->select('assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,application_id,application_key')
                 ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
+                //->db->where($daterange, null, false);
+                //->db->where($column.' != ','0000-00-00');
                 ->like('assignment_date',$date,'before')
                 ->from($this->config->item('incoming_delivery_table'));
 
