@@ -19,7 +19,7 @@ class Gen extends Application
         for($d = 1; $d < $days + 1; $d++){
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
-            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price')
+            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,application_id')
                 ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
                 ->like('assignment_date',$date,'before')
                 ->from($this->config->item('incoming_delivery_table'));
@@ -47,6 +47,13 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
                 }
 
+                if($r->cod_cost == 0 || is_null($r->cod_cost)){
+                    try{
+                        $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                    }catch(Exception $e){
+
+                    }
+                }
 
                 if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['cod_cost'])){
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['cod_cost'] += $r->cod_cost;
@@ -90,6 +97,7 @@ class Gen extends Application
                         $data['do_count'] = ( isset($aggregate[$dt][$merchant][$status]['Delivery Only']['count']))?$aggregate[$dt][$merchant][$status]['Delivery Only']['count']:0;
 
                         $data['cod_delivery_cost'] = ( isset($aggregate[$dt][$merchant][$status]['COD']['delivery_cost']))?$aggregate[$dt][$merchant][$status]['COD']['delivery_cost']:0;
+
                         $data['cod_cod_cost'] = ( isset($aggregate[$dt][$merchant][$status]['COD']['cod_cost']))?$aggregate[$dt][$merchant][$status]['COD']['cod_cost']:0;
                         $data['cod_total_price'] = ( isset($aggregate[$dt][$merchant][$status]['COD']['total_price']))?$aggregate[$dt][$merchant][$status]['COD']['total_price']:0;
                         $data['cod_count'] = ( isset($aggregate[$dt][$merchant][$status]['COD']['count']))?$aggregate[$dt][$merchant][$status]['COD']['count']:0;
@@ -144,7 +152,7 @@ class Gen extends Application
 
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
-            $this->db->select('assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price')
+            $this->db->select('assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price,application_id')
                 ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
                 ->like('assignment_date',$date,'before')
                 ->from($this->config->item('incoming_delivery_table'));
@@ -169,6 +177,14 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
                 }
 
+
+                if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
+                    try{
+                        $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                    }catch(Exception $e){
+
+                    }
+                }
 
                 if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['cod_cost'])){
                     $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['cod_cost'] += $r->cod_cost;
