@@ -2600,6 +2600,25 @@ class Reports extends Application
 
         foreach($rows->result() as $r){
 
+            if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
+                try{
+                    $app_id = get_app_id_from_key($r->application_key);
+                    $r->cod_cost = get_cod_tariff($r->total_price,$app_id);
+                }catch(Exception $e){
+
+                }
+            }
+
+
+            if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
+                try{
+                    $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+                    //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
+                }catch(Exception $e){
+
+                }
+            }
+
             $total = str_replace(array(',','.'), '', $r->total_price);
             $dsc = str_replace(array(',','.'), '', $r->total_discount);
             $tax = str_replace(array(',','.'), '',$r->total_tax);
