@@ -19,7 +19,7 @@ class Gen extends Application
         for($d = 1; $d < $days + 1; $d++){
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
-            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,application_id,application_key')
+            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,actual_weight,application_id,application_key')
                 ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
                 ->like('assignment_date',$date,'before')
                 ->from($this->config->item('incoming_delivery_table'));
@@ -56,15 +56,16 @@ class Gen extends Application
                     }
                 }
 
-                /*
+
                 if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                     try{
-                        $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+                        //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
                     }catch(Exception $e){
 
                     }
                 }
-                */
+
 
                 if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['cod_cost'])){
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['cod_cost'] += $r->cod_cost;
