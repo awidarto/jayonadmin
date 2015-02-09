@@ -41,19 +41,17 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'] = 1;
                 }
 
-                if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'])){
-                    $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] += $r->total_price;
-                }else{
-                    $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
-                }
-
-
                 if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
                     if($r->chargeable_amount > 0){
                         $r->total_price = $r->chargeable_amount;
                     }
                 }
 
+                if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'])){
+                    $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] += $r->total_price;
+                }else{
+                    $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
+                }
 
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
@@ -190,16 +188,16 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['count'] = 1;
                 }
 
-                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'])){
-                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] += $r->total_price;
-                }else{
-                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
-                }
-
                 if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
                     if($r->chargeable_amount > 0){
                         $r->total_price = $r->chargeable_amount;
                     }
+                }
+
+                if(isset($aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'])){
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] += $r->total_price;
+                }else{
+                    $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
                 }
 
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
