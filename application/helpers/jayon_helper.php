@@ -421,6 +421,9 @@ function get_weight_range($tariff,$app_id = null){
 	if($tariff > 0){
 		$CI->db->select('kg_from,kg_to');
 		$CI->db->where('total',$tariff);
+        if(!is_null($app_id)){
+            $CI->db->where('app_id',$app_id);
+        }
 		$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
 		if($result->num_rows() > 0){
 			$row = $result->row();
