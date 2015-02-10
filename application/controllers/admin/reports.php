@@ -2513,6 +2513,12 @@ class Reports extends Application
 
             foreach ($result as $r){
 
+                if($r['total_price'] == 0 || is_null($r['total_price']) || $r['total_price'] == ''){
+                    if($r['chargeable_amount'] > 0){
+                        $r['total_price'] = $r['chargeable_amount'];
+                    }
+                }
+
                 $app_id = $r['application_id'];
 
                 if($r['delivery_type'] == 'COD' || $r['delivery_type'] == 'CCOD'){
@@ -2632,6 +2638,13 @@ class Reports extends Application
         foreach($rows->result() as $r){
 
             $app_id = $r->application_id;
+
+            if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
+                if($r->chargeable_amount > 0){
+                    $r->total_price = $r->chargeable_amount;
+                }
+            }
+
 
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
