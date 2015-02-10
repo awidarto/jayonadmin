@@ -53,13 +53,17 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
                 }
 
-                if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
-                    try{
-                        $app_id = get_app_id_from_key($r->application_key);
-                        $r->cod_cost = get_cod_tariff($r->total_price,$app_id);
-                    }catch(Exception $e){
+                if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
+                    if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
+                        try{
+                            //$app_id = get_app_id_from_key($r->application_key);
+                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                        }catch(Exception $e){
 
+                        }
                     }
+                }else{
+                    $r->cod_cost;
                 }
 
 
@@ -214,8 +218,9 @@ class Gen extends Application
                 if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                     if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                         try{
-                            $app_id = get_app_id_from_key($r->application_key);
-                            $r->cod_cost = get_cod_tariff($r->total_price,$app_id);
+                            //$app_id = get_app_id_from_key($r->application_key);
+                            //$r->cod_cost = get_cod_tariff($r->total_price,$app_id);
+                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
                         }catch(Exception $e){
 
                         }
