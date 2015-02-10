@@ -69,7 +69,7 @@ class Gen extends Application
 
                 if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                     try{
-                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id);
                     }catch(Exception $e){
 
                     }
@@ -215,6 +215,8 @@ class Gen extends Application
                     $aggregate[$r->assignment_date][$r->device_id][$r->status][$r->delivery_type]['total_price'] = $r->total_price;
                 }
 
+                $app_id = $r->application_id;
+
                 if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                     if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                         try{
@@ -232,7 +234,7 @@ class Gen extends Application
 
                 if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                     try{
-                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id);
                         //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
                     }catch(Exception $e){
 
