@@ -2739,12 +2739,12 @@ class Reports extends Application
         if($pdf == 'print' || $pdf == 'pdf'){
 
             $total_span = 2;
-            $say_span = 6;
+            $say_span = 4;
 
         }else{
 
             $total_span = 2;
-            $say_span = 13;
+            $say_span = 11;
 
         }
 
@@ -2758,13 +2758,15 @@ class Reports extends Application
             $this->table->add_row(
                 'Payable',
                 array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-                    'colspan'=>$say_span)
+                    'colspan'=>$say_span,'class'=>'currency')
             );
         }
 
         $this->table->add_row(
             array('data'=>'Delivery Charge',
                 'colspan'=>$total_span),
+            array('data'=>idr($total_delivery),
+                'colspan'=>$total_span,'class'=>'currency'),
             array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
                 'colspan'=>$say_span)
         );
@@ -2772,6 +2774,8 @@ class Reports extends Application
         $this->table->add_row(
             array('data'=>'COD Surcharge',
                 'colspan'=>$total_span),
+            array('data'=>idr($total_cod),
+                'colspan'=>$total_span,'class'=>'currency'),
             array('data'=>$this->number_words->to_words($total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
@@ -2779,6 +2783,8 @@ class Reports extends Application
         $this->table->add_row(
             array('data'=>'Grand Total',
                 'colspan'=>$total_span),
+            array('data'=>idr($total_delivery + $total_cod),
+                'colspan'=>$total_span,'class'=>'currency'),
             array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
