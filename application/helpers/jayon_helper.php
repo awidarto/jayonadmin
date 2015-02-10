@@ -474,6 +474,9 @@ function get_cod_tariff($total_price,$app_id = null){
 		$CI->db->select('surcharge');
 		$CI->db->where('from_price <= ',$total_price);
 		$CI->db->where('to_price >= ',$total_price);
+        if(!is_null($app_id)){
+            $CI->db->where('app_id',$app_id);
+        }
 		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
 		$row = $result->row();
 	}
