@@ -58,6 +58,9 @@ class Gen extends Application
                         try{
                             //$app_id = get_app_id_from_key($r->application_key);
                             $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                            if($r->application_id == 103){
+                                print $r->cod_cost;
+                            }
                         }catch(Exception $e){
 
                         }
