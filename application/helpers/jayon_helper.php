@@ -440,7 +440,9 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
 
     if($weight > 0){
         $CI->db->select('total');
-        $CI->db->where('app_id', $app_id);
+        if(!is_null($app_id)){
+            $CI->db->where('app_id',$app_id);
+        }
         $CI->db->where('kg_from <= ',$weight);
         $CI->db->where('kg_to >= ',$weight);
         if($delivery_type == 'PS'){
