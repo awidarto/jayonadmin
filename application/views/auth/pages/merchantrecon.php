@@ -222,7 +222,6 @@ div.stickyHeader {
 
 <div>
 	<h3><?php print $type.' '.$period; ?></h3>
-    <?php if(isset($sumtab)){ print $sumtab; } ?>
 	<?php print $recontab; ?>
 </div>
 
