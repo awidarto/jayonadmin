@@ -21,7 +21,7 @@ class Gen extends Application
             //print($date);
             $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,actual_weight,application_id,application_key')
                 ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
-                ->like('assignment_date',$date,'both')
+                ->like('assignment_date',$date,'after')
                 ->from($this->config->item('incoming_delivery_table'));
 
             $result = $this->db->get()->result();

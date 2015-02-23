@@ -1874,39 +1874,69 @@ class Reports extends Application
 
         $this->table->clear();
 
-        $tmpl = array( 'table_open'  => '<table style="width:500px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+        //$tmpl = array( 'table_open'  => '<table style="width:500px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
 
-        $this->table->set_template($tmpl);
 
-        $this->table->add_row(
-            array('data'=>'Terbilang','colspan'=>3)
-        );
+        //$this->table->set_template($tmpl);
 
-        //if($type == 'Merchant' || $type == 'Global'){
+            $this->table->set_subheading(
+                'No.',
+                'Date',
+                'Merchant',
+
+                'count',
+                'dcost',
+                'pval',
+
+                'count',
+                'dcost',
+                'sur',
+                'pval',
+
+                'count',
+                'dcost',
+                'sur',
+                'pval',
+
+                'count',
+                'pfee',
+                'pval',
+
+                'Revenue',
+                'Delivery Count',
+                'Package Value'
+            ); // Setting headings for the table
+
             $this->table->add_row(
-                array('data'=>'Payable'),
-                array('data'=>idr($total_billing),'class'=>'currency'),
-                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah')
+                '',
+                '',
+
+                array('data'=>'Summary','class'=>'total'),
+
+                array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
+                array('data'=>idr($total['Delivery Only']['dcost'] + $total['COD']['dcost'] + $total['CCOD']['dcost']),'class'=>'total currency'),
+                array('data'=>idr($total['Delivery Only']['pval'] + $total['COD']['pval'] + $total['CCOD']['pval'] + $total['PS']['pval']),'class'=>'total currency'),
+
+                '',
+                '',
+                array('data'=>idr($total['COD']['sur'] + $total['CCOD']['sur']),'class'=>'total currency'),
+                '',
+
+                '',
+                '',
+                '',
+                '',
+
+                '',
+                array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+                '',
+
+                array('data'=>idr($total['jex']['revenue']),'class'=>'total currency'),
+                array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+                array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
             );
-        //}
 
-        $this->table->add_row(
-            array('data'=>'Delivery Charge'),
-            array('data'=>idr($total_delivery),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery).' rupiah')
-        );
-
-        $this->table->add_row(
-            array('data'=>'COD Surcharge'),
-            array('data'=>idr($total_cod),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_cod).' rupiah')
-        );
-
-        $this->table->add_row(
-            array('data'=>'Total Package Value'),
-            array('data'=>idr($total_delivery + $total_cod),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah')
-        );
 
         $sumtab = $this->table->generate();
         $data['sumtab'] = $sumtab;
