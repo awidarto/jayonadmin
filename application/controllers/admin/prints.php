@@ -215,10 +215,12 @@ class Prints extends Application
 					number_format($key['unit_total'],2,',','.')
 				);
 
-				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
-				$gt += (int)$u_total;
-				$d += (int)$u_discount;
+				//$u_total = str_replace(array(',','.'), '', $key['unit_total']);
+				//$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
+                $u_total =  $key['unit_total'];
+                $u_discount =  $key['unit_discount'];
+                $gt += (is_nan((int)$u_total))?0:(int)$u_total;
+                $d += (is_nan((int)$u_discount))?0:(int)$u_discount;
 
 			}
 
@@ -551,10 +553,12 @@ class Prints extends Application
 					number_format($key['unit_total'],2,',','.')
 				);
 
-				$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-				$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
-				$gt += (int)$u_total;
-				$d += (int)$u_discount;
+				//$u_total = str_replace(array(',','.'), '', $key['unit_total']);
+				//$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
+                $u_total =  $key['unit_total'];
+                $u_discount =  $key['unit_discount'];
+				$gt += (is_nan((int)$u_total))?0:(int)$u_total;
+				$d += (is_nan((int)$u_discount))?0:(int)$u_discount;
 
 			}
 
