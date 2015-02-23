@@ -2760,7 +2760,11 @@ class Reports extends Application
 
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
-            $total_billing += (int)str_replace('.','',$payable);
+            //$total_billing += (int)str_replace('.','',$payable);
+
+            $payable = str_replace('.','',$payable);
+
+            $total_billing += (double)$payable;
 
             if($pdf == 'print' || $pdf == 'pdf'){
 
