@@ -2743,9 +2743,9 @@ class Reports extends Application
             $cod = str_replace(array(',','.'), '',$r->cod_cost);
             $charge = str_replace(array(',','.'), '',$r->chargeable_amount);
 
-            $total = (int)$total;
-            $dsc = (int)$dsc;
-            $tax = (int)$tax;
+            $total = (is_nan($total))?0:(int)$total;
+            $dsc = (is_nan($dsc))?0:(int)$dsc;
+            $tax = (is_nan($tax))?0:(int)$tax;
             $dc = (int)$dc;
             $cod = (int)$cod;
             $charge = (int)$charge;
