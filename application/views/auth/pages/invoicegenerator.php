@@ -295,6 +295,7 @@ div.stickyHeader {
                                 </td>
                             </tr>
                         </table>
+                        <?php print $sumtab; ?>
                     </td>
                 </tr>
             </table>

@@ -2814,6 +2814,55 @@ class Reports extends Application
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
+        $this->table->clear();
+
+
+        $this->table->add_row(
+            'Terbilang',
+            array('data'=>'&nbsp;','colspan'=>$say_span)
+        );
+
+        //if($type == 'Merchant' || $type == 'Global'){
+            $this->table->add_row(
+                array('data'=>'Payable',
+                    'colspan'=>$total_span),
+                array('data'=>idr($total_billing),
+                    'colspan'=>$total_span,'class'=>'currency'),
+                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah',
+                    'colspan'=>$say_span)
+            );
+        //}
+
+        $this->table->add_row(
+            array('data'=>'Delivery Charge',
+                'colspan'=>$total_span),
+            array('data'=>idr($total_delivery),
+                'colspan'=>$total_span,'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $this->table->add_row(
+            array('data'=>'COD Surcharge',
+                'colspan'=>$total_span),
+            array('data'=>idr($total_cod),
+                'colspan'=>$total_span,'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $this->table->add_row(
+            array('data'=>'Grand Total',
+                'colspan'=>$total_span),
+            array('data'=>idr($total_delivery + $total_cod),
+                'colspan'=>$total_span,'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
+                'colspan'=>$say_span)
+        );
+
+        $sumtab = $this->table->generate();
+        $data['sumtab'] = $sumtab;
+
 
         /* end copy */
 
