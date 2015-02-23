@@ -2764,7 +2764,7 @@ class Reports extends Application
 
             $payable = str_replace('.','',$payable);
 
-            $total_billing += (double)$payable;
+            $total_billing = $total_billing + (double)$payable;
 
             if($pdf == 'print' || $pdf == 'pdf'){
 
