@@ -2738,19 +2738,19 @@ class Reports extends Application
                 }
             }
 
-            $total = str_replace(array(',','.'), '', $r->total_price);
-            $dsc = str_replace(array(',','.'), '', $r->total_discount);
-            $tax = str_replace(array(',','.'), '',$r->total_tax);
-            $dc = str_replace(array(',','.'), '',$r->delivery_cost);
-            $cod = str_replace(array(',','.'), '',$r->cod_cost);
-            $charge = str_replace(array(',','.'), '',$r->chargeable_amount);
+            //$total = str_replace(array(',','.'), '', $r->total_price);
+            //$dsc = str_replace(array(',','.'), '', $r->total_discount);
+            //$tax = str_replace(array(',','.'), '',$r->total_tax);
+            //$dc = str_replace(array(',','.'), '',$r->delivery_cost);
+            //$cod = str_replace(array(',','.'), '',$r->cod_cost);
+            //$charge = str_replace(array(',','.'), '',$r->chargeable_amount);
 
-            $total = (is_nan( (int)$total))?0:(int)$total;
-            $dsc = (is_nan((int)$dsc))?0:(int)$dsc;
-            $tax = (is_nan((int)$tax))?0:(int)$tax;
-            $dc = (int)$dc;
-            $cod = (int)$cod;
-            $charge = (int)$charge;
+            $total = (is_nan( (double)$total))?0:(double)$total;
+            $dsc = (is_nan((double)$dsc))?0:(double)$dsc;
+            $tax = (is_nan((double)$tax))?0:(double)$tax;
+            $dc = (is_nan((double)$dc))?0:(double)$dc;
+            $cod = (is_nan((double)$cod))?0:(double)$cod;
+            $charge = (is_nan((double)$charge))?0:(double)$charge;
 
             if($total == 0 && $charge > 0){
                 $total = $charge;
