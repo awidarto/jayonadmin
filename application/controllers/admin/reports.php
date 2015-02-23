@@ -1879,9 +1879,7 @@ class Reports extends Application
 
         //$this->table->set_template($tmpl);
 
-            $this->table->set_subheading(
-                'No.',
-                'Date',
+            $this->table->set_heading(
                 'Merchant',
 
                 'count',
@@ -1908,9 +1906,6 @@ class Reports extends Application
             ); // Setting headings for the table
 
             $this->table->add_row(
-                '',
-                '',
-
                 array('data'=>'Summary','class'=>'total'),
 
                 array('data'=>$total['Delivery Only']['count'] + $total['COD']['count'] + $total['CCOD']['count'] + $total['PS']['count'],'class'=>'total count'),
