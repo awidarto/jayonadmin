@@ -2773,7 +2773,7 @@ class Reports extends Application
             array('data'=>'&nbsp;','colspan'=>$say_span)
         );
 
-        if($type == 'Merchant' || $type == 'Global'){
+        //if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable',
                     'colspan'=>$total_span),
@@ -2782,7 +2782,7 @@ class Reports extends Application
                 array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah',
                     'colspan'=>$say_span)
             );
-        }
+        //}
 
         $this->table->add_row(
             array('data'=>'Delivery Charge',
