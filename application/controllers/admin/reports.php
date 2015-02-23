@@ -2871,7 +2871,7 @@ class Reports extends Application
             array('data'=>'&nbsp;','colspan'=>$say_span)
         );
 
-        //if($type == 'Merchant' || $type == 'Global'){
+        if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable',
                     'colspan'=>$total_span),
@@ -2880,7 +2880,7 @@ class Reports extends Application
                 array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah',
                     'colspan'=>$say_span)
             );
-        //}
+        }
 
         $this->table->add_row(
             array('data'=>'Delivery Charge',
@@ -2921,15 +2921,15 @@ class Reports extends Application
         $this->table->set_template($tmpl);
 
         $this->table->add_row(
-            array('data'=>'<h5>Summary</h5>','colspan'=>2)
+            array('data'=>'<h4>Summary</h4>','colspan'=>2)
         );
 
-        //if($type == 'Merchant' || $type == 'Global'){
+        if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable'),
                 array('data'=>idr((double)$total_billing),'class'=>'currency')
             );
-        //}
+        }
 
         $this->table->add_row(
             array('data'=>'Delivery Charge'),

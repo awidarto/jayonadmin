@@ -223,18 +223,25 @@ class Prints extends Application
 			}
 
 
-			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
-			$total = (int)$total;
+			//$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+            $total = $data['main_info']['total_price'];
+			$total = (is_nan((int)$total))?0:(int)$total;
 			//$gt = ($total < $gt)?$gt:$total;
-			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
-			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
-			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
-			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
 
-			$dsc = (int)$dsc;
-			$tax = (int)$tax;
-			$dc = (int)$dc;
-			$cod = (int)$cod;
+            //$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
+			//$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+			//$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
+			//$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
+
+            $dsc = $data['main_info']['total_discount'];
+            $tax = $data['main_info']['total_tax'];
+            $dc = $data['main_info']['delivery_cost'];
+            $cod = $data['main_info']['cod_cost'];
+
+			$dsc = (is_nan((int)$dsc))?0:(int)$dsc;
+			$tax = (is_nan((int)$tax))?0:(int)$tax;
+			$dc = (is_nan((int)$dc))?0:(int)$dc;
+			$cod = (is_nan((int)$cod))?0:(int)$cod;
 
             if($gt == 0){
                 $gt = $total;
@@ -551,18 +558,25 @@ class Prints extends Application
 
 			}
 
-			$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
-			$total = (int)$total;
-			//$gt = ($total < $gt)?$gt:$total;
-			$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
-			$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
-			$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
-			$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
+            //$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
+            $total = $data['main_info']['total_price'];
+            $total = (is_nan((int)$total))?0:(int)$total;
+            //$gt = ($total < $gt)?$gt:$total;
 
-			$dsc = (int)$dsc;
-			$tax = (int)$tax;
-			$dc = (int)$dc;
-			$cod = (int)$cod;
+            //$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
+            //$tax = str_replace(array(',','.'), '',$data['main_info']['total_tax']);
+            //$dc = str_replace(array(',','.'), '',$data['main_info']['delivery_cost']);
+            //$cod = str_replace(array(',','.'), '',$data['main_info']['cod_cost']);
+
+            $dsc = $data['main_info']['total_discount'];
+            $tax = $data['main_info']['total_tax'];
+            $dc = $data['main_info']['delivery_cost'];
+            $cod = $data['main_info']['cod_cost'];
+
+            $dsc = (is_nan((int)$dsc))?0:(int)$dsc;
+            $tax = (is_nan((int)$tax))?0:(int)$tax;
+            $dc = (is_nan((int)$dc))?0:(int)$dc;
+            $cod = (is_nan((int)$cod))?0:(int)$cod;
 
             if($gt == 0){
                 $gt = $total;
