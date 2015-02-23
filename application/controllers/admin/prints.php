@@ -219,15 +219,15 @@ class Prints extends Application
 				//$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
                 $u_total =  $key['unit_total'];
                 $u_discount =  $key['unit_discount'];
-                $gt += (is_nan((int)$u_total))?0:(int)$u_total;
-                $d += (is_nan((int)$u_discount))?0:(int)$u_discount;
+                $gt += (is_nan((double)$u_total))?0:(double)$u_total;
+                $d += (is_nan((double)$u_discount))?0:(double)$u_discount;
 
 			}
 
 
 			//$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
             $total = $data['main_info']['total_price'];
-			$total = (is_nan((int)$total))?0:(int)$total;
+			$total = (is_nan((double)$total))?0:(double)$total;
 			//$gt = ($total < $gt)?$gt:$total;
 
             //$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
@@ -240,10 +240,10 @@ class Prints extends Application
             $dc = $data['main_info']['delivery_cost'];
             $cod = $data['main_info']['cod_cost'];
 
-			$dsc = (is_nan((int)$dsc))?0:(int)$dsc;
-			$tax = (is_nan((int)$tax))?0:(int)$tax;
-			$dc = (is_nan((int)$dc))?0:(int)$dc;
-			$cod = (is_nan((int)$cod))?0:(int)$cod;
+			$dsc = (is_nan((double)$dsc))?0:(double)$dsc;
+			$tax = (is_nan((double)$tax))?0:(double)$tax;
+			$dc = (is_nan((double)$dc))?0:(double)$dc;
+			$cod = (is_nan((double)$cod))?0:(double)$cod;
 
             if($gt == 0){
                 $gt = $total;
@@ -557,14 +557,14 @@ class Prints extends Application
 				//$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
                 $u_total =  $key['unit_total'];
                 $u_discount =  $key['unit_discount'];
-				$gt += (is_nan((int)$u_total))?0:(int)$u_total;
-				$d += (is_nan((int)$u_discount))?0:(int)$u_discount;
+				$gt += (is_nan((double)$u_total))?0:(double)$u_total;
+				$d += (is_nan((double)$u_discount))?0:(double)$u_discount;
 
 			}
 
             //$total = str_replace(array(',','.'), '', $data['main_info']['total_price']);
             $total = $data['main_info']['total_price'];
-            $total = (is_nan((int)$total))?0:(int)$total;
+            $total = (is_nan((double)$total))?0:(double)$total;
             //$gt = ($total < $gt)?$gt:$total;
 
             //$dsc = str_replace(array(',','.'), '', $data['main_info']['total_discount']);
@@ -577,10 +577,10 @@ class Prints extends Application
             $dc = $data['main_info']['delivery_cost'];
             $cod = $data['main_info']['cod_cost'];
 
-            $dsc = (is_nan((int)$dsc))?0:(int)$dsc;
-            $tax = (is_nan((int)$tax))?0:(int)$tax;
-            $dc = (is_nan((int)$dc))?0:(int)$dc;
-            $cod = (is_nan((int)$cod))?0:(int)$cod;
+            $dsc = (is_nan((double)$dsc))?0:(double)$dsc;
+            $tax = (is_nan((double)$tax))?0:(double)$tax;
+            $dc = (is_nan((double)$dc))?0:(double)$dc;
+            $cod = (is_nan((double)$cod))?0:(double)$cod;
 
             if($gt == 0){
                 $gt = $total;
