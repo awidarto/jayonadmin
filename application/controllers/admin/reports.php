@@ -2884,6 +2884,8 @@ class Reports extends Application
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
+        /* TOP SUMMARY TABLE */
+
         $this->table->clear();
 
         $tmpl = array( 'table_open'  => '<table border="0" cellpadding="0" cellspacing="0" class="mytable">' );
@@ -2891,33 +2893,29 @@ class Reports extends Application
         $this->table->set_template($tmpl);
 
         $this->table->add_row(
-            array('data'=>'Terbilang','colspan'=>3)
+            array('data'=>'Terbilang','colspan'=>2)
         );
 
         //if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable'),
-                array('data'=>idr((double)$total_billing),'class'=>'currency'),
-                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah')
+                array('data'=>idr((double)$total_billing),'class'=>'currency')
             );
         //}
 
         $this->table->add_row(
             array('data'=>'Delivery Charge'),
-            array('data'=>idr($total_delivery),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery).' rupiah')
+            array('data'=>idr($total_delivery),'class'=>'currency')
         );
 
         $this->table->add_row(
             array('data'=>'COD Surcharge'),
-            array('data'=>idr($total_cod),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_cod).' rupiah')
+            array('data'=>idr($total_cod),'class'=>'currency')
         );
 
         $this->table->add_row(
             array('data'=>'Grand Total'),
-            array('data'=>idr($total_delivery + $total_cod),'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah')
+            array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
         );
 
         $sumtab = $this->table->generate();
