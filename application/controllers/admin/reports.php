@@ -2818,46 +2818,33 @@ class Reports extends Application
 
 
         $this->table->add_row(
-            'Terbilang',
-            array('data'=>'&nbsp;','colspan'=>$say_span)
+            array('data'=>'Terbilang','colspan'=>3)
         );
 
         //if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
-                array('data'=>'Payable',
-                    'colspan'=>$total_span),
-                array('data'=>idr($total_billing),
-                    'colspan'=>$total_span,'class'=>'currency'),
-                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah',
-                    'colspan'=>$say_span)
+                array('data'=>'Payable'),
+                array('data'=>idr($total_billing),'class'=>'currency'),
+                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah')
             );
         //}
 
         $this->table->add_row(
-            array('data'=>'Delivery Charge',
-                'colspan'=>$total_span),
-            array('data'=>idr($total_delivery),
-                'colspan'=>$total_span,'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery).' rupiah',
-                'colspan'=>$say_span)
+            array('data'=>'Delivery Charge'),
+            array('data'=>idr($total_delivery),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery).' rupiah')
         );
 
         $this->table->add_row(
-            array('data'=>'COD Surcharge',
-                'colspan'=>$total_span),
-            array('data'=>idr($total_cod),
-                'colspan'=>$total_span,'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_cod).' rupiah',
-                'colspan'=>$say_span)
+            array('data'=>'COD Surcharge'),
+            array('data'=>idr($total_cod),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_cod).' rupiah')
         );
 
         $this->table->add_row(
-            array('data'=>'Grand Total',
-                'colspan'=>$total_span),
-            array('data'=>idr($total_delivery + $total_cod),
-                'colspan'=>$total_span,'class'=>'currency'),
-            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
-                'colspan'=>$say_span)
+            array('data'=>'Grand Total'),
+            array('data'=>idr($total_delivery + $total_cod),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah')
         );
 
         $sumtab = $this->table->generate();
