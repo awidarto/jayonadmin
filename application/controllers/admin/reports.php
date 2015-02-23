@@ -2773,7 +2773,7 @@ class Reports extends Application
             $total_cod += (int)str_replace('.','',$cod);
             //$total_billing += (int)str_replace('.','',$payable);
 
-            $payable = str_replace('.','',$payable);
+            //$payable = str_replace('.','',$payable);
 
             $total_billing = $total_billing + (double)$payable;
 
