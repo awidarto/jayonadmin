@@ -253,19 +253,30 @@ $config['master_key'] = '7e931g6628S59A0sJ4pYVqAjdo0v66Wb';
 
 $config['unlimited_order_time'] = true;
 
-if($_SERVER['HTTP_HOST'] == 'localhost'){
-	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
-	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
-    $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
-	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
-    $config['api_url'] = 'http://localhost/jayonapidev/v2';
+if(isset($_SERVER)){
+
+    if($_SERVER['HTTP_HOST'] == 'localhost'){
+        $config['public_path'] = '/var/www/pro/jayonadmin/public/';
+        $config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
+        $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
+        $config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
+        $config['api_url'] = 'http://localhost/jayonapidev/v2';
+    }else{
+        //online version should redirect to main site
+        $config['public_path'] = '/var/www/pro/jayonadmin/public/';
+        $config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
+        $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
+        $config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
+        $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
+    }
+
 }else{
-	//online version should redirect to main site
-	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
-	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
-    $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
-	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
-    $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
+        //online version should redirect to main site
+        $config['public_path'] = '/var/www/pro/jayonadmin/public/';
+        $config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
+        $config['pickuppic_path'] = '/var/www/pro/jayonadmin/public/pickup/';
+        $config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
+        $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
 }
 
 $config['import_label_default'] = 4;
