@@ -2921,7 +2921,7 @@ class Reports extends Application
         $this->table->set_template($tmpl);
 
         $this->table->add_row(
-            array('data'=>'Summary','colspan'=>2)
+            array('data'=>'<h5>Summary</h5>','colspan'=>2)
         );
 
         //if($type == 'Merchant' || $type == 'Global'){
