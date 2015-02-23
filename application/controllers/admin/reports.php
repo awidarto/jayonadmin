@@ -2820,6 +2820,18 @@ class Reports extends Application
                     '',
                     ''
                 );
+            }else{
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_billing),'class'=>'currency total'),
+                );
             }
 
 
