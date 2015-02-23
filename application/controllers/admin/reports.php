@@ -3408,17 +3408,23 @@ class Reports extends Application
             }
 
             $courier_name = $r->courier_name;
-            $total = str_replace(array(',','.'), '', $r->total_price);
-            $dsc = str_replace(array(',','.'), '', $r->total_discount);
-            $tax = str_replace(array(',','.'), '',$r->total_tax);
-            $dc = str_replace(array(',','.'), '',$r->delivery_cost);
-            $cod = str_replace(array(',','.'), '',$r->cod_cost);
+            //$total = str_replace(array(',','.'), '', $r->total_price);
+            //$dsc = str_replace(array(',','.'), '', $r->total_discount);
+            //$tax = str_replace(array(',','.'), '',$r->total_tax);
+            //$dc = str_replace(array(',','.'), '',$r->delivery_cost);
+            //$cod = str_replace(array(',','.'), '',$r->cod_cost);
 
-            $total = (int)$total;
-            $dsc = (int)$dsc;
-            $tax = (int)$tax;
-            $dc = (int)$dc;
-            $cod = (int)$cod;
+            $total = $r->total_price;
+            $dsc = $r->total_discount;
+            $tax = $r->total_tax;
+            $dc = $r->delivery_cost;
+            $cod = $r->cod_cost;
+
+            $total = (is_nan((double)$total))?0:(double)$total;
+            $dsc = (is_nan((double)$dsc))?0:(double)$dsc;
+            $tax = (is_nan((double)$tax))?0:(double)$tax;
+            $dc = (is_nan((double)$dc))?0:(double)$dc;
+            $cod = (is_nan((double)$cod))?0:(double)$cod;
 
             $payable = 0;
 
@@ -3434,10 +3440,10 @@ class Reports extends Application
             foreach($details as $value => $key)
             {
 
-                $u_total = str_replace(array(',','.'), '', $key['unit_total']);
-                $u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
-                $gt += (int)$u_total;
-                $d += (int)$u_discount;
+                $u_total = $key['unit_total'];
+                $u_discount = $key['unit_discount'];
+                $gt += (is_nan((double)$u_total))?0:(double)$u_total;
+                $d += (is_nan((double)$u_discount))?0:(double)$u_discount;
 
             }
 
@@ -3448,9 +3454,9 @@ class Reports extends Application
 
             $payable = $gt;
 
-            $total_delivery += (int)str_replace('.','',$dc);
-            $total_cod += (int)str_replace('.','',$cod);
-            $total_billing += (int)str_replace('.','',$payable);
+            $total_delivery += (double)$dc;
+            $total_cod += (double)$cod;
+            $total_billing += (double)$payable;
 
             $db = '';
             if($r->delivery_bearer == 'merchant'){
