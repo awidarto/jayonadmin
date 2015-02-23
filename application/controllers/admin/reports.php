@@ -2882,7 +2882,7 @@ class Reports extends Application
 
         $this->table->clear();
 
-        $tmpl = array( 'table_open'  => '<table style="width:550px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+        $tmpl = array( 'table_open'  => '<table border="0" cellpadding="0" cellspacing="0" class="mytable">' );
 
         $this->table->set_template($tmpl);
 
