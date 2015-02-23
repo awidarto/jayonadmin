@@ -182,6 +182,7 @@
             <div style="width:400px;display:inline-block;">
                 <h1 style="margin-top:0px;">INVOICE</h1>
                 <h2>No: JSM-<?php print strtoupper($merchantname) ?>-<?php print $invdatenum ?></h2>
+                <?php print $sumtab; ?>
             </div>
         </div>
         <div style="display:block;clear:both;" >
