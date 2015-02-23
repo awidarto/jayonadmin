@@ -2775,9 +2775,12 @@ class Reports extends Application
 
         if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
-                'Payable',
-                array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-                    'colspan'=>$say_span,'class'=>'currency')
+                array('data'=>'Payable',
+                    'colspan'=>$total_span),
+                array('data'=>idr($total_billing),
+                    'colspan'=>$total_span,'class'=>'currency'),
+                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah',
+                    'colspan'=>$say_span)
             );
         }
 
