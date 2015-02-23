@@ -2830,7 +2830,7 @@ class Reports extends Application
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
                     '',
                     '',
-                    array('data'=>'Rp '.idr($total_billing),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_billing),'class'=>'currency total')
                 );
             }
 
