@@ -1871,6 +1871,47 @@ class Reports extends Application
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
+
+        $this->table->clear();
+
+        $tmpl = array( 'table_open'  => '<table style="width:500px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+
+        $this->table->set_template($tmpl);
+
+        $this->table->add_row(
+            array('data'=>'Terbilang','colspan'=>3)
+        );
+
+        //if($type == 'Merchant' || $type == 'Global'){
+            $this->table->add_row(
+                array('data'=>'Payable'),
+                array('data'=>idr($total_billing),'class'=>'currency'),
+                array('data'=>$this->number_words->to_words((double)$total_billing).' rupiah')
+            );
+        //}
+
+        $this->table->add_row(
+            array('data'=>'Delivery Charge'),
+            array('data'=>idr($total_delivery),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery).' rupiah')
+        );
+
+        $this->table->add_row(
+            array('data'=>'COD Surcharge'),
+            array('data'=>idr($total_cod),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_cod).' rupiah')
+        );
+
+        $this->table->add_row(
+            array('data'=>'Total Package Value'),
+            array('data'=>idr($total_delivery + $total_cod),'class'=>'currency'),
+            array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah')
+        );
+
+        $sumtab = $this->table->generate();
+        $data['sumtab'] = $sumtab;
+
+
         /* end copy */
 
         $this->breadcrumb->add_crumb('Revenue ( Manual Generated )','admin/reports/reconciliation');
@@ -2816,6 +2857,9 @@ class Reports extends Application
 
         $this->table->clear();
 
+        $tmpl = array( 'table_open'  => '<table style="width:500px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+
+        $this->table->set_template($tmpl);
 
         $this->table->add_row(
             array('data'=>'Terbilang','colspan'=>3)
