@@ -2699,6 +2699,8 @@ class Reports extends Application
         $total_delivery = 0;
         $total_cod = 0;
 
+        $total_payable = 0;
+
         $lastdate = '';
 
         foreach($rows->result() as $r){
@@ -2757,6 +2759,8 @@ class Reports extends Application
             $payable = 0;
 
             $payable = ($total - $dsc) + $tax;
+
+            $total_payable += ($total - $dsc) + $tax;
 
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
@@ -2836,7 +2840,7 @@ class Reports extends Application
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_billing),'class'=>'currency')
+                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
                 );
             }
 
