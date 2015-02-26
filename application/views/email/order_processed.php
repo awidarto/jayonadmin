@@ -12,7 +12,7 @@
     melalui <a href="http://www.jayonexpress.com/m/">Delivery Tracker</a> Jayonexpress.
 </p>
 <p>
-    Terima kasih,
+    Terima kasih,<br />
     Jayon Express
 </p>
 </body>

@@ -1253,7 +1253,7 @@ class Ajax extends Application
 
                         if($app->notify_on_new_order == 1){
                             if(valid_email($in->email)){
-                                send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_processed',$nedata,null);
+                                //send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_processed',$nedata,null);
                             }
                         }
 
@@ -1262,7 +1262,7 @@ class Ajax extends Application
                             $edata['username'] = $buyer_username;
                             $edata['password'] = $password;
                             if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
-                                send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+                                //send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
                             }
 
                         }
