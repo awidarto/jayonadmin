@@ -5,6 +5,11 @@ class Ajax extends Application
 	public function __construct()
 	{
 		parent::__construct();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        $this->accessor_ip = $_SERVER['REMOTE_ADDR'];
+
 	}
 
     public function printsession(){
@@ -1243,6 +1248,30 @@ class Ajax extends Application
                     $nedata['detail'] = $this->table;
 
                     $result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+
+                    try{
+
+                        if($app->notify_on_new_order == 1){
+                            if(valid_email($in->email)){
+                                send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_processed',$nedata,null);
+                            }
+                        }
+
+                        if($is_new == true){
+                            $edata['fullname'] = $dataset['fullname'];
+                            $edata['username'] = $buyer_username;
+                            $edata['password'] = $password;
+                            if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
+                                send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+                            }
+
+                        }
+
+                    }catch(Exception $e){
+
+                    }
+
+                    $this->log_access($api_key, __METHOD__ ,$result,$args);
 
                     return $result;
                 }else{

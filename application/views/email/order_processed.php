@@ -1,17 +1,19 @@
 <html>
 <body>
-<p>Dear <?php print $fullname?>,</p>
+<p>Bapak / Ibu <?php print $fullname?>,</p>
 
 <p>
-	Your order made at <?php print $ordertime; ?> with transaction id of <?php print $merchant_trx_id;?>
-	has been processed and is scheduled for delivery.
+    Delivery untuk order anda di toko <?php print $merchantname ?>
+    dengan nomor order <?php print $merchant_trx_id;?>
+    telah masuk ke sistem kami dan sedang diproses untuk pengiriman.
 </p>
 <p>
-	Your delivery id is <?php print $delivery_id;?>. You may check the progress at Jayon Express’ web site.
+    Untuk mengetahui status terkini dari proses pengiriman, silakan cek
+    melalui <a href="http://www.jayonexpress.com/m/">Delivery Tracker</a> Jayonexpress.
 </p>
 <p>
-	Thank you,
-	Jayon Express team
+    Terima kasih,
+    Jayon Express
 </p>
 </body>
 </html>

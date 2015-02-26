@@ -7,6 +7,12 @@ class Gen extends Application
         parent::__construct();
     }
 
+    public function schrev(){
+        $month = date('m',time());
+        $year = date('Y',time());
+        $this->rev($month, $year);
+    }
+
     public function rev($month,$year){
 
         set_time_limit(0);
