@@ -294,7 +294,7 @@ class V1 extends Application
 				//print_r($app);
 
 				if($app->notify_on_new_order == 1){
-					send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
+					//send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
 				}
 
 				if($is_new == true){
@@ -302,7 +302,7 @@ class V1 extends Application
 					$edata['username'] = $buyer_username;
 					$edata['password'] = $password;
 					if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
-						send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+						//send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
 					}
 
 				}
@@ -564,7 +564,7 @@ class V1 extends Application
 							$edata['status'] = ucwords(str_replace('_', '', $in->status));
 
 							//send_notification($subject,$to,$cc = null,$reply_to = null,$template = 'default',$data = null,$attachment = null)
-							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->email,$ord->merchant_email,null,'status_update',$edata,null);
+							//send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->email,$ord->merchant_email,null,'status_update',$edata,null);
 						}
 
 					}

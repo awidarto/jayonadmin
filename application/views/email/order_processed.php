@@ -4,7 +4,6 @@
 
 <p>
     Delivery untuk order anda di toko <?php print $merchantname ?>
-    dengan nomor order <?php print $merchant_trx_id;?>
     telah masuk ke sistem kami dan sedang diproses untuk pengiriman.
 </p>
 <p>
