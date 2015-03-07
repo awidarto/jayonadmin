@@ -3708,12 +3708,13 @@ class Reports extends Application
 
     //delivery time report
 
-    public function deliverytime($type = null,$deliverytype = null,$zone = null,$merchant = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function deliverytime($type = null,$deliverytype = null,$zone = null,$merchant = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
         $mid = (is_null($merchant))?'noid':$merchant;
         $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
+        $status = (is_null($status))?'all':$status;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -3727,6 +3728,7 @@ class Reports extends Application
             'deliverytype'=>$deliverytype,
             'zone'=> $zone,
             'merchant'=> $merchant,
+            'status'=> $status,
             'year'=> $year ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
@@ -3808,6 +3810,9 @@ class Reports extends Application
         $data['merchantlist'] = $mcs;
         $data['mid'] = $mid;
 
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
         /* copied from print controller */
 
         $this->load->library('number_words');
@@ -3885,6 +3890,7 @@ class Reports extends Application
             $this->db->where($this->config->item('assigned_delivery_table').'.device_id',$id);
         }
 
+
         if($deliverytype != 'noid'){
             if($deliverytype == 'DO'){
                 $deliverytype = 'Delivery Only';
@@ -3905,23 +3911,31 @@ class Reports extends Application
 
         $this->db->order_by('buyerdeliverycity','asc')->order_by('buyerdeliveryzone','asc');
 
-        $this->db->and_();
-        $this->db->group_start()
-            ->where('status',   $this->config->item('trans_status_mobile_delivered'))
-            //->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_new'))
-            ->or_where('status',$this->config->item('trans_status_rescheduled'))
-            ->or_where('status',$this->config->item('trans_status_mobile_return'))
-            //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            /*
-            ->or_()
-                ->group_start()
-                    ->where('status',$this->config->item('trans_status_new'))
-                    ->where('pending_count >', 0)
-                ->group_end()
-            */
 
-            ->group_end();
+        if($status != 'all'){
+            $this->db->where($this->config->item('assigned_delivery_table').'.status',$status);
+        }else{
+            $this->db->and_();
+
+            $this->db->group_start()
+                ->where('status',   $this->config->item('trans_status_mobile_delivered'))
+                //->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                ->or_where('status',$this->config->item('trans_status_new'))
+                ->or_where('status',$this->config->item('trans_status_rescheduled'))
+                ->or_where('status',$this->config->item('trans_status_mobile_return'))
+                //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+                /*
+                ->or_()
+                    ->group_start()
+                        ->where('status',$this->config->item('trans_status_new'))
+                        ->where('pending_count >', 0)
+                    ->group_end()
+                */
+
+                ->group_end();
+
+        }
+
 
         //print $this->db->last_query();
 
@@ -4526,6 +4540,7 @@ class Reports extends Application
         $deliverytype = null;
         $zone = null;
         $merchant = null;
+        $status = null;
         $year = null;
         $scope = null;
         $par1 = null;
@@ -4537,6 +4552,7 @@ class Reports extends Application
         $deliverytype = $this->input->post('deliverytype');
         $zone = $this->input->post('zone');
         $merchant = $this->input->post('merchant');
+        $status = $this->input->post('status');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -4544,7 +4560,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->deliverytime($type, $deliverytype ,$zone,$merchant,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->deliverytime($type, $deliverytype ,$zone,$merchant,$status,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 

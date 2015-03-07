@@ -13,10 +13,11 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -27,10 +28,11 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/month/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -40,11 +42,12 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
         );
@@ -91,6 +94,7 @@
                 'deliverytype': '<?= $getparams['deliverytype'] ?>',
                 'zone': '<?= $getparams['zone'] ?>',
                 'merchant': '<?= $getparams['merchant'] ?>',
+                'status': '<?= $getparams['status'] ?>',
                 'year': '<?= $getparams['year'] ?>',
                 'scope': '<?= $getparams['scope'] ?>',
                 'par1': '<?= $getparams['par1'] ?>',
@@ -252,6 +256,10 @@ td.cod{
                             <tr>
                                 <td><?php print (isset($merchant_select_title))?$merchant_select_title:'Merchant'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('merchant_scopes',$merchantlist,$mid,'id = "merchant_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php print (isset($status_select_title))?$status_select_title:'Status'; ?></td>
+                                <td colspan="3"><?php print form_dropdown('status_scopes',$statuslist,$stid,'id = "status_scopes"'); ?></td>
                             </tr>
                             <tr>
                                 <td><?php print (isset($zone_select_title))?$zone_select_title:'Zone'; ?></td>

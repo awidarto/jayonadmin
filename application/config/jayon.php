@@ -111,6 +111,13 @@ $config['trans_status_wh2ds'] = 'di delivery';
 $config['trans_status_ds2wh'] = 'kembali di gudang';
 $config['trans_status_return2merchant'] = 'kembali ke merchant';
 
+$config['status_list'] = array(
+    'pending'=>'Pending',
+    'delivered'=>'Delivered',
+    'canceled'=>'Canceled',
+    'returned'=>'Returned'
+);
+
 /* status colors */
 
 $config['status_colors'] = array(
