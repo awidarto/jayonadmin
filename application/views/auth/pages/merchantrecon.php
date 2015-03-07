@@ -10,9 +10,10 @@
 		$('#get_week').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
+                var status_scopes = $('#status_scopes').val();
 				var year = $('#year_scopes').val();
 				var week = $('#week_scopes').val();
-				var link = user_scopes +'/'+ year +'/week/'+ week;
+				var link = user_scopes +'/'+ status_scopes +'/'+ year +'/week/'+ week;
 				window.location = base + controller + link;
 
 			}
@@ -21,9 +22,10 @@
 		$('#get_month').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
+                var status_scopes = $('#status_scopes').val();
 				var year = $('#year_scopes').val();
 				var week = $('#month_scopes').val();
-				var link = user_scopes +'/'+ year +'/month/'+ week;
+				var link = user_scopes +'/'+ status_scopes +'/'+ year +'/month/'+ week;
 				window.location = base + controller + link;
 
 			}
@@ -31,10 +33,11 @@
 
 		$('#get_date_range').click(function(){
 				var user_scopes = $('#user_scopes').val();
+                var status_scopes = $('#status_scopes').val();
 				var year = $('#year_scopes').val();
 				var from = $('#date_from').val();
 				var to = $('#date_to').val();
-				var link = user_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+				var link = user_scopes +'/'+ status_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
 				window.location = base + controller + link;
 			}
 		);
@@ -158,6 +161,10 @@ div.stickyHeader {
 					<td><?php print (isset($select_title))?$select_title:'Merchant'; ?></td>
 					<td colspan="3"><?php print form_dropdown('user_scopes',$merchants,$id,'id = "user_scopes"'); ?></td>
 				</tr>
+                <tr>
+                    <td><?php print (isset($status_select_title))?$status_select_title:'Status'; ?></td>
+                    <td colspan="3"><?php print form_dropdown('status_scopes',$statuslist,$stid,'id = "status_scopes"'); ?></td>
+                </tr>
 				<tr>
 					<td>Year</td>
 					<td colspan="3"><?php print form_dropdown('year_scopes',$years,$year,'id = "year_scopes"');?></td>

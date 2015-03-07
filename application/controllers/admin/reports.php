@@ -998,10 +998,11 @@ class Reports extends Application
 		print json_encode($result); // Load the view
 	}
 
-	public function revenue($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+	public function revenue($type = null, $status = null ,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
 
 		if(is_null($scope)){
 			$id = 'noid';
@@ -1057,6 +1058,9 @@ class Reports extends Application
 		$data['merchants'] = $cs;
 		$data['id'] = $id;
 
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
 		/* copied from print controller */
 
 		$this->load->library('number_words');
@@ -1099,7 +1103,11 @@ class Reports extends Application
 			$this->db->where($this->config->item('delivered_delivery_table').'.merchant_id',$id);
 		}
 
-		$this->db->and_();
+        if($status != 'all'){
+            $this->db->where('status', $status);
+        }else{
+
+    		$this->db->and_();
 			$this->db->group_start();
 				$this->db->where('status',	 $this->config->item('trans_status_mobile_delivered'));
 				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
@@ -1110,6 +1118,7 @@ class Reports extends Application
 			$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
 			//$this->db->group_by('assignment_date,merchant_id,delivery_type,status');
 
+        }
 
 
         /* raw query
@@ -1492,10 +1501,11 @@ class Reports extends Application
 	}
 
 
-    public function revenuegen($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+    public function revenuegen($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -1551,6 +1561,9 @@ class Reports extends Application
         $data['merchants'] = $cs;
         $data['id'] = $id;
 
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
         /* copied from print controller */
 
         $this->load->library('number_words');
@@ -1585,7 +1598,11 @@ class Reports extends Application
             $this->db->where('merchant_id',$id);
         }
 
-        $this->db->and_();
+        if($status != 'all'){
+                $this->db->where('status',   $status);
+        }else{
+
+            $this->db->and_();
             $this->db->group_start();
                 $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
                 /*
@@ -1594,7 +1611,7 @@ class Reports extends Application
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
                 */
             $this->db->group_end();
-
+        }
         //print $this->db->last_query();
 
         if($pdf == 'csv'){
@@ -1961,10 +1978,12 @@ class Reports extends Application
     }
 
 
-    public function devicerecongen($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+    public function devicerecongen($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
+
 
         if(is_null($scope)){
             $id = 'noid';
@@ -2020,6 +2039,9 @@ class Reports extends Application
         $data['merchants'] = $cs;
         $data['id'] = $id;
 
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
         /* copied from print controller */
 
         $this->load->library('number_words');
@@ -2054,7 +2076,10 @@ class Reports extends Application
             $this->db->where('device_id',$id);
         }
 
-        $this->db->and_();
+        if($status != 'all'){
+            $this->db->where('status',   $status);
+        }else{
+            $this->db->and_();
             $this->db->group_start();
                 $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
                 /*
@@ -2063,6 +2088,9 @@ class Reports extends Application
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
                 */
             $this->db->group_end();
+
+        }
+
 
         //print $this->db->last_query();
 
@@ -2408,11 +2436,12 @@ class Reports extends Application
 
 
 
-    public function invoices($type = null,$deliverytype = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function invoices($type = null,$deliverytype = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
         $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
+        $status = (is_null($status))?'all':$status;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -2424,6 +2453,7 @@ class Reports extends Application
         $data['getparams'] = array(
             'type'=> $type ,
             'deliverytype'=>$deliverytype,
+            'status'=>$status,
             'year'=> $year ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
@@ -2490,6 +2520,9 @@ class Reports extends Application
 
         $data['merchants'] = $cs;
         $data['id'] = $id;
+
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
 
         $data['deliverytypes'] = $this->config->item('deliverytype_selector');
 
@@ -2560,7 +2593,10 @@ class Reports extends Application
             }
         }
 
-        $this->db->and_();
+        if($status != 'all'){
+                $this->db->where('status',   $status);
+        }else{
+            $this->db->and_();
             $this->db->group_start();
                 $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
                 /*
@@ -2569,6 +2605,8 @@ class Reports extends Application
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
                 */
             $this->db->group_end();
+
+        }
 
         //print $this->db->last_query();
 
@@ -3007,6 +3045,7 @@ class Reports extends Application
     public function geninvoice(){
         $type = null;
         $deliverytype = null;
+        $status = null;
         $year = null;
         $scope = null;
         $par1 = null;
@@ -3016,6 +3055,7 @@ class Reports extends Application
 
         $type = $this->input->post('type');
         $deliverytype = $this->input->post('deliverytype');
+        $status = $this->input->post('status');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -3023,7 +3063,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->invoices($type ,$deliverytype,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->invoices($type ,$deliverytype,$status,$year, $scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
@@ -6593,10 +6633,11 @@ class Reports extends Application
 	}
 
 
-	public function devicerecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+	public function devicerecon($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
 
 		if(is_null($scope)){
 			$id = 'noid';
@@ -6653,6 +6694,10 @@ class Reports extends Application
 
 		$data['devices'] = $cs;
 		$data['id'] = $id;
+
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
 		//$data['couriers'] = get_courier();
 
 		/* copied from print controller */
@@ -6694,15 +6739,19 @@ class Reports extends Application
 			$this->db->where($this->config->item('delivered_delivery_table').'.device_id',$id);
 		}
 
-		$this->db->and_();
-			$this->db->group_start();
-				$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
-				$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-				$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-				$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
-			$this->db->group_end();
+        if($status != 'all'){
+                $this->db->where('status',$status);
+        }else{
+            $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
 
-		$this->db->group_by('assignment_date,status');
+            $this->db->group_by('assignment_date,status');
+        }
 
         if($pdf == 'csv'){
 
