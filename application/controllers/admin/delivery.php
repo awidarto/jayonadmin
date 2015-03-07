@@ -5773,7 +5773,8 @@ class Delivery extends Application
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                     $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
-                    $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
+                    $dataset['status'] == $this->config->item('trans_status_mobile_noshow') ||
+                    $dataset['status'] == $this->config->item('trans_status_mobile_return')
                     ){
                     $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
                 }
@@ -5829,7 +5830,8 @@ class Delivery extends Application
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                 $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
-                $dataset['status'] == $this->config->item('trans_status_mobile_noshow')
+                $dataset['status'] == $this->config->item('trans_status_mobile_noshow')||
+                $dataset['status'] == $this->config->item('trans_status_mobile_return')
                 ){
                 $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
             }
