@@ -91,7 +91,7 @@ class Apps extends Application
 		$page['sortdisable'] = '6';
 		$page['ajaxurl'] = 'admin/apps/ajaxmanage';
 		$page['page_title'] = 'Application Keys';
-		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+		$this->ag_auth->view('appslistview',$page); // Load the view
 	}
 
 	public function ajaxmerchantmanage($id)
@@ -244,7 +244,7 @@ class Apps extends Application
 
 	public function delete($id,$merchant_id = null)
 	{
-		
+
 		if(in_array('members',$this->uri->segment_array())){
 			$back_url = 'admin/members/merchant/apps/manage/'.$merchant_id;
 		}else{
