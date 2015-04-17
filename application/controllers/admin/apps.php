@@ -239,7 +239,7 @@ class Apps extends Application
 		$page['add_button'] = array('link'=>'admin/members/merchant/apps/add/'.$id,'label'=>'Add Application');
 		$page['ajaxurl'] = 'admin/apps/ajaxmerchantmanage/'.$id;
 		$page['page_title'] = 'Application Keys';
-		$this->ag_auth->view('ajaxlistview',$page); // Load the view
+		$this->ag_auth->view('appslistview',$page); // Load the view
 	}
 
 	public function delete($id,$merchant_id = null)
