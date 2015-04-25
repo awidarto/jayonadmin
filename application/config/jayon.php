@@ -42,6 +42,7 @@ $config['device_assignment_table'] = 'device_courier_log';
 
 $config['invoice_table'] = 'released_invoices';
 $config['manifest_table'] = 'released_manifests';
+$config['docs_table'] = 'released_docs';
 $config['deliverytime_table'] = 'released_deliverytime';
 $config['phototag_table'] = 'delivery_photos';
 

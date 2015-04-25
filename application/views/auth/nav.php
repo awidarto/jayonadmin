@@ -67,12 +67,16 @@
 					<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Location Log'); } ?></li>
 				</ul>
 			</li>
+            <?php
+            /*
             <li class="<?php print set_hilite('admin\/admanager')?>" ><?php if(user_group('admin')) { echo anchor('admin/admanager', 'Advertising'); } ?>
                 <ul>
                     <li class="<?php print set_hilite('admin\/admanager')?>" ><?php if(user_group('admin')) { echo anchor('admin/admanager', 'Ad Manager'); } ?></li>
                     <li class="<?php print set_hilite('admin\/adcategory')?>" ><?php if(user_group('admin')) { echo anchor('admin/adcategory', 'Ad Category'); } ?></li>
                 </ul>
             </li>
+            */
+            ?>
 			<li class="<?php print set_hilite('admin\/apps\/manage')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'System'); } ?>
 				<ul>
 					<?php if(user_group('admin')): ?><li class="<?php print set_hilite('admin\/apps\/manage')?>" ><?php if(user_group('admin')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li><?php endif;?>
@@ -106,6 +110,15 @@
                     <li class="<?php print set_hilite('admin\/location\/distribution')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/distribution', 'Buyer Distributions'); } ?></li>
 				</ul>
 			</li>
+            <li class="<?php print set_hilite('custom\/cod\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/cod/report', 'Custom'); } ?>
+                <ul>
+                    <li class="<?php print set_hilite('custom\/cod\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/cod/report', 'COD Reconciliation'); } ?></li>
+                    <li class="<?php print set_hilite('custom\/orderstatus\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/orderstatus/report', 'Order Status Report'); } ?></li>
+                    <li class="<?php print set_hilite('custom\/orderrecon\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/orderrecon/report', 'Order Cost Reconciliation'); } ?></li>
+                    <li class="<?php print set_hilite('custom\/retur\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/retur/report', 'Return Report'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/docs\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/docs/listing', 'Released Documents'); } ?></li>
+                </ul>
+            </li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Administrators'); } ?></li>
