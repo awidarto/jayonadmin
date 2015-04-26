@@ -1,6 +1,6 @@
 <?php
 
-class Orderrecon extends Application
+class Pickuprecon extends Application
 {
 
     public function __construct()
@@ -714,15 +714,15 @@ class Orderrecon extends Application
         $data['summary_count'] = $counts;
         /* end copy */
 
-        $this->breadcrumb->add_crumb('Order Cost & Insurance Reconciliation','custom/orderrecon/report');
+        $this->breadcrumb->add_crumb('Pickup Reconciliation','custom/orderrecon/report');
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
-        $page['page_title'] = 'Order Reconciliation';
+        $page['page_title'] = 'Pickup Reconciliation';
         $data['select_title'] = 'Device';
         $data['zone_select_title'] = 'Zone';
 
 
-        $data['controller'] = 'custom/orderrecon/report/';
+        $data['controller'] = 'custom/pickuprecon/report/';
 
         $data['last_query'] = $last_query;
 
@@ -740,10 +740,10 @@ class Orderrecon extends Application
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
         $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
 
-        $pdffilename = 'JSM-RECON-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
+        $pdffilename = 'JSM-PICKUP-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
-            $html = $this->load->view('auth/pages/custom/print/orderreconprint',$data,true);
+            $html = $this->load->view('auth/pages/custom/print/pickupreconprint',$data,true);
             $pdf_name = $pdffilename;
             $pdfbuf = pdf_create($html, $pdf_name,'A3','landscape', false);
 
@@ -760,7 +760,7 @@ class Orderrecon extends Application
                 'period_from'=>$data['from'],
                 'period_to'=>$data['to'],
                 'release_date'=>$invdate,
-                'doc_type'=>'orderrecon',
+                'doc_type'=>'pickuprecon',
                 'doc_number'=>$pdffilename,
                 'note'=>'',
                 'filename'=>$pdffilename
@@ -771,10 +771,10 @@ class Orderrecon extends Application
             return array(file_exists(FCPATH.'public/custom/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
 
         }else if($pdf == 'print'){
-            $this->load->view('auth/pages/custom/print/orderreconprint',$data); // Load the view
+            $this->load->view('auth/pages/custom/print/pickupreconprint',$data); // Load the view
         }else{
-            //$this->load->view('custom/orderrecongenerator',$data); // Load the view
-            $this->ag_auth->view('custom/orderrecongenerator',$data); // Load the view
+            //$this->load->view('custom/pickuprecongenerator',$data); // Load the view
+            $this->ag_auth->view('custom/pickuprecongenerator',$data); // Load the view
         }
     }
 

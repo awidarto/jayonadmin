@@ -191,7 +191,7 @@ class Orderstatus extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,'.$mtab.'.created,deliverytime,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount')
+        $this->db->select('assignment_date,'.$mtab.'.created,deliverytime,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,recipient_name,buyerdeliveryzone,buyerdeliverycity,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,pickuptime,shipping_zip,status,pickup_status,warehouse_status,delivery_note,actual_weight,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -235,6 +235,7 @@ class Orderstatus extends Application
             ->or_where('delivery_type','CCOD')
             ->group_end();
 
+        /*
         $this->db->and_();
         $this->db->group_start()
             ->where('status',$this->config->item('trans_status_admin_courierassigned'))
@@ -246,7 +247,7 @@ class Orderstatus extends Application
                     ->where('pending_count >', 0)
                 ->group_end()
             ->group_end();
-
+        */
 
         //print $this->db->last_query();
 
@@ -306,17 +307,35 @@ class Orderstatus extends Application
                 'No.',
                 'Zone',
                 'TOKO ONLINE',
+                'TrxNo',
+                'AWB',
+                'Ref ID',
+                'PU Date Time',
+                'Shipper',
+                'DO',
+                'Consignee',
+                'Contact Person',
+                'Address',
+                'ZIP',
+                'DestCode',
+                'Destination',
+                'Layanan',
+                'Content',
                 'Type',
-                'Package ID',
-                'Airway Bill',
-                'Description',
-                'Total',
-                'Create Date',
-                'Delivered Date',
-                'Delivered Update',
-                'Consignee Name',
-                'Surcharge',
-                'Net Amount'
+                'Status',
+                'Received',
+                'Received Note',
+                'Return',
+                'Date of Return',
+                'Return Note',
+                'Undelivered',
+                'Undelivered Note',
+                'Pieces',
+                'Weight',
+                'Tariff',
+                'Other Charge',
+                'Reg AWB',
+                'Create Date'
             ); // Setting headings for the table
 
             /*
@@ -344,7 +363,6 @@ class Orderstatus extends Application
                 'No.',
                 'Zone',
                 'TOKO ONLINE',
-                'Type',
                 'TrxNo',
                 'AWB',
                 'Ref ID',
@@ -362,7 +380,7 @@ class Orderstatus extends Application
                 'Type',
                 'Status',
                 'Received',
-                'Relation',
+                'Received Note',
                 'Return',
                 'Date of Return',
                 'Return Note',
@@ -541,32 +559,70 @@ class Orderstatus extends Application
                 'Zone',
                 'TOKO ONLINE',
                 'Type',
-                'Package ID',
-                'Airway Bill',
-                'Description',
-                'Total',
-                'Create Date',
-                'Delivered Date',
-                'Delivered Update',
-                'Consignee Name',
-                'Surcharge',
-                'Net Amount'
+                'TrxNo',
+                'AWB',
+                'Ref ID',
+                'PU Date Time',
+                'Shipper',
+                'DO',
+                'Consignee',
+                'Contact Person',
+                'Address',
+                'ZIP',
+                'DestCode',
+                'Destination',
+                'Layanan',
+                'Content',
+                'Type',
+                'Status',
+                'Received',
+                'Relation',
+                'Return',
+                'Date of Return',
+                'Return Note',
+                'Undelivered',
+                'Undelivered Note',
+                'Pieces',
+                'Weight',
+                'Tariff',
+                'Other Charge',
+                'Reg AWB',
+                'Create Date'
                 */
                 $this->table->add_row(
                     $seq,
                     $r->buyerdeliveryzone,
                     $r->merchant_name,
-                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
                     $r->delivery_id,
                     $r->merchant_trans_id,
-                    '',
-                    array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
-                    $r->created,
-                    $r->deliverytime,
-                    '',
+                    $r->delivery_id,
+                    $r->pickuptime,
+                    'Jayon Express',
+                    $r->delivery_id,
                     $r->buyer_name,
-                    array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
-                    idr($chg - $cod)
+                    '',
+                    $r->shipping_address,
+                    $r->shipping_zip,
+                    '',
+                    $r->buyerdeliverycity,
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    'Paket '.$r->merchant_name,
+                    '',
+                    $r->status,
+                    ($r->recipient_name == '')?$r->buyer_name:$r->recipient_name,
+                    (($r->status == 'delivered')?$r->delivery_note:'' ),
+                    '',
+                    $r->deliverytime,
+                    (($r->status == 'returned')?$r->delivery_note:'' ),
+                    '',
+                    (($r->status == 'returned' || $r->status == 'delivered')?'':$r->delivery_note ),
+                    1,
+                    $r->actual_weight,
+                    array('data'=>idr($dc + $cod),'class'=>'currency '),
+                    0,
+                    0,
+                    $r->created
+
                 );
 
 
@@ -674,7 +730,7 @@ class Orderstatus extends Application
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
         $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
 
-        $pdffilename = 'JSM-COD-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
+        $pdffilename = 'JSM-ORDERSTATUS-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('auth/pages/custom/print/orderstatusprint',$data,true);

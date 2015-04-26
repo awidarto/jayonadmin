@@ -135,6 +135,8 @@ class Docs extends Application
 
         $dbcr = clone $this->db;
 
+        $this->db->order_by('created','desc')
+            ->order_by('release_date','desc');
         $this->db->order_by($columns[$sort_col],$sort_dir);
 
         $data = $this->db->limit($limit_count, $limit_offset)

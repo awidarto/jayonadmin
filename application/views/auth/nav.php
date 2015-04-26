@@ -115,6 +115,7 @@
                     <li class="<?php print set_hilite('custom\/cod\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/cod/report', 'COD Reconciliation'); } ?></li>
                     <li class="<?php print set_hilite('custom\/orderstatus\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/orderstatus/report', 'Order Status Report'); } ?></li>
                     <li class="<?php print set_hilite('custom\/orderrecon\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/orderrecon/report', 'Order Cost Reconciliation'); } ?></li>
+                    <li class="<?php print set_hilite('custom\/pickuprecon\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/pickuprecon/report', 'Pickup Reconciliation'); } ?></li>
                     <li class="<?php print set_hilite('custom\/retur\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/retur/report', 'Return Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/docs\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/docs/listing', 'Released Documents'); } ?></li>
                 </ul>

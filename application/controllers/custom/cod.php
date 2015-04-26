@@ -237,14 +237,14 @@ class Cod extends Application
 
         $this->db->and_();
         $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_()
-                ->group_start()
-                    ->where('status',$this->config->item('trans_status_new'))
-                    ->where('pending_count >', 0)
-                ->group_end()
+            ->where('status',$this->config->item('trans_status_mobile_delivered'))
+            //->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+            //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            //->or_()
+            //    ->group_start()
+            //        ->where('status',$this->config->item('trans_status_new'))
+            //        ->where('pending_count >', 0)
+            //    ->group_end()
             ->group_end();
 
 
