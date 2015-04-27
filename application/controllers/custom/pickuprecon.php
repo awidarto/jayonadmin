@@ -191,7 +191,7 @@ class Pickuprecon extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,'.$mtab.'.created,deliverytime,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,buyerdeliverycity,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount,actual_weight, weight, width, length, height')
+        $this->db->select('assignment_date,'.$mtab.'.created,deliverytime,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,pickuptime,pickup_dev_id,pickup_person,directions,delivery_bearer,buyer_name,recipient_name,buyerdeliveryzone,buyerdeliverycity,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,shipping_zip,status,pickup_status,warehouse_status,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount,actual_weight, weight, width, length, height')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -234,13 +234,26 @@ class Pickuprecon extends Application
             ->where('delivery_type','COD')
             ->or_where('delivery_type','CCOD')
             ->group_end();
+
+            $config['trans_status_tobepickup'] = 'akan diambil';
+            $config['trans_status_pickup'] = 'sudah diambil';
+
+            $config['trans_status_atmerchant'] = 'belum di gudang';
+            $config['trans_status_pu2wh'] = 'diterima di gudang';
+            $config['trans_status_inwh'] = 'di gudang';
+            $config['trans_status_wh2ds'] = 'di delivery';
+            $config['trans_status_ds2wh'] = 'kembali di gudang';
+
+
         */
 
         $this->db->and_();
         $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_mobile_delivered'))
-            //->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            //->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->where('pickup_status',$this->config->item('trans_status_pickup'))
+            ->or_where('pickup_status',$this->config->item('trans_status_pu2wh'))
+            ->or_where('pickup_status',$this->config->item('trans_status_inwh'))
+            ->or_where('pickup_status',$this->config->item('trans_status_wh2ds'))
+            ->or_where('pickup_status',$this->config->item('trans_status_ds2wh'))
             //->or_()
             //    ->group_start()
             //        ->where('status',$this->config->item('trans_status_new'))
@@ -304,113 +317,125 @@ class Pickuprecon extends Application
         //exit();
 
         if($pdf == 'print' || $pdf == 'pdf'){
+            /*
+            $this->table->set_heading(
+                '',
+                array('data'=>'Pickup Receipt','style'=>'text-align:center;','colspan'=>10),
+
+                array('data'=>'Identitas Merchant','style'=>'text-align:center;','colspan'=>4),
+
+                array('data'=>'Informasi Barang','style'=>'text-align:center;','colspan'=>7),
+
+                array('data'=>'Logistic Service','style'=>'text-align:center;','colspan'=>4),
+
+                array('data'=>'Identitas Penerima','style'=>'text-align:center;','colspan'=>9),
+
+                array('data'=>'Identitas Pengirim','style'=>'text-align:center;','colspan'=>5)
+            );
+            */ // Setting headings for the table
+
             $this->table->set_heading(
                 'No.',
-                'Tanggal',
-                'No. Reff.',
-                'Airway Bill',
+                'Logistik',
+                'Tanggal Pengambilan',
+                'Merchant PIC',
+                'No Telp Merchant PIC',
+                'Alamat Pickup Point (PP)',
+                'Kecamatan PP',
+                'Kelurahan PP',
+                'Kota PP',
+                'Propinsi PP',
+                'Kode Pos PP',
                 'Nama Merchant',
-                'Origin',
-                'Penerima',
-                'Destination',
-                'Service',
-                'Via',
-                'Koli',
-                'Berat Actual',
-                'P(cm)',
-                'L(cm)',
-                'T(cm)',
-                'Berat Volume',
-                'Berat Minimum Charge',
-                'Berat Dibebankan',
-                'Nilai Barang',
-                'Publish Rate',
-                'Harga Diskon',
-                'Harga Setelah Diskon',
-                'Surcharge (%)',
-                'Harga Dibebankan',
-                'Asuransi',
-                'Biaya Packing',
-                'Biaya Gift Wrap',
-                'Other Charges',
-                'Total Biaya',
-                'Description'
+                'Alamat Origin',
+                'Propinsi Origin',
+                'No Telp Merchant',
+                'GDN Ref Number',
+                'Airway Bill',
+                'SKU ID',
+                'Deskripsi Barang',
+                'Qty',
+                'Insurance (Y/N)',
+                'Insured Amount',
+                'Layanan',
+                'Gift Wrap',
+                'Gift Card',
+                'Special Instruction',
+                'Nama Pemesan',
+                'Nama Penerima',
+                'Alamat Penerima',
+                'Kecamatan',
+                'Kota',
+                'Propinsi',
+                'Kode Pos',
+                'No Telp',
+                'No HP',
+                'Email Pengirim',
+                'No Telp Pengirim',
+                'No HP Pengirim',
+                'Metode Pickup',
+                'Nominal COD'
             ); // Setting headings for the table
 
-            /*
-            $this->table->set_subheading(
-                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
-                /*
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
-                array('data'=>'NAMA','style'=>'min-width:100px;')
-
-            ); // Setting headings for the table
-            */
         }else{
             $this->table->set_heading(
-                'No.',
-                'Tanggal',
-                'No. Reff.',
-                'Airway Bill',
-                'Nama Merchant',
-                'Origin',
-                'Penerima',
-                'Destination',
-                'Service',
-                'Via',
-                'Koli',
-                'Berat Actual',
-                'P(cm)',
-                'L(cm)',
-                'T(cm)',
-                'Berat Volume',
-                'Berat Minimum Charge',
-                'Berat Dibebankan',
-                'Nilai Barang',
-                'Publish Rate',
-                'Harga Diskon',
-                'Harga Setelah Diskon',
-                'Surcharge (%)',
-                'Harga Dibebankan',
-                'Asuransi',
-                'Biaya Packing',
-                'Biaya Gift Wrap',
-                'Other Charges',
-                'Total Biaya',
-                'Description'
+                '',
+                array('data'=>'Pickup Receipt','style'=>'text-align:center;','colspan'=>10),
+
+                array('data'=>'Identitas Merchant','style'=>'text-align:center;','colspan'=>4),
+
+                array('data'=>'Informasi Barang','style'=>'text-align:center;','colspan'=>7),
+
+                array('data'=>'Logistic Service','style'=>'text-align:center;','colspan'=>4),
+
+                array('data'=>'Identitas Penerima','style'=>'text-align:center;','colspan'=>9),
+
+                array('data'=>'Identitas Pengirim','style'=>'text-align:center;','colspan'=>5)
             ); // Setting headings for the table
 
-            /*
             $this->table->set_subheading(
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                array('data'=>'TANDA TANGAN','style'=>'min-width:100px;'),
-                array('data'=>'NAMA','style'=>'min-width:100px;')
-
+                'No.',
+                'Logistik',
+                'Tanggal Pengambilan',
+                'Merchant PIC',
+                'No Telp Merchant PIC',
+                'Alamat Pickup Point (PP)',
+                'Kecamatan PP',
+                'Kelurahan PP',
+                'Kota PP',
+                'Propinsi PP',
+                'Kode Pos PP',
+                'Nama Merchant',
+                'Alamat Origin',
+                'Propinsi Origin',
+                'No Telp Merchant',
+                'GDN Ref Number',
+                'Airway Bill',
+                'SKU ID',
+                'Deskripsi Barang',
+                'Qty',
+                'Insurance (Y/N)',
+                'Insured Amount',
+                'Layanan',
+                'Gift Wrap',
+                'Gift Card',
+                'Special Instruction',
+                'Nama Pemesan',
+                'Nama Penerima',
+                'Alamat Penerima',
+                'Kecamatan',
+                'Kota',
+                'Propinsi',
+                'Kode Pos',
+                'No Telp',
+                'No HP',
+                'Email Pengirim',
+                'No Telp Pengirim',
+                'No HP Pengirim',
+                'Metode Pickup',
+                'Nominal COD'
             ); // Setting headings for the table
-            */
+
         }
 
 
@@ -538,101 +563,137 @@ class Pickuprecon extends Application
 
                 $this->table->add_row(
                     $seq,
-                    $r->deliverytime,
-                    $r->delivery_id,
-                    $r->merchant_trans_id,
+                    'Jayon Express',
+                    $r->pickuptime,
+                    '', // mc PIC
+                    '', // mc phone
+                    '', // mc address
+                    '', // mc kacamatan
+                    '', // mc kelurahan
+                    '', // mc city
+                    '', // mc province
+                    '', // mc zip
                     $r->merchant_name,
-                    'Jakarta',
-                    $r->buyer_name,
+                    $r->shipping_address,
                     $r->buyerdeliverycity,
-                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
-                    'DARAT',
+                    'DKI Jakarta',
+                    $r->merchant_trans_id,
+                    $r->delivery_id,
+                    '',
+                    'Paket '.$r->merchant_name,
                     1,
-                    $r->actual_weight,
-                    $r->length,
-                    $r->width,
-                    $r->height,
+                    'N',
                     0,
-                    0,
-                    0,
-                    array('data'=>idr($pack_value),'class'=>'currency '.$codclass),
-                    idr(6500),
-                    idr(0),
-                    idr(6500),
-                    0.6,
-                    idr($pack_value * (0.6 / 100 )),
-                    idr(6500),
-                    0,
-                    0,
-                    0,
-                    0,
-                    'Paket '.$r->merchant_name
+
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    'N',
+                    'N',
+                    $r->directions,
+
+                    $r->buyer_name,
+                    $r->recipient_name,
+                    $r->shipping_address,
+                    $r->buyerdeliveryzone,
+                    $r->buyerdeliverycity,
+                    '',
+                    $r->shipping_zip,
+                    $r->phone,
+                    $r->mobile1.' '.$r->mobile2,
+                    $r->pickup_person, // email kurir
+                    $r->pickup_dev_id, // no telp device
+                    '', // no hp
+                    'Motor',
+
+                    array('data'=>idr($pack_value),'class'=>'currency '.$codclass)
                 );
 
             }else{
                 /*
-                'No.',
-                'Tanggal',
+                'Logistik',
+                'Tanggal Pengambilan',
+                'Merchant PIC',
+                'No Telp Merchant PIC',
+                'Alamat Pickup Point (PP)',
+                'Kecamatan PP',
+                'Kelurahan PP',
+                'Kota PP',
+                'Propinsi PP',
+                'Kode Pos PP',
                 'No. Reff.',
-                'Airway Bill',
                 'Nama Merchant',
-                'Origin',
-                'Penerima',
-                'Destination',
-                'Service',
-                'Via',
-                'Koli',
-                'Berat Actual',
-                'P(cm)',
-                'L(cm)',
-                'T(cm)',
-                'Berat Volume',
-                'Berat Minimum Charge',
-                'Berat Dibebankan',
-                'Nilai Barang',
-                'Publish Rate',
-                'Harga Diskon',
-                'Harga Setelah Diskon',
-                'Surcharge (%)',
-                'Harga Dibebankan',
-                'Asuransi',
-                'Biaya Packing',
-                'Biaya Gift Wrap',
-                'Other Charges',
-                'Total Biaya',
-                'Description'
+                'Alamat Origin',
+                'Propinsi Origin',
+                'No Telp Merchant',
+                'GDN Ref Number',
+                'Airway Bill',
+                'SKU ID',
+                'Deskripsi Barang',
+                'Qty',
+                'Insurance (Y/N)',
+                'Insured Amount',
+                'Layanan',
+                'Gift Wrap',
+                'Gift Card',
+                'Special Instruction',
+                'Nama Pemesan',
+                'Nama Penerima',
+                'Alamat Penerima',
+                'Kecamatan',
+                'Kota',
+                'Propinsi',
+                'Kode Pos',
+                'No Telp',
+                'No HP',
+                'Email Pengirim',
+                'No Telp Pengirim',
+                'No HP Pengirim',
+                'Metode Pickup',
+                'Nominal COD'
                 */
                 $this->table->add_row(
                     $seq,
-                    $r->deliverytime,
-                    $r->delivery_id,
-                    $r->merchant_trans_id,
+                    'Jayon Express',
+                    $r->pickuptime,
+                    '', // mc PIC
+                    '', // mc phone
+                    '', // mc address
+                    '', // mc kacamatan
+                    '', // mc kelurahan
+                    '', // mc city
+                    '', // mc province
+                    '', // mc zip
                     $r->merchant_name,
-                    'Jakarta',
-                    $r->buyer_name,
+                    $r->shipping_address,
                     $r->buyerdeliverycity,
-                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
-                    'DARAT',
+                    'DKI Jakarta',
+                    $r->merchant_trans_id,
+                    $r->delivery_id,
+                    '',
+                    'Paket '.$r->merchant_name,
                     1,
-                    $r->actual_weight,
-                    $r->length,
-                    $r->width,
-                    $r->height,
+                    'N',
                     0,
-                    0,
-                    0,
-                    array('data'=>idr($pack_value),'class'=>'currency '.$codclass),
-                    idr(6500),
-                    idr(0),
-                    idr(6500),
-                    0.6,
-                    idr($pack_value * (0.6 / 100 )),
-                    idr(6500),
-                    0,
-                    0,
-                    0,
-                    0,
-                    'Paket '.$r->merchant_name
+
+                    array('data'=>colorizetype($r->delivery_type),'class'=>'currency '.$codclass),
+                    'N',
+                    'N',
+                    $r->directions,
+
+                    $r->buyer_name,
+                    $r->recipient_name,
+                    $r->shipping_address,
+                    $r->buyerdeliveryzone,
+                    $r->buyerdeliverycity,
+                    '',
+                    $r->shipping_zip,
+                    $r->phone,
+                    $r->mobile1.' '.$r->mobile2,
+                    $r->pickup_person, // email kurir
+                    $r->pickup_dev_id, // no telp device
+                    '', // no hp
+                    'Motor',
+
+                    array('data'=>idr($pack_value),'class'=>'currency '.$codclass)
                 );
 
 
