@@ -102,6 +102,7 @@
 					<li class="<?php print set_hilite('admin\/reports\/revenue$')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/revenue', 'Revenue Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/revenuegen')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/revenuegen', 'Revenue Report ( Manual )'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/invoices')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/invoices', 'Invoices'); } ?></li>
+                    <li class="<?php print set_hilite('custom\/codreport\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/codreport/report', 'COD Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/invoices\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/invoices/listing', 'Released Invoices'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/manifests')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/manifests', 'Manifests'); } ?></li>
                     <li class="<?php print set_hilite('admin\/reports\/deliverytime')?>" ><?php if(user_group('admin')) { echo anchor('admin/reports/deliverytime', 'Delivery Time'); } ?></li>
