@@ -135,7 +135,7 @@ class Codreport extends Application
             //print $this->db->last_query();
             $data['type'] = $user->merchantname.' - '.$user->fullname;
             $data['type_name'] = $user->fullname;
-            $data['bank_account'] = 'n/a';
+            $data['bank_account'] = $user->bank.' '.$user->account_number.' a/n '.$user->account_name;
 
             $data['merchantname'] = $user->merchantname;
         }
@@ -291,6 +291,7 @@ class Codreport extends Application
 
         //exit();
         if($pdf == 'print' || $pdf == 'pdf'){
+            /*
             $this->table->set_heading(
                 'No.',
                 'Delivery Time',
@@ -302,13 +303,13 @@ class Codreport extends Application
                 'Kode Toko',
                 'Status'
             ); // Setting headings for the table
+            */
 
-        }else{
             $this->table->set_heading(
                 'No.',
                 'No Kode Penjualan Toko',
                 'Delivery ID',
-                'Merchant Name',
+                //'Merchant Name',
                 'Store',
                 'Delivery Date',
                 'Buyer Name',
@@ -319,7 +320,26 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Payable Value'
+                'Total Charge'
+            ); // Setting headings for the table
+
+        }else{
+            $this->table->set_heading(
+                'No.',
+                'No Kode Penjualan Toko',
+                'Delivery ID',
+                //'Merchant Name',
+                'Store',
+                'Delivery Date',
+                'Buyer Name',
+                'Delivery Type',
+                'Status',
+                'Package Value',
+                'Disc',
+                'Tax',
+                'Delivery Chg',
+                'COD Surchg',
+                'Total Charge'
             ); // Setting headings for the table
 
         }
@@ -409,7 +429,7 @@ class Codreport extends Application
             $total_billing = $total_billing + (double)$payable;
 
             if($pdf == 'print' || $pdf == 'pdf'){
-
+                /*
                 $this->table->add_row(
                     $seq,
                     date('d-m-Y',strtotime($r->assignment_date)),
@@ -421,14 +441,32 @@ class Codreport extends Application
                     $this->hide_trx($r->merchant_trans_id),
                     $r->status
                 );
+                */
 
+                $this->table->add_row(
+                    $seq,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $this->short_did($r->delivery_id),
+                    //$r->fullname.'<hr />'.$r->merchant_name,
+                    $r->app_name.'<hr />'.$r->domain,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->buyer_name,
+                    $r->delivery_type,
+                    $r->status,
+                    array('data'=>idr($total),'class'=>'currency'),
+                    array('data'=>idr($dsc),'class'=>'currency'),
+                    array('data'=>idr($tax),'class'=>'currency'),
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($payable),'class'=>'currency')
+                );
 
             }else{
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
                     $this->short_did($r->delivery_id),
-                    $r->fullname.'<hr />'.$r->merchant_name,
+                    //$r->fullname.'<hr />'.$r->merchant_name,
                     $r->app_name.'<hr />'.$r->domain,
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
@@ -451,6 +489,7 @@ class Codreport extends Application
         }
 
             if($pdf == 'print' || $pdf == 'pdf'){
+                /*
                 $this->table->add_row(
                     '',
                     '',
@@ -462,12 +501,32 @@ class Codreport extends Application
                     '',
                     ''
                 );
+                */
+
+                $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    //'',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
+                );
+
             }else{
                 $this->table->add_row(
                     '',
                     '',
                     '',
-                    '',
+                    //'',
                     '',
                     '',
                     '',
@@ -491,12 +550,12 @@ class Codreport extends Application
 
         }else{
 
-            $total_span = 2;
+            $total_span = 1;
             $say_span = 11;
 
         }
 
-
+        /*
         $this->table->add_row(
             'Terbilang',
             array('data'=>'&nbsp;','colspan'=>$say_span)
@@ -539,6 +598,8 @@ class Codreport extends Application
             array('data'=>$this->number_words->to_words($total_delivery + $total_cod).' rupiah',
                 'colspan'=>$say_span)
         );
+
+        */
 
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
@@ -586,7 +647,9 @@ class Codreport extends Application
         $this->breadcrumb->add_crumb('COD Report','admin/custom/codreport');
 
         $page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+
         $page['page_title'] = 'Merchant Reconciliations';
+
         $data['select_title'] = 'Merchant';
 
         $data['controller'] = 'custom/codreport/report/';
@@ -595,12 +658,13 @@ class Codreport extends Application
 
         $data['grand_total'] = $total_delivery + $total_cod;
 
+        $data['total_payable'] = $total_payable;
 
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
 
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
 
-        $pdffilename = 'JSM-CODR-'.$mname.'-'.$data['invdatenum'];
+        $pdffilename = 'COD-'.$mname.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('auth/pages/custom/print/codreportprint',$data,true);
@@ -1037,6 +1101,8 @@ class Codreport extends Application
                 'pending'=>0
             );
 
+        $total_cod_charge = 0;
+
         foreach($rows->result() as $r){
 
             $counts[$r->delivery_type] += 1;
@@ -1189,6 +1255,8 @@ class Codreport extends Application
 
             }
 
+            $total_cod_charge += ($chg - $cod);
+
             $seq++;
         }
 
@@ -1263,6 +1331,8 @@ class Codreport extends Application
         $data['recontab'] = $recontab;
 
         $data['summary_count'] = $counts;
+
+        $data['total_cod_charge'] = $total_cod_charge;
         /* end copy */
 
         $this->breadcrumb->add_crumb('COD Reconciliation','custom/cod/report');
@@ -1291,7 +1361,7 @@ class Codreport extends Application
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
         $minfo = strtoupper(str_replace(' ','_',$data['merchantinfo']));
 
-        $pdffilename = 'JSM-COD-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
+        $pdffilename = 'COD-'.$mname.'-'.$minfo.'-'.$zonename.'-'.$data['invdatenum'];
 
         if($pdf == 'pdf'){
             $html = $this->load->view('auth/pages/custom/print/manifestprint',$data,true);

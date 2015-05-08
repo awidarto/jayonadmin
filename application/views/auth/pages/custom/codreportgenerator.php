@@ -75,7 +75,7 @@
         });
 
         $('#inv_preview').on('click',function(){
-            var invdate = $('#release_date').val();
+            var invdate = $('#date_from').val();
             var current_url = '<?php print current_url() ?>';
             //window.location = current_url + '/print/' + invdate;
             window.open( current_url + '/print/' + invdate ,'_blank');
@@ -96,9 +96,9 @@
             };
 
             if(params.par2 == 'pdf'){
-                params.par3 = $('#release_date').val();
+                params.par3 = $('#date_from').val();
             }else if(params.par3 == 'pdf'){
-                params.par4 = $('#release_date').val();
+                params.par4 = $('#date_from').val();
             }
 
             console.log(params);
@@ -291,8 +291,8 @@ div.stickyHeader {
                         <table style="width:500px;" id="recon_select" cellspacing="0" >
                             <tr>
 
-                                <td style="text-align:right;">Invoice Date</td>
-                                <td><?php print form_input(array('name'=>'release_date','id'=>'release_date','class'=>'text','value'=>''));?>
+                                <td style="text-align:right;">Generate</td>
+                                <td><?php //print form_input(array('name'=>'release_date','id'=>'release_date','class'=>'text','value'=>''));?>
                                 &nbsp;&nbsp;<span class="button" id="inv_preview">Preview</span>&nbsp;<span class="button" id="inv_generate">Terbitkan</span>
                                 &nbsp;&nbsp;<span id="generatinginvoice" style="display:none;">Creating report...</span>
                                 </td>

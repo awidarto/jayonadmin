@@ -127,8 +127,9 @@
     </head>
 
     <body>
-        <div id="head">
-            <div style="width:450px;display:inline-block;float:left;height:260px;">
+        <div id="head" style="display:block;" >
+            <div style="width:450px;display:inline-block;float:left;height:290px;">
+
                 <table border="0" cellpadding="0" cellspacing="0" id="mainLogo">
                     <tbody>
                         <tr>
@@ -161,16 +162,21 @@
                         <td style="text-align:left;" colspan="2"><?php print iddate($from, false) ;?> s/d <?php print iddate($to) ;?></td>
                     </tr>
                     <tr>
-                        <td>TOTAL</td>
+                        <td>TOTAL CHARGE TO BE TRANSFERRED</td>
                         <td></td>
-                        <td style="min-width:150px;width:150px;font-size:18px;">Rp <?php print idr($grand_total);?></td>
+                        <td style="min-width:150px;width:150px;font-size:18px;">Rp <?php print idr($total_payable);?></td>
+                    </tr>
+                    <tr>
+                        <td>TERBILANG</td>
+                        <td colspan="2"><?php print $this->number_words->to_words((double)$total_payable).' rupiah';?></td>
                     </tr>
                     <tr>
                         <td colspan="3" style="font-weight:normal;" >
                             <p>
-                                Payable to PT JEXINDO SUKSES MAKMUR<br />
-                                Account : BCA KCU PONDOK INDAH - 2910332069<br />
-                                Payment is due in 2 days based on invoice date<br />
+                                Payable to <?php print $merchantname; ?><br />
+                                Account : <?php print $bank_account; ?><br />
+                                Payment is due 3 days after COD<br />
+                                Report validation is send to us in written<br />
                                 Thank you for your business<br />
                                 Administrator
                             </p>
@@ -181,20 +187,12 @@
             </div>
             <div style="width:400px;display:inline-block;">
                 <h1 style="margin-top:0px;">COD REPORT</h1>
-                <h2>No: JSM-<?php print strtoupper($merchantname) ?>-<?php print $invdatenum ?></h2>
-                <?php print $sumtab; ?>
+                <h2>No: COD-<?php print strtoupper($merchantname) ?>-<?php print $invdatenum ?></h2>
             </div>
         </div>
+        <div style="display:block;clear:both;" />
         <div style="display:block;clear:both;" >
             <?php print $recontab; ?>
-        </div>
-
-        <div id="last_query">
-            <p>
-                *JATUH TEMPO PEMBAYARAN DUA HARI DARI TANGGAL INVOICE<br />
-                *INVOICE DIGITAL MERUPAKAN INVOICE UTAMA SEHINGGA SETELAH DIKIRIMKAN INVOICE DIGITAL HARAP MELAKUKAN PEMBAYARAN<br />
-                *BUKTI TRANSFER PEMBAYARAN MOHON DIKONFIRMASI KE KANTOR JAYON EXPRESS VIA EMAIL KE eddy.jusuf@jayonexpress.com dan ferdinand.patar@gmail.com
-            </p>
         </div>
 
     </body>

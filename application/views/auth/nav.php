@@ -119,6 +119,7 @@
                     <li class="<?php print set_hilite('custom\/pickuprecon\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/pickuprecon/report', 'Pickup Reconciliation'); } ?></li>
                     <li class="<?php print set_hilite('custom\/retur\/report')?>" ><?php if(user_group('admin')) { echo anchor('custom/retur/report', 'Return Report'); } ?></li>
                     <li class="<?php print set_hilite('admin\/docs\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/docs/listing', 'Released Documents'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/awb\/listing')?>" ><?php if(user_group('admin')) { echo anchor('admin/awb/listing', 'AWB Generator'); } ?></li>
                 </ul>
             </li>
 			<li class="<?php print set_hilite('admin\/users')?>" ><?php if(user_group('admin')) { echo anchor('admin/users/manage', 'Users'); } ?>
