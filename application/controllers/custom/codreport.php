@@ -624,6 +624,11 @@ class Codreport extends Application
         }
 
         $this->table->add_row(
+            array('data'=>'Total Charge'),
+            array('data'=>idr($total_payable),'class'=>'currency')
+        );
+
+        $this->table->add_row(
             array('data'=>'Delivery Charge'),
             array('data'=>idr($total_delivery),'class'=>'currency')
         );
@@ -634,7 +639,7 @@ class Codreport extends Application
         );
 
         $this->table->add_row(
-            array('data'=>'Grand Total'),
+            array('data'=>'Total COD Cost'),
             array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
         );
 
