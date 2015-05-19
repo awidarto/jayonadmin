@@ -96,13 +96,51 @@ function get_apps($merchant_id){
 }
 
 
-function get_delivery_id($sequence,$merchant_id){
+function get_delivery_id($sequence,$merchant_id,$delivery_id = null){
 	$CI =& get_instance();
-	$year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
-	$merchant_id = str_pad($merchant_id, $CI->config->item('merchant_id_pad'), '0', STR_PAD_LEFT);
-	$delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+
+    if(is_null($delivery_id) || $delivery_id == ''){
+        $year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
+        $merchant_id = str_pad($merchant_id, $CI->config->item('merchant_id_pad'), '0', STR_PAD_LEFT);
+        $delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+    }else{
+        $dr = $CI->db->where('merchant_id',$merchant_id)
+                ->where('awb_string',$delivery_id)
+                ->where('is_used',0)
+                ->from('awb_generated')
+                ->get();
+
+        if($dr->num_rows() > 0){
+
+            $delivery_id = $delivery_id;
+            $up = array('is_used'=>1, 'used_at'=>date('Y-m-d H:i:s', time() ) );
+
+            $CI->db->where('awb_string', $delivery_id)->update('awb_generated',$up);
+
+        }else{
+
+            $year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
+            $merchant_id = str_pad($merchant_id, $CI->config->item('merchant_id_pad'), '0', STR_PAD_LEFT);
+            $delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+        }
+    }
+
 
 	return $delivery_id;
+}
+
+function generate_delivery_id($sequence,$merchant_id,$date = null){
+    $CI =& get_instance();
+    $year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
+    $merchant_id = str_pad($merchant_id, $CI->config->item('merchant_id_pad'), '0', STR_PAD_LEFT);
+    if(is_null($date)){
+        $delivery_id = $merchant_id.'-'.date('d-mY',time()).'-'.$year_count;
+    }else{
+        $date = date('d-mY', strtotime($date) );
+        $delivery_id = $merchant_id.'-'.$date.'-'.$year_count;
+    }
+
+    return $delivery_id;
 }
 
 function get_devices(){

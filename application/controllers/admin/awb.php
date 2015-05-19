@@ -19,39 +19,50 @@ class Awb extends Application
 
     public function listing()
     {
-
-        $this->breadcrumb->add_crumb('Released','admin/invoices/listing');
+            /*
+            id
+            merchant_id
+            awb_date_string
+            awb_date
+            awb_sequence
+            merchant_name
+            is_used
+            used_at
+            awb_string\
+            */
+        $this->breadcrumb->add_crumb('Generated AWB','admin/awb/listing');
 
         $this->load->library('table');
 
         $this->table->set_heading(
             '#',
-            'Merchantname',
-            'Period_from',
-            'Period_to',
-            'Release_date',
-            'Doc_type',
-            'Doc_number',
-            'Note',
-            'Filename',
+            'AWB',
+            'Merchant Name',
+            'Merchant ID',
+            'AWB Date String',
+            'AWB Date',
+            'AWB Sequence / Code',
+            'Used',
+            'Used At',
             'Created',
             'Actions'); // Setting headings for the table
 
         $this->table->set_footing(
             '',
-            '<input type="text" name="search_merchantname" id="search_merchantname" value="Search merchant" class="search_init" />',
-            '<input type="text" name="search_email" id="search_email" value="Search zone" class="search_init" />',
-            '<input type="text" name="search_from" value="Search from" class="search_init" />',
-            '<input type="text" name="search_to" value="Search to" class="search_init" />',
-            '<input type="text" name="search_release_date" value="Search release date" class="search_init" />',
-            '<input type="text" name="search_note" value="Search Note" class="search_init" />',
-            '<input type="text" name="search_filename" value="Search filename" class="search_init" />',
+            '<input type="text" name="search_awb_string" value="Search awb_string" class="search_init" />',
+            '<input type="text" name="search_merchant_name" id="search_merchant_name" value="Search zone" class="search_init" />',
+            '<input type="text" name="search_merchant_id" id="search_merchant_id" value="Search zone" class="search_init" />',
+            '<input type="text" name="search_awb_date_string" value="Search awb_date_string" class="search_init" />',
+            '<input type="text" name="search_awb_date" value="Search awb_date" class="search_init" />',
+            '<input type="text" name="search_sequence" value="Search sequence" class="search_init" />',
+            '<input type="text" name="search_used" value="Search used" class="search_init" />',
+            '<input type="text" name="search_used_at" value="Search used_at" class="search_init" />',
             '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />',
-            form_button('do_setgroup','Set Group','id="doSetGroup"')
+            ''
             );
 
         $page['sortdisable'] = '';
-        $page['ajaxurl'] = 'admin/docs/ajaxmanage';
+        $page['ajaxurl'] = 'admin/awb/ajaxmanage';
         $page['add_button'] = array('link'=>'admin/members/add','label'=>'Add New Member');
         $page['page_title'] = 'Generated AWB';
         $this->ag_auth->view('awbajaxlistview',$page); // Load the view
@@ -66,19 +77,19 @@ class Awb extends Application
         $sort_dir = $this->input->post('sSortDir_0');
 
         $columns = array(
-            'merchantname',
-            'period_from',
-            'period_to',
-            'release_date',
-            'doc_type',
-            'doc_number',
-            'note',
-            'filename',
+            'awb_string',
+            'merchant_name',
+            'merchant_id',
+            'awb_date_string',
+            'awb_date',
+            'awb_sequence',
+            'is_used',
+            'used_at',
             'created'
         );
 
         $this->db->select('*')
-            ->from($this->config->item('docs_table'));
+            ->from('awb_generated');
 
         $dbca = clone $this->db;
 
@@ -93,40 +104,49 @@ class Awb extends Application
         }
 
         if($this->input->post('sSearch_0') != ''){
-            $this->db->like('merchantname',$this->input->post('sSearch_0'));
+            $this->db->like('awb_string',$this->input->post('sSearch_0'));
             $search = true;
         }
 
 
         if($this->input->post('sSearch_1') != ''){
-            $this->db->like('period_from',$this->input->post('sSearch_1'));
+            $this->db->like('merchant_name',$this->input->post('sSearch_1'));
             $search = true;
         }
 
         if($this->input->post('sSearch_2') != ''){
-            $this->db->like('period_to',$this->input->post('sSearch_2'));
+            $this->db->like('merchant_id',$this->input->post('sSearch_2'));
             $search = true;
         }
 
         if($this->input->post('sSearch_3') != ''){
-            $this->db->like('release_date',$this->input->post('sSearch_3'));
+            $this->db->like('awb_date_string',$this->input->post('sSearch_3'));
             $search = true;
         }
 
         if($this->input->post('sSearch_4') != ''){
-            $this->db->like('invoice_number',$this->input->post('sSearch_4'));
+            $this->db->like('awb_date',$this->input->post('sSearch_4'));
             $search = true;
         }
 
         if($this->input->post('sSearch_5') != ''){
-            $this->db->like('note',$this->input->post('sSearch_5'));
+            $this->db->like('awb_sequence',$this->input->post('sSearch_5'));
             $search = true;
         }
         if($this->input->post('sSearch_6') != ''){
-            $this->db->like('filename',$this->input->post('sSearch_6'));
+            $this->db->like('is_used',$this->input->post('sSearch_6'));
             $search = true;
         }
 
+        if($this->input->post('sSearch_7') != ''){
+            $this->db->like('used_at',$this->input->post('sSearch_7'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_8') != ''){
+            $this->db->like('created',$this->input->post('sSearch_8'));
+            $search = true;
+        }
 
         if($search){
             //$this->db->and_();
@@ -135,8 +155,7 @@ class Awb extends Application
 
         $dbcr = clone $this->db;
 
-        $this->db->order_by('created','desc')
-            ->order_by('release_date','desc');
+        $this->db->order_by('created','desc');
         $this->db->order_by($columns[$sort_col],$sort_dir);
 
         $data = $this->db->limit($limit_count, $limit_offset)
@@ -160,24 +179,19 @@ class Awb extends Application
             $num++;
 
             $delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
-            $editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
-            $dl = anchor(base_url().'public/custom/'.$key['filename'].'.pdf', 'Download pdf', array('target'=>'_blank')); // Build actions links
-
-            $edit = anchor("admin/members/edit/".$key['id']."/", "Edit"); // Build actions links
-            $detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", $key['merchantname']); // Build detail links
 
             $aadata[] = array(
                 $num,
-                $key['merchantname'],
-                $key['period_from'],
-                $key['period_to'],
-                $key['release_date'],
-                $key['doc_type'],
-                $key['doc_number'],
-                $key['note'],
-                $key['filename'],
+                $key['awb_string'],
+                $key['merchant_name'],
+                $key['merchant_id'],
+                $key['awb_date_string'],
+                $key['awb_date'],
+                $key['awb_sequence'],
+                $key['is_used'],
+                $key['used_at'],
                 $key['created'],
-                $dl.''
+                ''
                 //$edit.' '.$editpass.' '.$delete
             ); // Adding row to table
 
@@ -191,6 +205,90 @@ class Awb extends Application
         );
 
         print json_encode($result);
+    }
+
+    public function ajaxgenerate(){
+        $in = $this->input->post();
+
+        $date_from = $in['date_from'];
+        $date_to = $in['date_to'];
+
+        $gen_qty = $in['gen_qty'];
+
+        $merchant_id = $in['merchant_id'];
+        $merchant_name = $in['merchant_name'];
+
+        $datetimeFrom = new DateTime($date_from);
+        $datetimeTo = new DateTime($date_to);
+        $interval = $datetimeFrom->diff($datetimeTo);
+
+        $days = $interval->format('%a');
+
+        $days = intval($days) + 1;
+
+        $remainder = $gen_qty%$days;
+
+        $awbdaycount = intval( ($gen_qty - $remainder) / $days );
+
+        //echo $awbdaycount."\r\n";
+
+        $interval = DateInterval::createfromdatestring('1 day');
+
+        $date_arr = array();
+
+        $date_arr[] = $datetimeFrom->format('Y-m-d');
+
+        for($i = 0; $i < ($days - 1); $i++){
+            $date_arr[] = $datetimeFrom->add($interval)->format('Y-m-d');
+        }
+
+        //print_r($date_arr);
+
+        $did_arr = array();
+
+        $lastdate = '';
+        foreach($date_arr as $d){
+            for($j = 0; $j < $awbdaycount; $j++){
+                $seq = strtolower(random_string('alnum',8));
+                $did_arr[] = array(
+                        'awb_string'=> generate_delivery_id($seq, $merchant_id, $d ),
+                        'awb_date'=>$d,
+                        'awb_sequence'=>$seq
+                    );
+                $lastdate = $d;
+            }
+        }
+
+        if($remainder > 0){
+            for($j = 0; $j < $remainder; $j++){
+                $seq = strtolower(random_string('alnum',8));
+                $did_arr[] = array(
+                        'awb_string'=> generate_delivery_id($seq, $merchant_id, $lastdate ),
+                        'awb_date'=>$d,
+                        'awb_sequence'=>$seq
+                    );
+            }
+        }
+
+        foreach($did_arr as $did){
+            $dt = array(
+                'merchant_id'=>$merchant_id,
+                'awb_date_string'=>date('d-mY', strtotime($did['awb_date']) ),
+                'awb_date'=>$did['awb_date'],
+                'awb_sequence'=>$did['awb_sequence'],
+                'merchant_name'=>$merchant_name,
+                'is_used'=>0,
+                'awb_string'=>$did['awb_string'],
+                'created'=>date('Y-m-d H:i:s',time())
+            );
+
+            //print_r($dt);
+
+            $this->db->insert('awb_generated',$dt);
+
+        }
+
+        print json_encode(array('result'=>'OK') );
     }
 
     public function merchant()

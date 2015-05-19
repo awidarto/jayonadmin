@@ -850,6 +850,7 @@
             //pdata.transaction_id = $('#total_charges').val(); // random generated
             pdata.buyer_id  = $('#buyer_id').val();
             pdata.merchant_id  = $('#merchant_id').val();
+            pdata.delivery_id  = $('#delivery_id').val();
             pdata.buyer_name = $('#buyer_name').val();
             pdata.recipient_name = $('#recipient_name').val();
             pdata.shipping_address = $('#shipping_address').val();
@@ -1272,6 +1273,13 @@
                             </tr>
                             <tr>
                                 <td colspan="2"><strong>Delivery Info</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Delivery ID Jayon / AWB Jayon:</td>
+                                <td>
+                                    <input type="text" id="delivery_id" name="delivery_id" value="" />
+                                    <p class="fine">Hanya jika Delivery ID Jayon sudah ada sebelumnya, kosongkan jika tidak teredia</p>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Delivery Date:</td>

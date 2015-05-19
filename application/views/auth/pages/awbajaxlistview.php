@@ -16,6 +16,23 @@
 
     $(document).ready(function() {
 
+        $('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
+        $('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
+
+        $( '#merchant_name' ).autocomplete({
+            source: '<?php print site_url('ajax/getmerchant')?>',
+            method: 'post',
+            minLength: 2,
+            select:function(event,ui){
+                $('#merchant_id').val(ui.item.id);
+                $('#merchant_id_txt').html(ui.item.id);
+                $('#merchant_fullname').val(ui.item.fullname);
+                $('#merchant_email').val(ui.item.email);
+                $('#merchant_name').val(ui.item.value);
+            }
+        });
+
+
         var oTable = $('.dataTable').dataTable(
             {
                 "bProcessing": true,
@@ -23,10 +40,7 @@
                 "sAjaxSource": "<?php print site_url($ajaxurl);?>",
                 "oLanguage": { "sSearch": "Search "},
                 "sPaginationType": "full_numbers",
-                "sDom": 'T<"clear">lfrtip',
-                "oTableTools": {
-                    "sSwfPath": "<?php print base_url();?>assets/swf/copy_csv_xls_pdf.swf"
-                },
+                "sDom": 'l<"clear">frtip',
             <?php if($this->config->item('infinite_scroll')):?>
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
@@ -138,6 +152,33 @@
         });
 
 
+        $('#get_date_range').on('click',function(){
+
+            if($('#merchant_id').val() == ''){
+                alert('Please specify Merchant and valid Merchant ID');
+            }else{
+                $('#generating').show();
+
+                $.post('<?php print site_url('admin/awb/ajaxgenerate');?>',
+                    {
+                        merchant_id : $('#merchant_id').val(),
+                        merchant_name : $('#merchant_name').val(),
+                        gen_qty : $('#gen_qty').val(),
+                        date_from : $('#date_from').val(),
+                        date_to : $('#date_to').val()
+                    },
+                    function(data) {
+                        if(data.result = 'OK'){
+                            refreshTab();
+                        }
+                        $('#generating').hide();
+                    /*optional stuff to do after success */
+                    },'json');
+
+            }
+
+        });
+
         $('#setgroup').click(function(){
             var parent = '';
             parent = $('input:radio[name=parent_check]:checked').val();
@@ -232,12 +273,89 @@
     </div>
 <?php endif;?>
 
+
+<div id="form">
+    <table>
+        <tr>
+            <td>
+
+                <table style="width:500px;" id="recon_select" cellspacing="0" >
+                    <tr>
+                        <td>Merchant ID :</td>
+                        <td colspan="3">
+                            <span id="merchant_id_txt"></span><br />
+                            <input type="text" value="" id="merchant_name" name="merchant_name" />
+
+                            <input type="hidden" value="" id="merchant_id" name="merchant_id" /><br />
+                            <input type="hidden" value="" id="merchant_name" name="merchant_name" /><br />
+                            <input type="hidden" value="" id="merchant_email" name="merchant_email" /><br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>Amount Generated :</td>
+                        <td colspan="3">
+                            <input type="text" value="1000" id="gen_qty" name="gen_qty" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+
+                    <tr class="dark">
+                        <td>From Date</td>
+                        <td><?php print form_input(array('name'=>'date_from','id'=>'date_from','class'=>'text','value'=>''));?></td>
+                        <td><?php print 'To '.form_input(array('name'=>'date_to','id'=>'date_to','class'=>'text','value'=>''));?></td>
+                        <td><span id="get_date_range" class="button action_link" style="cursor:pointer;">Generate</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+
+                    <tr id="generating" style="display:none">
+                        <td colspan="4">
+                            <img src="<?php print base_url();?>assets/images/ajax_loader.gif" />
+                            Generating data, please wait, this will take a while.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-align:right;">
+                            <span class="button">Download CSV / Excel</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:right;">
+                            <p>
+                                Set merchant id / name, from date and to date before downloading CSV / Excel file.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+            </td>
+            <td style="vertical-align:top;">
+
+            </td>
+        </tr>
+    </table>
+</div>
+
 <div class="button_nav" style="text-align:left;">
     <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
     <?php if(isset($group_button) && $group_button == true):?>
         <span class="button" id="setgroup" style="cursor:pointer;" >Group Selected Buyers</span>
     <?php endif;?>
 </div>
+
 <?php echo $this->table->generate(); ?>
 
 <?php
