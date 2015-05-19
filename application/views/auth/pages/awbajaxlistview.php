@@ -151,6 +151,32 @@
             oTable.fnFilter( this.value, $('tfoot input').index(this) );
         });
 
+        $('#download-csv').on('click',function(){
+
+            if($('#merchant_id').val() == ''){
+                alert('Please specify Merchant and valid Merchant ID');
+            }else{
+                $.post('<?php print base_url() ?>admin/dl/awb',
+                    {
+                        merchant_id : $('#merchant_id').val(),
+                        merchant_name : $('#merchant_name').val(),
+                        gen_qty : $('#gen_qty').val(),
+                        date_from : $('#date_from').val(),
+                        date_to : $('#date_to').val()
+                    },
+                    function(data) {
+                        if(data.status == 'OK'){
+                            console.log(data.data.urlcsv);
+                            window.location.href = data.data.urlcsv;
+                        }
+                    },'json');
+            }
+
+
+            //return false;
+            event.preventDefault();
+        });
+
 
         $('#get_date_range').on('click',function(){
 
@@ -327,7 +353,7 @@
 
                     <tr>
                         <td colspan="4" style="text-align:right;">
-                            <span class="button">Download CSV / Excel</span>
+                            <span class="button" id="download-csv" >Download CSV / Excel</span>
                         </td>
                     </tr>
                     <tr>

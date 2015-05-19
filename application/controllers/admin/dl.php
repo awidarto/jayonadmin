@@ -606,6 +606,100 @@ class Dl extends Application
         print json_encode($result);
     }
 
+    public function awb(){
+
+        $fn = $this->input->post();
+
+        $this->db->select('awb_string');
+        $this->db->where('merchant_id',$fn['merchant_id']);
+
+        $this->db->where('awb_date >=',$fn['date_from']);
+
+        $this->db->where('awb_date <=',$fn['date_to']);
+
+        $data = $this->db->order_by('created','desc')
+                    ->get('awb_generated');
+
+        $last_query = $this->db->last_query();
+
+        $result = $data->result_array();
+
+        //print_r($sdata);
+
+        $aadata = array();
+
+        $num = 0;
+
+        $headrow = array(
+            'AWB / Jayon Delivery ID'
+        );
+
+
+
+        $this->load->library('xlswrite');
+        $xlswrite = new Xlswrite();
+        $xlswrite->setActiveSheetIndex(0);
+
+        $colnames = $this->config->item('xls_columns');
+
+        $colindex = 0;
+        foreach($headrow as $d){
+            $cellname = $colnames[$colindex]."1";
+            $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+            $colindex++;
+        }
+
+        $num = 0;
+        //foreach($result as $value => $key)
+        for($i = 0; $i < count($result);$i++)
+        {
+            $key = $result[$i];
+
+            $num++;
+
+            $xdata = array(
+                $key['awb_string']
+            );
+
+            $aadata[] = $xdata;
+
+            $colindex = 0;
+            foreach($xdata as $d){
+                $cellname = $colnames[$colindex].($num + 1);
+                $xlswrite->getActiveSheet()->SetCellValue($cellname, $d );
+                $colindex++;
+            }
+
+        }
+
+
+
+        $fname = date('Y-m-d',time()).'_awb_list.csv';
+        $xname = date('Y-m-d',time()).'_awb_list.xlsx';
+
+        $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
+
+        $fp = fopen(FCPATH.'public/dl/'.$fname, 'w');
+
+        $head = 0;
+        foreach ($aadata as $fields) {
+            if($head == 0){
+                $heads = $headrow;
+                fputcsv($fp, $heads, ',' , '"');
+                fputcsv($fp, $fields, ',' , '"');
+            }else{
+                fputcsv($fp, $fields, ',' , '"');
+            }
+            $head++;
+        }
+
+        fclose($fp);
+
+        $urlcsv = base_url().'admin/dl/out/'.$xname;
+        $result = array( 'status'=>'OK','data'=>array('urlcsv'=>$urlcsv), 'q'=>$last_query );
+        print json_encode($result);
+    }
+
     public function __delivered(){
 
         $filter = $this->input->post('datafilter');
