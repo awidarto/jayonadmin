@@ -674,8 +674,8 @@ class Dl extends Application
 
 
 
-        $fname = $fn['date_from'].'_'.$fn['date_to'].'_awb_list.csv';
-        $xname = $fn['date_from'].'_'.$fn['date_to'].'_awb_list.xlsx';
+        $fname = $fn['date_from'].'_'.$fn['date_to'].'_'.$fn['merchant_id'].'_awb_list.csv';
+        $xname = $fn['date_from'].'_'.$fn['date_to'].'_'.$fn['merchant_id'].'_awb_list.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
