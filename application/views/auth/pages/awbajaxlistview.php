@@ -8,6 +8,10 @@
     display: inline-block;
     font-size: 10px;
 }
+
+.button{
+    cursor: pointer;
+}
 </style>
 
 <script>
