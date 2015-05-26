@@ -2608,6 +2608,9 @@ class Reports extends Application
 
         }
 
+        $this->db->order_by('delivery_type', 'asc');
+        $this->db->order_by('assignment_date', 'asc');
+
         //print $this->db->last_query();
 
         if($pdf == 'csv'){
@@ -2726,7 +2729,8 @@ class Reports extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Payable Value'
+                'COD Value',
+                'GMV'
             ); // Setting headings for the table
 
         }
@@ -2736,6 +2740,7 @@ class Reports extends Application
         $total_billing = 0;
         $total_delivery = 0;
         $total_cod = 0;
+        $total_cod_val = 0;
 
         $total_payable = 0;
 
@@ -2811,6 +2816,10 @@ class Reports extends Application
             $total_cod += (int)str_replace('.','',$cod);
             //$total_billing += (int)str_replace('.','',$payable);
 
+            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
+
+            $total_cod_val += $codval;
+
             //$payable = str_replace('.','',$payable);
 
             $total_billing = $total_billing + (double)$payable;
@@ -2846,6 +2855,7 @@ class Reports extends Application
                     array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($codval),'class'=>'currency'),
                     array('data'=>idr($payable),'class'=>'currency')
                 );
 
@@ -2885,6 +2895,7 @@ class Reports extends Application
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
                 );
             }
