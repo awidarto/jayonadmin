@@ -161,14 +161,17 @@
                         <td>PERIODE PENGIRIMAN</td>
                         <td style="text-align:left;" colspan="2"><?php print iddate($from, false) ;?> s/d <?php print iddate($to) ;?></td>
                     </tr>
+                    <?php
+                        $total_transfered = $total_cod_val - $grand_total;
+                    ?>
                     <tr>
                         <td>TOTAL CHARGE TO BE TRANSFERRED</td>
                         <td></td>
-                        <td style="min-width:150px;width:150px;font-size:18px;">Rp <?php print idr($total_payable);?></td>
+                        <td style="min-width:150px;width:150px;font-size:18px;">Rp <?php print idr($total_transfered);?></td>
                     </tr>
                     <tr>
                         <td>TERBILANG</td>
-                        <td colspan="2"><?php print $this->number_words->to_words((double)$total_payable).' rupiah';?></td>
+                        <td colspan="2"><?php print $this->number_words->to_words((double)$total_transfered).' rupiah';?></td>
                     </tr>
                     <tr>
                         <td colspan="3" style="font-weight:normal;" >

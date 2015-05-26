@@ -694,6 +694,8 @@ class Codreport extends Application
 
         $data['total_payable'] = $total_payable;
 
+        $data['total_cod_val'] = $total_cod_val;
+
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
 
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
