@@ -320,7 +320,8 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Payable Value'
+                'COD Value',
+                'GMV'
             ); // Setting headings for the table
 
         }else{
@@ -339,7 +340,8 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Payable Value'
+                'COD Value',
+                'GMV'
             ); // Setting headings for the table
 
         }
@@ -443,6 +445,8 @@ class Codreport extends Application
                 );
                 */
 
+                $codval = ($r->deliverytype == 'COD'|| $r->deliverytype == 'CCOD')?$payable:0;
+
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
@@ -458,10 +462,14 @@ class Codreport extends Application
                     array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($codval),'class'=>'currency'),
                     array('data'=>idr($payable),'class'=>'currency')
                 );
 
             }else{
+
+                $codval = ($r->deliverytype == 'COD'|| $r->deliverytype == 'CCOD')?$payable:0;
+
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
@@ -477,6 +485,7 @@ class Codreport extends Application
                     array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($codval),'class'=>'currency'),
                     array('data'=>idr($payable),'class'=>'currency')
                 );
 
