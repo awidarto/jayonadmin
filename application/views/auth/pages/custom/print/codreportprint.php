@@ -121,6 +121,10 @@
                 }
             }
 
+            .currency{
+                text-align: right;
+            }
+
         </style>
 
 
