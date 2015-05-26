@@ -2710,6 +2710,7 @@ class Reports extends Application
                 'COD Surchg',
                 'Buyer',
                 'Kode Toko',
+                'Fulfillment / Order ID',
                 'Status'
             ); // Setting headings for the table
 
@@ -2835,6 +2836,7 @@ class Reports extends Application
                     array('data'=>idr($cod),'class'=>'currency'),
                     $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
                     $r->status
                 );
 
