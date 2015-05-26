@@ -181,7 +181,7 @@
                                 Payable to <?php print $merchantname; ?><br />
                                 Account : <?php print $bank_account; ?><br />
                                 Payment is due 1 day after COD successfully delivered<br />
-                                Report validation is send to us in written<br />
+                                Report validation is send to us in written, within one week<br />
                                 Thank you for your business<br />
                                 Administrator
                             </p>
