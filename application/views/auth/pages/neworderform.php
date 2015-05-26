@@ -1501,7 +1501,7 @@
                                 <td class='lsums'>COD Surcharge</td><td class='sums'  style="text-align:right"><span id="cod_cost_txt"></span></td><td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td><td>&nbsp;</td>
+                                <td class='lsums'>Payable Value</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td><td>&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>

@@ -320,7 +320,7 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Total Charge'
+                'Payable Value'
             ); // Setting headings for the table
 
         }else{
@@ -339,7 +339,7 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Total Charge'
+                'Payable Value'
             ); // Setting headings for the table
 
         }
