@@ -153,13 +153,11 @@
                 <table id="address" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td>KEPADA</td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="2" ><?php print $merchantname; ?></td>
                     </tr>
                     <tr>
                         <td>TANGGAL</td>
-                        <td><?php print $invdate ?></td>
-                        <td></td>
+                        <td colspan="2"><?php print $invdate ?></td>
                     </tr>
                     <tr>
                         <td>PERIODE PENGIRIMAN</td>
@@ -182,7 +180,7 @@
                             <p>
                                 Payable to <?php print $merchantname; ?><br />
                                 Account : <?php print $bank_account; ?><br />
-                                Payment is due 3 days after COD<br />
+                                Payment is due 1 day after COD successfully delivered<br />
                                 Report validation is send to us in written<br />
                                 Thank you for your business<br />
                                 Administrator
