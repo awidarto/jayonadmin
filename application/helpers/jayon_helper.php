@@ -503,6 +503,7 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
 }
 
 function get_cod_tariff($total_price,$app_id = null){
+
 	$CI =& get_instance();
 
 	$CI->db->select_max('to_price','max');
