@@ -191,6 +191,9 @@
             <div style="width:400px;display:inline-block;">
                 <h1 style="margin-top:0px;">COD REPORT</h1>
                 <h2>No: COD-<?php print strtoupper($merchantname) ?>-<?php print $invdatenum ?></h2>
+
+                <?php print $sumtab ?>
+
             </div>
         </div>
         <div style="display:block;clear:both;" />
