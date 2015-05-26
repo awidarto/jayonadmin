@@ -352,6 +352,8 @@ class Codreport extends Application
         $total_delivery = 0;
         $total_cod = 0;
 
+        $total_cod_val = 0;
+
         $total_payable = 0;
 
         $lastdate = '';
@@ -430,6 +432,11 @@ class Codreport extends Application
 
             $total_billing = $total_billing + (double)$payable;
 
+            $codval = ($r->deliverytype == 'COD'|| $r->deliverytype == 'CCOD')?$payable:0;
+
+            $total_cod_val += $codval;
+
+
             if($pdf == 'print' || $pdf == 'pdf'){
                 /*
                 $this->table->add_row(
@@ -445,7 +452,6 @@ class Codreport extends Application
                 );
                 */
 
-                $codval = ($r->deliverytype == 'COD'|| $r->deliverytype == 'CCOD')?$payable:0;
 
                 $this->table->add_row(
                     $seq,
@@ -467,8 +473,6 @@ class Codreport extends Application
                 );
 
             }else{
-
-                $codval = ($r->deliverytype == 'COD'|| $r->deliverytype == 'CCOD')?$payable:0;
 
                 $this->table->add_row(
                     $seq,
@@ -527,6 +531,7 @@ class Codreport extends Application
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
                 );
 
@@ -546,6 +551,7 @@ class Codreport extends Application
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
                 );
             }
