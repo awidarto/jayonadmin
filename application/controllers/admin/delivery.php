@@ -4144,6 +4144,11 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_13') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.fulfillment_code',$this->input->post('sSearch_13'));
+            $search = true;
+        }
+
 		/* handle pulldown type filter , hacky thing but should work for now */
 
 		if($this->input->post('sSearch_0') != '' && preg_match('/^sel_*/', $this->input->post('sSearch_0'))){
@@ -4295,6 +4300,7 @@ class Delivery extends Application
                 $notes,
 				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -4350,6 +4356,7 @@ class Delivery extends Application
 			'Actions',
 
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
@@ -4380,6 +4387,7 @@ class Delivery extends Application
             '',
             '',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
+            '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
             '',
             ''
 			);
@@ -4449,6 +4457,7 @@ class Delivery extends Application
                 delivery_cost,
                 delivery_type,cod_cost,
                 delivery_note,
+                fulfillment_code,
                 pickup_note,
                 warehouse_note,
                 reschedule_ref,
@@ -4568,6 +4577,11 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_15') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.fulfillment_code',$this->input->post('sSearch_15'));
+            $search = true;
+        }
+
 		if($search){
 			$this->db->and_();
 		}
@@ -4662,6 +4676,7 @@ class Delivery extends Application
                 $notes,
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
@@ -4708,6 +4723,7 @@ class Delivery extends Application
             'Note',
             'Delivery ID',
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
 			'Reschedule Ref',
@@ -4735,6 +4751,7 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search kode toko" class="search_init" />',
+            '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
 			form_button('do_sending','Send Slip','id="doSending"'),
             form_button('do_archive','Archive Selection','id="doArchive"')
 
