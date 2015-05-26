@@ -853,6 +853,8 @@ class Import extends Application
                 $order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
                 $order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
+                $order['fulfillment_code'] = (isset($in->fulfillment_code))?$in->fulfillment_code:'';
+
                 // check out who is bearing the cost
                 if($order['delivery_type'] == 'COD' || $order['delivery_type'] == 'CCOD'){
                     if($order['delivery_bearer'] == 'merchant'){
