@@ -643,7 +643,7 @@ class Codreport extends Application
 
         $this->table->add_row(
             array('data'=>'Total COD Value'),
-            array('data'=>idr($total_payable),'class'=>'currency')
+            array('data'=>idr($total_cod_val),'class'=>'currency')
         );
 
         $this->table->add_row(
