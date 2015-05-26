@@ -657,8 +657,13 @@ class Codreport extends Application
         );
 
         $this->table->add_row(
-            array('data'=>'Total COD Cost'),
+            array('data'=>'Total Delivery Cost'),
             array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
+        );
+
+        $this->table->add_row(
+            array('data'=>'Total Transfered to Merchant'),
+            array('data'=>idr( $total_cod_val - ($total_delivery + $total_cod)),'class'=>'currency')
         );
 
         $sumtab = $this->table->generate();
