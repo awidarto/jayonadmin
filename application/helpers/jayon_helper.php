@@ -524,7 +524,11 @@ function get_cod_tariff($total_price,$app_id = null){
 		$row = $result->row();
 	}
 
-	return $row->surcharge;
+    if(isset($row->surcharge)){
+        return $row->surcharge;
+    }else{
+        return 0;
+    }
 
 }
 
