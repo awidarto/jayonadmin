@@ -642,27 +642,33 @@ class Codreport extends Application
         }
 
         $this->table->add_row(
-            array('data'=>'Total COD Value'),
-            array('data'=>idr($total_cod_val),'class'=>'currency')
-        );
-
-        $this->table->add_row(
-            array('data'=>'Total Delivery Charge'),
-            array('data'=>idr($total_delivery),'class'=>'currency')
-        );
-
-        $this->table->add_row(
-            array('data'=>'Total COD Surcharge'),
-            array('data'=>idr($total_cod),'class'=>'currency')
+            array('data'=>'Total COD Value','style'=>'padding-bottom:8px;'),
+            '&nbsp;',
+            array('data'=>idr($total_cod_val),'class'=>'currency','style'=>'padding-bottom:8px;')
         );
 
         $this->table->add_row(
             array('data'=>'Total Delivery Cost'),
+            '&nbsp;',
             array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
         );
 
         $this->table->add_row(
+            array('data'=>'Total Delivery Charge','style'=>'padding-left:20px;'),
+            array('data'=>idr($total_delivery),'class'=>'currency'),
+            '&nbsp;'
+        );
+
+        $this->table->add_row(
+            array('data'=>'Total COD Surcharge','style'=>'padding-left:20px;'),
+            array('data'=>idr($total_cod),'class'=>'currency'),
+            '&nbsp;'
+        );
+
+
+        $this->table->add_row(
             array('data'=>'Total Transfered to Merchant'),
+            '&nbsp;',
             array('data'=>idr( $total_cod_val - ($total_delivery + $total_cod)),'class'=>'currency')
         );
 
