@@ -37,6 +37,7 @@ class Import extends Application
         'buyer_id'=>'',
         'merchant_id'=>'',
         'merchant_trans_id'=>'',
+        'fulfillment_code'=>'',
         //'courier_id'=>'',
         //'device_id'=>'',
         'buyer_name'=>'',
