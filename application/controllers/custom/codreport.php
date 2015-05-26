@@ -642,17 +642,17 @@ class Codreport extends Application
         }
 
         $this->table->add_row(
-            array('data'=>'Total Charge'),
+            array('data'=>'Total COD Value'),
             array('data'=>idr($total_payable),'class'=>'currency')
         );
 
         $this->table->add_row(
-            array('data'=>'Delivery Charge'),
+            array('data'=>'Total Delivery Charge'),
             array('data'=>idr($total_delivery),'class'=>'currency')
         );
 
         $this->table->add_row(
-            array('data'=>'COD Surcharge'),
+            array('data'=>'Total COD Surcharge'),
             array('data'=>idr($total_cod),'class'=>'currency')
         );
 
