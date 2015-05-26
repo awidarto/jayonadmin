@@ -323,8 +323,7 @@ class Codreport extends Application
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'COD Value',
-                'GMV'
+                'COD Value'
             ); // Setting headings for the table
 
         }else{
@@ -471,8 +470,8 @@ class Codreport extends Application
                     array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
-                    array('data'=>idr($codval),'class'=>'currency'),
-                    array('data'=>idr($payable),'class'=>'currency')
+                    array('data'=>idr($codval),'class'=>'currency')
+                    //array('data'=>idr($payable),'class'=>'currency')
                 );
 
             }else{
@@ -534,8 +533,8 @@ class Codreport extends Application
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total')
+                    //array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
                 );
 
             }else{
