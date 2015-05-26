@@ -201,6 +201,9 @@ class Codreport extends Application
 
         }
 
+        $this->db->order_by('deliverytype', 'asc');
+        $this->db->order_by('assignment_date', 'asc');
+
         //print $this->db->last_query();
 
         if($pdf == 'csv'){
