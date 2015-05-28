@@ -74,6 +74,7 @@ class Admin extends Application
                 print $r['delivery_id']."\r\n";
                 print $r['delivery_type']."\r\n";
                 print $r['total_price']."\r\n";
+                print $r['cod_cost']."\r\n";
                 print $r['delivery_cost']."\r\n".$r['weight']."\r\n".$r['chargeable_amount'];
                 //print_r($r);
                 $wtotal++;
