@@ -70,6 +70,7 @@ class Admin extends Application
         foreach ($result as $r) {
             $total++;
             if($r['delivery_cost']%$wrong == 0){
+                print "\r\n";
                 print $r['delivery_id']."\r\n";
                 print $r['delivery_cost']."\r\n".$r['weight']."\r\n".$r['chargeable_amount'];
                 //print_r($r);
