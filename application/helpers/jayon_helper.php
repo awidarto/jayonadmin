@@ -477,15 +477,15 @@ function get_weight_range($tariff,$app_id = null){
 function get_weight_tariff($weight, $delivery_type ,$app_id = null){
     $CI =& get_instance();
 
-    $weight = (float)$weight;
+    $weight = floatval($weight);
 
     if($weight > 0){
         $CI->db->select('total');
         if(!is_null($app_id)){
             $CI->db->where('app_id',$app_id);
         }
-        $CI->db->where('kg_from <= ',$weight);
-        $CI->db->where('kg_to >= ',$weight);
+        $CI->db->where('kg_from <= ', $weight );
+        $CI->db->where('kg_to >= ', $weight );
         if($delivery_type == 'PS'){
             $result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
         }else{
@@ -516,8 +516,8 @@ function get_cod_tariff($total_price,$app_id = null){
 		$row = $result->row();
 	}else{
 		$CI->db->select('surcharge');
-		$CI->db->where('from_price <= ',$total_price);
-		$CI->db->where('to_price >= ',$total_price);
+		$CI->db->where('from_price <= ', doubleval($total_price) );
+		$CI->db->where('to_price >= ', doubleval($total_price) );
         if(!is_null($app_id)){
             $CI->db->where('app_id',$app_id);
         }
