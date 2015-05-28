@@ -72,6 +72,8 @@ class Admin extends Application
             if($r['delivery_cost']%$wrong == 0){
                 print "\r\n";
                 print $r['delivery_id']."\r\n";
+                print $r['delivery_type']."\r\n";
+                print $r['total_price']."\r\n";
                 print $r['delivery_cost']."\r\n".$r['weight']."\r\n".$r['chargeable_amount'];
                 //print_r($r);
                 $wtotal++;
