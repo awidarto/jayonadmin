@@ -65,13 +65,18 @@ class Admin extends Application
             ->from($this->config->item('incoming_delivery_table'))
             ->get()->result_array();
 
+        $total = 0;
+        $wtotal = 0;
         foreach ($result as $r) {
-
+            $total++;
             if($r['delivery_cost']%$wrong == 0){
                 print_r($r);
+                $wtotal++;
             }
 
         }
+
+        print 'totals '.$total.' '.$wtotal;
 
     }
 
