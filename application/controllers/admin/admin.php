@@ -96,6 +96,9 @@ class Admin extends Application
                     );
 
                 print_r($newdata);
+
+                $this->db->where('delivery_id',$r['delivery_id'])->update($this->config->item('incoming_delivery_table'), $newdata);
+
                 $wtotal++;
             }
 
