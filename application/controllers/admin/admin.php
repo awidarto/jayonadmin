@@ -67,7 +67,10 @@ class Admin extends Application
 
         foreach ($result as $r) {
 
-            print_r($r);
+            if($r['delivery_cost']%$wrong == 0){
+                print_r($r);
+            }
+
         }
 
     }
