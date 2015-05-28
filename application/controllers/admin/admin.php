@@ -74,9 +74,28 @@ class Admin extends Application
                 print $r['delivery_id']."\r\n";
                 print $r['delivery_type']."\r\n";
                 print $r['total_price']."\r\n";
+                print $r['total_discount']."\r\n";
+                print $r['total_tax']."\r\n";
                 print $r['cod_cost']."\r\n";
                 print $r['delivery_cost']."\r\n".$r['weight']."\r\n".$r['chargeable_amount'];
                 //print_r($r);
+
+                $div = $r['delivery_cost']/$wrong;
+
+                $chg = ($r['total_price'] - $r['total_discount']) - $r['total_tax'];
+                if($r['delivery_type'] == 'COD' || $r['delivery_type'] == 'CCOD'){
+                    $chg = $chg + $r['delivery_cost'] + $r['cod_cost'];
+                }else{
+                    $chg = $chg + $r['delivery_cost'];
+                }
+
+                $newdata = array(
+                        'delivery_cost'=>($right*$div),
+                        'weight'=>($right*$div),
+                        'chargeable_amount'=>$chg
+                    );
+
+                print_r($newdata);
                 $wtotal++;
             }
 
