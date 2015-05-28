@@ -63,7 +63,7 @@ class Admin extends Application
     public function fixcodtariff($merchant_id,$wrong,$right){
         $result = $this->db->where('merchant_id',$merchant_id)
             ->from($this->config->item('incoming_delivery_table'))
-            ->get()->row_array();
+            ->get()->result_array();
 
         foreach ($result as $r) {
 
