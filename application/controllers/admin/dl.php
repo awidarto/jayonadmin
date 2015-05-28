@@ -282,7 +282,7 @@ class Dl extends Application
                 $key['merchant'],
                 $key['buyer_name'],
                 $key['recipient_name'],
-                $key['shipping_address'],
+                $this->removeinvalids( $key['shipping_address']),
                 $key['phone'].', '.$key['mobile1'].', '.$key['mobile2'],
                 $key['delivery_id'],
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
@@ -556,7 +556,7 @@ class Dl extends Application
                 $key['merchant'],
                 $key['buyer_name'],
                 $key['recipient_name'],
-                $key['shipping_address'],
+                $this->removeinvalids( $key['shipping_address']),
                 $key['phone'].', '.$key['mobile1'].', '.$key['mobile2'],
                 $key['delivery_note'],
                 $key['status'],
@@ -841,6 +841,10 @@ class Dl extends Application
         }else{
             return $trx_id;
         }
+    }
+
+    public function removeinvalids($in){
+        return str_replace(array("\r","\n"), " ", $in);
     }
 
 
