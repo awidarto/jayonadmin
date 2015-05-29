@@ -65,7 +65,12 @@ function escapeVars($str, $replace = ''){
 }
 
 function idr($in){
-	return number_format((double) $in,2,',','.');
+    if($in > 0){
+        return number_format((double) $in,2,',','.');
+    }else{
+        $num = abs((double) $in);
+        return '<span style="color:red">('.number_format($num,2,',','.').')</span>' ;
+    }
 }
 
 function get_print_default($user_group = 'admin'){
