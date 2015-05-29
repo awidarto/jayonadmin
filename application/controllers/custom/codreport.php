@@ -311,6 +311,7 @@ class Codreport extends Application
             $this->table->set_heading(
                 'No.',
                 'No Kode Penjualan Toko',
+                'Fulfillment / Order ID',
                 'Delivery ID',
                 //'Merchant Name',
                 'Store',
@@ -330,6 +331,7 @@ class Codreport extends Application
             $this->table->set_heading(
                 'No.',
                 'No Kode Penjualan Toko',
+                'Fulfillment / Order ID',
                 'Delivery ID',
                 //'Merchant Name',
                 'Store',
@@ -458,6 +460,7 @@ class Codreport extends Application
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
                     $this->short_did($r->delivery_id),
                     //$r->fullname.'<hr />'.$r->merchant_name,
                     $r->app_name.'<hr />'.$r->domain,
@@ -479,6 +482,7 @@ class Codreport extends Application
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
                     $this->short_did($r->delivery_id),
                     //$r->fullname.'<hr />'.$r->merchant_name,
                     $r->app_name.'<hr />'.$r->domain,
@@ -522,7 +526,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
-                    //'',
+                    '',
                     '',
                     '',
                     '',
@@ -542,7 +546,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
-                    //'',
+                    '',
                     '',
                     '',
                     '',
