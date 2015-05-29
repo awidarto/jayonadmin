@@ -201,8 +201,8 @@ class Codreport extends Application
 
         }
 
-        $this->db->order_by('delivery_type', 'asc');
         $this->db->order_by('assignment_date', 'asc');
+        $this->db->order_by('delivery_type', 'asc');
 
         //print $this->db->last_query();
 
