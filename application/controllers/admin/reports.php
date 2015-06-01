@@ -4625,10 +4625,11 @@ class Reports extends Application
     }
 
 
-    public function courierrecap($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+    public function courierrecap($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
 
         if(is_null($scope)){
             $id = 'noid';
@@ -4898,6 +4899,8 @@ class Reports extends Application
         $recontab = $this->table->generate();
         $data['recontab'] = $recontab;
 
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
 
         /* end copy */
 
@@ -5962,10 +5965,12 @@ class Reports extends Application
 	}
 
 
-	public function merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+	public function merchantrecon($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
 		$id = (is_null($type))?'noid':$type;
+
+        $status = (is_null($status))?'all':$status;
 
 		if(is_null($scope)){
 			$id = 'noid';
@@ -6288,6 +6293,9 @@ class Reports extends Application
 
 		$recontab = $this->table->generate();
 		$data['recontab'] = $recontab;
+
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
 
 		/* end copy */
 
