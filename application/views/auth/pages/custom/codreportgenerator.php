@@ -119,6 +119,46 @@
 
 
         });
+
+        $('#xls_generate').on('click',function(){
+
+            var params = {
+                'type': '<?= $getparams['type'] ?>',
+                'deliverytype': '<?= $getparams['deliverytype'] ?>',
+                'status': '<?= $getparams['status'] ?>',
+                'year': '<?= $getparams['year'] ?>',
+                'scope': '<?= $getparams['scope'] ?>',
+                'par1': '<?= $getparams['par1'] ?>',
+                'par2': '<?= ($getparams['par2'] == 'pdf')?'xls':$getparams['par2']; ?>',
+                'par3': '<?= ($getparams['par3'] == 'pdf')?'xls':$getparams['par3']; ?>',
+                'par4': '<?= $getparams['par4'] ?>',
+            };
+
+            if(params.par2 == 'xls'){
+                params.par3 = $('#date_from').val();
+            }else if(params.par3 == 'xls'){
+                params.par4 = $('#date_from').val();
+            }
+
+            console.log(params);
+
+            $('#generatinginvoice').show();
+
+            $.post( base + 'custom/codreport/genreport',
+                params,
+                function(data){
+                    if(data.result == 'OK'){
+                        $('#generatinginvoice').hide();
+                        alert('Report generated');
+
+                        $('#genresult').html( '<a href="' + base + 'public/custom/' + data.file + '" target="_blank">' + data.file +'</a>' );
+                    }
+                },
+                'json' );
+
+
+        });
+
         //$("#toClone thead").sticky({topSpacing:0});
 
     });
@@ -293,7 +333,9 @@ div.stickyHeader {
 
                                 <td style="text-align:right;">Generate</td>
                                 <td><?php //print form_input(array('name'=>'release_date','id'=>'release_date','class'=>'text','value'=>''));?>
-                                &nbsp;&nbsp;<span class="button" id="inv_preview">Preview</span>&nbsp;<span class="button" id="inv_generate">Terbitkan</span>
+                                &nbsp;&nbsp;<span class="button" id="inv_preview">Preview</span>
+                                &nbsp;<span class="button" id="inv_generate">Terbitkan</span>
+                                &nbsp;<span class="button" id="xls_generate">Export Excel</span>
                                 &nbsp;&nbsp;<span id="generatinginvoice" style="display:none;">Creating report...</span>
                                 </td>
                             </tr>

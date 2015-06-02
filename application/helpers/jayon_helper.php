@@ -64,12 +64,16 @@ function escapeVars($str, $replace = ''){
     return $str;
 }
 
-function idr($in){
+function idr($in, $transform = true){
     if($in > 0){
         return number_format((double) $in,2,',','.');
     }else{
         $num = abs((double) $in);
-        return '<span style="color:red">('.number_format($num,2,',','.').')</span>' ;
+        if($transform){
+            return '<span style="color:red">('.number_format($num,2,',','.').')</span>' ;
+        }else{
+            return number_format($num,2,',','.') ;
+        }
     }
 }
 

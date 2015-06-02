@@ -292,8 +292,10 @@ class Codreport extends Application
 
         //print_r($trans);
 
+        $xls = array();
+
         //exit();
-        if($pdf == 'print' || $pdf == 'pdf'){
+        if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
             /*
             $this->table->set_heading(
                 'No.',
@@ -326,6 +328,25 @@ class Codreport extends Application
                 'COD Surchg',
                 'COD Value'
             ); // Setting headings for the table
+
+            $xls[] = array(
+                'No.',
+                'No Kode Penjualan Toko',
+                'Fulfillment / Order ID',
+                'Delivery ID',
+                //'Merchant Name',
+                'Store',
+                'Delivery Date',
+                'Buyer Name',
+                'Delivery Type',
+                'Status',
+                'Package Value',
+                'Disc',
+                'Tax',
+                'Delivery Chg',
+                'COD Surchg',
+                'COD Value'
+            );
 
         }else{
             $this->table->set_heading(
@@ -441,7 +462,7 @@ class Codreport extends Application
             $total_cod_val += $codval;
 
 
-            if($pdf == 'print' || $pdf == 'pdf'){
+            if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
                 /*
                 $this->table->add_row(
                     $seq,
@@ -477,6 +498,25 @@ class Codreport extends Application
                     //array('data'=>idr($payable),'class'=>'currency')
                 );
 
+                $xls[] = array(
+                    $seq,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    $this->short_did($r->delivery_id),
+                    //$r->fullname.'<hr />'.$r->merchant_name,
+                    $r->app_name.' - '.$r->domain,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->buyer_name,
+                    $r->delivery_type,
+                    $r->status,
+                    idr($total,false),
+                    idr($dsc,false),
+                    idr($tax,false),
+                    idr($dc,false),
+                    idr($cod,false),
+                    idr($codval,false)                    //array('data'=>idr($payable),'class'=>'currency')
+                );
+
             }else{
 
                 $this->table->add_row(
@@ -507,7 +547,7 @@ class Codreport extends Application
             $seq++;
         }
 
-            if($pdf == 'print' || $pdf == 'pdf'){
+            if($pdf == 'print' || $pdf == 'pdf'|| $pdf == 'xls'){
                 /*
                 $this->table->add_row(
                     '',
@@ -541,6 +581,25 @@ class Codreport extends Application
                     //array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
                 );
 
+                $xls[] = array(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    'Rp '.idr($total_delivery),
+                    'Rp '.idr($total_cod),
+                    'Rp '.idr($total_cod_val)
+                    //array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
+                );
+
             }else{
                 $this->table->add_row(
                     '',
@@ -564,7 +623,7 @@ class Codreport extends Application
 
 
 
-        if($pdf == 'print' || $pdf == 'pdf'){
+        if($pdf == 'print' || $pdf == 'pdf'|| $pdf == 'xls'){
 
             $total_span = 2;
             $say_span = 4;
@@ -637,11 +696,14 @@ class Codreport extends Application
             array('data'=>'<h4>Summary</h4>','colspan'=>2)
         );
 
+        $xls[] = array('Summary');
+
         if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable'),
                 array('data'=>idr((double)$total_billing),'class'=>'currency')
             );
+            $xls[] = array('Payable',idr((double)$total_billing,false));
         }
 
         $this->table->add_row(
@@ -650,11 +712,15 @@ class Codreport extends Application
             array('data'=>idr($total_cod_val),'class'=>'currency','style'=>'padding-bottom:8px;')
         );
 
+        $xls[] = array('Total COD Value',idr((double)$total_cod_val,false));
+
         $this->table->add_row(
             array('data'=>'Total Delivery Cost'),
             '&nbsp;',
             array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
         );
+
+        $xls[] = array('Total Delivery Cost',idr($total_delivery + $total_cod,false));
 
         $this->table->add_row(
             array('data'=>'Total Delivery Charge','style'=>'padding-left:20px;'),
@@ -662,18 +728,23 @@ class Codreport extends Application
             '&nbsp;'
         );
 
+        $xls[] = array('Total Delivery Charge',idr($total_delivery,false));
+
         $this->table->add_row(
             array('data'=>'Total COD Surcharge','style'=>'padding-left:20px;'),
             array('data'=>idr($total_cod),'class'=>'currency'),
             '&nbsp;'
         );
 
+        $xls[] = array('Total COD Surcharge',idr($total_cod,false));
 
         $this->table->add_row(
             array('data'=>'Total Transfered to Merchant'),
             '&nbsp;',
             array('data'=>idr( $total_cod_val - ($total_delivery + $total_cod)),'class'=>'currency')
         );
+
+        $xls[] = array('Total Transfered to Merchant',idr($total_cod_val - ($total_delivery + $total_cod),false));
 
         $sumtab = $this->table->generate();
         $data['sumtab'] = $sumtab;
@@ -705,12 +776,41 @@ class Codreport extends Application
 
         $pdffilename = 'COD-'.$mname.'-'.$data['invdatenum'];
 
-        if($pdf == 'pdf'){
-            $html = $this->load->view('auth/pages/custom/print/codreportprint',$data,true);
-            $pdf_name = $pdffilename;
-            $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+        if($pdf == 'pdf' || $pdf == 'xls'){
 
-            file_put_contents(FCPATH.'public/custom/'.$pdf_name.'.pdf', $pdfbuf);
+            if($pdf == 'pdf'){
+                $html = $this->load->view('auth/pages/custom/print/codreportprint',$data,true);
+                $pdf_name = $pdffilename;
+                $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+                file_put_contents(FCPATH.'public/custom/'.$pdf_name.'.pdf', $pdfbuf);
+            }else{
+
+                $pdf_name = $pdffilename;
+
+                $this->load->library('xlswrite');
+                $xlswrite = new Xlswrite();
+                $xlswrite->setActiveSheetIndex(0);
+
+
+                $colnames = $this->config->item('xls_columns');
+
+                $colindex = 0;
+
+                //print_r($colnames);
+
+                for($i = 0;$i < count($xls);$i++ ){
+                    for($j = 0; $j < count($xls[$i]);$j++ ){
+                        $cellname = $colnames[$j];
+                        $cellname .= ($i+1);
+                        //print $cellname .' = '.$xls[$i][$j]."\r\n";
+                        $xlswrite->getActiveSheet()->SetCellValue($cellname, $xls[$i][$j] );
+                    }
+                }
+
+                $xlswrite->xlsx(FCPATH.'public/custom/'.$pdf_name.'.xlsx');
+
+            }
+
 
             $data['invdate'] = iddate($invdate);
             $data['invdatenum'] = date('dmY',mysql_to_unix($invdate));
@@ -731,7 +831,11 @@ class Codreport extends Application
 
             $inres = $this->db->insert($this->config->item('docs_table'),$invdata);
 
-            return array(file_exists(FCPATH.'public/custom/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+            if($pdf == 'pdf'){
+                return array(file_exists(FCPATH.'public/custom/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+            }else{
+                return array(file_exists(FCPATH.'public/custom/'.$pdf_name.'.xlsx'), $pdf_name.'.xlsx');
+            }
 
         }else if($pdf == 'print'){
             $this->load->view('auth/pages/custom/print/codreportprint',$data); // Load the view
