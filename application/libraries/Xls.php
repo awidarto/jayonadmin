@@ -16,6 +16,8 @@ class Xls {
 
     public $sheetname = 'ORDERS';
 
+    public $skipempty = true;
+
     function __construct()
     {
         require_once('PHPExcel.php');
@@ -24,6 +26,10 @@ class Xls {
 
     public function setController($controller){
         $this->controller = $controller;
+    }
+
+    public function setSkipEmpty($state){
+        $this->skipempty = $state;
     }
 
     public function toPHPdate($date){
@@ -74,7 +80,7 @@ class Xls {
 
 
                 $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(true); // Loop all cells, even if it is not set
+                $cellIterator->setIterateOnlyExistingCells($this->skipempty); // Loop all cells, even if it is not set
                 $numcols = 0;
                 foreach ($cellIterator as $cell) {
                     $cell_array[$numrows][$numcols] = $cell->getCalculatedValue() ;

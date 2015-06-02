@@ -16,6 +16,13 @@ class Codreport extends Application
 
     }
 
+    public function testxls(){
+        $tmpl_data['_gmv'] = 100000000;
+        $r = $this->compile_xls(array(),$tmpl_data, FCPATH.'public/xlstemplate/codreport.xlsx');
+
+        print_r($r);
+    }
+
     public function index(){
         //$this->breadcrumb->add_crumb('Reports','admin/reports/daily');
         $this->breadcrumb->add_crumb('Statistics','admin/reports');
@@ -696,14 +703,12 @@ class Codreport extends Application
             array('data'=>'<h4>Summary</h4>','colspan'=>2)
         );
 
-        $xls[] = array('Summary');
-
         if($type == 'Merchant' || $type == 'Global'){
             $this->table->add_row(
                 array('data'=>'Payable'),
                 array('data'=>idr((double)$total_billing),'class'=>'currency')
             );
-            $xls[] = array('Payable',idr((double)$total_billing,false));
+
         }
 
         $this->table->add_row(
@@ -712,7 +717,6 @@ class Codreport extends Application
             array('data'=>idr($total_cod_val),'class'=>'currency','style'=>'padding-bottom:8px;')
         );
 
-        $xls[] = array('Total COD Value',idr((double)$total_cod_val,false));
 
         $this->table->add_row(
             array('data'=>'Total Delivery Cost'),
@@ -720,7 +724,6 @@ class Codreport extends Application
             array('data'=>idr($total_delivery + $total_cod),'class'=>'currency')
         );
 
-        $xls[] = array('Total Delivery Cost',idr($total_delivery + $total_cod,false));
 
         $this->table->add_row(
             array('data'=>'Total Delivery Charge','style'=>'padding-left:20px;'),
@@ -728,7 +731,6 @@ class Codreport extends Application
             '&nbsp;'
         );
 
-        $xls[] = array('Total Delivery Charge',idr($total_delivery,false));
 
         $this->table->add_row(
             array('data'=>'Total COD Surcharge','style'=>'padding-left:20px;'),
@@ -736,15 +738,11 @@ class Codreport extends Application
             '&nbsp;'
         );
 
-        $xls[] = array('Total COD Surcharge',idr($total_cod,false));
-
         $this->table->add_row(
             array('data'=>'Total Transfered to Merchant'),
             '&nbsp;',
             array('data'=>idr( $total_cod_val - ($total_delivery + $total_cod)),'class'=>'currency')
         );
-
-        $xls[] = array('Total Transfered to Merchant',idr($total_cod_val - ($total_delivery + $total_cod),false));
 
         $sumtab = $this->table->generate();
         $data['sumtab'] = $sumtab;
@@ -775,6 +773,30 @@ class Codreport extends Application
         $mname = strtoupper(str_replace(' ','_',$data['merchantname']));
 
         $pdffilename = 'COD-'.$mname.'-'.$data['invdatenum'];
+
+
+        $total_transfer = $total_cod_val - ($total_delivery + $total_cod);
+
+        $txd['_gmv'] = idr((double)$total_billing,false);
+        $txd['_total_delivery'] = idr($total_delivery + $total_cod,false);
+        $txd['_total_do'] = idr($total_delivery,false);
+        $txd['_total_cod'] = idr($total_cod,false);
+        $txd['_total_transfer'] = idr($total_transfer,false);
+
+
+        $txd['_att_to'] = $data['merchantname'];
+        $txd['_date_from'] = $data['from'];
+        $txd['_date_to'] = $data['to'];
+        $txd['_doc_date'] = $data['invdate'];
+        $txd['_doc_no'] = $data['invdatenum'];
+        $txd['_total_transfer_say'] = $this->number_words->to_words((double) $total_transfer ).' rupiah';
+
+        $txd['_account'] = $data['bank_account'];
+        $txd['_payable'] = $data['merchantname'];
+        $txd['_sender'] = 'Administrator';
+
+        $xls = $this->compile_xls($xls, $txd, FCPATH.'public/xlstemplate/codreport.xlsx');
+
 
         if($pdf == 'pdf' || $pdf == 'xls'){
 
@@ -1403,24 +1425,6 @@ class Codreport extends Application
             $seq++;
         }
 
-        /*
-
-            if($pdf == 'print' || $pdf == 'pdf'){
-                $this->table->add_row(
-                    '',
-                    '',
-                    '',
-                    '',
-                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
-                    '',
-                    '',
-                    ''
-                );
-            }
-        */
-
-
 
         if($pdf == 'print' || $pdf == 'pdf'){
 
@@ -1590,6 +1594,54 @@ class Codreport extends Application
         return str_replace(array('/','#','|'), '<br />', $phone);
     }
 
+    public function compile_xls($data, $tmpl_data ,$template_path, $ext = '.xlsx'){
+            $this->load->library('xls');
+            $this->xls->setSkipEmpty(false);
+            $xdata = $this->xls->load($template_path,$ext);
+
+            //print_r($xdata['Worksheet']['cells']);
+
+            $cells = $xdata['Worksheet']['cells'];
+
+            $splice_at = 0;
+
+            for($i = 0; $i < count($cells); $i++){
+                for($j = 0;$j < count($cells[$i]);$j++){
+                    if(isset($tmpl_data[$cells[$i][$j]])){
+                        $cells[$i][$j] = $tmpl_data[$cells[$i][$j]];
+                    }
+
+                    if( $cells[$i][$j] == '_space_' ){
+                        $cells[$i][$j] = '';
+                    }
+
+                    if($cells[$i][$j] == '_table_'){
+                        $splice_at = $i;
+                    }
+                }
+            }
+
+            //print $splice_at;
+
+            //if pos is start, just merge them
+            if($splice_at == 0) {
+                $cells = array_merge($cells, $data);
+            } else {
+
+                if($splice_at >= (count($cells) - 1 )) {
+                    $cells = array_merge($cells, $data);
+                } else {
+                    //split into head and tail, then merge head+inserted bit+tail
+                    $head = array_slice($cells, 0, $splice_at);
+                    $tail = array_slice($cells, $splice_at + 1 );
+                    $cells = array_merge($head, $data, $tail);
+                }
+            }
+
+
+        return $cells;
+
+    }
 
 }
 
