@@ -4302,7 +4302,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
                 $key['delivery_cost'],
-                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                ($key['delivery_type'] == 'COD' || $key['delivery_type'] == 'CCOD')?$key['cod_cost']:'',
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
                 (double)$key['width']*(double)$key['height']*(double)$key['length'],
                 get_weight_range($key['weight'],$key['application_id'])
