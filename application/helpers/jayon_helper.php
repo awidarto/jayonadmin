@@ -240,7 +240,8 @@ function get_merchant($id = null,$flatten = true){
 		 $CI->db->where('id',$id);
 	}
 
-	$CI->db->where('group_id',user_group_id('merchant'));
+	$CI->db->where('group_id',user_group_id('merchant'))
+            ->order_by('merchantname','asc');
 
 	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
 	if($flatten){
