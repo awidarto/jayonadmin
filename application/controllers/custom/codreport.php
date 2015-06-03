@@ -166,7 +166,7 @@ class Codreport extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, cod_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, cod_bearer, delivery_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -454,7 +454,16 @@ class Codreport extends Application
 
             $payable = ($total - $dsc) + $tax;
 
-            $total_payable += ($total - $dsc) + $tax;
+            if($r->cod_bearer == 'buyer'){
+                $payable = $payable + $cod;
+            }
+
+            if($r->delivery_bearer == 'buyer'){
+                $payable = $payable + $dc;
+            }
+
+
+            $total_payable += $payable;
 
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
@@ -464,9 +473,6 @@ class Codreport extends Application
 
             $total_billing = $total_billing + (double)$payable;
 
-            if($r->cod_bearer == 'buyer'){
-                $payable = $payable + $cod;
-            }
 
             $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
