@@ -454,6 +454,9 @@ class Codreport extends Application
 
             $payable = ($total - $dsc) + $tax;
 
+            $payable = $payable + $dc + $cod;
+
+            /*
             if($r->cod_bearer == 'buyer'){
                 $payable = $payable + $cod;
             }
@@ -461,7 +464,7 @@ class Codreport extends Application
             if($r->delivery_bearer == 'buyer'){
                 $payable = $payable + $dc;
             }
-
+            */
 
             $total_payable += $payable;
 
