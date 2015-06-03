@@ -175,7 +175,7 @@ class Codreport extends Application
             ->from($this->config->item('incoming_delivery_table'));
 
         $column = 'assignment_date';
-        $daterange = sprintf("`%s`between '%s% 00:00:00' and '%s% 23:59:59' ", $column, $sfrom, $sto);
+        $daterange = sprintf("`%s`between '%s 00:00:00' and '%s 23:59:59' ", $column, $sfrom, $sto);
 
         $this->db->where($daterange, null, false);
         $this->db->where($column.' != ','0000-00-00');
