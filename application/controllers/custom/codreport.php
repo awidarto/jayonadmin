@@ -474,7 +474,7 @@ class Codreport extends Application
             $total_billing = $total_billing + (double)$payable;
 
 
-            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$r->chargeable_amount:0;
+            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
             $total_cod_val += $codval;
 

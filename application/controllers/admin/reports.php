@@ -2699,8 +2699,10 @@ class Reports extends Application
 
         //print_r($trans);
 
+        $xls = array();
+
         //exit();
-        if($pdf == 'print' || $pdf == 'pdf'){
+        if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
             $this->table->set_heading(
                 'No.',
                 'Delivery Time',
@@ -2713,6 +2715,19 @@ class Reports extends Application
                 'Fulfillment / Order ID',
                 'Status'
             ); // Setting headings for the table
+
+            $xls[] = array(
+                'No.',
+                'Delivery Time',
+                'Delivery ID',
+                'Type',
+                'Delivery Fee',
+                'COD Surchg',
+                'Buyer',
+                'Kode Toko',
+                'Fulfillment / Order ID',
+                'Status'
+            );
 
         }else{
             $this->table->set_heading(
@@ -2826,7 +2841,7 @@ class Reports extends Application
 
             $total_billing = $total_billing + (double)$payable;
 
-            if($pdf == 'print' || $pdf == 'pdf'){
+            if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
 
                 $this->table->add_row(
                     $seq,
@@ -2835,6 +2850,19 @@ class Reports extends Application
                     $r->delivery_type,
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
+                    $r->buyer_name,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    $r->status
+                );
+
+                $xls[] = array(
+                    $seq,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $this->short_did($r->delivery_id),
+                    $r->delivery_type,
+                    idr($dc,false),
+                    idr($cod,false),
                     $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
@@ -2871,18 +2899,31 @@ class Reports extends Application
             $seq++;
         }
 
-            if($pdf == 'print' || $pdf == 'pdf'){
+            if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
                 $this->table->add_row(
                     '',
                     '',
                     '',
                     '',
-                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
                     '',
                     '',
                     ''
                 );
+
+                $xls[] = array(
+                    '',
+                    '',
+                    '',
+                    '',
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
+                    '',
+                    '',
+                    ''
+                );
+
             }else{
                 $this->table->add_row(
                     '',
@@ -3025,12 +3066,70 @@ class Reports extends Application
 
         $pdffilename = 'JSM-'.$mname.'-'.$data['invdatenum'];
 
-        if($pdf == 'pdf'){
-            $html = $this->load->view('print/invoiceprint',$data,true);
-            $pdf_name = $pdffilename;
-            $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+        $total_transfer  = $total_delivery + $total_cod;
 
-            file_put_contents(FCPATH.'public/invoices/'.$pdf_name.'.pdf', $pdfbuf);
+        $txd['_gmv'] = idr((double)$total_billing,false);
+        $txd['_total_delivery'] = idr($total_delivery + $total_cod,false);
+        $txd['_total_do'] = idr($total_delivery,false);
+        $txd['_total_cod'] = idr($total_cod,false);
+        $txd['_total_transfer'] = idr($total_transfer,false);
+
+
+        $txd['_att_to'] = $data['merchantname'];
+        $txd['_date_from'] = $data['from'];
+        $txd['_date_to'] = $data['to'];
+        $txd['_doc_date'] = $data['invdate'];
+        $txd['_doc_no'] = $data['invdatenum'];
+
+
+        $txd['_total_do_say'] = $this->number_words->to_words((double) $total_delivery ).' rupiah';
+        $txd['_total_cod_say'] = $this->number_words->to_words((double) $total_cod ).' rupiah';
+
+        $txd['_total_transfer_say'] = $this->number_words->to_words((double) $total_transfer ).' rupiah';
+
+        $txd['_account'] = $data['bank_account'];
+        $txd['_payable'] = $data['merchantname'];
+        $txd['_sender'] = 'Administrator';
+
+
+        $xls = $this->compile_xls($xls, $txd, FCPATH.'public/xlstemplate/invoice.xlsx');
+
+        if($pdf == 'pdf' || $pdf == 'xls'){
+
+            if($pdf == 'pdf'){
+                $html = $this->load->view('print/invoiceprint',$data,true);
+                $pdf_name = $pdffilename;
+                $pdfbuf = pdf_create($html, $pdf_name,'A4','landscape', false);
+
+                file_put_contents(FCPATH.'public/invoices/'.$pdf_name.'.pdf', $pdfbuf);
+
+            }else{
+
+                $pdf_name = $pdffilename;
+
+                $this->load->library('xlswrite');
+                $xlswrite = new Xlswrite();
+                $xlswrite->setActiveSheetIndex(0);
+
+
+                $colnames = $this->config->item('xls_columns');
+
+                $colindex = 0;
+
+                //print_r($colnames);
+
+                for($i = 0;$i < count($xls);$i++ ){
+                    for($j = 0; $j < count($xls[$i]);$j++ ){
+                        $cellname = $colnames[$j];
+                        $cellname .= ($i+1);
+                        //print $cellname .' = '.$xls[$i][$j]."\r\n";
+                        $xlswrite->getActiveSheet()->SetCellValue($cellname, $xls[$i][$j] );
+                    }
+                }
+
+                $xlswrite->xlsx(FCPATH.'public/invoices/'.$pdf_name.'.xlsx');
+
+            }
 
             $data['invdate'] = iddate($invdate);
             $data['invdatenum'] = date('dmY',mysql_to_unix($invdate));
@@ -3049,7 +3148,12 @@ class Reports extends Application
 
             $inres = $this->db->insert($this->config->item('invoice_table'),$invdata);
 
-            return array(file_exists(FCPATH.'public/invoices/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+
+            if($pdf == 'pdf'){
+                return array(file_exists(FCPATH.'public/invoices/'.$pdf_name.'.pdf'), $pdf_name.'.pdf');
+            }else{
+                return array(file_exists(FCPATH.'public/invoices/'.$pdf_name.'.xlsx'), $pdf_name.'.xlsx');
+            }
 
         }else if($pdf == 'print'){
             $this->load->view('print/invoiceprint',$data); // Load the view
@@ -7809,6 +7913,55 @@ class Reports extends Application
 
     public function split_phone($phone){
         return str_replace(array('/','#','|'), '<br />', $phone);
+    }
+
+    public function compile_xls($data, $tmpl_data ,$template_path, $ext = '.xlsx'){
+            $this->load->library('xls');
+            $this->xls->setSkipEmpty(false);
+            $xdata = $this->xls->load($template_path,$ext);
+
+            //print_r($xdata['Worksheet']['cells']);
+
+            $cells = $xdata['Worksheet']['cells'];
+
+            $splice_at = 0;
+
+            for($i = 0; $i < count($cells); $i++){
+                for($j = 0;$j < count($cells[$i]);$j++){
+                    if(isset($tmpl_data[$cells[$i][$j]])){
+                        $cells[$i][$j] = $tmpl_data[$cells[$i][$j]];
+                    }
+
+                    if( $cells[$i][$j] == '_space_' ){
+                        $cells[$i][$j] = '';
+                    }
+
+                    if($cells[$i][$j] == '_table_'){
+                        $splice_at = $i;
+                    }
+                }
+            }
+
+            //print $splice_at;
+
+            //if pos is start, just merge them
+            if($splice_at == 0) {
+                $cells = array_merge($cells, $data);
+            } else {
+
+                if($splice_at >= (count($cells) - 1 )) {
+                    $cells = array_merge($cells, $data);
+                } else {
+                    //split into head and tail, then merge head+inserted bit+tail
+                    $head = array_slice($cells, 0, $splice_at);
+                    $tail = array_slice($cells, $splice_at + 1 );
+                    $cells = array_merge($head, $data, $tail);
+                }
+            }
+
+
+        return $cells;
+
     }
 
 
