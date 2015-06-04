@@ -464,10 +464,14 @@ class Codreport extends Application
             if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
                 if($r->delivery_bearer == 'merchant'){
                     $dcx = 0;
+                }else{
+                    $dcx = $dc;
                 }
 
                 if($r->cod_bearer == 'merchant'){
                     $codx = 0;
+                }else{
+                    $codx = $cod;
                 }
 
                 $codval = ($total - $dsc) + $tax + $dcx + $codx;
