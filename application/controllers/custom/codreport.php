@@ -474,6 +474,7 @@ class Codreport extends Application
             if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
                 $codval = ($total - $dsc) + $tax + $dc + $cod;
             }else{
+                $dc = 0;
                 $cod = 0;
                 $codval = $dc;
             }
