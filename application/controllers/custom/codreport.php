@@ -400,7 +400,7 @@ class Codreport extends Application
                 }
             }
 
-            /*
+
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
@@ -424,7 +424,7 @@ class Codreport extends Application
 
                 }
             }
-            */
+
 
             //$total = str_replace(array(',','.'), '', $r->total_price);
             //$dsc = str_replace(array(',','.'), '', $r->total_discount);
@@ -455,30 +455,12 @@ class Codreport extends Application
 
             $payable = ($total - $dsc) + $tax;
 
-            $payable = $payable + $dc + $cod;
-
-            /*
-            if($r->cod_bearer == 'buyer'){
-                $payable = $payable + $cod;
-            }
-
-            if($r->delivery_bearer == 'buyer'){
-                $payable = $payable + $dc;
-            }
-            */
-
             $total_payable += $payable;
 
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
-            //$total_billing += (int)str_replace('.','',$payable);
 
-            //$payable = str_replace('.','',$payable);
-
-            $total_billing = $total_billing + (double)$payable;
-
-
-            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$r->chargeable_amount:0;
+            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
             $total_cod_val += $codval;
 
