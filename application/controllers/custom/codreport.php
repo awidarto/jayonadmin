@@ -400,7 +400,6 @@ class Codreport extends Application
                 }
             }
 
-            /*
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
@@ -424,7 +423,6 @@ class Codreport extends Application
 
                 }
             }
-            */
 
             //$total = str_replace(array(',','.'), '', $r->total_price);
             //$dsc = str_replace(array(',','.'), '', $r->total_discount);
