@@ -433,7 +433,6 @@ class Codreport extends Application
             $total_payable += $payable;
 
             $total_delivery += (int)str_replace('.','',$dc);
-            $total_cod += (int)str_replace('.','',$cod);
 
             //$codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
@@ -459,6 +458,7 @@ class Codreport extends Application
             }
 
             //$codval = $charge;
+            $total_cod_val += $codval;
 
 
             //
@@ -487,7 +487,7 @@ class Codreport extends Application
 
             }
 
-            $total_cod_val += $codval;
+            $total_cod += (int)str_replace('.','',$cod);
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
