@@ -460,13 +460,22 @@ class Codreport extends Application
 
             //$codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
-            if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
-                //$codval = ($total - $dsc) + $tax + $dc + $cod;
-            }else{
+            if($r->delivery_bearer == 'merchant'){
+                $dc = 0;
+            }
+
+            if($r->cod_bearer == 'merchant'){
                 $cod = 0;
             }
 
-            $codval = $charge;
+            if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
+                $codval = ($total - $dsc) + $tax + $dc + $cod;
+            }else{
+                $cod = 0;
+                $codval = 0;
+            }
+
+            //$codval = $charge;
 
             $total_cod_val += $codval;
 
