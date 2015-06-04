@@ -2741,12 +2741,12 @@ class Reports extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
-                'Package Value',
+                'Total Price',
                 'Disc',
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'COD Value',
+                'Total Charge',
                 'GMV'
             ); // Setting headings for the table
 
@@ -2773,7 +2773,7 @@ class Reports extends Application
                 }
             }
 
-
+            /*
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
@@ -2797,6 +2797,7 @@ class Reports extends Application
 
                 }
             }
+            */
 
             //$total = str_replace(array(',','.'), '', $r->total_price);
             //$dsc = str_replace(array(',','.'), '', $r->total_discount);
@@ -2833,7 +2834,14 @@ class Reports extends Application
             $total_cod += (int)str_replace('.','',$cod);
             //$total_billing += (int)str_replace('.','',$payable);
 
-            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
+            //$codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
+
+            if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
+                $codval = ($total - $dsc) + $tax + $dc + $cod;
+            }else{
+                //$cod = 0;
+                $codval = $dc;
+            }
 
             $total_cod_val += $codval;
 
