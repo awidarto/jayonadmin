@@ -2741,7 +2741,7 @@ class Reports extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
-                'Total Price',
+                'Package Value',
                 'Disc',
                 'Tax',
                 'Delivery Chg',
@@ -2833,14 +2833,7 @@ class Reports extends Application
             $total_cod += (int)str_replace('.','',$cod);
             //$total_billing += (int)str_replace('.','',$payable);
 
-            //$codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
-
-            if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
-                $codval = ($total - $dsc) + $tax + $dc + $cod;
-            }else{
-                //$cod = 0;
-                $codval = $dc;
-            }
+            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
 
             $total_cod_val += $codval;
 
