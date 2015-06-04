@@ -328,12 +328,12 @@ class Codreport extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
-                'Package Value',
+                'Total Price',
                 'Disc',
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'COD Value'
+                'Total Charges'
             ); // Setting headings for the table
 
             $xls[] = array(
@@ -347,12 +347,12 @@ class Codreport extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
-                'Package Value',
+                'Total Price',
                 'Disc',
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'COD Value'
+                'Total Charges'
             );
 
         }else{
@@ -367,12 +367,12 @@ class Codreport extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
-                'Package Value',
+                'Total Price',
                 'Disc',
                 'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'COD Value',
+                'Total Charges',
                 'GMV'
             ); // Setting headings for the table
 
@@ -400,7 +400,7 @@ class Codreport extends Application
                 }
             }
 
-
+            /*
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
@@ -424,7 +424,7 @@ class Codreport extends Application
 
                 }
             }
-
+            */
 
             //$total = str_replace(array(',','.'), '', $r->total_price);
             //$dsc = str_replace(array(',','.'), '', $r->total_discount);
@@ -460,26 +460,19 @@ class Codreport extends Application
             $total_delivery += (int)str_replace('.','',$dc);
             $total_cod += (int)str_replace('.','',$cod);
 
-            $codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
+            //$codval = ($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD')?$payable:0;
+
+            if($r->delivery_type == 'COD'|| $r->delivery_type == 'CCOD'){
+                $codval = ($gt - $dsc) + $tax + $dc + $cod;
+            //}else{
+                //$cod = 0;
+                //$codval = $dc;
+            }
 
             $total_cod_val += $codval;
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
-                /*
-                $this->table->add_row(
-                    $seq,
-                    date('d-m-Y',strtotime($r->assignment_date)),
-                    $this->short_did($r->delivery_id),
-                    $r->delivery_type,
-                    array('data'=>idr($dc),'class'=>'currency'),
-                    array('data'=>idr($cod),'class'=>'currency'),
-                    $r->buyer_name,
-                    $this->hide_trx($r->merchant_trans_id),
-                    $r->status
-                );
-                */
-
 
                 $this->table->add_row(
                     $seq,
