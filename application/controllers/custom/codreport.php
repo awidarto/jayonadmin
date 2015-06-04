@@ -468,7 +468,9 @@ class Codreport extends Application
                 $cod = 0;
             }
 
-            $total_cod_val += $charge;
+            $codval = $charge;
+
+            $total_cod_val += $codval;
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
