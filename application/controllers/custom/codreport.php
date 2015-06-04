@@ -460,7 +460,6 @@ class Codreport extends Application
 
             //$codval = $charge;
 
-            $total_cod_val += $codval;
 
             //
             if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
@@ -485,7 +484,10 @@ class Codreport extends Application
                 }catch(Exception $e){
 
                 }
+
             }
+
+            $total_cod_val += $codval;
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
