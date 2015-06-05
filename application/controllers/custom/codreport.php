@@ -1624,6 +1624,7 @@ class Codreport extends Application
 
                     if($cells[$i][$j] == '_table_'){
                         $splice_at = $i;
+                        $cells[$i][$j] = '';
                     }
                 }
             }
