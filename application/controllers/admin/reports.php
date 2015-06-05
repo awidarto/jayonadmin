@@ -3652,7 +3652,7 @@ class Reports extends Application
             }
 
 
-
+            $fcode = ($r->fulfillment_code == '')?'':'<hr />'.$r->fulfillment_code;
 
             if($pdf == 'print' || $pdf == 'pdf'){
 
@@ -3669,7 +3669,7 @@ class Reports extends Application
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $this->hide_trx($r->merchant_trans_id).($r->fulfillment_code == '')?'':'<hr />'.$r->fulfillment_code,
+                    $this->hide_trx($r->merchant_trans_id).$fcode,
                     '',
                     ''
                 );
@@ -3689,7 +3689,7 @@ class Reports extends Application
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
-                    $this->hide_trx($r->merchant_trans_id).($r->fulfillment_code == '')?'':'<hr />'.$r->fulfillment_code,
+                    $this->hide_trx($r->merchant_trans_id).$fcode,
                     '',
                     ''
                 );
