@@ -784,7 +784,7 @@ class Codreport extends Application
 
         $total_transfer = $total_cod_val - ($total_delivery + $total_cod);
 
-        $txd['_gmv'] = idr((double)$total_billing,false);
+        $txd['_gmv'] = idr((double)$total_cod_val,false);
         $txd['_total_delivery'] = idr($total_delivery + $total_cod,false);
         $txd['_total_do'] = idr($total_delivery,false);
         $txd['_total_cod'] = idr($total_cod,false);
