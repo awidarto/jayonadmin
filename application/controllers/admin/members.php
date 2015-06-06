@@ -1210,6 +1210,9 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_unlimited_time', 'Mobile Number', 'trim|xss_clean');
 
+        $this->form_validation->set_rules('delivery_bearer', 'Delivery Bearer', 'trim|xss_clean');
+        $this->form_validation->set_rules('cod_surcharge_bearer', 'COD Bearer', 'trim|xss_clean');
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
@@ -1257,6 +1260,10 @@ class Members extends Application
 			$mc_last_order = set_value('mc_last_order');
 			$mc_unlimited_time = set_value('mc_unlimited_time');
 
+            $delivery_bearer = set_value('delivery_bearer');
+            $cod_bearer = set_value('cod_surcharge_bearer');
+
+
 			$group_id = set_value('group_id');
 
 			$dataset = array(
@@ -1293,6 +1300,9 @@ class Members extends Application
 				'mc_first_order' => $mc_first_order,
 				'mc_last_order' => $mc_last_order,
 				'mc_unlimited_time' => $mc_unlimited_time,
+
+                'delivery_bearer'=>$delivery_bearer,
+                'cod_bearer'=>$cod_bearer,
 
 				'group_id'=>$group_id,
 				'created'=> date('Y-m-d h:i:s',time())
@@ -1378,6 +1388,9 @@ class Members extends Application
 		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_unlimited_time', 'Mobile Number', 'trim|xss_clean');
 
+        $this->form_validation->set_rules('delivery_bearer', 'Delivery Bearer', 'trim|xss_clean');
+        $this->form_validation->set_rules('cod_surcharge_bearer', 'COD Bearer', 'trim|xss_clean');
+
 		$user = $this->get_user($id);
 		$data['user'] = $user;
 
@@ -1428,6 +1441,9 @@ class Members extends Application
             $dataset['mc_toscan'] = set_value('mc_toscan');
             $dataset['mc_pickup_time'] = set_value('mc_pickup_time');
             $dataset['mc_pickup_cutoff'] = set_value('mc_pickup_cutoff');
+
+            $dataset['delivery_bearer'] = set_value('delivery_bearer');
+            $dataset['cod_bearer'] = set_value('cod_surcharge_bearer');
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)

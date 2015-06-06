@@ -101,6 +101,20 @@
             Pick Up Cut Off Time:<br />
             <input type="text" name="mc_pickup_cutoff" size="50" class="form" value="<?php echo set_value('mc_pickup_cutoff',$user['mc_pickup_cutoff']); ?>" /><?php echo form_error('mc_pickup_cutoff'); ?><br /><br />
 
+            <table>
+                <tr>
+                    <td>
+                        Cost Bearer<hr />
+                        <label for"delivery_bearer">Delivery Fee :</label><br />
+                            <?php print form_checkbox(array('name'=>'delivery_bearer','id'=>'delivery_bearer','value'=>'buyer','checked'=>($user['delivery_bearer'] == 'buyer')?TRUE:FALSE ));?> Bill buyer / tagihkan ke buyer
+                        <br />
+                        <label for="cod_surcharge_bearer">COD / CCOD Surcharges:</label><br />
+                            <?php print form_checkbox(array('name'=>'cod_surcharge_bearer','id'=>'cod_surcharge_bearer','value'=>'buyer','checked'=>($user['cod_bearer'] == 'buyer')?TRUE:FALSE ));?> Bill buyer / tagihkan ke buyer
+                    </td>
+                </tr>
+            </table>
+
+
 			<?php print form_fieldset_close(); ?>
 
 			<input type="submit" value="Update" name="register" />
