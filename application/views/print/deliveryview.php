@@ -209,6 +209,10 @@
             height:auto;
         }
 
+        .red{
+            color: red;
+        }
+
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
