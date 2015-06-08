@@ -639,22 +639,6 @@ class Prints extends Application
                     );
 
 
-                $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
-
-                $this->table->add_row(
-                    array('data'=>$paidby,
-                        'colspan'=>2,
-                        'class'=>'lsums'
-                        ),
-                    array('data'=>'Delivery Charge',
-                        'class'=>'lsums'.$cclass
-                        ),
-                    array('data'=>number_format($dc,2,',','.'),
-                        'class'=>'editable'.$cclass,
-                        'id'=>'delivery_cost'
-                    )
-                );
-
                 $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
 
 				$this->table->add_row(
@@ -664,7 +648,6 @@ class Prints extends Application
                         ),
 					'Delivery Charge',
 					array('data'=>number_format($dc,2,',','.'),
-						'class'=>'editable',
 						'id'=>'delivery_cost'
 					)
 				);
