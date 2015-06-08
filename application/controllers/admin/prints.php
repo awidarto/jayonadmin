@@ -586,7 +586,11 @@ class Prints extends Application
                 $gt = $total;
             }
 
+            $dcd = $dc;
+            $codc = $cod;
+
             if($data['main_info']['delivery_bearer'] == 'merchant'){
+
                 $dc = 0;
             }
 
@@ -638,19 +642,28 @@ class Prints extends Application
                     'buyer'=>'pembeli'
                     );
 
+                $cclass = '';
 
-                $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
+                $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
+
+                $cclass = ($data['main_info']['delivery_bearer'] == 'merchant')?'red':'';
+
 
 				$this->table->add_row(
                     array('data'=>$paidby,
                         'colspan'=>2,
-                        'class'=>'lsums'
+                        'class'=>'lsums '
                         ),
 					'Delivery Charge',
-					array('data'=>number_format($dc,2,',','.'),
+					array('data'=>number_format($dcd,2,',','.'),
+                        'class'=>$cclass,
 						'id'=>'delivery_cost'
 					)
 				);
+
+                $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
+
+                $cclass = ($data['main_info']['cod_bearer'] == 'merchant')?'red':'';
 
 				$this->table->add_row(
                     array('data'=>$paidby,
@@ -658,8 +671,8 @@ class Prints extends Application
                         'class'=>'lsums'
                         ),
 					'COD Surcharge',
-					array('data'=>number_format($cod,2,',','.'),
-						'class'=>'editable',
+					array('data'=>number_format($codc,2,',','.'),
+						'class'=>$cclass,
 						'id'=>'cod_cost'
 					)
 				);
@@ -667,7 +680,7 @@ class Prints extends Application
 				$this->table->add_row(
 					'&nbsp;',
 					'&nbsp;',
-					'Total Charges',
+					'Total Charges (to Buyer)',
 					array('data'=>number_format($chg,2,',','.'),
 						'id'=>'total_charges',
                         'class'=>'bigtype'
