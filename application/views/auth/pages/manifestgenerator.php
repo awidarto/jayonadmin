@@ -210,6 +210,13 @@ td.cod{
     font-weight: bold;
 }
 
+td span.dupe{
+    font-weight: bolder;
+    background-color: transparent;
+    color: black;
+    font-size: 13px;
+}
+
 </style>
 
 <?php

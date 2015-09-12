@@ -601,6 +601,13 @@
 </div>
 <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
 
+<div class="button_nav">
+    <span class="button check similar_email">Mark Same Email</span>
+    <span class="button check unmark_similar_email">Remove Email Mark</span>
+    <span class="button check similar_phone">Mark Same Phone</span>
+    <span class="button check unmark_similar_phone">Remove Phone Mark</span>
+</div>
+
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>

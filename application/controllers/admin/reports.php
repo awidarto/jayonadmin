@@ -3351,7 +3351,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,fulfillment_code,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount')
+        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,fulfillment_code,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount,same_phone,same_email')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3654,6 +3654,9 @@ class Reports extends Application
 
             $fcode = ($r->fulfillment_code == '')?'':'<hr />'.$r->fulfillment_code;
 
+            $phone_dupe = ($r->same_phone == 1)?'class="dupe"':'';
+            $email_dupe = ($r->same_email == 1)?'class="dupe"':'';
+
             if($pdf == 'print' || $pdf == 'pdf'){
 
                 $this->table->add_row(
@@ -3668,7 +3671,7 @@ class Reports extends Application
                     array('data'=>( $cod == 0 )?0:idr($cod),'class'=>'currency '.$codclass,'style'=>'position:relative;'),
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
-                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
                     '',
                     ''
@@ -3688,7 +3691,7 @@ class Reports extends Application
                     array('data'=>( $cod == 0 )?0:idr($cod).'<span class="bearer">'.$cb.'</span>','class'=>'currency '.$codclass,'style'=>'position:relative;'),
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
-                    $this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2),
+                    '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
 
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
                     '',

@@ -61,3 +61,99 @@
                 alert('Please select one or more delivery orders');
             }
         });
+
+        $('.similar_email').on('click',function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post( '<?php print site_url('ajax/mark');?>',{
+                    ids:assigns,
+                    action:'mark_email'
+                },function(data){
+                    if(data.status == 'OK'){
+                        oTable.fnDraw();
+                    }
+                },'json');
+
+                console.log(assigns);
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+        $('.unmark_similar_email').on('click',function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post( '<?php print site_url('ajax/unmark');?>',{
+                    ids:assigns,
+                    action:'unmark_email'
+                },function(data){
+                    if(data.status == 'OK'){
+                        oTable.fnDraw();
+                    }
+                },'json');
+
+                console.log(assigns);
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+        $('.similar_phone').on('click',function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post( '<?php print site_url('ajax/mark');?>',{
+                    ids:assigns,
+                    action:'mark_phone'
+                },function(data){
+                    if(data.status == 'OK'){
+                        oTable.fnDraw();
+                    }
+                },'json');
+
+                console.log(assigns);
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+        $('.unmark_similar_phone').on('click',function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post( '<?php print site_url('ajax/unmark');?>',{
+                    ids:assigns,
+                    action:'unmark_phone'
+                },function(data){
+                    if(data.status == 'OK'){
+                        oTable.fnDraw();
+                    }
+                },'json');
+
+                console.log(assigns);
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });

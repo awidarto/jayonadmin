@@ -66,6 +66,7 @@ button {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+    cursor: pointer;
 }
 
 .add {
@@ -286,4 +287,11 @@ img.sign{
 span.textred{
     color: red;
     font-weight: bold;
+}
+
+.dupe{
+    color: white;
+    font-weight: bolder;
+    padding: 4px 6px;
+    background-color: maroon;
 }

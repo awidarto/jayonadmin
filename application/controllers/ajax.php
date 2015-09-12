@@ -12,6 +12,48 @@ class Ajax extends Application
 
 	}
 
+    public function mark(){
+        $ids = $this->input->post('ids');
+        $action = $this->input->post('action');
+
+        if($action == 'mark_email'){
+            $dataset = array('same_email'=>1);
+        }else{
+            $dataset = array('same_phone'=>1);
+        }
+
+
+        if($this->db->where_in('delivery_id', $ids)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK','timestamp'=>now()));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NODUPE','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
+    public function unmark(){
+        $ids = $this->input->post('ids');
+        $action = $this->input->post('action');
+
+        if($action == 'mark_email'){
+            $dataset = array('same_email'=>0);
+        }else{
+            $dataset = array('same_phone'=>0);
+        }
+
+
+        if($this->db->where_in('delivery_id', $ids)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK','timestamp'=>now()));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NODUPE','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
     public function printsession(){
         $ids = $this->input->post('ids');
         $sess = mt_rand( 1000, 9999 );

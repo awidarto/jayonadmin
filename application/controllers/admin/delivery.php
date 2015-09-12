@@ -330,7 +330,6 @@ class Delivery extends Application
 
 		$result = $data->result_array();
 
-
 		$aadata = array();
 
 		$num = $limit_offset;
@@ -409,7 +408,8 @@ class Delivery extends Application
                 $pusign = '';
             }
             */
-
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
             $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';
@@ -455,7 +455,7 @@ class Delivery extends Application
 				//$app['domain'],
 				$key['buyer_name'],
                 $key['shipping_zip'],
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
                 get_weight_range($key['weight'],$key['application_id'])
 				//$key['reschedule_ref'],
@@ -766,6 +766,8 @@ class Delivery extends Application
             }else{
                 $picture = '';
             }
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
@@ -793,7 +795,7 @@ class Delivery extends Application
                 $picture,
                 $key['shipping_address'],
                 $key['directions'],
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 colorizestatus($key['status']),
                 $reference,
                 $reschedule.'<br />'.$changestatus,
@@ -1183,6 +1185,8 @@ class Delivery extends Application
             }else{
                 $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
             }
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
@@ -1255,7 +1259,7 @@ class Delivery extends Application
                 //$app['domain'],
                 $key['buyer_name'],
                 $key['shipping_zip'],
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $reference
                 //$key['reschedule_ref'],
                 //$key['revoke_ref'],
@@ -1534,7 +1538,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['directions'],
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']),
 				$reference,
 				$reschedule.'<br />'.$changestatus,
@@ -1912,6 +1916,8 @@ class Delivery extends Application
             }else{
                 $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
             }
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
@@ -1985,7 +1991,7 @@ class Delivery extends Application
                 //$app['domain'],
                 $key['buyer_name'],
                 $key['shipping_zip'],
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $reference
                 //$key['reschedule_ref'],
                 //$key['revoke_ref'],
@@ -2253,7 +2259,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['shipping_address'].'<br />'.$locpicker,
 				$key['directions'],
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				$reference,
 				($key['status'] == 'canceled')?$purge.'<br />'.$viewlog:$reschedule,
@@ -2558,7 +2564,11 @@ class Delivery extends Application
 
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat',$key['id']).' '.colorizelatlon($lat,$lon,'lon',$key['id']).'</span>';
 
-            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check  '.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).' '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            //$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check  '.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).' '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"');
+
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
 			$aadata[] = array(
 				$num,
@@ -2566,7 +2576,7 @@ class Delivery extends Application
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
 				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
                 //$delivery_check,
-				'<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                '<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.$delivery_check.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
 				//$app['application_name'],
 				//$app['domain'],
@@ -2578,7 +2588,7 @@ class Delivery extends Application
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'].'<br />'.$locpicker,
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -3714,10 +3724,13 @@ class Delivery extends Application
             $style = 'style="cursor:pointer;padding:2px;display:block;"';
             $class = ($lat == 'Set Loc')?' red':'';
 
-            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            //$delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"');
 
             //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat',$key['id']).' '.colorizelatlon($lat,$lon,'lon',$key['id']).'</span>';
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
 
 			$aadata[] = array(
@@ -3727,7 +3740,7 @@ class Delivery extends Application
 				get_slot_range($key['assignment_timeslot']),
 				//$key['delivery_id'],
                 //$delivery_check,
-				'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				$delivery_check.'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
 				$key['buyerdeliveryzone'],
 				(isset($app['application_name']))?$app['application_name']:'',
@@ -3740,7 +3753,7 @@ class Delivery extends Application
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'].'<br />'.$locpicker,
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -3949,6 +3962,8 @@ class Delivery extends Application
 			$datefield = ($bardate == $key['assignment_date'])?'':$datecheck;
 
 			$devicefield = ($bardate == $key['assignment_date'] && $bardev == $key['device_id'])?'':$devicecheck;
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
 
 			$aadata[] = array(
@@ -3962,7 +3977,7 @@ class Delivery extends Application
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
 				$key['shipping_address'],
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']).'<br />'.$pick_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -4208,8 +4223,6 @@ class Delivery extends Application
 
         $lastquery = $this->db->last_query();
 
-
-
 		$result = $data->result_array();
 
 		$aadata = array();
@@ -4221,8 +4234,6 @@ class Delivery extends Application
 		$barzone = '';
 
 		$num = $limit_offset;
-
-
 
 		foreach($result as $value => $key)
 		{
@@ -4266,6 +4277,8 @@ class Delivery extends Application
             if($key['status'] == 'pending'){
                 $thumbstat .= '<br />'.$thumbnail;
             }
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
             $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check '.$key['device_id'].' '.str_replace(' ', '-', $key['buyerdeliveryzone'] ).' "').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
@@ -4291,7 +4304,7 @@ class Delivery extends Application
                 $key['buyer_name'],
                 $key['recipient_name'],
                 $key['shipping_address'].'<br />'.$direction,
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $delivery_check,
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
@@ -4464,6 +4477,8 @@ class Delivery extends Application
                 revoke_ref,
                 latitude,
                 longitude,
+                same_email,
+                same_phone,
                 '.$mtab.'.merchant_id';
 
 		$this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -4649,6 +4664,9 @@ class Delivery extends Application
 
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
+
             $pick_stat = colorizestatus($key['pickup_status']);
             $wh_stat = colorizestatus($key['warehouse_status']);
 
@@ -4669,7 +4687,7 @@ class Delivery extends Application
                 $key['buyer_name'],
                 $key['recipient_name'],
                 $key['shipping_address'].'<br />'.$direction,
-                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $thumbnail,
                 $key['delivery_note'],
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
@@ -4893,7 +4911,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
@@ -5079,7 +5097,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
 				$key['delivery_note'],
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']),
 				$printslip.' '.$proceed.' '.$cancel.' '.$viewlog.' '.$changestatus
 				//$key['reschedule_ref'],
@@ -5281,6 +5299,8 @@ class Delivery extends Application
 
             //$locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.$lat.' '.$lon.'</span>';
             $locpicker = '<span id="'.$key['id'].'" '.$style.' class="locpick'.$class.'">'.colorizelatlon($lat,$lon,'lat').' '.colorizelatlon($lat,$lon,'lon').'</span>';
+            $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
+            $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
 			$aadata[] = array(
 				$num,
@@ -5297,7 +5317,7 @@ class Delivery extends Application
 				$key['courier'],
 				$key['shipping_address'].'<br />'.$locpicker,
 				get_thumbnail($key['delivery_id']),
-				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
 				colorizestatus($key['status']),
 				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],
@@ -6422,6 +6442,17 @@ class Delivery extends Application
                 'Content-Type: text/csv'
             );
         return Response::download($dlfile, $filename, $headers );
+    }
+
+    public function getdupes($field, $date, $scope ){
+        $dupes = $this->db->select($field.', count(*) as count')
+            ->from($this->config->item('incoming_delivery_table'))
+            ->like($scope,$date,'after')
+            ->group_by($field)
+            ->get()
+            ->result_array();
+
+        return $dupes;
     }
 
 

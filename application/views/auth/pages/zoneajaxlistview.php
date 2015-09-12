@@ -205,7 +205,13 @@
 					assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong> <br /> '+ zone +'</li>';
 				});
 
-				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: date_assign,assignment_zone: $('#assign_deliveryzone').val(),assignment_city: city_assign }, function(data) {
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',
+                    {
+                        assignment_date: date_assign,
+                        assignment_zone: $('#assign_deliveryzone').val(),
+                        assignment_city: city_assign
+                    },
+                 function(data) {
 					$('#dev_list').html(data.html);
 				},'json');
 
@@ -361,6 +367,12 @@
 	</div>
 <?php endif;?>
 <?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
+<div class="button_nav">
+    <span class="button check similar_email">Mark Same Email</span>
+    <span class="button check unmark_similar_email">Remove Email Mark</span>
+    <span class="button check similar_phone">Mark Same Phone</span>
+    <span class="button check unmark_similar_phone">Remove Phone Mark</span>
+</div>
 
 <?php echo $this->table->generate(); ?>
 
