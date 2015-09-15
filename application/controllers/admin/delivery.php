@@ -51,6 +51,7 @@ class Delivery extends Application
             'ZIP',
             'Phone',
             'W x H x L = V',
+            'Box Count',
             'Weight Range'
             ); // Setting headings for the table
 
@@ -83,6 +84,7 @@ class Delivery extends Application
             '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
 
             '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '',
             '',
             ''
             );
@@ -457,6 +459,7 @@ class Delivery extends Application
                 $key['shipping_zip'],
 				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+                $key['box_count'],
                 get_weight_range($key['weight'],$key['application_id'])
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -4316,6 +4319,7 @@ class Delivery extends Application
                 $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD' || $key['delivery_type'] == 'CCOD')?$key['cod_cost']:'',
+                $key['box_count'],
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
                 (double)$key['width']*(double)$key['height']*(double)$key['length'],
                 get_weight_range($key['weight'],$key['application_id'])
@@ -4372,6 +4376,7 @@ class Delivery extends Application
             'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
+            'Box Count',
             'W x H x L',
             'Volume',
             'Weight Range'
@@ -4401,6 +4406,7 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
             '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
+            '',
             '',
             ''
 			);
