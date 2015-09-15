@@ -3470,14 +3470,13 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                'Delivery ID Date',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
-                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>14),
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
                 /*
                 '',
                 '',
@@ -3512,14 +3511,12 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
-                'Delivery ID Date',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
-                '',
                 '',
                 '',
                 '',
@@ -3675,11 +3672,11 @@ class Reports extends Application
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
-                    array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
-                    $this->date_did($r->delivery_id),
+                    array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode.'<br/>'.$this->date_did($r->delivery_id),'class'=>'currency cod'),
                     '',
                     ''
                 );
+
 
 
             }else{
@@ -3697,8 +3694,7 @@ class Reports extends Application
                     $r->shipping_address,
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
 
-                    array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
-                    $this->date_did($r->delivery_id),
+                    array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode.'<br/>'.$this->date_did($r->delivery_id),'class'=>'currency cod'),
                     '',
                     ''
                 );
