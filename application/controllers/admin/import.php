@@ -8,6 +8,7 @@ class Import extends Application
         'buyerdeliverycity'=>'',
         'buyerdeliveryslot'=>1,
         'buyerdeliverytime'=>1,
+        'box_count'=>1,
         'assigntime'=>'',
         'timeslot'=>1,
         'assignment_zone'=>'',
@@ -890,7 +891,7 @@ class Import extends Application
                 }
 
                 $order['is_import'] = 1;
-                print_r($order);
+                //print_r($order);
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
                 $sequence = $this->db->insert_id();
@@ -907,6 +908,14 @@ class Import extends Application
                 }else{
                     $delivery_id = get_delivery_id($sequence,$app->merchant_id);
                 }
+
+                if(isset($in->box_count)){
+                    $box_count = $in->box_count;
+                }else{
+                    $box_count = 1;
+                }
+
+                save_box($delivery_id, trim($transaction_id), $order['fulfillment_code'],$box_count);
 
                 $nedata['fullname'] = $in->buyer_name;
                 $nedata['merchant_trx_id'] = trim($transaction_id);
@@ -1145,7 +1154,6 @@ class Import extends Application
             return 0;
         }
     }
-
 
     private function save_buyer($ds){
 

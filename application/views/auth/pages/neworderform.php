@@ -380,18 +380,34 @@
             if($('#delivery_type').val() == 'COD'){
                 $('#sub_cod').show();
                 $('#sub_ccod').hide();
+                if($('#sub_cod').val() == 'debit'){
+                    $('#sub_provider').show();
+                }else{
+                    $('#sub_provider').hide();
+                }
 
             }else if($('#delivery_type').val() == 'CCOD'){
                 $('#sub_cod').hide();
                 $('#sub_ccod').show();
+                $('#sub_provider').show();
             }else{
                 $('#sub_cod').hide();
                 $('#sub_ccod').hide();
+                $('#sub_provider').hide();
             }
 
 
             getweightandcod();
         });
+
+        $('#sub_cod').on('change',function(){
+            if($('#sub_cod').val() == 'debit'){
+                $('#sub_provider').show();
+            }else{
+                $('#sub_provider').hide();
+            }
+        });
+
 
         $('#buyerdeliverydate').datepicker({
             numberOfMonths: 2,
@@ -879,6 +895,7 @@
             pdata.height = $('#package_height').val();
             pdata.length = $('#package_length').val();
             pdata.weight = $('#package_weight').val();
+            pdata.box_count = $('#box_count').val();
 
             pdata.show_shop = ($('#show_shop').is(':checked'))?1:0;
             pdata.show_merchant = ($('#show_merchant').is(':checked'))?1:0;
@@ -898,6 +915,9 @@
 
             pdata.cod_method = $('#sub_cod').val();
             pdata.ccod_method = $('#sub_ccod').val();
+            pdata.payment_provider = $('#sub_provider').val();
+
+            pdata.fulfillment_code = $('#fulfillment_code').val();
 
             var udescs = [];
             var uqtys = [];
@@ -1347,6 +1367,12 @@
                                     <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" /> <span class="fine">( No. Invoice / AWB / dll )</span>
                                 </td>
                             </tr>
+                            <tr class="buyer_info">
+                                <td class="row_label" id="merchant_id_label">Fulfillment ID<hr /><span class="fine">Kode Fulfillment</span></td>
+                                <td>
+                                    <input type="text" id="fulfillment_code" name="fulfillment_code" value="" />
+                                </td>
+                            </tr>
 
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
@@ -1359,6 +1385,10 @@
                                     <select name="sub_ccod" id="sub_ccod" style="display:none">
                                         <option value="full">Pembayaran Penuh</option>
                                         <option value="installment">Cicilan</option>
+                                    </select>
+                                    <select name="sub_provider" id="sub_provider" style="display:none">
+                                        <option value="BCA">BCA</option>
+                                        <option value="Mandiri">Bank Mandiri</option>
                                     </select>
                                 </td>
                             </tr>
@@ -1413,6 +1443,12 @@
                                 <td>
                                     <input type="text" id="phone" name="phone" value="" /> **<br />
                                     ** autocomplete
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Box Count<hr /><span class="fine">Jumlah Box</span></td>
+                                <td>
+                                    <input type="text" id="box_count" class="short" name="box_count" value="1" />
                                 </td>
                             </tr>
                             <tr>

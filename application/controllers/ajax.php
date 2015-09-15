@@ -736,7 +736,9 @@ class Ajax extends Application
 			'cod_bearer' => $this->input->post('bearer_cod'),
 			'delivery_bearer' => $this->input->post('bearer_delivery'),
 			'cod_method' => $this->input->post('cod_method'),
-			'ccod_method' => $this->input->post('ccod_method')
+			'ccod_method' => $this->input->post('ccod_method'),
+            'payment_provider' => $this->input->post('payment_provider'),
+            'box_count' => $this->input->post('box_count')
 		);
 
         if($trx['merchant_trans_id'] == '' || $trx['merchant_trans_id'] == '-'){
@@ -1152,6 +1154,18 @@ class Ajax extends Application
                 $order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
                 $order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
+                $order['payment_provider'] = (isset($in->payment_provider))?$in->payment_provider:'na';
+
+                $order['fulfillment_code'] = (isset($in->fulfillment_code))?$in->fulfillment_code:'na';
+
+                if(isset($in->box_count)){
+                    $box_count = $in->box_count;
+                }else{
+                    $box_count = 1;
+                }
+
+                $order['box_count'] = $box_count;
+
                 if(isset($in->show_shop)){
                     $order['show_shop'] = $in->show_shop;
                 }
@@ -1176,6 +1190,14 @@ class Ajax extends Application
                 }else{
                     $delivery_id = get_delivery_id($sequence,$app->merchant_id);
                 }
+
+                if(isset($in->box_count)){
+                    $box_count = $in->box_count;
+                }else{
+                    $box_count = 1;
+                }
+
+                save_box($delivery_id, trim($transaction_id), $order['fulfillment_code'],$box_count);
 
 
                 $nedata['fullname'] = $in->buyer_name;

@@ -1,5 +1,40 @@
 <?php
 
+function save_box($delivery_id, $merchant_trans_id, $fulfillment_code,$count){
+    $CI =& get_instance();
+
+    $CI->db
+        ->where('delivery_id',$delivery_id)
+        ->where('merchant_trans_id',$merchant_trans_id)
+        ->where('fulfillment_code',$fulfillment_code)
+        ->delete('box_list');
+
+    $bd = array(
+            'delivery_id'=>$delivery_id,
+            'merchant_trans_id'=>$merchant_trans_id,
+            'fulfillment_code'=>$fulfillment_code,
+            'box_id'=>1
+        );
+
+    $bds = array(
+            'delivery_id'=>$delivery_id,
+            'merchant_trans_id'=>$merchant_trans_id,
+            'fulfillment_code'=>$fulfillment_code,
+            'box_id'=>1,
+            'timestamp'=>date('Y-m-d H:i:s',time())
+        );
+
+    for($i = 0; $i < $count;$i++){
+        $CI->db->insert('box_list',$bd);
+        $CI->db->insert('box_status',$bds);
+
+        $bd['box_id'] = $i + 1;
+        $bds['box_id'] = $i + 1;
+    }
+
+}
+
+
 function iddate($date,$withyear = true){
     $idmonth = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
 
