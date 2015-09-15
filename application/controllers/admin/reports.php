@@ -3470,13 +3470,14 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
+                'Delivery ID Date',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
-                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>14),
                 /*
                 '',
                 '',
@@ -3511,12 +3512,14 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
+                'Delivery ID Date',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
+                '',
                 '',
                 '',
                 '',
@@ -3673,6 +3676,7 @@ class Reports extends Application
                     $r->shipping_address,
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
+                    $this->date_did($r->delivery_id),
                     '',
                     ''
                 );
@@ -3694,6 +3698,7 @@ class Reports extends Application
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
 
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode,'class'=>'currency cod'),
+                    $this->date_did($r->delivery_id),
                     '',
                     ''
                 );
@@ -7913,6 +7918,12 @@ class Reports extends Application
     public function short_did($did){
         $did = explode('-',$did);
         return array_pop($did);
+    }
+
+    public function date_did($did){
+        $did = explode('-',$did);
+        $date_did = $did[1].'-'.$did[2];
+        return $date_did;
     }
 
     public function split_phone($phone){
