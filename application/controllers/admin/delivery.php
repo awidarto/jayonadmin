@@ -137,6 +137,7 @@ class Delivery extends Application
 			'zip',
 			'delivery_id',
 			'merchant_trans_id',
+            'fulfillment_code',
 			'app_name',
 			'merchant',
 			'buyer',
@@ -1406,6 +1407,7 @@ class Delivery extends Application
             'zip',
             'delivery_id',
             'merchant_trans_id',
+            'fulfillment_code',
             'app_name',
             'merchant',
             'buyer',
@@ -1770,6 +1772,7 @@ class Delivery extends Application
 			'buyer',
 			'merchant',
 			'merchant_trans_id',
+            'fulfillment_code',
 			'shipping_address',
 			'phone',
 			'status',
@@ -2929,6 +2932,7 @@ class Delivery extends Application
 			'buyer',
 			'merchant',
 			'merchant_trans_id',
+            'fulfillment_code',
 			'shipping_address',
 			'phone',
 			'status',
@@ -3445,7 +3449,8 @@ class Delivery extends Application
 			'',
 			'status',
 			'merchant_id',
-			'merchant_trans_id'
+			'merchant_trans_id',
+            'fulfillment_code'
 			);
 
 		// get total count result
