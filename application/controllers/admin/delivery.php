@@ -3075,7 +3075,7 @@ class Delivery extends Application
 			->order_by('device_id','asc');
 
 
-        if($coluns[$sort_col] == 'status'){
+        if($columns[$sort_col] == 'status'){
             $this->db->order_by('status',$sort_dir)
                 ->order_by('warehouse_status',$sort_dir)
                 ->order_by('pickup_status',$sort_dir);
