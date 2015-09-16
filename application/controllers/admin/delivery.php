@@ -2929,12 +2929,17 @@ class Delivery extends Application
 			'buyerdeliverycity',
 			'buyerdeliveryzone',
 			'app_name',
+            'delivery_type',
 			'buyer',
+            '',
+            '',
 			'merchant',
 			'merchant_trans_id',
             'fulfillment_code',
 			'shipping_address',
-			'phone',
+			'',
+            '',
+            'phone',
 			'status',
 			);
 
@@ -3064,12 +3069,21 @@ class Delivery extends Application
 		$this->db->group_start()
 			->where('status',$this->config->item('trans_status_admin_devassigned'))
 			->group_end();
-		$data = $this->db
+		$this->db
 			->limit($limit_count, $limit_offset)
 			->order_by('assignment_date','desc')
-			->order_by('device_id','asc')
-			->order_by($columns[$sort_col],$sort_dir)
-			->get($this->config->item('assigned_delivery_table'));
+			->order_by('device_id','asc');
+
+
+        if($coluns[$sort_col] == 'status'){
+            $this->db->order_by('status',$sort_dir)
+                ->order_by('warehouse_status',$sort_dir)
+                ->order_by('pickup_status',$sort_dir);
+        }else{
+            $this->db->order_by($columns[$sort_col],$sort_dir);
+        }
+
+		$data = $this->db->get($this->config->item('assigned_delivery_table'));
 
 		//print $this->db->last_query();
 
