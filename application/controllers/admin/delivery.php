@@ -5221,8 +5221,9 @@ class Delivery extends Application
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                     $incr = true;
-                    $dataset['delivery_note'] = $req_note;
+                    //$dataset['delivery_note'] = $req_note;
                 }
+                    $dataset['delivery_note'] = $req_note;
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                     $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
@@ -5278,8 +5279,8 @@ class Delivery extends Application
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
-                $dataset['delivery_note'] = $req_note;
             }
+                $dataset['delivery_note'] = $req_note;
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                 $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
