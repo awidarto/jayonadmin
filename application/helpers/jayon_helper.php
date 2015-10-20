@@ -1412,7 +1412,12 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 
 function colorizestatus($status, $prefix = '', $suffix = ''){
 
-	$colors = config_item('status_colors');
+    $CI =& get_instance();
+
+	$colors = array_merge($CI->config->item('status_colors'), $CI->config->item('courier_status_changes'));
+
+    //$colors = $CI->config->item('status_colors');
+
 	if($status == '' || !in_array($status, array_keys($colors))){
 		$class = 'brown';
 		$status = 'N/A';

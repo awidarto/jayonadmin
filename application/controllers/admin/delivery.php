@@ -428,6 +428,7 @@ class Delivery extends Application
             //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
                 $wh_stat = colorizestatus($key['warehouse_status']);
+                $cr_stat = colorizestatus($key['courier_status']);
             //}else{
             //    $pick_stat = '';
             //}
@@ -456,7 +457,7 @@ class Delivery extends Application
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
                 $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
-                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
                 $direction,
                 '<img class="sign" src="'.$sign['sign'].'" />',
 				//(double)$key['width']*(double)$key['height']*(double)$key['length'],
@@ -1694,6 +1695,7 @@ class Delivery extends Application
             //if($key['toscan'] == 1){
                 $pick_stat = colorizestatus($key['pickup_status']);
                 $wh_stat = colorizestatus($key['warehouse_status']);
+                $cr_stat = colorizestatus($key['courier_status']);
 
             //}else{
             //    $pick_stat = '';
@@ -1719,7 +1721,7 @@ class Delivery extends Application
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
                 $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
-                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
                 $direction,
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
                 //(double)$key['width']*(double)$key['height']*(double)$key['length'],
@@ -1935,6 +1937,7 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
             $wh_stat = colorizestatus($key['warehouse_status']);
+                $cr_stat = colorizestatus($key['courier_status']);
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
@@ -1974,7 +1977,7 @@ class Delivery extends Application
                 $key['fulfillment_code'],
 				$key['shipping_address'].'<br />'.$locpicker,
 				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
-				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] == 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -3124,6 +3127,7 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
             $wh_stat = colorizestatus($key['warehouse_status']);
+            $cr_stat = colorizestatus($key['courier_status']);
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
@@ -3162,7 +3166,7 @@ class Delivery extends Application
                 $key['fulfillment_code'],
 				$key['shipping_address'].'<br />'.$locpicker,
 				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
-				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				$reassign.'<br />'.$changestatus.'<br />'.$viewlog //$printslip.' '.$edit.' '.$delete
@@ -3695,6 +3699,7 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
                 $wh_stat = colorizestatus($key['warehouse_status']);
+                $cr_stat = colorizestatus($key['courier_status']);
 
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
@@ -3718,7 +3723,7 @@ class Delivery extends Application
                 '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $delivery_check,
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-				$thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
+				$thumbstat.'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
                 $notes,
@@ -3876,6 +3881,7 @@ class Delivery extends Application
                 status,
                 pickup_status,
                 warehouse_status,
+                courier_status,
                 device_id,
                 deliverytime,
                 chargeable_amount,
@@ -4083,6 +4089,7 @@ class Delivery extends Application
 
             $pick_stat = colorizestatus($key['pickup_status']);
             $wh_stat = colorizestatus($key['warehouse_status']);
+            $cr_stat = colorizestatus($key['courier_status']);
 
             $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
             $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
@@ -4104,7 +4111,7 @@ class Delivery extends Application
                 '<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $thumbnail,
                 $key['delivery_note'],
-                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
                 $notes,
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),

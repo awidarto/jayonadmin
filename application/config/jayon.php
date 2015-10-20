@@ -119,6 +119,18 @@ $config['status_list'] = array(
     'returned'=>'Returned'
 );
 
+//$config['courier_status'] = array(
+    $config['trans_cr_atmerchant'] = 'di merchant';
+    $config['trans_cr_inwh'] = 'di gudang';
+    $config['trans_cr_offcr'] = 'belum di kurir';
+    $config['trans_cr_oncr'] = 'di kurir';
+    $config['trans_cr_oncr_partial'] = 'di kurir sebagian';
+    $config['trans_cr_return2wh'] = 'kembali ke gudang';
+    $config['trans_cr_return2merchant'] = 'kembali ke lokasi awal';
+    $config['trans_cr_canceled'] = 'batal';
+//);
+
+
 /* status colors */
 
 $config['status_colors'] = array(
@@ -198,6 +210,19 @@ $config['warehouse_status_changes'] = array(
     $config['trans_status_ds2wh'] => 'brown',
     $config['trans_status_return2merchant'] => 'red'
 );
+
+$config['courier_status_changes'] = array(
+
+    $config['trans_cr_atmerchant'] => 'maroon',
+    $config['trans_cr_inwh'] => 'brown',
+    $config['trans_cr_offcr'] => 'red',
+    $config['trans_cr_oncr'] => 'green',
+    $config['trans_cr_oncr_partial'] => 'green',
+    $config['trans_cr_return2wh'] => 'brown',
+    $config['trans_cr_return2merchant'] => 'maroon',
+    $config['trans_cr_canceled'] => 'red'
+);
+
 
 $config['max_lat'] = -6.288176;
 $config['min_lat'] = -6.286224;
