@@ -152,6 +152,14 @@
         $('#download-csv').on('click',function(){
             var flt = $('tfoot td input, tfoot td select');
             var dlfilter = [];
+            var currentpage = Math.ceil(oTable.fnSettings()._iDisplayStart / oTable.fnSettings()._iDisplayLength) + 1;
+            var perpage = oTable.fnSettings()._iDisplayLength;
+            var totalpage = Math.ceil(oTable.fnSettings().fnRecordsTotal() / perpage);
+
+            console.log(currentpage);
+            console.log(perpage);
+            console.log(totalpage);
+
 
             flt.each(function(){
                 var name = this.name;
@@ -167,7 +175,10 @@
                 {
                     datafilter : dlfilter,
                     sort : sort[0],
-                    sortdir : sort[1]
+                    sortdir : sort[1],
+                    currentpage : currentpage,
+                    perpage : perpage,
+                    totalpage : totalpage
                 },
                 function(data) {
                     if(data.status == 'OK'){
