@@ -171,6 +171,8 @@
             var sort = oTable.fnSettings().aaSorting;
             console.log(sort);
 
+            $('#process_xls').show();
+
             $.post('<?php print base_url() ?>admin/dl/dispatch',
                 {
                     datafilter : dlfilter,
@@ -184,7 +186,10 @@
                     if(data.status == 'OK'){
                         console.log(data.data.urlcsv);
                         window.location.href = data.data.urlcsv;
-
+                        $('#process_xls').hide();
+                    }else{
+                        alert('Failed to generate Excel file');
+                        $('#process_xls').hide();
                     }
                 },'json');
 
@@ -719,6 +724,7 @@
     	</div>
     <?php endif;?>
     <div class="button_nav">
+        <span id="process_xls" style="display:none;" >Generating Excel file...</span>&nbsp;
         <span id="download-csv" class="button" style="cursor:pointer">
             Download Excel
         </span>
