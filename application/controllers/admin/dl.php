@@ -360,6 +360,12 @@ class Dl extends Application
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
+        $limit_count = $this->input->post('perpage');
+        $limit_offset = $this->input->post('perpage') * ($this->input->post('currentpage') - 1);
+
+        $curpage = $this->input->post('currentpage');
+        $totalpage = $this->input->post('totalpage');
+
 
         $mtab = $this->config->item('assigned_delivery_table');
 
@@ -590,8 +596,8 @@ class Dl extends Application
 
 
 
-        $fname = date('Y-m-d',time()).'_deliverystatus.csv';
-        $xname = date('Y-m-d',time()).'_deliverystatus.xlsx';
+        $fname = date('Y-m-d',time()).'_deliverystatus_'.$curpage.'_of_'.$totalpage.'.csv';
+        $xname = date('Y-m-d',time()).'_deliverystatus_'.$curpage.'_of_'.$totalpage.'.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
@@ -789,6 +795,7 @@ class Dl extends Application
             ->order_by('buyerdeliverycity','asc')
             ->order_by('buyerdeliveryzone','asc')
             //->order_by($sort,$sort_dir)
+            ->limit($limit_count, $limit_offset)
             ->get($this->config->item('assigned_delivery_table'));
 
         $sdata = $data->result_array();
