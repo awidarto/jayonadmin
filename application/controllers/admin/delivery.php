@@ -4139,8 +4139,8 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
 		$this->breadcrumb->add_crumb('Delivery Status','admin/delivery/delivered');
 
-		$data = $this->db->where('status','delivered')->get($this->config->item('delivered_delivery_table'));
-		$result = $data->result_array();
+		//$data = $this->db->where('status','delivered')->get($this->config->item('delivered_delivery_table'));
+		//$result = $data->result_array();
 
 		$this->table->set_heading(
 			'#',
