@@ -3351,7 +3351,7 @@ class Reports extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,pending_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,fulfillment_code,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount,same_phone,same_email')
+        $this->db->select('assignment_date,delivery_id,'.$mtab.'.merchant_id as merchant_id,cod_bearer,delivery_bearer,buyer_name,buyerdeliveryzone,pending_count,box_count,c.fullname as courier_name,'.$mtab.'.phone,'.$mtab.'.mobile1,'.$mtab.'.mobile2,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,shipping_address,status,pickup_status,warehouse_status,fulfillment_code,cod_cost,delivery_cost,total_price,chargeable_amount,total_tax,total_discount,same_phone,same_email')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -3470,13 +3470,14 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
+                'Jumlah Box',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
-                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>13),
+                array('data'=>'Mohon tunjukkan kartu identitas untuk di foto sebagai bagian bukti penerimaan','style'=>'text-align:center;','colspan'=>14),
                 /*
                 '',
                 '',
@@ -3511,12 +3512,14 @@ class Reports extends Application
                 'ALAMAT',
                 'Phone',
                 'No Kode Penjualan Toko',
+                'Jumlah Box',
                 array('data'=>'PENERIMA PAKET','colspan'=>2)
 
 
             ); // Setting headings for the table
 
             $this->table->set_subheading(
+                '',
                 '',
                 '',
                 '',
@@ -3559,7 +3562,11 @@ class Reports extends Application
                 'pending'=>0
             );
 
+        $total_box = 0;
+
         foreach($rows->result() as $r){
+
+            $total_box += intval($r->box_count);
 
             $counts[$r->delivery_type] += 1;
 
@@ -3673,6 +3680,7 @@ class Reports extends Application
                     $r->shipping_address,
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode.'<br/>'.$this->date_did($r->delivery_id),'class'=>'currency cod'),
+                    array('data'=>$r->box_count,'style'=>'text-align:center;'),
                     '',
                     ''
                 );
@@ -3693,8 +3701,8 @@ class Reports extends Application
                     array('data'=>( $chg == 0 )?0:idr($chg),'class'=>'currency '.$codclass),
                     $r->shipping_address,
                     '<span '.$phone_dupe.' >'.$this->split_phone($r->phone).'<br />'.$this->split_phone($r->mobile1).'<br />'.$this->split_phone($r->mobile2).'</span>',
-
                     array('data'=>$this->hide_trx($r->merchant_trans_id).$fcode.'<br/>'.$this->date_did($r->delivery_id),'class'=>'currency cod'),
+                    array('data'=>$r->box_count,'style'=>'text-align:center;'),
                     '',
                     ''
                 );
@@ -3773,7 +3781,10 @@ class Reports extends Application
         */
 
         $recontab = $this->table->generate();
+
+        $data['total_box'] = $total_box;
         $data['recontab'] = $recontab;
+
 
         $data['summary_count'] = $counts;
         /* end copy */

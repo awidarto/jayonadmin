@@ -217,6 +217,7 @@
                             <th>CCOD</th>
                             <th>PS</th>
                             <th>Pending</th>
+                            <th>Total Box</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -226,6 +227,7 @@
                             <td><?php print $summary_count['CCOD']?></td>
                             <td><?php print $summary_count['PS']?></td>
                             <td><?php print $summary_count['pending']?></td>
+                            <td><?php print $total_box ?></td>
                         </tr>
                     </tbody>
                 </table>
