@@ -361,8 +361,8 @@ class Import extends Application
 
                     $trx_id = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
 
-                    print "order input: \r\n";
-                    print_r($order);
+                    //print "order input: \r\n";
+                    //print_r($order);
 
                     $trx = json_encode($order);
                     $result = $this->order_save($trx,$app_key,$trx_id);
@@ -729,8 +729,8 @@ class Import extends Application
 
                 $in = json_decode($in);
 
-                print "order input to save: \r\n";
-                print_r($in);
+                //print "order input to save: \r\n";
+                //print_r($in);
 
                 $is_new = false;
 
@@ -833,6 +833,8 @@ class Import extends Application
                     $order['cod_cost'] = get_cod_tariff($order['total_price'],$app->id);
                 }
 
+                $order['box_count'] = (isset($in->box_count))?$in->box_count:1;
+
                 $order['shipping_address'] = $in->shipping_address;
                 $order['shipping_zip'] = $in->zip;
                 $order['phone'] = $in->phone;
@@ -891,7 +893,11 @@ class Import extends Application
                 }
 
                 $order['is_import'] = 1;
+
+
                 //print_r($order);
+
+                //die();
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
                 $sequence = $this->db->insert_id();
