@@ -113,6 +113,8 @@ $config['trans_status_ds2wh'] = 'kembali di gudang';
 $config['trans_status_return2merchant'] = 'kembali ke merchant';
 
 $config['status_list'] = array(
+    'date_assigned'=>'Date Assigned',
+    'cr_assigned'=>'Courier Assigned',
     'pending'=>'Pending',
     'delivered'=>'Delivered',
     'canceled'=>'Canceled',
