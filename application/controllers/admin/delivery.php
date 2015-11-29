@@ -433,6 +433,9 @@ class Delivery extends Application
             //    $pick_stat = '';
             //}
 
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
             $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'';
@@ -448,7 +451,7 @@ class Delivery extends Application
                 $key['pickup_dev_id'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				get_slot_range($key['buyerdeliveryslot']),
-				$key['buyerdeliveryzone'],
+				$key['buyerdeliveryzone'].$setzone,
 				$key['buyerdeliverycity'],
                 $key['shipping_address'].'<br />'.$locpicker,
 				'<span class="'.( ($key['dupe'] > 0 )?'red':'' ).'">'.$this->hide_trx($key['merchant_trans_id']).'</span>'.$markscan,
@@ -3701,6 +3704,9 @@ class Delivery extends Application
                 $wh_stat = colorizestatus($key['warehouse_status']);
                 $cr_stat = colorizestatus($key['courier_status']);
 
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
             $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'&nbsp;';
@@ -3715,7 +3721,7 @@ class Delivery extends Application
 				colorizetype($key['delivery_type']),
                 ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
                 $cityfield,
-                $zonefield,
+                $zonefield.$setzone,
                 $key['merchant'],
                 $key['buyer_name'],
                 $key['recipient_name'],

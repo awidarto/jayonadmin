@@ -54,6 +54,23 @@ class Ajax extends Application
 
     }
 
+    public function setzone(){
+        $id = $this->input->post('delivery_id');
+        $city = $this->input->post('city');
+        $zone = $this->input->post('zone');
+
+        $dataset = array('buyerdeliveryzone'=>$zone, 'buyerdeliverycity'=>$city);
+
+        if($this->db->where('delivery_id', $id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK','timestamp'=>now()));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NODUPE','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
     public function printsession(){
         $ids = $this->input->post('ids');
         $sess = mt_rand( 1000, 9999 );
@@ -628,7 +645,10 @@ class Ajax extends Application
 		print $result;
 	}
 
-	public function getzoneselect(){
+	public function getzoneselect($prefix = null){
+
+        $prefix = (is_null($prefix))?'':$prefix;
+
 		$city = $this->input->post('city');
 
 		$this->db->where(array('city'=>$city));
@@ -644,7 +664,7 @@ class Ajax extends Application
 			$zone[0] = 'Select delivery zone';
 		}
 
-		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="buyerdeliveryzone"');
+		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="'.$prefix.'buyerdeliveryzone"');
 
 		print json_encode(array('result'=>'ok','data'=>$select));
 	}

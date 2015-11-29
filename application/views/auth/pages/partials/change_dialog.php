@@ -93,3 +93,63 @@
         </tr>
     </table>
 </div>
+
+<div id="setzone_dialog" title="Set Zone">
+    <strong>Delivery ID : </strong><span id="setzone_id"></span><br /><br />
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                City
+                <div id="set_city_select">
+                    <?php
+                        $city = get_city_options();
+                        $zone = array(''=>'Select Zone');
+                        $cityselect = form_dropdown('buyerdeliverycity',$city,null,'id="setbuyerdeliverycity"');
+                        $zoneselect = form_dropdown('buyerdeliveryzone',$zone,null,'id="setbuyerdeliveryzone"');
+                        print $cityselect;
+                    ?>
+                </div>
+            </td>
+            <td >
+                Zone
+                <div id="set_zone_select">
+                    <?php
+                        print $zoneselect;
+                    ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="setcity_dialog" title="Set City">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="setcity_id"></span><br /><br />
+                <?php
+                    $status_list = $this->config->item('pickup_status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="punew_status"');
+
+                ?>
+            </td>
+            <td>
+                <label for="puchg_note">Note</label>
+                <textarea name="puchg_note" id="puchg_note" style="width:100%;height:100%"></textarea>
+            </td>
+        </tr>
+    </table>
+</div>

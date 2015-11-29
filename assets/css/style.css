@@ -1,3 +1,4 @@
+
 body,ul,ol,li{
 	margin:0;
 	padding:0;
@@ -8,6 +9,10 @@ body{padding:0px;background: url('../images/long_logo.png') no-repeat right top;
 #header{width:100%;margin:0;padding:0;border-bottom:thin solid #efefef;}
 #logo{width:1000px;margin:0 auto;color:#231e18;height:150px;}
 #nav_bg{background:brown;width:100%;padding-top:4px;}
+
+.action{
+    cursor: pointer;
+}
 
 #login{
 	margin:auto auto;
