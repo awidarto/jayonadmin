@@ -1391,7 +1391,7 @@ class Ajax extends Application
                     $edata['username'] = $buyer_username;
                     $edata['password'] = $password;
                     if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
-                        send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+                        //send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
                     }
 
                 }
