@@ -6898,7 +6898,7 @@ class Reports extends Application
 		$sto = date('Y-m-d',strtotime($to));
 
 		$this->db->distinct();
-		$this->db->select('assignment_date,status,count(*) as count');
+		$this->db->select('assignment_date,status,count(*) as count, count(box_count) as total_box_count');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -7021,7 +7021,9 @@ class Reports extends Application
 
 			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
 			$tarray[$seq]['assignment_date'] = $r->assignment_date;
+            $tarray[$seq]['total_box_count'] = $r->total_box_count;
 			$tarray[$seq][$r->status] = $r->count;
+
 
 
 		}
@@ -7040,7 +7042,7 @@ class Reports extends Application
 			$dl = (isset($r['delivered']))?$r['delivered']:0;
 			$ns = (isset($r['noshow']))?$r['noshow']:0;
 			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
-            $bx = (isset($r['box_count']))?$r['box_count']:1;
+            $bx = (isset($r['total_box_count']))?$r['total_box_count']:1;
 
 			$tdl += $dl;
 			$tns += $ns;
