@@ -166,7 +166,7 @@ class Codreport extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, cod_bearer, delivery_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, cod_bearer, delivery_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -328,6 +328,7 @@ class Codreport extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
+                'Jumlah Box',
                 'Total Price',
                 'Disc',
                 'Tax',
@@ -347,6 +348,7 @@ class Codreport extends Application
                 'Buyer Name',
                 'Delivery Type',
                 'Status',
+                'Jumlah Box',
                 'Total Price',
                 'Disc',
                 'Tax',
@@ -366,6 +368,7 @@ class Codreport extends Application
                 'Delivery Date',
                 'Buyer Name',
                 'Delivery Type',
+                'Jumlah Box',
                 'Status',
                 'Total Price',
                 'Disc',
@@ -382,6 +385,8 @@ class Codreport extends Application
         $seq = 1;
         $total_billing = 0;
         $total_delivery = 0;
+        $total_box = 0;
+
         $total_cod = 0;
 
         $total_cod_val = 0;
@@ -490,6 +495,8 @@ class Codreport extends Application
 
             $total_cod += (int)str_replace('.','',$cod);
 
+            $total_box += $r->box_count;
+
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
 
@@ -503,6 +510,7 @@ class Codreport extends Application
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
                     $r->delivery_type,
+                    $r->box_count,
                     $r->status,
                     array('data'=>idr($total),'class'=>'currency'),
                     array('data'=>idr($dsc),'class'=>'currency'),
@@ -523,6 +531,7 @@ class Codreport extends Application
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
                     $r->delivery_type,
+                    $r->box_count,
                     $r->status,
                     idr($total,false),
                     idr($dsc,false),
@@ -544,6 +553,7 @@ class Codreport extends Application
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
                     $r->delivery_type,
+                    $r->box_count,
                     $r->status,
                     array('data'=>idr($total),'class'=>'currency'),
                     array('data'=>idr($dsc),'class'=>'currency'),
@@ -586,6 +596,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
+                    array('data'=>$total_box,'class'=>'total'),
                     '',
                     '',
                     '',
@@ -605,6 +616,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
+                    $total_box,
                     '',
                     '',
                     '',
@@ -625,6 +637,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
+                    array('data'=>$total_box,'class'=>'total'),
                     '',
                     '',
                     '',

@@ -2566,7 +2566,7 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -2713,6 +2713,7 @@ class Reports extends Application
                 'Buyer',
                 'Kode Toko',
                 'Fulfillment / Order ID',
+                'Jumlah Box',
                 'Status'
             ); // Setting headings for the table
 
@@ -2726,6 +2727,7 @@ class Reports extends Application
                 'Buyer',
                 'Kode Toko',
                 'Fulfillment / Order ID',
+                'Jumlah Box',
                 'Status'
             );
 
@@ -2740,6 +2742,7 @@ class Reports extends Application
                 'Delivery Date',
                 'Buyer Name',
                 'Delivery Type',
+                'Jumlah Box',
                 'Status',
                 'Package Value',
                 'Disc',
@@ -2758,6 +2761,7 @@ class Reports extends Application
         $total_delivery = 0;
         $total_cod = 0;
         $total_cod_val = 0;
+        $total_box = 0;
 
         $total_payable = 0;
 
@@ -2837,6 +2841,8 @@ class Reports extends Application
 
             $total_cod_val += $codval;
 
+            $total_box += $r->box_count;
+
             //$payable = str_replace('.','',$payable);
 
             $total_billing = $total_billing + (double)$payable;
@@ -2853,6 +2859,7 @@ class Reports extends Application
                     $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
+                    $r->box_count,
                     $r->status
                 );
 
@@ -2866,6 +2873,7 @@ class Reports extends Application
                     $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
+                    $r->box_count,
                     $r->status
                 );
 
@@ -2881,6 +2889,7 @@ class Reports extends Application
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
                     $r->delivery_type,
+                    $r->box_count,
                     $r->status,
                     array('data'=>idr($total),'class'=>'currency'),
                     array('data'=>idr($dsc),'class'=>'currency'),
@@ -2909,6 +2918,8 @@ class Reports extends Application
                     idr($total_cod,false),
                     '',
                     '',
+                    '',
+                    $total_box,
                     ''
                 );
 
@@ -2921,6 +2932,8 @@ class Reports extends Application
                     idr($total_cod,false),
                     '',
                     '',
+                    '',
+                    $total_box,
                     ''
                 );
 
@@ -2935,6 +2948,7 @@ class Reports extends Application
                     '',
                     '',
                     '',
+                    $total_box,
                     '',
                     '',
                     '',
@@ -6989,7 +7003,8 @@ class Reports extends Application
 			'Delivered',
 			'No Show',
 			'Rescheduled',
-			'Delivery Count'
+			'Delivery Count',
+            'Jumlah Box'
 		); // Setting headings for the table
 
 		$seq = 0;
@@ -7018,16 +7033,19 @@ class Reports extends Application
 		$tdl = 0;
 		$tns = 0;
 		$trs = 0;
+        $tbx = 0;
 
 		foreach ($tarray as $r) {
 
 			$dl = (isset($r['delivered']))?$r['delivered']:0;
 			$ns = (isset($r['noshow']))?$r['noshow']:0;
 			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
+            $bx = (isset($r['box_count']))?$r['box_count']:1;
 
 			$tdl += $dl;
 			$tns += $ns;
 			$trs += $rs;
+            $tbx += $bx;
 
             $inc = $this->db->like('ordertime', $r['assignment_date'],'after')->count_all_results($this->config->item('delivered_delivery_table'));
 
@@ -7040,7 +7058,9 @@ class Reports extends Application
 				$dl,
 				$ns,
 				$rs,
-				$dl + $ns + $rs
+				$dl + $ns + $rs,
+                $bx
+
 			);
 
 			$seq++;
@@ -7056,7 +7076,8 @@ class Reports extends Application
 			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),
 			array('data'=>$tns,'style'=>'border-top:thin solid grey'),
 			array('data'=>$trs,'style'=>'border-top:thin solid grey'),
-			array('data'=>$gt,'style'=>'border-top:thin solid grey')
+			array('data'=>$gt,'style'=>'border-top:thin solid grey'),
+            array('data'=>$tbx,'style'=>'border-top:thin solid grey')
 		);
 
 		$recontab = $this->table->generate();
