@@ -6897,7 +6897,7 @@ class Reports extends Application
 		$sfrom = date('Y-m-d',strtotime($from));
 		$sto = date('Y-m-d',strtotime($to));
 
-		$this->db->distinct();
+		//$this->db->distinct();
 		$this->db->select('assignment_date,status,count(*) as count, count(box_count) as total_box_count');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
