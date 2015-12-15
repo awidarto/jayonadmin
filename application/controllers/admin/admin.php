@@ -49,9 +49,128 @@ class Admin extends Application
 
 			$page['locdata'] = json_encode($locations);
             */
+            $starttime = date('Y-m-d', time()).' 00:00:00';
+            $endtime = date('Y-m-d', time()).' 23:59:59';
+
+            //$date = '2015-02-12';
+            //$starttime = $date.' 00:00:00';
+            //$endtime = $date.' 23:59:59';
+
+            $intab = $this->config->item('incoming_delivery_table');
+            $sq = $this->db->select('merchant_id,m.merchantname as merchant, count(*) as count, sum(box_count) as box_count')
+                ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+                ->where($intab.'.created >=',$starttime)
+                ->where($intab.'.created <=',$endtime)
+                ->from($this->config->item('incoming_delivery_table'))
+                ->order_by('count','desc')
+                ->order_by('box_count','desc')
+                ->group_by('merchant_id')
+                ->get()
+                ->result_array();
+
+            $tmpl = array( 'table_open'  => '<table style="width:100%;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+
+            $this->table->set_template($tmpl);
+
+            $this->table->set_heading(
+                'No.',
+                'Merchant',
+                'Incoming',
+                'Jumlah Box'
+            ); // Setting headings for the table
+
+            $num = 0;
+
+            $total_order = 0;
+            $total_box = 0;
+
+            foreach($sq as $s){
+                $num++;
+                $this->table->add_row(
+                    array('data'=>$num,'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['merchant'],'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['count'],'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['box_count'],'style'=>'border-top:thin solid grey')
+                );
+
+                $total_order += intval($s['count']);
+                $total_box  += intval($s['box_count']);
+
+            }
+
+            $this->table->add_row(
+                array('data'=>'','style'=>'border-top:thin solid grey'),
+                array('data'=>'Total','style'=>'border-top:thin solid grey'),
+                array('data'=>$total_order,'style'=>'border-top:thin solid grey'),
+                array('data'=>$total_box,'style'=>'border-top:thin solid grey')
+            );
+
+            $incomingtab = $this->table->generate();
+            $page['incomingtab'] = $incomingtab;
 
 
-			$page['period'] = ' - '.date('M Y',time());
+
+            $intab = $this->config->item('incoming_delivery_table');
+            $sq = $this->db->select('merchant_id,m.merchantname as merchant, count(*) as count, sum(box_count) as box_count')
+                ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+                //->where($intab.'.assignment_date >=',$starttime)
+                //->where($intab.'.assignment_date <=',$endtime)
+                //->and_()
+                ->group_start()
+                ->where('status','pending')
+                ->where('pending_count !=',0)
+                ->group_end()
+                ->from($this->config->item('incoming_delivery_table'))
+                ->order_by('count','desc')
+                ->order_by('box_count','desc')
+                ->group_by('merchant_id')
+                ->get()
+                ->result_array();
+
+            //print $this->db->last_query();
+
+            $this->table->clear();
+
+            $this->table->set_template($tmpl);
+
+            $this->table->set_heading(
+                'No.',
+                'Merchant',
+                'Pending',
+                'Jumlah Box'
+            ); // Setting headings for the table
+
+            $num = 0;
+
+            $total_order = 0;
+            $total_box = 0;
+
+            foreach($sq as $s){
+                $num++;
+                $this->table->add_row(
+                    array('data'=>$num,'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['merchant'],'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['count'],'style'=>'border-top:thin solid grey'),
+                    array('data'=>$s['box_count'],'style'=>'border-top:thin solid grey')
+                );
+
+                $total_order += intval($s['count']);
+                $total_box  += intval($s['box_count']);
+
+            }
+
+            $this->table->add_row(
+                array('data'=>'','style'=>'border-top:thin solid grey'),
+                array('data'=>'Total','style'=>'border-top:thin solid grey'),
+                array('data'=>$total_order,'style'=>'border-top:thin solid grey'),
+                array('data'=>$total_box,'style'=>'border-top:thin solid grey')
+            );
+
+            $pendingtab = $this->table->generate();
+            $page['pendingtab'] = $pendingtab;
+
+
+			$page['period'] = ' - '.date('d M Y',time());
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}
