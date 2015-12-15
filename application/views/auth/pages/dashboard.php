@@ -101,6 +101,7 @@
 
 td {
     vertical-align:top;
+    line-height: 2em;
 }
 
 /*google map tile tweak*/

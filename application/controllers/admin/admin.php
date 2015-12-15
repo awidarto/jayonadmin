@@ -68,7 +68,7 @@ class Admin extends Application
                 ->get()
                 ->result_array();
 
-            $tmpl = array( 'table_open'  => '<table style="width:100%;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+            $tmpl = array( 'table_open'  => '<table style="width:500px;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
 
             $this->table->set_template($tmpl);
 
