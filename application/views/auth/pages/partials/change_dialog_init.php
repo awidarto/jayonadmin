@@ -174,3 +174,164 @@
                 },'json');
 
         });
+
+        $('#setweight_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#setweight_id').html();
+
+                    $.post('<?php print site_url('ajax/setweight');?>',{
+                        'delivery_id':delivery_id,
+                        'weight':$('#package_weight').val()
+                    }, function(data) {
+                        if(data.status == 'OK'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#setweight_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                //$('#confirm_list').html('');
+            }
+        });
+
+        $('#setdeliverydate_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#setdeliverydate_id').html();
+
+                    $.post('<?php print site_url('ajax/setdeliverydate');?>',{
+                        'delivery_id':delivery_id,
+                        'deliverydate': $('#assign_set_deliverytime').val(),
+                    }, function(data) {
+                        if(data.status == 'OK'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#setdeliverydate_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                //$('#confirm_list').html('');
+            }
+        });
+
+        $('#assign_set_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+
+        $('#setdeliverytype_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#setweight_id').html();
+
+                    $.post('<?php print site_url('ajax/setzone');?>',{
+                        'delivery_id':delivery_id,
+                        'city': $('#setbuyerdeliverycity').val(),
+                        'zone': $('#setbuyerdeliveryzone').val()
+                    }, function(data) {
+                        if(data.status == 'OK'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#setzone_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                //$('#confirm_list').html('');
+            }
+        });
+
+        $('#set_delivery_type').change(function(){
+
+            if($('#set_delivery_type').val() == 'COD'){
+                $('#sub_cod').show();
+                $('#sub_ccod').hide();
+                if($('#sub_cod').val() == 'debit'){
+                    $('#sub_provider').show();
+                }else{
+                    $('#sub_provider').hide();
+                }
+
+            }else if($('#set_delivery_type').val() == 'CCOD'){
+                $('#sub_cod').hide();
+                $('#sub_ccod').show();
+                $('#sub_provider').show();
+            }else{
+                $('#sub_cod').hide();
+                $('#sub_ccod').hide();
+                $('#sub_provider').hide();
+            }
+
+            getweightandcod();
+        });
+
+        function getweightandcod(){
+            var delivery_type = $('#set_delivery_type').val();
+
+            //console.log(current_app);
+
+            if(delivery_type == 'COD' || delivery_type == 'CCOD'){
+                $.post('<?php print site_url('ajax/getcoddata');?>',
+                    { app_key: current_app },
+                    function(data) {
+                        $('#cod_tab_data').html(data.data.table);
+                        cod_surcharge_table = $.parseJSON(data.data.codhash);
+                        calculate();
+                    },'json');
+
+                $('#cod_line').show();
+                $('#cod_tab').show();
+            }else{
+                $('#cod_line').hide();
+                $('#cod_tab').hide();
+                $('#cod_cost_txt').html(0);
+                $('#cod_cost').val(0);
+            }
+
+            if(delivery_type == 'PS'){
+                $.post('<?php print site_url('ajax/getpickupdata');?>',
+                    { app_key: current_app },
+                    function(data) {
+                        $('#delivery_tab_data').html(data.data.table);
+                        $('#weight_selection').html(data.data.selector);
+                    },'json');
+
+            }else{
+                $.post('<?php print site_url('ajax/getweightdata');?>',
+                    { app_key: current_app },
+                    function(data) {
+                        $('#delivery_tab_data').html(data.data.table);
+                        $('#weight_selection').html(data.data.selector);
+                    },'json');
+
+            }
+
+        }
+

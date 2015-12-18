@@ -54,6 +54,39 @@ class Ajax extends Application
 
     }
 
+    public function setweight(){
+        $id = $this->input->post('delivery_id');
+        $weight = $this->input->post('weight');
+
+
+        $dataset = array('weight'=>$weight,'delivery_cost'=>$weight);
+
+        if($this->db->where('delivery_id', $id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK','timestamp'=>now()));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NODUPE','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
+    public function setdeliverydate(){
+        $id = $this->input->post('delivery_id');
+        $deliverydate = $this->input->post('deliverydate');
+
+        $dataset = array('assignment_date'=>$deliverydate);
+
+        if($this->db->where('delivery_id', $id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
+            $result = json_encode(array('status'=>'OK','timestamp'=>now()));
+        }else{
+            $result = json_encode(array('status'=>'ERR:NODUPE','timestamp'=>now() ));
+        }
+
+        print $result;
+
+    }
+
     public function setzone(){
         $id = $this->input->post('delivery_id');
         $city = $this->input->post('city');
@@ -402,14 +435,16 @@ class Ajax extends Application
 		if($dctable == true){
 			$weight[0] = 'Select weight range';
 			foreach ($dctable as $r) {
-				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+                $p = 'IDR '.number_format($r->total,2,',','.');
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
 				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
 			}
 		}else{
 			$dctable = get_delivery_charge_table(0);
 			$weight[0] = 'Select weight range';
 			foreach ($dctable as $r) {
-				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+                $p = 'IDR '.number_format($r->total,2,',','.');
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
 				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
 			}
 		}

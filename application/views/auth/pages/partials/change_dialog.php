@@ -153,3 +153,75 @@
         </tr>
     </table>
 </div>
+
+<div id="setdeliverydate_dialog" title="Set Delivery Date">
+    <strong>Delivery ID : </strong><span id="setdeliverydate_id"></span><br /><br />
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td >
+                <div id="set_deliverydate_select">
+                    <input id="assign_set_deliverytime" type="text" value=""><br />
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="setweight_dialog" title="Set Weight">
+    <strong>Delivery ID : </strong><span id="setweight_id"></span><br /><br />
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td >
+                Weight
+                <div id="set_weight_select">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="setdeliverytype_dialog" title="Set Delivery Type">
+    <strong>Delivery ID : </strong><span id="setdeliverytype_id"></span><br /><br />
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td >
+                Delivery Type
+                <div id="set_type_select">
+                    <?php
+
+                        $delivery_type = array(
+                            '0'=>'Select delivery type',
+                            'COD'=>'COD',
+                            'CCOD'=>'Credit Card On Delivery',
+                            'Delivery Only'=>'Delivery Only',
+                            'PS'=>'Pick Up Supply'
+                        );
+
+                        $typeselect = form_dropdown('delivery_type',$delivery_type,null,'id="set_delivery_type"');
+
+                        print $typeselect;
+                    ?>
+                    <select name="sub_cod" id ="sub_cod" style="display:none">
+                        <option value="cash">Tunai</option>
+                        <option value="debit">Debit</option>
+                    </select>
+                    <select name="sub_ccod" id="sub_ccod" style="display:none">
+                        <option value="full">Pembayaran Penuh</option>
+                        <option value="installment">Cicilan</option>
+                    </select>
+                    <select name="sub_provider" id="sub_provider" style="display:none">
+                        <option value="BCA">BCA</option>
+                        <option value="Mandiri">Bank Mandiri</option>
+                    </select>
+                </div>
+            </td>
+            <td>
+                <div id="weight_selection">
+                </div>
+                <div id="weight_selection">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+

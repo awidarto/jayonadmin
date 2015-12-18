@@ -435,6 +435,9 @@ class Delivery extends Application
 
             $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
+            $setdeliverytype = '<span class="set_deliverytype orange action" data-deliverytype="'.$key['delivery_type'].'" id="'.$key['delivery_id'].'">Set Type</span>';
 
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
@@ -474,7 +477,7 @@ class Delivery extends Application
 				'<span '.$phone_dupe.' >'.$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'].'</span>',
                 $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
                 $key['box_count'],
-                get_weight_range($key['weight'],$key['application_id'])
+                get_weight_range($key['weight'],$key['application_id']).$setweight
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -1974,6 +1977,13 @@ class Delivery extends Application
             $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
             $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
+            $setdeliverytype = '<span class="set_deliverytype orange action" data-deliverytype="'.$key['delivery_type'].'" id="'.$key['delivery_id'].'">Set Type</span>';
+
+
 			$aadata[] = array(
 				$num,
 				$datefield,
@@ -1988,7 +1998,7 @@ class Delivery extends Application
 				$key['buyer_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
-				get_weight_range($key['weight'],$key['application_id']),
+				get_weight_range($key['weight'],$key['application_id']).$setweight,
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
@@ -3160,6 +3170,13 @@ class Delivery extends Application
             $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
             $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
+            $setdeliverytype = '<span class="set_deliverytype orange action" data-deliverytype="'.$key['delivery_type'].'" id="'.$key['delivery_id'].'">Set Type</span>';
 
 			$aadata[] = array(
 				$num,
@@ -3170,14 +3187,14 @@ class Delivery extends Application
                 //$delivery_check,
 				$delivery_check.'<span class="view_detail  '.$key['assignment_date'].'-'.$key['device_id'].' " id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['buyerdeliverycity'],
-				$key['buyerdeliveryzone'],
+				$key['buyerdeliveryzone'].$setzone,
 				(isset($app['application_name']))?$app['application_name']:'',
 				//$app['domain'],
 				colorizetype($key['delivery_type']),
 				$key['buyer_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
 				(double)$key['width']*(double)$key['height']*(double)$key['length'],
-				get_weight_range($key['weight'],$key['application_id']),
+				get_weight_range($key['weight'],$key['application_id']).$setweight,
 				$key['merchant'],
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
@@ -3721,15 +3738,20 @@ class Delivery extends Application
             $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
 
+            $setassignmentdate = '<span class="set_assignmentdate orange action" data-app="'.$key['application_key'].'" data-assignmentdate="'.$key['assignment_date'].'" id="'.$key['delivery_id'].'">Ubah Delivery Date</span>';
+
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
             $notes = ($key['delivery_note'] != '')?'<span class="green">Delivery Note:</span><br />'.$key['delivery_note']:'&nbsp;';
             $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'&nbsp;';
             $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'&nbsp;';
 
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
+
 			$aadata[] = array(
 				$num,
-				$datefield,
+				$datefield.$setassignmentdate,
 				$devicefield,
 				$courierfield,
 				colorizetype($key['delivery_type']),
@@ -3755,7 +3777,7 @@ class Delivery extends Application
                 $key['box_count'],
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
                 (double)$key['width']*(double)$key['height']*(double)$key['length'],
-                get_weight_range($key['weight'],$key['application_id'])
+                get_weight_range($key['weight'],$key['application_id']).$setweight
 
 			);
 
@@ -3841,6 +3863,7 @@ class Delivery extends Application
             '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
             '',
             '',
+            '',
             ''
 			);
 
@@ -3911,6 +3934,9 @@ class Delivery extends Application
                 delivery_type,cod_cost,
                 delivery_note,
                 fulfillment_code,
+                application_key,
+                weight,
+                application_id,
                 pickup_note,
                 warehouse_note,
                 reschedule_ref,
@@ -4115,6 +4141,8 @@ class Delivery extends Application
             $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'';
             $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'';
 
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
+
 			$aadata[] = array(
 				$num,
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -4136,6 +4164,7 @@ class Delivery extends Application
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-slipname="'.$slipname.'" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
+                get_weight_range($key['weight'],$key['application_id']).$setweight,
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
@@ -4183,6 +4212,7 @@ class Delivery extends Application
             'Delivery ID',
             'No Kode Penjualan Toko',
             'Fulfillment / Order ID',
+            'Weight',
             'Delivery Fee',
             'COD Surcharge',
 			'Reschedule Ref',
