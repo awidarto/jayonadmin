@@ -21,13 +21,14 @@
                 console.log(delivery_id);
 
                 var city = $(e.target).data('city');
+                var zone = $(e.target).data('zone');
 
                 console.log(city);
 
                 $('#setbuyerdeliverycity').val(city);
 
                 $.post('<?php print site_url('ajax/getzoneselect/set');?>',
-                    { city: city },
+                    { city: city, zone:zone },
                     function(data) {
                         $('#set_zone_select').html(data.data);
                     },'json');

@@ -433,7 +433,7 @@ class Delivery extends Application
             //    $pick_stat = '';
             //}
 
-            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" data-zone="'.$key['buyerdeliveryzone'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
             $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
 
@@ -1977,18 +1977,18 @@ class Delivery extends Application
             $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
             $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
-            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" data-zone="'.$key['buyerdeliveryzone'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+            $setassignmentdate = '<span class="set_assignmentdate orange action" data-app="'.$key['application_key'].'" data-assignmentdate="'.$key['assignment_date'].'" id="'.$key['delivery_id'].'">Ubah Delivery Date</span>';
             $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
-
             $setdeliverytype = '<span class="set_deliverytype orange action" data-deliverytype="'.$key['delivery_type'].'" id="'.$key['delivery_id'].'">Set Type</span>';
 
 
 			$aadata[] = array(
 				$num,
-				$datefield,
+				$datefield.$setassignmentdate,
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
-				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>',
+				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>'.$setzone,
                 //$delivery_check,
                 '<input type="hidden" name="assign[]" class="'.$key['assignment_date'].'_'.str_replace(' ', '_', $key['buyerdeliverycity']).'" value="'.$key['delivery_id'].'">'.$delivery_check.'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
@@ -3170,17 +3170,16 @@ class Delivery extends Application
             $phone_dupe = ($key['same_phone'] == 1)?'class="dupe"':'';
             $email_dupe = ($key['same_email'] == 1)?'class="dupe"':'';
 
-            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
-
-            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" data-zone="'.$key['buyerdeliveryzone'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
+            $setassignmentdate = '<span class="set_assignmentdate orange action" data-app="'.$key['application_key'].'" data-assignmentdate="'.$key['assignment_date'].'" id="'.$key['delivery_id'].'">Ubah Delivery Date</span>';
             $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
 
             $setdeliverytype = '<span class="set_deliverytype orange action" data-deliverytype="'.$key['delivery_type'].'" id="'.$key['delivery_id'].'">Set Type</span>';
 
 			$aadata[] = array(
 				$num,
-				$datefield,
+				$datefield.$setassignmentdate,
 				$devicefield,
 				get_slot_range($key['assignment_timeslot']),
 				//$key['delivery_id'],
@@ -3735,10 +3734,10 @@ class Delivery extends Application
                 $wh_stat = colorizestatus($key['warehouse_status']);
                 $cr_stat = colorizestatus($key['courier_status']);
 
-            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
+            $setzone = '<span class="set_zone orange action" data-city="'.$key['buyerdeliverycity'].'" data-zone="'.$key['buyerdeliveryzone'].'" id="'.$key['delivery_id'].'">Set Zone</span>';
             $setcity = '<span class="set_city orange action" data-city="'.$key['buyerdeliverycity'].'" id="'.$key['delivery_id'].'">Set City</span>';
-
             $setassignmentdate = '<span class="set_assignmentdate orange action" data-app="'.$key['application_key'].'" data-assignmentdate="'.$key['assignment_date'].'" id="'.$key['delivery_id'].'">Ubah Delivery Date</span>';
+            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
 
             $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
 
@@ -3746,7 +3745,6 @@ class Delivery extends Application
             $notes .= ($key['pickup_note'] != '')?'<br /><span class="brown">PU Note:</span><br />'.$key['pickup_note']:'&nbsp;';
             $notes .= ($key['warehouse_note'] != '')?'<br /><span class="orange">WH Note:</span><br />'.$key['warehouse_note']:'&nbsp;';
 
-            $setweight = '<span class="set_weight orange action" data-app="'.$key['application_key'].'" data-weight="'.$key['weight'].'" id="'.$key['delivery_id'].'">Set Weight</span>';
 
 
 			$aadata[] = array(
