@@ -1986,7 +1986,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				$num,
-				$datefield.$setassignmentdate,
+				$datefield,
 				'<span id="c_'.$key['delivery_id'].'">'.$cityfield.'</span>',
 				'<span id="'.$key['delivery_id'].'">'.$key['buyerdeliveryzone'].'</span>'.$setzone,
                 //$delivery_check,

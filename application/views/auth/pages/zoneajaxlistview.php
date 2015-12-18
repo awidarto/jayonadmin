@@ -198,6 +198,8 @@
 
 				$('.' + date_assign +'_'+ city_assign_class).each(function(){
 
+                    console.log('this ' + this.value);
+
 					var zone = date_assign + ' | ' +$('#'+this.value).html() +' | '+ city_assign;
 
 					zone += '<input type="checkbox" name="assign_check_dev[]" value="'+this.value+'" class="id_assign">';
