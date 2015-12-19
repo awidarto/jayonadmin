@@ -5278,7 +5278,12 @@ class Delivery extends Application
                     $incr = true;
                     //$dataset['delivery_note'] = $req_note;
                 }
+
+                if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
+
+                }else{
                     $dataset['delivery_note'] = $req_note;
+                }
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                     $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
@@ -5335,7 +5340,12 @@ class Delivery extends Application
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
             }
+
+            if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
+
+            }else{
                 $dataset['delivery_note'] = $req_note;
+            }
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')||
                 $dataset['status'] == $this->config->item('trans_status_mobile_revoked') ||
