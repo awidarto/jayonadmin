@@ -845,6 +845,7 @@ class Delivery extends Application
         $this->table->set_heading(
             '#',
             'Timestamp',
+            'Pick Up Time',
             'Pick Up Picture',
             'Pick Up Person',
             'Pick Up Device',
@@ -877,6 +878,7 @@ class Delivery extends Application
         $this->table->set_footing(
             '',
             '<input type="text" name="search_ordertime" id="search_ordertime" value="Search timestamp" class="search_init" />',
+            '',
             '',
             '<input type="text" name="search_pickupperson" id="search_pickupperson" value="Search PU Person" class="search_init" />',
             '<input type="text" name="search_pickupdevice" id="search_pickupdevice" value="Search PU Device" class="search_init" />',
@@ -1263,6 +1265,7 @@ class Delivery extends Application
             $aadata[] = array(
                 $num,
                 $key['ordertime'],
+                $key['pickuptime'],
                 $picture,
                 $key['pickup_person'],
                 $key['pickup_dev_id'],
@@ -1994,6 +1997,7 @@ class Delivery extends Application
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="'.$key['assignment_date'].'_'.$key['buyerdeliverycity'].'"').$key['delivery_id'],
 				//$app['application_name'],
 				//$app['domain'],
+                $key['pickuptime'],
 				colorizetype($key['delivery_type']),
 				$key['buyer_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -2037,6 +2041,7 @@ class Delivery extends Application
 			'Delivery ID',
 			//'App Name',
 			//'App Domain',
+            'Pick Up Time',
 			'Type',
 			'Buyer',
 			'W x H x L',
@@ -2059,6 +2064,7 @@ class Delivery extends Application
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"'),
@@ -3189,6 +3195,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'].$setzone,
 				(isset($app['application_name']))?$app['application_name']:'',
 				//$app['domain'],
+                $key['pickuptime'],
 				colorizetype($key['delivery_type']),
 				$key['buyer_name'],
 				$key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -3234,6 +3241,7 @@ class Delivery extends Application
 			'Delivery City',
 			'Delivery Zone',
 			'App Name',
+            'Pick Up Time',
 			'Type',
 			'Buyer',
 			'W x H x L',
@@ -3257,6 +3265,7 @@ class Delivery extends Application
             '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
             '<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
             '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
+            '',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             '',
@@ -3752,6 +3761,7 @@ class Delivery extends Application
 				$datefield.$setassignmentdate,
 				$devicefield,
 				$courierfield,
+                $key['pickuptime'],
 				colorizetype($key['delivery_type']),
                 ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
                 $cityfield,
@@ -3809,6 +3819,7 @@ class Delivery extends Application
 			'Delivery Date',
 			'Device',
 			'Courier',
+            'Pick Up Time',
 			'Type',
 			'COD Value',
             'City',
@@ -3840,6 +3851,7 @@ class Delivery extends Application
 			'',
 			'<input type="text" name="search_buyerdeliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_device" id="search_device" value="Search device" class="search_init" />',
+            '',
 			'',
 			'<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
 			'',
@@ -3919,6 +3931,7 @@ class Delivery extends Application
                 '.$mtab.'.mobile1,
                 '.$mtab.'.mobile2,
                 delivery_note,
+                pickuptime,
                 status,
                 pickup_status,
                 warehouse_status,
@@ -4143,6 +4156,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				$num,
+                $key['pickuptime'],
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
                 $key['device'],
                 $key['courier'],
@@ -4191,6 +4205,7 @@ class Delivery extends Application
 
 		$this->table->set_heading(
 			'#',
+            'Pick Up Time',
 			'Delivery Time',
             'Device',
             'Courier',
@@ -4220,6 +4235,7 @@ class Delivery extends Application
 
 		$this->table->set_footing(
 			'',
+            '',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
             '<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
             '<input type="text" name="search_courier" id="search_courier" value="Search Courier" class="search_init" />',
