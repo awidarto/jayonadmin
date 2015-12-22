@@ -3407,7 +3407,7 @@ class Reports extends Application
         }
 
         $this->db
-            ->order_by($this->config->item('assigned_delivery_table').'.created','asc')
+            ->order_by($this->config->item('assigned_delivery_table').'.pickuptime','asc')
             ->order_by('buyerdeliverycity','asc')
             ->order_by('buyerdeliveryzone','asc');
 
