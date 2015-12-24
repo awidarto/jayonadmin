@@ -7,6 +7,7 @@
         $('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
         $('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
         $('#release_date').datepicker({ dateFormat: 'yy-mm-dd' });
+        $('#date_pickup').datepicker({ dateFormat: 'yy-mm-dd' });
 
         $('#get_week').click(function(){
 
@@ -15,9 +16,13 @@
                 var merchant_scopes = $('#merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
+                var date_pickup = $('#date_pickup').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/week/'+ week;
+
+                date_pickup = (date_pickup == '')?'all':date_pickup;
+
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/week/'+ week;
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
@@ -31,10 +36,14 @@
                 var merchant_scopes = $('#merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
+                var date_pickup = $('#date_pickup').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
+
+                date_pickup = (date_pickup == '')?'all':date_pickup;
+
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/month/'+ week;
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/month/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -46,10 +55,14 @@
                 var merchant_scopes = $('#merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
+                var date_pickup = $('#date_pickup').val();
                 var year = $('#year_scopes').val();
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
+
+                date_pickup = (date_pickup == '')?'all':date_pickup;
+
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/date/'+ from +'/'+ to ;
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
@@ -98,6 +111,7 @@
                 'zone': '<?= $getparams['zone'] ?>',
                 'merchant': '<?= $getparams['merchant'] ?>',
                 'status': '<?= $getparams['status'] ?>',
+                'date_pickup': '<?= $getparams['date_pickup'] ?>',
                 'year': '<?= $getparams['year'] ?>',
                 'scope': '<?= $getparams['scope'] ?>',
                 'par1': '<?= $getparams['par1'] ?>',
@@ -274,6 +288,10 @@ td span.dupe{
                             <tr>
                                 <td><?php print (isset($zone_select_title))?$zone_select_title:'Zone'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('zone_scopes',$zones,$zone,'id = "zone_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td>Pick Up Date</td>
+                                <td><?php print form_input(array('name'=>'date_pickup','id'=>'date_pickup','class'=>'text','value'=>$date_pickup));?></td>
                             </tr>
                             <tr>
                                 <td>Year</td>

@@ -3207,13 +3207,17 @@ class Reports extends Application
 
     //manifest
 
-    public function manifests($type = null,$deliverytype = null,$zone = null,$merchant = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
+    public function manifests($type = null,$deliverytype = null,$zone = null,$merchant = null,$status = null,$year = null,$date_pickup = null ,$scope = null, $par1 = null, $par2 = null, $par3 = null,$par4 = null){
 
         $type = (is_null($type))?'Global':$type;
         $id = (is_null($type))?'noid':$type;
         $mid = (is_null($merchant))?'noid':$merchant;
         $deliverytype = (is_null($deliverytype))?'noid':$deliverytype;
         $status = (is_null($status))?'all':$status;
+
+        $date_pickup = (is_null($date_pickup))?'all':$date_pickup;
+
+
 
         if(is_null($scope)){
             $id = 'noid';
@@ -3229,6 +3233,7 @@ class Reports extends Application
             'merchant'=> $merchant,
             'status'=> $status,
             'year'=> $year ,
+            'date_pickup'=> $date_pickup ,
             'scope'=>$scope ,
             'par1'=> $par1 ,
             'par2'=> $par2 ,
@@ -3404,6 +3409,11 @@ class Reports extends Application
         if($zone != 'all'){
             $zone = urldecode($zone);
             $this->db->where($this->config->item('assigned_delivery_table').'.buyerdeliveryzone',$zone);
+        }
+
+        if($date_pickup != 'all'){
+            $date_pickup = urldecode($date_pickup);
+            $this->db->like($this->config->item('assigned_delivery_table').'.pickuptime',$date_pickup,'after' );
         }
 
         $this->db
@@ -3837,6 +3847,8 @@ class Reports extends Application
 
         $data['courier_name'] = $courier_name;
 
+        $data['date_pickup'] = ($date_pickup == 'all')?'':$date_pickup;
+
         $data['merchantname'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantname']);
         $data['merchantinfo'] = str_replace( array('http','www.',':','/','.com','.net','.co.id'),'',$data['merchantinfo']);
 
@@ -3898,6 +3910,7 @@ class Reports extends Application
         $zone = $this->input->post('zone');
         $merchant = $this->input->post('merchant');
         $status = $this->input->post('status');
+        $date_pickup = $this->input->post('date_pickup');
         $year = $this->input->post('year');
         $scope = $this->input->post('scope');
         $par1 = $this->input->post('par1');
@@ -3905,7 +3918,7 @@ class Reports extends Application
         $par3 = $this->input->post('par3');
         $par4 = $this->input->post('par4');
 
-        $result = $this->manifests($type,$deliverytype ,$zone,$merchant,$status,$year, $scope, $par1, $par2, $par3,$par4);
+        $result = $this->manifests($type,$deliverytype ,$zone,$merchant,$status,$year, $date_pickup ,$scope, $par1, $par2, $par3,$par4);
 
         $result[0] = ($result[0])?'OK':'FAILED';
 
