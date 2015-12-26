@@ -14,15 +14,20 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var exclude_merchant_scopes = $('#exclude_merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var date_pickup = $('#date_pickup').val();
                 var year = $('#year_scopes').val();
                 var week = $('#week_scopes').val();
 
+                console.log(exclude_merchant_scopes);
+
+                exclude_merchant_scopes = exclude_merchant_scopes.join(':');
+
                 date_pickup = (date_pickup == '')?'all':date_pickup;
 
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/week/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ exclude_merchant_scopes +'/' + status_scopes +'/'+ year + '/' + date_pickup +'/week/'+ week;
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ year +'/week/'+ week;
                 window.location = base + controller + link;
 
@@ -34,16 +39,21 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var exclude_merchant_scopes = $('#exclude_merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var date_pickup = $('#date_pickup').val();
                 var year = $('#year_scopes').val();
                 var week = $('#month_scopes').val();
 
+                console.log(exclude_merchant_scopes);
+
+                exclude_merchant_scopes = exclude_merchant_scopes.join(':');
+
                 date_pickup = (date_pickup == '')?'all':date_pickup;
 
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year +'/month/'+ week;
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/month/'+ week;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ exclude_merchant_scopes +'/' + status_scopes +'/'+ year + '/' + date_pickup +'/month/'+ week;
                 window.location = base + controller + link;
 
             }
@@ -53,6 +63,7 @@
                 var user_scopes = $('#user_scopes').val();
                 var zone_scopes = $('#zone_scopes').val();
                 var merchant_scopes = $('#merchant_scopes').val();
+                var exclude_merchant_scopes = $('#exclude_merchant_scopes').val();
                 var status_scopes = $('#status_scopes').val();
                 var deliverytype_scopes = $('#type_scopes').val();
                 var date_pickup = $('#date_pickup').val();
@@ -60,9 +71,13 @@
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
 
+                console.log(exclude_merchant_scopes);
+
+                exclude_merchant_scopes = exclude_merchant_scopes.join(':');
+
                 date_pickup = (date_pickup == '')?'all':date_pickup;
 
-                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ status_scopes +'/'+ year + '/' + date_pickup +'/date/'+ from +'/'+ to ;
+                var link = user_scopes +'/'+ deliverytype_scopes +'/'+  zone_scopes + '/' + merchant_scopes +'/'+ exclude_merchant_scopes +'/' + status_scopes +'/'+ year + '/' + date_pickup +'/date/'+ from +'/'+ to ;
                 //var link = user_scopes +'/'+ deliverytype_scopes +'/'+ zone_scopes + '/' + merchant_scopes +'/'+ year +'/date/'+ from +'/'+ to ;
                 window.location = base + controller + link;
             }
@@ -110,6 +125,7 @@
                 'deliverytype': '<?= $getparams['deliverytype'] ?>',
                 'zone': '<?= $getparams['zone'] ?>',
                 'merchant': '<?= $getparams['merchant'] ?>',
+                'exmerchant': '<?= $getparams['exmerchant'] ?>',
                 'status': '<?= $getparams['status'] ?>',
                 'date_pickup': '<?= $getparams['date_pickup'] ?>',
                 'year': '<?= $getparams['year'] ?>',
@@ -280,6 +296,10 @@ td span.dupe{
                             <tr>
                                 <td><?php print (isset($merchant_select_title))?$merchant_select_title:'Merchant'; ?></td>
                                 <td colspan="3"><?php print form_dropdown('merchant_scopes',$merchantlist,$mid,'id = "merchant_scopes"'); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php print (isset($merchant_select_title))?$merchant_select_title:'Exclude Merchant'; ?></td>
+                                <td colspan="3"><?php print form_dropdown('exclude_merchant_scopes',$merchantlist,$exmid,'id = "exclude_merchant_scopes" multiple'); ?></td>
                             </tr>
                             <tr>
                                 <td><?php print (isset($status_select_title))?$status_select_title:'Status'; ?></td>
