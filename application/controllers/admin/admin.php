@@ -169,6 +169,292 @@ class Admin extends Application
             $pendingtab = $this->table->generate();
             $page['pendingtab'] = $pendingtab;
 
+            /* pickup to delivered */
+
+            $intab = $this->config->item('incoming_delivery_table');
+            $sq = $this->db->select('merchant_id, date(pickuptime) as pickupdate,status')
+                ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+                //->where($intab.'.assignment_date >=',$starttime)
+                //->where($intab.'.assignment_date <=',$endtime)
+                //->and_()
+                ->where_in('status',array('pending','cr_assigned'))
+                ->where('date(pickuptime) !=','0000-00-00')
+                /*
+                ->and_()
+                ->group_start()
+                ->where_in('status',array('pending'))
+                ->where('pending_count !=',0)
+                ->group_end()
+                */
+                ->from($this->config->item('incoming_delivery_table'))
+                ->order_by('merchant_id','asc')
+                ->order_by('pickupdate','asc')
+                //->group_by('merchant_id,pickupdate')
+                ->get()
+                ->result_array();
+
+            //print $this->db->last_query();
+
+            //print_r($sq);
+
+            $pickupdates = array();
+
+            foreach($sq as $ps){
+                if(in_array($ps['pickupdate'], $pickupdates)){
+
+                }else{
+                    $pickupdates[] = $ps['pickupdate'];
+                }
+            }
+
+            $merchantids = array();
+
+            foreach($sq as $md){
+                if(in_array($md['merchant_id'], $merchantids)){
+
+                }else{
+                    $merchantids[] = $md['merchant_id'];
+                }
+            }
+
+            //print_r($pickupdates);
+            //print_r($merchantids);
+
+            $sqx = $this->db->select('merchant_id,m.merchantname as merchant, date(pickuptime) as pickupdate , pending_count, box_count,status')
+                ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+                //->where($intab.'.assignment_date >=',$starttime)
+                //->where($intab.'.assignment_date <=',$endtime)
+                //->and_()
+                ->where_in('merchant_id',$merchantids)
+                ->where_in('date(pickuptime)',$pickupdates)
+                ->where('date(pickuptime) !=','0000-00-00')
+                /*
+                ->and_()
+                ->group_start()
+                ->where_in('status',array('pending'))
+                ->where('pending_count !=',0)
+                ->group_end()
+                */
+                ->from($this->config->item('incoming_delivery_table'))
+                ->order_by('merchant','asc')
+                ->order_by('pickupdate','asc')
+                //->group_by('merchant_id,pickupdate,status,pending_count')
+                ->get()
+                ->result_array();
+
+
+            $merchantnames = array();
+
+            foreach($sqx as $md){
+                $merchantnames[$md['merchant_id']] = $md['merchant'];
+
+            }
+
+            //print_r($sqx);
+
+            $res = array();
+
+
+            foreach ($sqx as $s) {
+                $m = $s['merchant_id'];
+                $d = $s['pickupdate'];
+
+                if(isset( $res[$m][$d]['tpack'] )){
+                    $res[$m][$d]['tpack'] = $res[$m][$d]['tpack'] + 1;
+                }else{
+                    $res[$m][$d]['tpack'] = 1;
+                }
+
+                if(isset( $res[$m][$d]['box'] )){
+                    $res[$m][$d]['box'] = $res[$m][$d]['box'] + $s['box_count'];
+                }else{
+                    $res[$m][$d]['box'] = $s['box_count'];
+                }
+
+                if($s['status'] == 'pending' && $s['pending_count'] == 1){
+                    if(isset( $res[$m][$d]['p1'] )){
+                        $res[$m][$d]['p1'] = $res[$m][$d]['p1'] + 1;
+                    }else{
+                        $res[$m][$d]['p1'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'pending' && $s['pending_count'] == 2){
+                    if(isset( $res[$m][$d]['p2'] )){
+                        $res[$m][$d]['p2'] = $res[$m][$d]['p2'] + 1;
+                    }else{
+                        $res[$m][$d]['p2'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'pending' && $s['pending_count'] == 3){
+                    if(isset( $res[$m][$d]['p3'] )){
+                        $res[$m][$d]['p3'] = $res[$m][$d]['p3'] + 1;
+                    }else{
+                        $res[$m][$d]['p3'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'pending' && $s['pending_count'] > 3){
+                    if(isset( $res[$m][$d]['pout'] )){
+                        $res[$m][$d]['pout'] = $res[$m][$d]['pout'] + 1;
+                    }else{
+                        $res[$m][$d]['pout'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'pending'){
+                    if(isset( $res[$m][$d]['pc'] )){
+                        $res[$m][$d]['pc'] = $res[$m][$d]['pc'] + 1;
+                    }else{
+                        $res[$m][$d]['pc'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'cr_assigned' || ( $s['status'] == 'pending' && $s['pending_count'] > 0 ) ){
+                    if(isset( $res[$m][$d]['in'] )){
+                        $res[$m][$d]['in'] = $res[$m][$d]['in'] + 1;
+                    }else{
+                        $res[$m][$d]['in'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'returned'){
+                    if(isset( $res[$m][$d]['ret'] )){
+                        $res[$m][$d]['ret'] = $res[$m][$d]['ret'] + 1;
+                    }else{
+                        $res[$m][$d]['ret'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'delivered'){
+                    if(isset( $res[$m][$d]['deli'] )){
+                        $res[$m][$d]['deli'] = $res[$m][$d]['deli'] + 1;
+                    }else{
+                        $res[$m][$d]['deli'] = 1;
+                    }
+                }
+
+            }
+
+            //print_r($res);
+
+            //die();
+
+            $this->table->clear();
+
+            $tmpl = array( 'table_open'  => '<table style="width:100%;" border="0" cellpadding="0" cellspacing="0" class="mytable">' );
+
+            $this->table->set_template($tmpl);
+
+            $this->table->set_heading(
+                array('data'=>'No.','rowspan'=>2),
+                array('data'=>'Merchant','rowspan'=>2,'style'=>'text-align:center;'),
+                array('data'=>'Tanggal Paket Diterima','rowspan'=>2,'style'=>'text-align:center;'),
+                array('data'=>'Jumlah Paket Diterima','rowspan'=>2,'style'=>'text-align:center;'),
+                array('data'=>'Jumlah Box','rowspan'=>2,'style'=>'text-align:center;'),
+                array('data'=>'Pending','colspan'=>4,'style'=>'text-align:center;'),
+                array('data'=>'Jumlah Paket Dalam Pengiriman','style'=>'text-align:center;'),
+                array('data'=>'Jumlah Paket Dikembalikan','style'=>'text-align:center;'),
+                array('data'=>'Jumlah Paket Terkirim','style'=>'text-align:center;')
+            ); // Setting headings for the table
+
+            $this->table->set_subheading(
+                'P1',
+                'P2',
+                'P3',
+                '>P3',
+                //'Total',
+                array('data'=>'In Progress','style'=>'text-align:center;'),
+                array('data'=>'Retur','style'=>'text-align:center;'),
+                array('data'=>'Delivered','style'=>'text-align:center;')
+            ); // Setting headings for the table
+
+            $num = 0;
+
+            $total_order = 0;
+            $total_box = 0;
+
+            foreach($res as $s=>$d){
+
+                $this->table->add_row(
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=> $merchantnames[ $s ],'style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey')
+                );
+
+
+
+                foreach($d as $s=>$k){
+
+                    $pc = (isset( $k['pc'] ) )?$k['pc']:'0';
+                    $p1 = (isset( $k['p1'] ) )?$k['p1']:'0';
+                    $p2 = (isset( $k['p2'] ) )?$k['p2']:'0';
+                    $p3 = (isset( $k['p3'] ) )?$k['p3']:'0';
+                    $pout = (isset( $k['pout'] ) )?$k['pout']:'0';
+
+                    $in = (isset( $k['in'] ) )?$k['in']:'0';
+
+                    $ret = (isset( $k['ret'] ) )?$k['ret']:'0';
+
+                    $deli = (isset( $k['deli'] ) )?$k['deli']:'0';
+
+                    $tpack = (isset( $k['tpack'] ) )?$k['tpack']:'0';
+
+                    $box = (isset( $k['box'] ) )?$k['box']:'0';
+
+                    if($tpack == $deli + $ret){
+
+                    }else{
+
+                        $num++;
+                        $this->table->add_row(
+                            array('data'=>$num,'style'=>'border-top:thin solid grey'),
+                            array('data'=>'','style'=>'border-top:thin solid grey'),
+                            array('data'=>$s,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$tpack,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$box,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$p1,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$p2,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$p3,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$pout,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$in,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$ret,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$deli,'style'=>'text-align:center; border-top:thin solid grey')
+                        );
+
+                    }
+
+
+                }
+
+
+
+            }
+
+            /*
+            $this->table->add_row(
+                array('data'=>'','style'=>'border-top:thin solid grey'),
+                array('data'=>'Total','style'=>'border-top:thin solid grey'),
+                array('data'=>$total_order,'style'=>'border-top:thin solid grey'),
+                array('data'=>$total_box,'style'=>'border-top:thin solid grey')
+            );
+            */
+
+            $pickuptab = $this->table->generate();
+            $page['pickuptab'] = $pickuptab;
+
+
 
 			$page['period'] = ' - '.date('d M Y',time());
 			$page['page_title'] = 'Dashboard';

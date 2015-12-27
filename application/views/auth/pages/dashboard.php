@@ -143,5 +143,14 @@ td {
             </td>
 
         </tr>
+        <tr>
+            <td colspan="2" style="width:50%;height:100%;vertical-align:top;">
+                <h3>&nbsp;</h3>
+                <div id="statistics"  style="width:100%;height:100%;">
+                    <span>Pick Up to Delivery <?php print $period;?></span>
+                    <?php print $pickuptab; ?>
+                </div>
+            </td>
+        </tr>
     </table>
 </div>
