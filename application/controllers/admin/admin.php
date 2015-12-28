@@ -354,7 +354,7 @@ class Admin extends Application
                 array('data'=>'Jumlah Paket Diterima','rowspan'=>2,'style'=>'text-align:center;'),
                 array('data'=>'Jumlah Box','rowspan'=>2,'style'=>'text-align:center;'),
                 array('data'=>'Pending','colspan'=>4,'style'=>'text-align:center;'),
-                array('data'=>'Jumlah Paket Dalam Pengiriman','style'=>'text-align:center;'),
+                //array('data'=>'Jumlah Paket Dalam Pengiriman','style'=>'text-align:center;'),
                 array('data'=>'Jumlah Paket Dikembalikan','style'=>'text-align:center;'),
                 array('data'=>'Jumlah Paket Terkirim','style'=>'text-align:center;')
             ); // Setting headings for the table
@@ -365,7 +365,7 @@ class Admin extends Application
                 'P3',
                 '>P3',
                 //'Total',
-                array('data'=>'In Progress','style'=>'text-align:center;'),
+                //array('data'=>'In Progress','style'=>'text-align:center;'),
                 array('data'=>'Retur','style'=>'text-align:center;'),
                 array('data'=>'Delivered','style'=>'text-align:center;')
             ); // Setting headings for the table
@@ -388,7 +388,7 @@ class Admin extends Application
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
-                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    //array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey')
                 );
@@ -428,7 +428,7 @@ class Admin extends Application
                             array('data'=>$p2,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$p3,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$pout,'style'=>'text-align:center; border-top:thin solid grey'),
-                            array('data'=>$in,'style'=>'text-align:center; border-top:thin solid grey'),
+                            //array('data'=>$in,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$ret,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$deli,'style'=>'text-align:center; border-top:thin solid grey')
                         );
