@@ -230,6 +230,7 @@ class Admin extends Application
                 ->where_in('date(pickuptime)',$pickupdates)
                 ->where('date(pickuptime) !=','0000-00-00')
                 ->where_not_in('status',array('canceled'))
+                ->where('pickup_status', 'sudah diambil' )
                 /*
                 ->and_()
                 ->group_start()
