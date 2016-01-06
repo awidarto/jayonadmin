@@ -178,6 +178,7 @@ class Admin extends Application
                 //->where($intab.'.assignment_date <=',$endtime)
                 //->and_()
                 ->where_in('status',array('pending','cr_assigned'))
+                ->where('pickup_status', 'sudah diambil' )
                 ->where('date(pickuptime) !=','0000-00-00')
                 /*
                 ->and_()
@@ -228,6 +229,7 @@ class Admin extends Application
                 ->where_in('merchant_id',$merchantids)
                 ->where_in('date(pickuptime)',$pickupdates)
                 ->where('date(pickuptime) !=','0000-00-00')
+                ->where_not_in('status',array('canceled'))
                 /*
                 ->and_()
                 ->group_start()

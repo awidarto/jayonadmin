@@ -130,14 +130,14 @@ td {
             <td style="width:50%;height:100%;vertical-align:top;">
                 <h3>Statistics</h3>
                 <div id="statistics"  style="width:100%;height:100%;">
-                    <span>Incoming <?php print $period;?></span>
+                    <span>Incoming Order Data <?php print $period;?></span>
                     <?php print $incomingtab; ?>
                 </div>
             </td>
             <td style="width:50%;height:100%;vertical-align:top;">
                 <h3>&nbsp;</h3>
                 <div id="statistics"  style="width:100%;height:100%;">
-                    <span>Pending <?php print $period;?></span>
+                    <span>Pending Order Data <?php print $period;?></span>
                     <?php print $pendingtab; ?>
                 </div>
             </td>
