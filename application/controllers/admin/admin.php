@@ -322,7 +322,7 @@ class Admin extends Application
                     }
                 }
 
-                if($s['status'] == 'dev_assigned'){
+                if($s['status'] == 'date_assigned'){
                     if(isset( $res[$m][$d]['deved'] )){
                         $res[$m][$d]['deved'] = $res[$m][$d]['deved'] + 1;
                     }else{
@@ -330,7 +330,7 @@ class Admin extends Application
                     }
                 }
 
-                if($s['status'] == 'cr_assigned'){
+                if($s['status'] == 'dev_assigned'){
                     if(isset( $res[$m][$d]['cred'] )){
                         $res[$m][$d]['cred'] = $res[$m][$d]['cred'] + 1;
                     }else{
