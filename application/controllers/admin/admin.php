@@ -322,6 +322,22 @@ class Admin extends Application
                     }
                 }
 
+                if($s['status'] == 'dev_assigned'){
+                    if(isset( $res[$m][$d]['deved'] )){
+                        $res[$m][$d]['deved'] = $res[$m][$d]['deved'] + 1;
+                    }else{
+                        $res[$m][$d]['deved'] = 1;
+                    }
+                }
+
+                if($s['status'] == 'cr_assigned'){
+                    if(isset( $res[$m][$d]['cred'] )){
+                        $res[$m][$d]['cred'] = $res[$m][$d]['cred'] + 1;
+                    }else{
+                        $res[$m][$d]['cred'] = 1;
+                    }
+                }
+
                 if($s['status'] == 'returned'){
                     if(isset( $res[$m][$d]['ret'] )){
                         $res[$m][$d]['ret'] = $res[$m][$d]['ret'] + 1;
@@ -357,6 +373,8 @@ class Admin extends Application
                 array('data'=>'Jumlah Paket Diterima','rowspan'=>2,'style'=>'text-align:center;'),
                 array('data'=>'Jumlah Box','rowspan'=>2,'style'=>'text-align:center;'),
                 array('data'=>'Pending','colspan'=>4,'style'=>'text-align:center;'),
+                array('data'=>'Device Assignment','rowspan'=>2,'style'=>'text-align:center;'),
+                array('data'=>'Courier Assignment','rowspan'=>2,'style'=>'text-align:center;'),
                 //array('data'=>'Jumlah Paket Dalam Pengiriman','style'=>'text-align:center;'),
                 array('data'=>'Jumlah Paket Dikembalikan','style'=>'text-align:center;'),
                 array('data'=>'Jumlah Paket Terkirim','style'=>'text-align:center;')
@@ -391,6 +409,8 @@ class Admin extends Application
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
+                    array('data'=>'','style'=>'border-top:thin solid grey'),
                     //array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey'),
                     array('data'=>'','style'=>'border-top:thin solid grey')
@@ -409,6 +429,10 @@ class Admin extends Application
                     $in = (isset( $k['in'] ) )?$k['in']:'0';
 
                     $ret = (isset( $k['ret'] ) )?$k['ret']:'0';
+
+                    $deved = (isset( $k['deved'] ) )?$k['deved']:'0';
+
+                    $cred = (isset( $k['cred'] ) )?$k['cred']:'0';
 
                     $deli = (isset( $k['deli'] ) )?$k['deli']:'0';
 
@@ -431,6 +455,8 @@ class Admin extends Application
                             array('data'=>$p2,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$p3,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$pout,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$deved,'style'=>'text-align:center; border-top:thin solid grey'),
+                            array('data'=>$cred,'style'=>'text-align:center; border-top:thin solid grey'),
                             //array('data'=>$in,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$ret,'style'=>'text-align:center; border-top:thin solid grey'),
                             array('data'=>$deli,'style'=>'text-align:center; border-top:thin solid grey')
