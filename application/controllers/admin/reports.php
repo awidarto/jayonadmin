@@ -4478,7 +4478,7 @@ class Reports extends Application
 
             $mdetails = $this->mongo_db->where('deliveryId',$r->delivery_id)
                             ->where_ne('deliveryNote','')
-                            ->order_by('mtimestamp','desc')
+                            ->order_by( array('mtimestamp'=>'desc'))
                             ->get('orderlog');
 
             //print_r($mdetails);
