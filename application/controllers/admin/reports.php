@@ -4475,6 +4475,37 @@ class Reports extends Application
 
             }
 
+
+            $mdetails = $this->mongo_db->where('deliveryId',$r->delivery_id)
+                            ->where_ne('deliveryNote','')
+                            ->order_by('mtimestamp','desc')
+                            ->get('orderlog');
+
+            print_r($mdetails);
+
+            $n = '';
+
+            foreach($mdetails as $d )
+            {
+
+                if($n != $d['deliveryNote']){
+                    if($pdf == 'csv'){
+                        $notes .= $d['mtimestamp']."\n";
+                        $notes .= $d['status']."\n";
+                        $notes .= $n." |\n";
+                    }else{
+                        $notes .= $d['timestamp'].'<br />';
+                        $notes .= '<b>'.$d['status'].'</b><br />';
+                        $notes .= $n.'<br />';
+
+                    }
+                }
+
+                $n = $d['deliveryNote'];
+
+            }
+
+
             /*
             $payable = $gt;
 

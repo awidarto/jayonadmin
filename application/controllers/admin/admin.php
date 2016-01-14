@@ -587,7 +587,11 @@ class Admin extends Application
 
     }
 
-    public function testdistance(){
+    public function testmongo(){
+
+        $orderlog = $this->mongo_db->get('shipmentlog');
+
+        print_r($orderlog);
 
     }
 
