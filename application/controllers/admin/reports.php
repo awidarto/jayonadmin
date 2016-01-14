@@ -4481,7 +4481,7 @@ class Reports extends Application
                             ->order_by('mtimestamp','desc')
                             ->get('orderlog');
 
-            print_r($mdetails);
+            //print_r($mdetails);
 
             $n = '';
 
@@ -4494,7 +4494,7 @@ class Reports extends Application
                         $notes .= $d['status']."\n";
                         $notes .= $n." |\n";
                     }else{
-                        $notes .= $d['timestamp'].'<br />';
+                        $notes .= $d['mtimestamp'].'<br />';
                         $notes .= '<b>'.$d['status'].'</b><br />';
                         $notes .= $n.'<br />';
 
