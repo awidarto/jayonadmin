@@ -4489,6 +4489,8 @@ class Reports extends Application
             {
 
                 if($n != $d['deliveryNote']){
+
+                    $n = $d['deliveryNote'];
                     if($pdf == 'csv'){
                         $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec)."\n";
                         $notes .= $d['status']."\n";
@@ -4501,7 +4503,6 @@ class Reports extends Application
                     }
                 }
 
-                $n = $d['deliveryNote'];
 
             }
 
