@@ -929,11 +929,15 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     }
 
     $pics_db = $CI->mongo_db->where('parent_id','=',$delivery_id)
-                ->get();
+                ->get('uploaded');
 
     $app = 'app v 2.0';
 
     $dbfullpic = array();
+
+    $sign_count = 0;
+    $pic_count = 0;
+
 
     if($pics_db){
 
