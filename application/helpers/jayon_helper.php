@@ -928,7 +928,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
     }
 
-    $pics_db = $CI->mongo_db->where('parent_id','=',$delivery_id)
+    $pics_db = $CI->mongo_db->where('parent_id',$delivery_id)
                 ->get('uploaded');
 
     $app = 'app v 1.0';
