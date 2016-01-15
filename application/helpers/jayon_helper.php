@@ -1026,9 +1026,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         $class = 'thumb_multi';
 
         $app = 'app v 2.0';
-        $egql = '';
+        $egal = '';
+
         foreach($pics_db as $pic){
-            $dbfullpic[] = $pic['full_url'];
 
             if( intval($pic['is_signature']) == 1){
                 $sign_count++;
@@ -1038,7 +1038,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
             $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$pic['name'].'" src="%s?'.time().'" />',$pic['thumbnail_url']);
 
-            $egal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$pics_db['full_url'].'" >';
+            $egal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$pic['full_url'].'" >';
 
         }
 
