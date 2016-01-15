@@ -931,7 +931,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     $pics_db = $CI->mongo_db->where('parent_id','=',$delivery_id)
                 ->get('uploaded');
 
-    $app = 'app v 2.0';
+    $app = 'app v 1.0';
 
     $dbfullpic = array();
 
@@ -955,6 +955,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
             }
         }
     }
+
+    $ths = '';
+
 
     if($pidx > 1){
         $ths = '';
@@ -1005,7 +1008,6 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
     if($pic_count > 0){
 
-        $ths = '';
         foreach($pics_db as $epic){
             $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic2.'" src="%s?'.time().'" />',$epic['thumbnail_url']);
         }
@@ -1038,9 +1040,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     }
 
     if($has_sign){
-        $gal = '<br />'.($pidx - 1).' pics & '.$sign_count.' signature';
+        $gal = '<br />'.($pidx - 1).' pics & '.$sign_count.' signature - '.$app;
     }else{
-        $gal = '<br />'.$pidx.' pics, no signature';
+        $gal = '<br />'.$pidx.' pics, no signature - '.$app;
     }
 
     if($pidx > 0){
