@@ -928,8 +928,6 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
     }
 
-    $pics_db = $CI->mongo_db->where('parent_id','=',$delivery_id)
-                ->get('uploaded');
 
     $app = 'app v 1.0';
 
@@ -937,20 +935,6 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
     $sign_count = 0;
     $pic_count = 0;
-
-
-    if(count($pics_db) > 0){
-        $app = 'app v 2.0';
-        foreach($pics_db as $pic){
-            $dbfullpic[] = $pic['full_url'];
-
-            if( intval($pic['is_signature']) == 1){
-                $sign_count++;
-            }else{
-                $pic_count++;
-            }
-        }
-    }
 
     $ths = '';
 
@@ -1001,24 +985,6 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
     }
 
-    if($pic_count > 0){
-
-        foreach($pics_db as $epic){
-            $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic2.'" src="%s?'.time().'" />',$epic['thumbnail_url']);
-        }
-
-        $class = 'thumb_multi';
-
-        $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
-
-        $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
-
-        $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;overflow-y:hidden;">'.$ths.'</div>';
-
-    }
-
-
-
     $has_sign = false;
 
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
@@ -1047,11 +1013,55 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
     }
 
-    if($pic_count > 0){
-        for($g = 0; $g < $dbfullpic; $g++){
-            $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$dbfullpic[$g].'" >';
+    // get v.2 pictures
+
+    $pics_db = $CI->mongo_db->where('parent_id',$delivery_id)
+                ->get('uploaded');
+
+    if(count($pics_db) > 0){
+        $app = 'app v 2.0';
+        foreach($pics_db as $pic){
+            $dbfullpic[] = $pic['full_url'];
+
+            if( intval($pic['is_signature']) == 1){
+                $sign_count++;
+            }else{
+                $pic_count++;
+            }
         }
+
+        if($pic_count > 0){
+
+            foreach($pics_db as $epic){
+                $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic2.'" src="%s?'.time().'" />',$epic['thumbnail_url']);
+            }
+
+            $class = 'thumb_multi';
+
+            $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
+
+            $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
+
+            $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;overflow-y:hidden;">'.$ths.'</div>';
+
+            if($has_sign){
+                $gal = '<br />'.($pidx - 1).' pics & '.$sign_count.' signature - '.$app;
+            }else{
+                $gal = '<br />'.$pidx.' pics, no signature - '.$app;
+            }
+
+            for($g = 0; $g < $dbfullpic; $g++){
+                $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$dbfullpic[$g].'" >';
+            }
+
+        }
+
     }
+
+
+
+
+
 
     $thumbnail = $thumbnail.$gal;
 
