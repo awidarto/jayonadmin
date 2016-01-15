@@ -177,8 +177,8 @@ class Admin extends Application
                 //->where($intab.'.assignment_date >=',$starttime)
                 //->where($intab.'.assignment_date <=',$endtime)
                 //->and_()
-                //->where_in('status',array('pending','cr_assigned'))
-                ->where('status','!=','delivered')
+                ->where_in('status',array('pending','cr_assigned'))
+                //->where('status','!=','delivered')
                 ->where('pickup_status', 'sudah diambil' )
                 ->where('date(pickuptime) !=','0000-00-00')
                 /*
