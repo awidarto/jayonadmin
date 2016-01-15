@@ -939,12 +939,8 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     $pic_count = 0;
 
 
-    if($pics_db){
-
-        if(count($pics_db) > 0){
-            $app = 'app v 2.0';
-        }
-
+    if(count($pics_db) > 0){
+        $app = 'app v 2.0';
         foreach($pics_db as $pic){
             $dbfullpic[] = $pic['full_url'];
 
@@ -955,6 +951,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
             }
         }
     }
+
 
     $ths = '';
 
