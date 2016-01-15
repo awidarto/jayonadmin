@@ -1018,11 +1018,15 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     $pics_db = $CI->mongo_db->where('parent_id',$delivery_id)
                 ->get('uploaded');
 
-    print_r($pics_db);
+    //print_r($pics_db);
 
-/*
+
     if(count($pics_db) > 0){
+
+        $class = 'thumb_multi';
+
         $app = 'app v 2.0';
+        $egql = '';
         foreach($pics_db as $pic){
             $dbfullpic[] = $pic['full_url'];
 
@@ -1031,39 +1035,28 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
             }else{
                 $pic_count++;
             }
-        }
 
-        if($pic_count > 0){
+            $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$pic['name'].'" src="%s?'.time().'" />',$pic['thumbnail_url']);
 
-            foreach($pics_db as $epic){
-                $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic['name'].'" src="%s?'.time().'" />',$epic['thumbnail_url']);
-            }
-
-            $class = 'thumb_multi';
-
-            $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
-
-            $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
-
-            $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;overflow-y:hidden;">'.$ths.'</div>';
-
-            if($has_sign){
-                $gal = '<br />'.($pidx - 1).' pics & '.$sign_count.' signature - '.$app;
-            }else{
-                $gal = '<br />'.$pidx.' pics, no signature - '.$app;
-            }
-
-            for($g = 0; $g < $dbfullpic; $g++){
-                $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$dbfullpic[$g].'" >';
-            }
+            $egal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$pics_db['full_url'].'" >';
 
         }
+
+        $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
+
+        $ths .= '<div style="width:100%;height:100%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
+
+        $thumbnail = '<div style="width:100px;height:75px;clear:both;display:block;cursor:pointer;position:relative;border:thin solid brown;overflow-y:hidden;">'.$ths.'</div>';
+
+        if($sign_count > 0){
+            $gal = '<br />'.$pic_count.' pics & '.$sign_count.' signature - '.$app;
+        }else{
+            $gal = '<br />'.$pic_count.' pics, no signature - '.$app;
+        }
+
+        $gal .= $egal;
 
     }
-
-
-
-*/
 
 
     $thumbnail = $thumbnail.$gal;
