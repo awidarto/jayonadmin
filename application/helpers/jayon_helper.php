@@ -1033,7 +1033,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         if($pic_count > 0){
 
             foreach($pics_db as $epic){
-                $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic2.'" src="%s?'.time().'" />',$epic['thumbnail_url']);
+                $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$epic['name'].'" src="%s?'.time().'" />',$epic['thumbnail_url']);
             }
 
             $class = 'thumb_multi';
