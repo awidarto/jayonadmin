@@ -1018,6 +1018,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
     $pics_db = $CI->mongo_db->where('parent_id',$delivery_id)
                 ->get('uploaded');
 
+    print_r($pics_db);
+
+/*
     if(count($pics_db) > 0){
         $app = 'app v 2.0';
         foreach($pics_db as $pic){
@@ -1060,7 +1063,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
 
 
-
+*/
 
 
     $thumbnail = $thumbnail.$gal;
