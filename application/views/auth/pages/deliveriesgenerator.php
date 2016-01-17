@@ -114,14 +114,14 @@
 
             $('#generatinginvoice').show();
 
-            $.post( base + 'admin/reports/geninvoice',
+            $.post( base + 'admin/reports/gendeliveries',
                 params,
                 function(data){
                     if(data.result == 'OK'){
                         $('#generatinginvoice').hide();
-                        alert('Invoice generated');
+                        alert('Report generated');
 
-                        $('#genresult').html( '<a href="' + base + 'public/invoices/' + data.file + '" target="_blank">' + data.file +'</a>' );
+                        $('#genresult').html( '<a href="' + base + 'public/custom/' + data.file + '" target="_blank">' + data.file +'</a>' );
                     }
                 },
                 'json' );
@@ -153,14 +153,14 @@
 
             $('#generatinginvoice').show();
 
-            $.post( base + 'admin/reports/geninvoice',
+            $.post( base + 'admin/reports/gendeliveries',
                 params,
                 function(data){
                     if(data.result == 'OK'){
                         $('#generatinginvoice').hide();
                         alert('Report generated');
 
-                        $('#genresult').html( '<a href="' + base + 'public/invoices/' + data.file + '" target="_blank">' + data.file +'</a>' );
+                        $('#genresult').html( '<a href="' + base + 'public/custom/' + data.file + '" target="_blank">' + data.file +'</a>' );
                     }
                 },
                 'json' );
