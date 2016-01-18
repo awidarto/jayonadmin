@@ -13,7 +13,7 @@
         <style type="text/css">
 
             body{
-                width:100%;
+                width:100% !important;
                 font-size: 12px;
                 font-family: arial,sans-serif;
                 margin: auto;

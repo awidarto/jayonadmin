@@ -4206,7 +4206,7 @@ class Reports extends Application
 
         $xls = array();
 
-        //exit();
+        /*//exit();
         if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
             $this->table->set_heading(
                 'No.',
@@ -4245,6 +4245,33 @@ class Reports extends Application
             );
 
         }else{
+            */
+            $xls[] = array(
+                'No.',
+                'No Kode Penjualan Toko',
+                'Fulfillment / Order ID',
+                'Delivery ID',
+                'Merchant Name',
+                'Store',
+                'Data Incoming Time',
+                'Pickup Time',
+                'Delivery Date',
+                'Delivered At',
+                'Delivery Note',
+                'Buyer Name',
+                'Delivery Type',
+                'Jumlah Box',
+                'Status',
+                //'Package Value',
+                //'Disc',
+                //'Tax',
+                'Delivery Chg',
+                //'COD Surchg',
+                'Total Charge'
+                //'GMV'
+            ); // Setting headings for the table
+
+
             $this->table->set_heading(
                 'No.',
                 'No Kode Penjualan Toko',
@@ -4265,12 +4292,12 @@ class Reports extends Application
                 //'Disc',
                 //'Tax',
                 'Delivery Chg',
-                'COD Surchg',
+                //'COD Surchg',
                 'Total Charge'
                 //'GMV'
             ); // Setting headings for the table
 
-        }
+        //}
 
 
         $seq = 1;
@@ -4504,7 +4531,7 @@ class Reports extends Application
             }
 
 
-
+            /*
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
 
                 $this->table->add_row(
@@ -4545,6 +4572,32 @@ class Reports extends Application
 
 
             }else{
+                */
+                $xls[] = array(
+                    $seq,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    $this->short_did($r->delivery_id),
+                    $r->fullname.'<hr />'.$r->merchant_name,
+                    $r->app_name.'<hr />'.$r->domain,
+                    $r->created,
+                    $r->pickuptime,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->deliverytime,
+                    $notes,
+                    $r->buyer_name,
+                    $r->delivery_type,
+                    $r->box_count,
+                    $r->status,
+                    //array('data'=>idr($total),'class'=>'currency'),
+                    //array('data'=>idr($dsc),'class'=>'currency'),
+                    //array('data'=>idr($tax),'class'=>'currency'),
+                    idr($dc),
+                    //idr($cod),
+                    idr($codval)
+                    //idr($payable)
+                );
+
                 $this->table->add_row(
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
@@ -4565,19 +4618,19 @@ class Reports extends Application
                     //array('data'=>idr($dsc),'class'=>'currency'),
                     //array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
-                    array('data'=>idr($cod),'class'=>'currency'),
+                    //array('data'=>idr($cod),'class'=>'currency'),
                     array('data'=>idr($codval),'class'=>'currency')
                     //array('data'=>idr($payable),'class'=>'currency')
                 );
 
 
-            }
+            //}
 
 
 
             $seq++;
         }
-
+            /*
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
                 $this->table->add_row(
                     '',
@@ -4616,6 +4669,7 @@ class Reports extends Application
                 );
 
             }else{
+                */
                 $this->table->add_row(
                     '',
                     '',
@@ -4633,25 +4687,48 @@ class Reports extends Application
                     $total_box,
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    //array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total')
                     //array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
                 );
-            }
+
+                $xls[] = array(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $total_box,
+                    '',
+                    idr($total_delivery),
+                    //idr($total_cod),
+                    idr($total_cod_val)
+                    //idr($total_payable)
+                );
+
+            //}
 
 
-
+        /*
         if($pdf == 'print' || $pdf == 'pdf'){
 
             $total_span = 2;
             $say_span = 4;
 
         }else{
-
+        */
             $total_span = 2;
             $say_span = 11;
 
-        }
+        //}
 
 
         $this->table->add_row(
