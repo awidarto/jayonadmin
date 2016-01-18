@@ -4460,12 +4460,6 @@ class Reports extends Application
 
                 }
 
-                if($pdf == 'csv'){
-
-                }else{
-                    $notes .= '<br /><hr />';
-                }
-
             }
 
 
@@ -4498,14 +4492,14 @@ class Reports extends Application
 
                 }
 
-                if($pdf == 'csv'){
-
-                }else{
-                    $notes .= '<br /><hr />';
-                }
 
             }
 
+            if($pdf == 'csv'){
+
+            }else{
+                $notes .= '<br /><hr />';
+            }
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
