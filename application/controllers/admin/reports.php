@@ -4480,11 +4480,11 @@ class Reports extends Application
                         if($pdf == 'csv'){
                             $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec)."\n";
                             $notes .= $d['status']."\n";
-                            $notes .= $n." |\n";
+                            $notes .= $n." |\n\n";
                         }else{
                             $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec).'<br />';
                             $notes .= '<b>'.$d['status'].'</b><br />';
-                            $notes .= $n.'<br />';
+                            $notes .= $n.'<br /><br /><hr />';
 
                         }
                     }
