@@ -4473,7 +4473,7 @@ class Reports extends Application
                     }
 
                     if($n != ''){
-                        if($pdf == 'csv'){
+                        if($pdf == 'csv' || $pdf == 'xls'){
                             $notes .= $d['timestamp']."\n";
                             $notes .= $d['status']."\n";
                             $notes .= $n." |\n\n";
@@ -4504,7 +4504,7 @@ class Reports extends Application
                     if($n != $d['deliveryNote']){
 
                         $n = $d['deliveryNote'];
-                        if($pdf == 'csv'){
+                        if($pdf == 'csv' || $pdf == 'xls'){
                             $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec)."\n";
                             $notes .= $d['status']."\n";
                             $notes .= $n." |\n\n";
@@ -4523,7 +4523,7 @@ class Reports extends Application
             }
 
             if($notes != ''){
-                if($pdf == 'csv'){
+                if($pdf == 'csv' || $pdf == 'xls'){
 
                 }else{
                     $notes .= '<hr />';
