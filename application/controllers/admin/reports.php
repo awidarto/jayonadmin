@@ -4463,7 +4463,7 @@ class Reports extends Application
                 if($pdf == 'csv'){
 
                 }else{
-                    $notes .= '<br />';
+                    $notes .= '<br /><hr />';
                 }
 
             }
@@ -4501,7 +4501,7 @@ class Reports extends Application
                 if($pdf == 'csv'){
 
                 }else{
-                    $notes .= '<br />';
+                    $notes .= '<br /><hr />';
                 }
 
             }
