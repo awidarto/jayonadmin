@@ -4070,7 +4070,7 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,deliverytime,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,pickuptime ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -4210,7 +4210,11 @@ class Reports extends Application
         if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
             $this->table->set_heading(
                 'No.',
-                'Delivery Time',
+                'Data Incoming Time',
+                'Pick Up Time',
+                'Delivery Date',
+                'Delivered At',
+                'Delivery Notes',
                 'Delivery ID',
                 'Type',
                 'Delivery Fee',
@@ -4224,7 +4228,11 @@ class Reports extends Application
 
             $xls[] = array(
                 'No.',
-                'Delivery Time',
+                'Data Incoming Time',
+                'Pick Up Time',
+                'Delivery Date',
+                'Delivered At',
+                'Delivery Notes',
                 'Delivery ID',
                 'Type',
                 'Delivery Fee',
@@ -4244,18 +4252,22 @@ class Reports extends Application
                 'Delivery ID',
                 'Merchant Name',
                 'Store',
+                'Data Incoming Time',
+                'Pickup Time',
                 'Delivery Date',
+                'Delivered At',
+                'Delivery Note',
                 'Buyer Name',
                 'Delivery Type',
                 'Jumlah Box',
                 'Status',
-                'Package Value',
-                'Disc',
-                'Tax',
+                //'Package Value',
+                //'Disc',
+                //'Tax',
                 'Delivery Chg',
                 'COD Surchg',
-                'Total Charge',
-                'GMV'
+                'Total Charge'
+                //'GMV'
             ); // Setting headings for the table
 
         }
@@ -4271,6 +4283,54 @@ class Reports extends Application
         $total_payable = 0;
 
         $lastdate = '';
+
+        $delivery_ids = array();
+
+        foreach ($rows->result() as $d) {
+            $delivery_ids[] = $d->delivery_id;
+        }
+
+            $details = $this->db->where_in('delivery_id',$delivery_ids)
+                            ->and_()
+                            ->group_start()
+                                ->where('status',   $this->config->item('trans_status_mobile_delivered'))
+                                ->or_where('status',$this->config->item('trans_status_new'))
+                                ->or_where('status',$this->config->item('trans_status_rescheduled'))
+                                ->or_where('status',$this->config->item('trans_status_mobile_return'))
+                            ->group_end()
+                            ->order_by('timestamp','desc')
+                            ->get($this->config->item('delivery_log_table'));
+
+            $details = $details->result_array();
+
+            if(count($details) > 0){
+                $dbdetail = array();
+
+                foreach($details as $dt){
+                    $dbdetail[$dt['delivery_id']][] = $dt;
+                }
+
+            }else{
+                $details = false;
+            }
+
+
+            $mdetails = $this->mongo_db->where_in('deliveryId',$delivery_ids)
+                            ->where_ne('deliveryNote','')
+                            ->order_by( array('mtimestamp'=>'desc'))
+                            ->get('orderlog');
+
+            if(count($mdetails) > 0){
+                $mdbdetail = array();
+
+                foreach($mdetails as $dt){
+                    $mdbdetail[$dt['deliveryId']][] = $dt;
+                }
+
+            }else{
+                $mdetails = false;
+            }
+
 
         foreach($rows->result() as $r){
 
@@ -4352,11 +4412,84 @@ class Reports extends Application
 
             $total_billing = $total_billing + (double)$payable;
 
+            // delivery notes
+
+
+            $notes = '';
+
+            if($details && isset($details[$r->delivery_id])){
+
+                foreach($details[$r->delivery_id] as $d )
+                {
+                    $n = '';
+                    if($d['api_event'] == 'admin_change_status'){
+                        $n = $d['req_note'];
+                    }else{
+                        if($d['notes'] != ''){
+                            $n = $d['notes'];
+                        }
+                    }
+
+                    if($n != ''){
+                        if($pdf == 'csv'){
+                            $notes .= $d['timestamp']."\n";
+                            $notes .= $d['status']."\n";
+                            $notes .= $n." |\n";
+                        }else{
+                            $notes .= $d['timestamp'].'<br />';
+                            $notes .= '<b>'.$d['status'].'</b><br />';
+                            $notes .= $n.'<br />';
+
+                        }
+                    }
+
+                }
+
+            }
+
+
+
+
+            //print_r($mdetails);
+
+            if($mdetails && isset($mdetails[$r->delivery_id])){
+
+                $n = '';
+
+                foreach($mdetails[$r->delivery_id] as $d )
+                {
+
+                    if($n != $d['deliveryNote']){
+
+                        $n = $d['deliveryNote'];
+                        if($pdf == 'csv'){
+                            $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec)."\n";
+                            $notes .= $d['status']."\n";
+                            $notes .= $n." |\n";
+                        }else{
+                            $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec).'<br />';
+                            $notes .= '<b>'.$d['status'].'</b><br />';
+                            $notes .= $n.'<br />';
+
+                        }
+                    }
+
+
+                }
+
+            }
+
+
+
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
 
                 $this->table->add_row(
                     $seq,
+                    $r->created,
+                    $r->pickuptime,
                     date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->deliverytime,
+                    $notes,
                     $this->short_did($r->delivery_id),
                     $r->delivery_type,
                     array('data'=>idr($dc),'class'=>'currency'),
@@ -4370,7 +4503,11 @@ class Reports extends Application
 
                 $xls[] = array(
                     $seq,
+                    $r->created,
+                    $r->pickuptime,
                     date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->deliverytime,
+                    $notes,
                     $this->short_did($r->delivery_id),
                     $r->delivery_type,
                     idr($dc,false),
@@ -4391,18 +4528,22 @@ class Reports extends Application
                     $this->short_did($r->delivery_id),
                     $r->fullname.'<hr />'.$r->merchant_name,
                     $r->app_name.'<hr />'.$r->domain,
+                    $r->created,
+                    $r->pickuptime,
                     date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->deliverytime,
+                    $notes,
                     $r->buyer_name,
                     $r->delivery_type,
                     $r->box_count,
                     $r->status,
-                    array('data'=>idr($total),'class'=>'currency'),
-                    array('data'=>idr($dsc),'class'=>'currency'),
-                    array('data'=>idr($tax),'class'=>'currency'),
+                    //array('data'=>idr($total),'class'=>'currency'),
+                    //array('data'=>idr($dsc),'class'=>'currency'),
+                    //array('data'=>idr($tax),'class'=>'currency'),
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
-                    array('data'=>idr($codval),'class'=>'currency'),
-                    array('data'=>idr($payable),'class'=>'currency')
+                    array('data'=>idr($codval),'class'=>'currency')
+                    //array('data'=>idr($payable),'class'=>'currency')
                 );
 
 
@@ -4419,6 +4560,10 @@ class Reports extends Application
                     '',
                     '',
                     '',
+                    '',
+                    '',
+                    '',
+                    '',
                     idr($total_delivery,false),
                     idr($total_cod,false),
                     '',
@@ -4429,6 +4574,10 @@ class Reports extends Application
                 );
 
                 $xls[] = array(
+                    '',
+                    '',
+                    '',
+                    '',
                     '',
                     '',
                     '',
@@ -4453,15 +4602,16 @@ class Reports extends Application
                     '',
                     '',
                     '',
+                    '',
+                    '',
+                    '',
+                    '',
                     $total_box,
-                    '',
-                    '',
-                    '',
                     '',
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total')
+                    //array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
                 );
             }
 
