@@ -4499,7 +4499,7 @@ class Reports extends Application
                 if($pdf == 'csv'){
 
                 }else{
-                    $notes .= '<br /><hr />';
+                    $notes .= '<hr />';
                 }
             }
 
