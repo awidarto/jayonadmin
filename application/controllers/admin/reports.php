@@ -4495,11 +4495,14 @@ class Reports extends Application
 
             }
 
-            if($pdf == 'csv'){
+            if($notes != ''){
+                if($pdf == 'csv'){
 
-            }else{
-                $notes .= '<br /><hr />';
+                }else{
+                    $notes .= '<br /><hr />';
+                }
             }
+
 
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
