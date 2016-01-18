@@ -4460,6 +4460,12 @@ class Reports extends Application
 
                 }
 
+                if($pdf == 'csv'){
+
+                }else{
+                    $notes .= '<br />';
+                }
+
             }
 
 
@@ -4484,12 +4490,18 @@ class Reports extends Application
                         }else{
                             $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec).'<br />';
                             $notes .= '<b>'.$d['status'].'</b><br />';
-                            $notes .= $n.'<br /><br /><hr />';
+                            $notes .= $n.'<br />';
 
                         }
                     }
 
 
+                }
+
+                if($pdf == 'csv'){
+
+                }else{
+                    $notes .= '<br />';
                 }
 
             }
