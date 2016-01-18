@@ -231,6 +231,11 @@ div.stickyHeader {
 .button{
     cursor: pointer;
 }
+
+table.reportTable td{
+    vertical-align: top;
+}
+
 </style>
 
 <?php
