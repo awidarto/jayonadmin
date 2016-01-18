@@ -4353,7 +4353,7 @@ class Reports extends Application
             $mdetails = $this->mongo_db->where_in('deliveryId',$delivery_ids)
                             ->where_ne('deliveryNote','')
                             ->where_gte('mtimestamp', new MongoDate( strtotime($from)))
-                            ->order_by( array('mtimestamp'=>'desc'))
+                            ->order_by( array('mtimestamp'=>'asc'))
                             ->get('orderlog');
 
             if(count($mdetails) > 0){
