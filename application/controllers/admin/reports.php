@@ -4310,6 +4310,7 @@ class Reports extends Application
                     $dbdetail[$dt['delivery_id']][] = $dt;
                 }
 
+                $details = $dbdetail;
             }else{
                 $details = false;
             }
@@ -4327,6 +4328,8 @@ class Reports extends Application
                 foreach($mdetails as $dt){
                     $mdbdetail[$dt['deliveryId']][] = $dt;
                 }
+
+                $mdetails = $mdbdetail;
 
             }else{
                 $mdetails = false;
