@@ -4290,6 +4290,7 @@ class Reports extends Application
             $delivery_ids[] = $d->delivery_id;
         }
 
+        if(count($delivery_ids) > 0){
             $details = $this->db->where_in('delivery_id',$delivery_ids)
                             ->and_()
                             ->group_start()
@@ -4315,7 +4316,13 @@ class Reports extends Application
                 $details = false;
             }
 
+        }else{
+            $details = false;
+        }
 
+
+
+        if(count($delivery_ids) > 0){
             $mdetails = $this->mongo_db->where_in('deliveryId',$delivery_ids)
                             ->where_ne('deliveryNote','')
                             ->where_gte('mtimestamp', new MongoDate( strtotime($from)))
@@ -4334,6 +4341,10 @@ class Reports extends Application
             }else{
                 $mdetails = false;
             }
+        }else{
+            $mdetails = false;
+        }
+
 
 
         foreach($rows->result() as $r){
