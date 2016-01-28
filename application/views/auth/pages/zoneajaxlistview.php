@@ -22,6 +22,7 @@
 				"oLanguage": { "sSearch": "Search "},
 				"sPaginationType": "full_numbers",
 				"sDom": 'T<"clear">lfrtip',
+                "aLengthMenu": [[100, 150, 200, 250, 500], [100, 150, 200, 250, 500]],
 				"oTableTools": {
 					"sSwfPath": "<?php print base_url();?>assets/swf/copy_csv_xls_pdf.swf"
 				},

@@ -20,6 +20,7 @@
 				"oLanguage": { "sSearch": "Search "},
 				"sPaginationType": "full_numbers",
 				"sDom": 'T<"clear">lfrtip',
+                "aLengthMenu": [[100, 150, 200, 250, 500], [100, 150, 200, 250, 500]],
 				"oTableTools": {
 					"sSwfPath": "<?php print base_url();?>assets/swf/copy_csv_xls_pdf.swf"
 				},
@@ -29,16 +30,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -51,7 +52,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -182,7 +183,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -205,7 +206,7 @@
 						delivery_ids[i] = $(this).val();
 						laststatus[i] = $(this).attr('title');
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -234,7 +235,7 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				"Download PDF": function(){
 					var print_id = $('#print_id').val();
 					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
@@ -246,7 +247,7 @@
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 
@@ -260,14 +261,14 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 	});
