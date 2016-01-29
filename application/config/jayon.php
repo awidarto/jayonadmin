@@ -163,6 +163,7 @@ $config['status_colors'] = array(
 	$config['trans_status_admin_dispatched'] => 'green',
 
     $config['trans_status_tobepickup'] => 'maroon',
+    $config['trans_status_no_pickup'] => 'red',
     $config['trans_status_pickup'] => 'green',
 
     $config['trans_status_atmerchant'] => 'maroon',
