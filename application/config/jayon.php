@@ -103,6 +103,7 @@ $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
 $config['trans_status_tobepickup'] = 'akan diambil';
+$config['trans_status_no_pickup'] = 'tidak diambil';
 $config['trans_status_pickup'] = 'sudah diambil';
 
 $config['trans_status_atmerchant'] = 'belum di gudang';
@@ -125,7 +126,7 @@ $config['status_list'] = array(
     $config['trans_cr_atmerchant'] = 'di merchant';
     $config['trans_cr_inwh'] = 'di gudang';
     $config['trans_cr_offcr'] = 'belum di kurir';
-    $config['trans_cr_oncr'] = 'di kurir';
+    $config['trans_cr_oncr'] = 'sudah di kurir';
     $config['trans_cr_oncr_partial'] = 'di kurir sebagian';
     $config['trans_cr_return2wh'] = 'kembali ke gudang';
     $config['trans_cr_return2merchant'] = 'kembali ke lokasi awal';
@@ -199,6 +200,7 @@ $config['status_changes'] = array(
 $config['pickup_status_changes'] = array(
 
     $config['trans_status_canceled'] => 'red',
+    $config['trans_status_no_pickup'] => 'red',
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
 );
