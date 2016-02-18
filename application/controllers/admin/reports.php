@@ -2566,7 +2566,7 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -2706,37 +2706,51 @@ class Reports extends Application
         if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
             $this->table->set_heading(
                 'No.',
-                'Delivery Time',
-                'Delivery ID',
-                'Type',
-                'Delivery Fee',
-                'COD Surchg',
-                'Buyer',
+                'Tanggal Kirim',
                 'Kode Toko',
                 'Fulfillment / Order ID',
+                'Delivery ID / AWB',
+                'Buyer',
+                'Kota',
+                'Type',
+                'Jumlah COD',
                 'Jumlah Box',
-                'Status'
+                'Berat Aktual',
+                'Harga Dasar / Koli',
+                'Diskon',
+                'Delivery Fee',
+                'COD Surchg',
+                'Status',
+                'Tanggal Terima',
+                'Penerima'
             ); // Setting headings for the table
 
             $xls[] = array(
                 'No.',
-                'Delivery Time',
-                'Delivery ID',
-                'Type',
-                'Delivery Fee',
-                'COD Surchg',
-                'Buyer',
+                'Tanggal Kirim',
                 'Kode Toko',
                 'Fulfillment / Order ID',
-                'Jumlah Box',
-                'Status'
+                'Delivery ID / AWB',
+                'Buyer',
+                'Kota',
+                'Type',
+                'Jumlah COD',
+                'Jumlah Box / Koli',
+                'Berat Aktual',
+                'Harga Dasar / Koli',
+                'Diskon',
+                'Delivery Fee',
+                'COD Surchg',
+                'Status',
+                'Tanggal Terima',
+                'Penerima'
             );
 
         }else{
             $this->table->set_heading(
                 'No.',
                 'No Kode Penjualan Toko',
-                'Fulfillment / Order ID',
+                'No FF / Order ID',
                 'Delivery ID',
                 'Merchant Name',
                 'Store',
@@ -2849,33 +2863,69 @@ class Reports extends Application
             $total_billing = $total_billing + (double)$payable;
 
             if($pdf == 'print' || $pdf == 'pdf' || $pdf == 'xls'){
+                /*
+                'No.',
+                'Delivery Time',
+                'Kode Toko',
+                'Fulfillment / Order ID',
+                'Delivery ID / AWB',
+                'Buyer',
+                'Kota',
+                'Type',
+                'Jumlah COD',
+                'Jumlah Box',
+                'Berat Aktual',
+                'Harga Dasar / Koli',
+                'Diskon',
+                'Delivery Fee',
+                'COD Surchg',
+                'Status',
+                'Tanggal Terima',
+                'Penerima'
+                */
 
                 $this->table->add_row(
                     $seq,
                     date('d-m-Y',strtotime($r->assignment_date)),
-                    $this->short_did($r->delivery_id),
-                    $r->delivery_type,
-                    array('data'=>idr($dc),'class'=>'currency'),
-                    array('data'=>idr($cod),'class'=>'currency'),
-                    $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
+                    //$this->short_did($r->delivery_id),
+                    $r->delivery_id,
+                    $r->buyer_name,
+                    $r->buyerdeliverycity,
+                    $r->delivery_type,
+                    idr($payable),
                     $r->box_count,
-                    $r->status
+                    $r->actual_weight,
+                    '-',
+                    idr($dsc),
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    $r->status,
+                    $r->deliverytime,
+                    $r->delivery_note
                 );
 
                 $xls[] = array(
                     $seq,
                     date('d-m-Y',strtotime($r->assignment_date)),
-                    $this->short_did($r->delivery_id),
-                    $r->delivery_type,
-                    idr($dc,false),
-                    idr($cod,false),
-                    $r->buyer_name,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
+                    //$this->short_did($r->delivery_id),
+                    $r->delivery_id,
+                    $r->buyer_name,
+                    $r->buyerdeliverycity,
+                    $r->delivery_type,
+                    $payable,
                     $r->box_count,
-                    $r->status
+                    $r->actual_weight,
+                    '',
+                    $dsc,
+                    $dc,
+                    $cod,
+                    $r->status,
+                    $r->deliverytime,
+                    $r->delivery_note
                 );
 
 
@@ -2915,12 +2965,19 @@ class Reports extends Application
                     '',
                     '',
                     '',
-                    idr($total_delivery,false),
-                    idr($total_cod,false),
+                    '',
+                    '',
                     '',
                     '',
                     '',
                     $total_box,
+                    '',
+                    '',
+                    '',
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
+                    '',
+                    '',
                     ''
                 );
 
@@ -2929,12 +2986,19 @@ class Reports extends Application
                     '',
                     '',
                     '',
-                    idr($total_delivery,false),
-                    idr($total_cod,false),
+                    '',
+                    '',
                     '',
                     '',
                     '',
                     $total_box,
+                    '',
+                    '',
+                    '',
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
+                    '',
+                    '',
                     ''
                 );
 
