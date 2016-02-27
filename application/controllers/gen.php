@@ -25,7 +25,7 @@ class Gen extends Application
         for($d = 1; $d < $days + 1; $d++){
             $date = $year.'-'.str_pad($month,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT);
             //print($date);
-            $this->db->select('assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,actual_weight,application_id,application_key')
+            $this->db->select($this->config->item('incoming_delivery_table').'.created,assignment_date,merchant_id,m.merchantname as merchant_name, m.fullname as fullname,delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,actual_weight,application_id,application_key')
                 ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
                 ->like('assignment_date',$date,'after')
                 ->from($this->config->item('incoming_delivery_table'));
@@ -40,6 +40,8 @@ class Gen extends Application
                 $lookupname[$r->merchant_id] = $r->merchant_name.' - '.$r->fullname;
 
                 $r->delivery_type = (strtoupper($r->delivery_type) == 'DO')? 'Delivery Only': $r->delivery_type ;
+
+                $orderdate = date('Y-m-d', strtotime($r->created) );
 
                 if(isset($aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'])){
                     $aggregate[$r->assignment_date][$r->merchant_id][$r->status][$r->delivery_type]['count'] += 1;
@@ -63,7 +65,7 @@ class Gen extends Application
                     if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                         try{
                             //$app_id = get_app_id_from_key($r->application_key);
-                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id,$orderdate);
                         }catch(Exception $e){
 
                         }
@@ -75,7 +77,7 @@ class Gen extends Application
 
                 if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                     try{
-                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id);
+                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id, $orderdate);
                     }catch(Exception $e){
 
                     }
@@ -188,7 +190,7 @@ class Gen extends Application
             $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
 
 
-            $this->db->select('assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,application_id,application_key')
+            $this->db->select($this->config->item('incoming_delivery_table').'.created,assignment_date,device_id,d.identifier as device_name, delivery_type,status,cod_cost,delivery_cost,total_price,chargeable_amount,application_id,application_key')
                 ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
                 //->db->where($daterange, null, false);
                 //->db->where($column.' != ','0000-00-00');
@@ -222,13 +224,14 @@ class Gen extends Application
                 }
 
                 $app_id = $r->application_id;
+                $orderdate = date('Y-m-d', strtotime($r->created) );
 
                 if($r->delivery_type == 'COD' || $r->delivery_type == 'CCOD'){
                     if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                         try{
                             //$app_id = get_app_id_from_key($r->application_key);
                             //$r->cod_cost = get_cod_tariff($r->total_price,$app_id);
-                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id);
+                            $r->cod_cost = get_cod_tariff($r->total_price,$r->application_id,$orderdate);
                         }catch(Exception $e){
 
                         }
@@ -240,7 +243,7 @@ class Gen extends Application
 
                 if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                     try{
-                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id);
+                        $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$r->application_id, $orderdate );
                         //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
                     }catch(Exception $e){
 

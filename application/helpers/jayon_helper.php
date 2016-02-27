@@ -519,7 +519,7 @@ function get_weight_range($tariff,$app_id = null){
 	}
 }
 
-function get_weight_tariff($weight, $delivery_type ,$app_id = null){
+function get_weight_tariff($weight, $delivery_type ,$app_id = null, $date = null){
     $CI =& get_instance();
 
     $weight = floatval($weight);
@@ -531,6 +531,20 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
         }
         $CI->db->where('kg_from <= ', $weight );
         $CI->db->where('kg_to >= ', $weight );
+
+        if(!is_null($date)){
+            $CI->db->where('period_from <= ',$date);
+            $CI->db->where('period_to >= ',$date);
+        }
+
+        /*
+        $column = 'assignment_date';
+        $daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+        $CI->db->where($daterange, null, false);
+        $CI->db->where($column.' != ','0000-00-00');
+        */
+
         if($delivery_type == 'PS'){
             $result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
         }else{
@@ -547,7 +561,7 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
     }
 }
 
-function get_cod_tariff($total_price,$app_id = null){
+function get_cod_tariff($total_price,$app_id = null, $date = null){
 
 	$CI =& get_instance();
 
@@ -563,6 +577,12 @@ function get_cod_tariff($total_price,$app_id = null){
 		$CI->db->select('surcharge');
 		$CI->db->where('from_price <= ', doubleval($total_price) );
 		$CI->db->where('to_price >= ', doubleval($total_price) );
+
+        if(!is_null($date)){
+            $CI->db->where('period_from <= ',$date);
+            $CI->db->where('period_to >= ',$date);
+        }
+
         if(!is_null($app_id)){
             $CI->db->where('app_id',$app_id);
         }
@@ -593,12 +613,21 @@ function get_cod_table($app_id){
 
 }
 
-function get_delivery_charge_table($app_id){
+function get_delivery_charge_table($app_id, $date = null){
 	$CI =& get_instance();
 
 	$CI->db->where('app_id',$app_id);
+
+    if(!is_null($date)){
+        $CI->db->where('period_from <= ',$date);
+        $CI->db->where('period_to >= ',$date);
+    }
+
+
 	$CI->db->order_by('seq','asc');
 	$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+
+    //print $CI->db->last_query();
 
 	if($result->num_rows() > 0){
 		return $result->result();

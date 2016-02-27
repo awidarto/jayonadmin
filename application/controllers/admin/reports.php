@@ -2566,7 +2566,7 @@ class Reports extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select('assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -2629,11 +2629,13 @@ class Reports extends Application
 
                 $app_id = $r['application_id'];
 
+                $orderdate = date('Y-m-d', strtotime($r['created']) );
+
                 if($r['delivery_type'] == 'COD' || $r['delivery_type'] == 'CCOD'){
                     if($r['cod_cost'] == 0 || is_null($r['cod_cost']) || $r['cod_cost'] == ''){
                         try{
                             //$app_id = get_app_id_from_key($r['application_key']);
-                            $r['cod_cost'] = get_cod_tariff($r['total_price'],$app_id);
+                            $r['cod_cost'] = get_cod_tariff($r['total_price'],$app_id, $orderdate);
                         }catch(Exception $e){
 
                         }
@@ -2646,7 +2648,7 @@ class Reports extends Application
 
                 if($r['delivery_cost'] == 0 || is_null($r['delivery_cost']) || $r['delivery_cost'] == ''){
                     try{
-                        $r['delivery_cost'] = get_weight_tariff($r['actual_weight'], $r['delivery_type'] ,$app_id);
+                        $r['delivery_cost'] = get_weight_tariff($r['actual_weight'], $r['delivery_type'] ,$app_id, $orderdate);
                     }catch(Exception $e){
 
                     }
@@ -2785,6 +2787,7 @@ class Reports extends Application
         foreach($rows->result() as $r){
 
             $app_id = $r->application_id;
+            $orderdate = date('Y-m-d', strtotime($r->created) );
 
             if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
                 if($r->chargeable_amount > 0){
@@ -2797,7 +2800,7 @@ class Reports extends Application
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
                         //$app_id = get_app_id_from_key($r->application_key);
-                        $r->cod_cost = get_cod_tariff($r->total_price,$app_id);
+                        $r->cod_cost = get_cod_tariff($r->total_price,$app_id, $orderdate);
                     }catch(Exception $e){
 
                     }
@@ -2810,7 +2813,8 @@ class Reports extends Application
 
             if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                 try{
-                    $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+
+                    $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id, $orderdate);
                     //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
                 }catch(Exception $e){
 
@@ -4196,12 +4200,13 @@ class Reports extends Application
                 }
 
                 $app_id = $r['application_id'];
+                $orderdate = date('Y-m-d', strtotime($r['created']) );
 
                 if($r['delivery_type'] == 'COD' || $r['delivery_type'] == 'CCOD'){
                     if($r['cod_cost'] == 0 || is_null($r['cod_cost']) || $r['cod_cost'] == ''){
                         try{
                             //$app_id = get_app_id_from_key($r['application_key']);
-                            $r['cod_cost'] = get_cod_tariff($r['total_price'],$app_id);
+                            $r['cod_cost'] = get_cod_tariff($r['total_price'],$app_id, $orderdate);
                         }catch(Exception $e){
 
                         }
@@ -4214,7 +4219,7 @@ class Reports extends Application
 
                 if($r['delivery_cost'] == 0 || is_null($r['delivery_cost']) || $r['delivery_cost'] == ''){
                     try{
-                        $r['delivery_cost'] = get_weight_tariff($r['actual_weight'], $r['delivery_type'] ,$app_id);
+                        $r['delivery_cost'] = get_weight_tariff($r['actual_weight'], $r['delivery_type'] ,$app_id, $orderdate);
                     }catch(Exception $e){
 
                     }
@@ -4441,6 +4446,7 @@ class Reports extends Application
         foreach($rows->result() as $r){
 
             $app_id = $r->application_id;
+            $orderdate = date('Y-m-d', strtotime($r['created']) );
 
             if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
                 if($r->chargeable_amount > 0){
@@ -4453,7 +4459,7 @@ class Reports extends Application
                 if($r->cod_cost == 0 || is_null($r->cod_cost) || $r->cod_cost == ''){
                     try{
                         //$app_id = get_app_id_from_key($r->application_key);
-                        $r->cod_cost = get_cod_tariff($r->total_price,$app_id);
+                        $r->cod_cost = get_cod_tariff($r->total_price,$app_id, $orderdate);
                     }catch(Exception $e){
 
                     }
@@ -4466,7 +4472,7 @@ class Reports extends Application
 
             if($r->delivery_cost == 0 || is_null($r->delivery_cost) || $r->delivery_cost == ''){
                 try{
-                    $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id);
+                    $r->delivery_cost = get_weight_tariff($r->actual_weight, $r->delivery_type ,$app_id, $orderdate);
                     //$r->delivery_cost = get_cod_tariff($r->total_price,$r->application_id);
                 }catch(Exception $e){
 

@@ -336,7 +336,7 @@ class Import extends Application
 
                     $line['delivery_type'] = ($line['delivery_type'] == 'DO')?'Delivery Only':$line['delivery_type'];
                     $line['actual_weight'] = $line['weight'];
-                    $line['weight'] = get_weight_tariff($line['weight'], $line['delivery_type'] ,$app_id);
+                    $line['weight'] = get_weight_tariff($line['weight'], $line['delivery_type'] ,$app_id, date('Y-m-d',time()));
 
                     $trx_detail = array();
                     $trx_detail[0]['unit_description'] = $line['package_description'];
@@ -830,7 +830,7 @@ class Import extends Application
                 if($in->delivery_type == 'DO' || $in->delivery_type == 'Delivery Only'){
                     $order['cod_cost'] = 0;
                 }else{
-                    $order['cod_cost'] = get_cod_tariff($order['total_price'],$app->id);
+                    $order['cod_cost'] = get_cod_tariff($order['total_price'],$app->id, date('Y-m-d', time() ) );
                 }
 
                 $order['box_count'] = (isset($in->box_count))?$in->box_count:1;

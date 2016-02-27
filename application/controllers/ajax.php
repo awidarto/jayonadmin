@@ -424,29 +424,41 @@ class Ajax extends Application
 
 	public function getweightdata(){
 		$app_key = $this->input->post('app_key');
-		if($app_key == '0'){
-			$dctable = false;
+
+        $dctablehit = true;
+
+        if($app_key == '0'){
+			$dctablehit = false;
 			$app_id = 0;
 		}else{
 			$app_id = get_app_id_from_key($app_key);
-			$dctable = get_delivery_charge_table($app_id);
+			$dctable = get_delivery_charge_table($app_id, date('Y-m-d',time()));
 		}
 
-		if($dctable == true){
+		if($dctablehit == true){
 			$weight[0] = 'Select weight range';
-			foreach ($dctable as $r) {
-                $p = 'IDR '.number_format($r->total,2,',','.');
-				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
-				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
-			}
+
+            if(is_array($dctable)){
+                foreach ($dctable as $r) {
+                    $p = 'IDR '.number_format($r->total,2,',','.');
+                    $weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
+                    $this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+                }
+            }else{
+                $this->table->add_row('', '');
+            }
 		}else{
 			$dctable = get_delivery_charge_table(0);
 			$weight[0] = 'Select weight range';
-			foreach ($dctable as $r) {
-                $p = 'IDR '.number_format($r->total,2,',','.');
-				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
-				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
-			}
+            if(is_array($dctable)){
+                foreach ($dctable as $r) {
+                    $p = 'IDR '.number_format($r->total,2,',','.');
+                    $weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg - '.$p;
+                    $this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+                }
+            }else{
+                $this->table->add_row('', '');
+            }
 		}
 
 		$weightselect = form_dropdown('package_weight',$weight,null,'id="package_weight"');
@@ -930,7 +942,8 @@ class Ajax extends Application
 			$dc = (int)$dc;
 
 			if($delivery_type == 'COD'){
-				$cod = get_cod_tariff(($total - $dsc) + $tax);
+                $prc = ($total - $dsc) + $tax;
+				$cod = get_cod_tariff( $prc, $order['application_id'], date('Y-m-d', strtotime($order['created']) ) );
 			}else{
 				$cod = 0;
 			}
