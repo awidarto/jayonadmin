@@ -166,7 +166,11 @@ class Codreport extends Application
         $sfrom = date('Y-m-d',strtotime($from));
         $sto = date('Y-m-d',strtotime($to));
 
-        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, cod_bearer, delivery_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        //$this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name, deliverytime, delivery_note,cod_bearer, delivery_bearer,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,status,fulfillment_code,cod_cost,delivery_cost,total_price,total_tax,box_count,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+
+        $mtab = $this->config->item('assigned_delivery_table');
+
+        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,cod_bearer, delivery_bearer,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -321,25 +325,26 @@ class Codreport extends Application
 
             $this->table->set_heading(
                 'No.',
-                'No Kode Penjualan Toko',
+                'Tanggal Kirim',
+                'Kode Toko',
                 'Fulfillment / Order ID',
-                'Delivery ID',
-                //'Merchant Name',
-                'Store',
-                'Delivery Date',
-                'Buyer Name',
-                'Delivery Type',
-                'Status',
+                'Delivery ID / AWB',
+                'Buyer',
+                'Kota',
+                'Type',
+                'Jumlah COD',
                 'Jumlah Box',
-                'Total Price',
-                'Disc',
-                'Tax',
-                'Delivery Chg',
+                'Berat Aktual',
+                'Harga Dasar / Koli',
+                'Diskon',
+                'Delivery Fee',
                 'COD Surchg',
-                'Total Charges'
-            ); // Setting headings for the table
+                'Status',
+                'Tanggal Terima',
+                'Penerima'
 
-            $xls[] = array(
+
+                /*
                 'No.',
                 'No Kode Penjualan Toko',
                 'Fulfillment / Order ID',
@@ -357,10 +362,72 @@ class Codreport extends Application
                 'Delivery Chg',
                 'COD Surchg',
                 'Total Charges'
+                */
+            ); // Setting headings for the table
+
+            $xls[] = array(
+                'No.',
+                'Tanggal Kirim',
+                'Kode Toko',
+                'Fulfillment / Order ID',
+                'Delivery ID / AWB',
+                'Buyer',
+                'Kota',
+                'Type',
+                'Jumlah COD',
+                'Jumlah Box / Koli',
+                'Berat Aktual',
+                'Harga Dasar / Koli',
+                'Diskon',
+                'Delivery Fee',
+                'COD Surchg',
+                'Status',
+                'Tanggal Terima',
+                'Penerima'
+
+                /*
+                'No.',
+                'No Kode Penjualan Toko',
+                'Fulfillment / Order ID',
+                'Delivery ID',
+                //'Merchant Name',
+                'Store',
+                'Delivery Date',
+                'Buyer Name',
+                'Delivery Type',
+                'Status',
+                'Jumlah Box',
+                'Total Price',
+                'Disc',
+                'Tax',
+                'Delivery Chg',
+                'COD Surchg',
+                'Total Charges'
+                */
             );
 
         }else{
             $this->table->set_heading(
+                'No.',
+                'No Kode Penjualan Toko',
+                'No FF / Order ID',
+                'Delivery ID',
+                'Merchant Name',
+                'Store',
+                'Delivery Date',
+                'Buyer Name',
+                'Delivery Type',
+                'Jumlah Box',
+                'Status',
+                'Package Value',
+                'Disc',
+                'Tax',
+                'Delivery Chg',
+                'COD Surchg',
+                'Total Charge',
+                'GMV'
+
+                /*
                 'No.',
                 'No Kode Penjualan Toko',
                 'Fulfillment / Order ID',
@@ -379,6 +446,7 @@ class Codreport extends Application
                 'COD Surchg',
                 'Total Charges',
                 'GMV'
+                */
             ); // Setting headings for the table
 
         }
@@ -503,6 +571,27 @@ class Codreport extends Application
 
                 $this->table->add_row(
                     $seq,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    //$this->short_did($r->delivery_id),
+                    $r->delivery_id,
+                    $r->buyer_name,
+                    $r->buyerdeliverycity,
+                    $r->delivery_type,
+                    idr($payable),
+                    $r->box_count,
+                    $r->actual_weight,
+                    '-',
+                    idr($dsc),
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    $r->status,
+                    $r->deliverytime,
+                    $r->delivery_note
+
+                    /*
+                    $seq,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
                     $this->short_did($r->delivery_id),
@@ -520,9 +609,31 @@ class Codreport extends Application
                     array('data'=>idr($cod),'class'=>'currency'),
                     array('data'=>idr($codval),'class'=>'currency')
                     //array('data'=>idr($payable),'class'=>'currency')
+                    */
                 );
 
                 $xls[] = array(
+                    $seq,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    //$this->short_did($r->delivery_id),
+                    $r->delivery_id,
+                    $r->buyer_name,
+                    $r->buyerdeliverycity,
+                    $r->delivery_type,
+                    $payable,
+                    $r->box_count,
+                    $r->actual_weight,
+                    '',
+                    $dsc,
+                    $dc,
+                    $cod,
+                    $r->status,
+                    $r->deliverytime,
+                    $r->delivery_note
+
+                    /*
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
@@ -539,12 +650,34 @@ class Codreport extends Application
                     idr($tax,false),
                     idr($dc,false),
                     idr($cod,false),
-                    idr($codval,false)                    //array('data'=>idr($payable),'class'=>'currency')
+                    idr($codval,false)
+                    //array('data'=>idr($payable),'class'=>'currency')
+                    */
                 );
 
             }else{
 
                 $this->table->add_row(
+                    $seq,
+                    $this->hide_trx($r->merchant_trans_id),
+                    $r->fulfillment_code,
+                    $this->short_did($r->delivery_id),
+                    $r->fullname.'<hr />'.$r->merchant_name,
+                    $r->app_name.'<hr />'.$r->domain,
+                    date('d-m-Y',strtotime($r->assignment_date)),
+                    $r->buyer_name,
+                    $r->delivery_type,
+                    $r->box_count,
+                    $r->status,
+                    array('data'=>idr($total),'class'=>'currency'),
+                    array('data'=>idr($dsc),'class'=>'currency'),
+                    array('data'=>idr($tax),'class'=>'currency'),
+                    array('data'=>idr($dc),'class'=>'currency'),
+                    array('data'=>idr($cod),'class'=>'currency'),
+                    array('data'=>idr($codval),'class'=>'currency'),
+                    array('data'=>idr($payable),'class'=>'currency')
+
+                    /*
                     $seq,
                     $this->hide_trx($r->merchant_trans_id),
                     $r->fulfillment_code,
@@ -563,6 +696,7 @@ class Codreport extends Application
                     array('data'=>idr($cod),'class'=>'currency'),
                     array('data'=>idr($codval),'class'=>'currency'),
                     array('data'=>idr($payable),'class'=>'currency')
+                    */
                 );
 
 
@@ -574,6 +708,30 @@ class Codreport extends Application
         }
 
             if($pdf == 'print' || $pdf == 'pdf'|| $pdf == 'xls'){
+                $this->table->add_row(
+
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $total_box,
+                    '',
+                    '',
+                    '',
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
+                    '',
+                    '',
+                    ''
+
+                );
+
+
                 /*
                 $this->table->add_row(
                     '',
@@ -586,7 +744,6 @@ class Codreport extends Application
                     '',
                     ''
                 );
-                */
 
                 $this->table->add_row(
                     '',
@@ -607,8 +764,30 @@ class Codreport extends Application
                     array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total')
                     //array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
                 );
+                */
 
                 $xls[] = array(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $total_box,
+                    '',
+                    '',
+                    '',
+                    idr($total_delivery,false),
+                    idr($total_cod,false),
+                    '',
+                    '',
+                    ''
+
+
+                    /*
                     '',
                     '',
                     '',
@@ -626,10 +805,31 @@ class Codreport extends Application
                     'Rp '.idr($total_cod),
                     'Rp '.idr($total_cod_val)
                     //array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
+                    */
                 );
 
             }else{
                 $this->table->add_row(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $total_box,
+                    '',
+                    '',
+                    '',
+                    '',
+                    array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
+                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
+
+                    /*
                     '',
                     '',
                     '',
@@ -647,6 +847,7 @@ class Codreport extends Application
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
+                    */
                 );
             }
 
