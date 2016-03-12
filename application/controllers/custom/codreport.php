@@ -170,7 +170,7 @@ class Codreport extends Application
 
         $mtab = $this->config->item('assigned_delivery_table');
 
-        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,cod_bearer, delivery_bearer,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
+        $this->db->select($this->config->item('assigned_delivery_table').'.created,assignment_date,delivery_id,'.$this->config->item('assigned_delivery_table').'.merchant_id as merchant_id,buyer_name,merchant_trans_id,m.merchantname as merchant_name, m.fullname as fullname, a.application_name as app_name, a.domain as domain ,delivery_type,cod_bearer, delivery_bearer,status,cod_cost,delivery_cost,total_price,total_tax,fulfillment_code,box_count,buyerdeliverycity, delivery_note, deliverytime, pickuptime,total_discount,chargeable_amount,actual_weight,application_id,application_key')
             ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
             ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left')
             ->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left')
@@ -340,6 +340,7 @@ class Codreport extends Application
                 'Delivery Fee',
                 'COD Surchg',
                 'Status',
+                'Tanggal Pickup',
                 'Tanggal Terima',
                 'Penerima'
 
@@ -382,6 +383,7 @@ class Codreport extends Application
                 'Delivery Fee',
                 'COD Surchg',
                 'Status',
+                'Tanggal Pickup',
                 'Tanggal Terima',
                 'Penerima'
 
@@ -414,6 +416,7 @@ class Codreport extends Application
                 'Delivery ID',
                 'Merchant Name',
                 'Store',
+                'Pickup Date',
                 'Delivery Date',
                 'Buyer Name',
                 'Delivery Type',
@@ -587,6 +590,7 @@ class Codreport extends Application
                     array('data'=>idr($dc),'class'=>'currency'),
                     array('data'=>idr($cod),'class'=>'currency'),
                     $r->status,
+                    $r->pickuptime,
                     $r->deliverytime,
                     $r->delivery_note
 
@@ -630,6 +634,7 @@ class Codreport extends Application
                     $dc,
                     $cod,
                     $r->status,
+                    $r->pickuptime,
                     $r->deliverytime,
                     $r->delivery_note
 
@@ -664,6 +669,7 @@ class Codreport extends Application
                     $this->short_did($r->delivery_id),
                     $r->fullname.'<hr />'.$r->merchant_name,
                     $r->app_name.'<hr />'.$r->domain,
+                    $r->pickuptime,
                     date('d-m-Y',strtotime($r->assignment_date)),
                     $r->buyer_name,
                     $r->delivery_type,
@@ -727,6 +733,7 @@ class Codreport extends Application
                     idr($total_cod,false),
                     '',
                     '',
+                    '',
                     ''
 
                 );
@@ -784,6 +791,7 @@ class Codreport extends Application
                     idr($total_cod,false),
                     '',
                     '',
+                    '',
                     ''
 
 
@@ -819,6 +827,7 @@ class Codreport extends Application
                     '',
                     '',
                     '',
+                    '',
                     $total_box,
                     '',
                     '',
@@ -827,7 +836,7 @@ class Codreport extends Application
                     array('data'=>'Rp '.idr($total_delivery),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod),'class'=>'currency total'),
                     array('data'=>'Rp '.idr($total_cod_val),'class'=>'currency total'),
-                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency')
+                    array('data'=>'Rp '.idr($total_payable),'class'=>'currency total')
 
                     /*
                     '',
