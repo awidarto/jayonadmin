@@ -180,12 +180,19 @@
                 var thumbs = $('.gal_' + delivery_id)
 
                 $('.gal_' + delivery_id).each(function(el){
+                    var pic_url = $(this).val() + '?' + currentTime.getTime();
+
+                    if($(this).val().indexOf('http:') == -1){
+                        pic_url = '<?php print print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime();
+                    }
+
                     images.push(
                         {
-                            href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            href : pic_url,
                             title : $(this).val()
                         }
                     );
+
                 });
 
                 $.fancybox.open(images);
