@@ -545,6 +545,8 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null, $date = null
         $CI->db->where($column.' != ','0000-00-00');
         */
 
+        $CI->db->order_by('period_from','desc');
+
         if($delivery_type == 'PS'){
             $result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
         }else{
@@ -586,6 +588,9 @@ function get_cod_tariff($total_price,$app_id = null, $date = null){
         if(!is_null($app_id)){
             $CI->db->where('app_id',$app_id);
         }
+
+        $CI->db->order_by('period_from','desc');
+
 		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
 		$row = $result->row();
 	}
