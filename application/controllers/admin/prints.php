@@ -83,7 +83,7 @@ class Prints extends Application
         $this->load->view('auth/pages/setlocation',$data); // Load the view
     }
 
-    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'qr',$pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'qr', $showqty = 'No',$pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
                         m.id as merchant_id,
                         m.merchantname as merchant,
@@ -118,6 +118,18 @@ class Prints extends Application
                     $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
                 }
 
+                $detsql = $this->db->select('delivery_id')->select_sum('unit_quantity')->where_in('delivery_id',$ids)
+                            ->group_by('delivery_id')
+                            ->get($this->config->item('delivery_details_table'));
+
+                $qty_arr = array();
+
+                if($detsql->result_array()){
+                    foreach($detsql->result_array() as $qt){
+                        $qty_arr[ $qt['delivery_id'] ] = $qt['unit_quantity'];
+                    }
+                }
+
             //$pd = get_print_default();
             /*
             if($pd){
@@ -137,6 +149,8 @@ class Prints extends Application
                 $data['margin_bottom'] = $margin_bottom;
                 $data['font_size'] = $font_size;
                 $data['code_type'] = $code_type;
+                $data['showqty'] = $showqty;
+                $data['qty_arr'] = $qty_arr;
             //}
 
 

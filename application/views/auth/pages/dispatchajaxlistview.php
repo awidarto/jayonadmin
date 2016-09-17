@@ -221,9 +221,10 @@
                             var mbottom = $('#label_margin_bottom').val();
                             var fsize = $('#label_font_size').val();
                             var codetype = $('#label_code_type').val();
+                            var showqty = $('#label_show_qty').val();
 
                             $('#label_id').val(delivery_id);
-                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  res +'/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype;
+                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  res +'/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype + '/' + showqty;
                             $('#label_frame').attr('src',src);
                             $('#label_dialog').dialog('open');
                         }
@@ -280,7 +281,9 @@
             var mbottom = $('#label_margin_bottom').val();
             var fsize = $('#label_font_size').val();
             var codetype = $('#label_code_type').val();
-            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype;
+            var showqty = $('#label_show_qty').val();
+
+            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype +'/'+ showqty;
 
             $('#label_frame').attr('src',src);
         });
@@ -295,6 +298,7 @@
             var mbottom = $('#label_margin_bottom').val();
             var fsize = $('#label_font_size').val();
             var codetype = $('#label_code_type').val();
+            var showqty = $('#label_show_qty').val();
 
             $.post(
                 '<?php print base_url();?>ajax/printdefault',
@@ -307,7 +311,8 @@
                     mright : mright,
                     mbottom : mbottom,
                     fsize : fsize,
-                    codetype : codetype
+                    codetype : codetype,
+                    showqty : showqty
 
                 },
                 function(data){
