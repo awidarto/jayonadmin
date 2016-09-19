@@ -155,8 +155,12 @@
             <?php if( isset($showqty) && $showqty == 'yes'): ?>
             <tr>
                 <td colspan="2" style="width:50%;text-align:left">
-                    Item Qty : <?php print $qty_arr[$address['delivery_id']] ?><br />
-                    Total : IDR <?php print $address['chargeable_amount'] ?> 
+                    Item Qty : <?php print isset($qty_arr[$address['delivery_id']])?$qty_arr[$address['delivery_id']]:1 ?><br />
+                    Total : IDR <?php print $address['chargeable_amount'] ?>
+                    <p>
+                        Jumlah dan harga diisi oleh merchant. Jika ada perbedaan silakan hubungi merchant.
+                    </p>
+
                 </td>
             </tr>
             <?php endif ?>
