@@ -4446,7 +4446,7 @@ class Reports extends Application
         foreach($rows->result() as $r){
 
             $app_id = $r->application_id;
-            $orderdate = date('Y-m-d', strtotime($r['created']) );
+            $orderdate = date('Y-m-d', strtotime($r->created ) );
 
             if($r->total_price == 0 || is_null($r->total_price) || $r->total_price == ''){
                 if($r->chargeable_amount > 0){
