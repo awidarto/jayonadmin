@@ -4571,9 +4571,9 @@ class Reports extends Application
                 foreach($mdetails[$r->delivery_id] as $d )
                 {
 
-                    if($n != $d['deliveryNote']){
+                    if(isset($d['deliveryNote'])){
+                        if($n != $d['deliveryNote']){
 
-                        if(isset($d['deliveryNote'])){
                             $n = $d['deliveryNote'];
                             if($pdf == 'csv' || $pdf == 'xls'){
                                 $notes .= date('Y-m-d H:i:s' ,$d['mtimestamp']->sec)."\n";
@@ -4585,7 +4585,9 @@ class Reports extends Application
                                 $notes .= $n.'<br /><br />';
 
                             }
+
                         }
+
                     }
 
 
