@@ -36,11 +36,16 @@ function save_box($delivery_id, $merchant_trans_id, $fulfillment_code,$count){
 
 
 function iddate($date,$withyear = true){
+
     $idmonth = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
 
-    $tahun = substr($date, 0, 4);
-    $bulan = substr($date, 5, 2);
-    $tgl   = substr($date, 8, 2);
+    //$tahun = substr($date, 0, 4);
+    //$bulan = substr($date, 5, 2);
+    //$tgl   = substr($date, 8, 2);
+
+    $tahun = date( 'Y', strtotime( $date));
+    $bulan = date( 'm', strtotime( $date));
+    $tgl   = date( 'd', strtotime( $date));
 
     if($withyear == true){
         $result = $tgl . " " . $idmonth[(int)$bulan-1] . " ". $tahun;
