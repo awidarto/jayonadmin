@@ -506,6 +506,8 @@ function user_group_desc($id)
 function get_weight_range($tariff,$app_id = null){
 	$CI =& get_instance();
 
+	$tariff = floatval($tariff);
+
 	if($tariff > 0){
 		$CI->db->select('kg_from,kg_to');
 		$CI->db->where('total',$tariff);
