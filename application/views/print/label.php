@@ -146,6 +146,8 @@
                         <h3><?php print $address['recipient_name'] ?></h3>
                         <p class="shipping"><?php print $address['shipping_address'] ?></p>
                         <p><?php print $address['buyerdeliverycity'] ?></p>
+                        <p><?php print $address['phone'] ?></p>
+                        <p><?php print $address['mobile1'] ?></p>
                         <?php if($code_type == 'barcode') : ?>
                         <img class="barcode" src="<?php print base_url()?>img/barcode/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
                         <?php endif; ?>
