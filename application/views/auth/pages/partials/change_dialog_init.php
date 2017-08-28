@@ -95,6 +95,38 @@
                 $('#confirm_list').html('');
             }
         });
+//updatesahlan
+        $('#crchangestatus_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#crchange_id').html();
+
+                    $.post('<?php print site_url('admin/delivery/ajaxcrchangestatus');?>',{
+                        'delivery_id':delivery_id,
+                        'new_status': $('#crnew_status').val(),
+                        'actor': $('#actor').val(),
+                        'req_note' : $('#crchg_note').val()
+                    }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#crchangestatus_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
 
         $('#setzone_dialog').dialog({
             autoOpen: false,

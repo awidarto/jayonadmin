@@ -365,6 +365,8 @@ class Delivery extends Application
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
 
+            $crchangestatus = '<span class="crchangestatus" id="'.$key['delivery_id'].'"  style="cursor:pointer;text-decoration:underline;"> CRChgStat</span>';
+
 			$app = $this->get_app_info($key['application_key']);
 
 			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (get_option('auto_lock_hours')*60*60))?true:false;
@@ -461,7 +463,7 @@ class Delivery extends Application
 				$key['fulfillment_code'],
                 colorizetype($key['delivery_type']),
 				'<b>'.$key['merchant'].'</b><br />'.$app_name,
-                $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
+                $printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$crchangestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
                 $direction,
@@ -3708,6 +3710,7 @@ class Delivery extends Application
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
+            $crchangestatus = '<span class="crchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >CRChgStat</span>';
 
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -3777,7 +3780,7 @@ class Delivery extends Application
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
                 $notes,
-				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
+				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$crchangestatus.'<br /><br />'.$viewlog,
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
                 $key['delivery_cost'],
@@ -5580,6 +5583,87 @@ class Delivery extends Application
 
         print json_encode(array('result'=>$order_exist));
     }
+
+    public function ajaxcrchangestatus(){
+        $delivery_id = $this->input->post('delivery_id');
+        $device_id = $this->input->post('device_id');
+        $dataset['courier_status'] = $this->input->post('new_status');
+        $dataset['crchange_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
+        $req_by = $this->input->post('req_by');
+        $req_name = $this->input->post('req_name');
+        $req_note = $this->input->post('req_note');
+
+        $dataset['courier_note'] = $req_note;
+
+        if(is_array($delivery_id)){
+            foreach($delivery_id as $did){
+
+                if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+                {
+
+                    $order_exist = 'ok';
+                }
+                else
+                {
+                    $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+                }
+
+                $data = array(
+                    'timestamp'=>date('Y-m-d H:i:s',time()),
+                    'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                    'delivery_id'=>$did,
+                    'device_id'=>$device_id,
+                    'courier_id'=>0,
+                    'actor_type'=>$this->input->post('actor'),
+                    'actor_id'=>$this->session->userdata('userid'),
+                    'latitude'=>0.000000,
+                    'longitude'=>0.000000,
+                    'status'=>$this->input->post('new_status'),
+                    'api_event'=>'admin_change_wh_status',
+                    'notes'=>$order_exist
+                );
+
+                delivery_log($data);
+
+            }
+
+        }else{
+
+
+            if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
+            {
+
+                $order_exist = 'ok';
+            }
+            else
+            {
+                $order_exist = 'ORDER_FAILED_ASSIGNMENT';
+            }
+
+            $data = array(
+                'timestamp'=>date('Y-m-d H:i:s',time()),
+                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                'delivery_id'=>$delivery_id,
+                'device_id'=>$device_id,
+                'courier_id'=>0,
+                'actor_type'=>$this->input->post('actor'),
+                'actor_id'=>$this->session->userdata('userid'),
+                'latitude'=>0.000000,
+                'longitude'=>0.000000,
+                'status'=>$this->input->post('new_status'),
+                'api_event'=>'admin_change_wh_status',
+                'notes'=>$order_exist
+            );
+
+            delivery_log($data);
+
+
+        }
+
+
+        print json_encode(array('result'=>$order_exist));
+    }
+
 
 	public function getzone(){
 		$q = $this->input->get('term');

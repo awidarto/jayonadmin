@@ -93,7 +93,39 @@
         </tr>
     </table>
 </div>
+<!-- updatesahlan -->
+<div id="crchangestatus_dialog" title="Change Courir Status">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="crchange_id"></span><br /><br />
+                <?php
+                    $status_list = $this->config->item('courier_status_changes');
+                    $status_list = array_keys($status_list);
 
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    $actor = $this->config->item('actors_title');
+
+
+                    print 'Actor <br />';
+                    print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
+                    print ' New Status<br />';
+                    print form_dropdown('new_status',$sl,'','id="crnew_status"');
+
+                ?>
+            </td>
+            <td>
+                <label for="crchg_note">Note</label>
+                <textarea name="crchg_note" id="crchg_note" style="width:100%;height:100%"></textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+<!-- end -->
 <div id="setzone_dialog" title="Set Zone">
     <strong>Delivery ID : </strong><span id="setzone_id"></span><br /><br />
     <table style="width:100%;border:0;margin:0;">

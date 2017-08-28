@@ -16,6 +16,12 @@
                 $('#whchangestatus_dialog').dialog('open');
             }
 
+            if ($(e.target).is('.crchangestatus')) {
+                var delivery_id = e.target.id;
+                $('#crchange_id').html(delivery_id);
+                $('#crchangestatus_dialog').dialog('open');
+            }
+
             if ($(e.target).is('.set_zone')) {
                 var delivery_id = e.target.id;
                 console.log(delivery_id);
