@@ -7964,7 +7964,7 @@ class Reports extends Application
 		}
 	}
 
-
+	// new update
 	public function devicerecon($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
@@ -8058,7 +8058,343 @@ class Reports extends Application
 		$sto = date('Y-m-d',strtotime($to));
 
 		$this->db->distinct();
-		$this->db->select('assignment_date,status,count(*) as count, sum(box_count) as total_box_count');
+		$this->db->select('assignment_date,delivery_type, status, count(*) as count, sum(box_count) as total_box_count');
+		$this->db->from($this->config->item('delivered_delivery_table'));
+
+		$column = 'assignment_date';
+		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
+
+		$this->db->where($daterange, null, false);
+		$this->db->where($column.' != ','0000-00-00');
+
+		if($id != 'noid'){
+			$this->db->where($this->config->item('delivered_delivery_table').'.device_id',$id);
+		}
+
+        if($status != 'all'){
+                $this->db->where('status',$status);
+        }else{
+            $this->db->and_();
+            $this->db->group_start();
+                $this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
+                $this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
+            $this->db->group_end();
+
+            $this->db->group_by('assignment_date,status,delivery_type');
+        }
+
+        if($pdf == 'csv'){
+
+            $result = $this->db->get()->result_array();
+
+            // Open the output stream
+            $fh = fopen('php://output', 'w');
+
+            // Start output buffering (to capture stream contents)
+            ob_start();
+
+            // Loop over the * to export
+            if (! empty($result)) {
+                $headers = array_keys($result[0]);
+                    fputcsv($fh, $headers);
+                foreach ($result as $item) {
+                    fputcsv($fh, $item);
+                }
+            }
+
+            // Get the contents of the output buffer
+            $string = ob_get_clean();
+
+            $filename = str_replace('/', '_', uri_string()).'.csv';
+
+            // Output CSV-specific headers
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            header('Content-Transfer-Encoding: binary');
+
+            exit($string);
+        }
+
+
+		$rows = $this->db->get();
+
+        $last_query = $this->db->last_query();
+
+
+        //get incoming counts
+        /*
+        $sql = 'SELECT DISTINCT DATE_FORMAT( ordertime,  \'%Y-%m-%d\' ) AS incoming, COUNT( * ) as count FROM  `delivery_order_active` WHERE ordertime BETWEEN ? AND ? GROUP BY incoming';
+
+        $ql = $this->db->query($sql, array($from.' 00:00:00', $to.' 11:59:59'));
+
+        $incomings = $ql->result_array();
+
+
+
+        $incoming_array = array();
+
+        foreach($incomings as $i){
+            $incoming_array[$i['incoming']] = $i['count'];
+        }
+
+        print_r($incoming_array);
+        */
+
+        //print $this->db->last_query();
+
+
+
+		$this->table->set_heading(
+			array('data'=>'Delivery Details',
+				'colspan'=>'4'
+			)
+		);
+
+
+		$this->table->set_heading(
+			'No.',
+			'Date',
+            'Incoming',
+			'Delivered',
+			'COD',
+			'DO',
+			'No Show',
+			'Rescheduled',
+			'Delivery Count',
+            'Jumlah Box'
+		); // Setting headings for the table
+
+		$seq = 0;
+		$rowdate = '';
+		$tarray = array();
+		$type_array = array(
+			'COD',
+			'Delivery Only'
+		);
+		foreach($rows->result() as $r){
+			foreach($type_array as $t){
+			//print_r($r);
+				if($rowdate == ''){
+					$rowdate = $r->assignment_date;
+				}
+				if($r->assignment_date != $rowdate){
+					$seq++;
+					$rowdate = $r->assignment_date;
+				}
+
+				//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
+
+				$tarray[$seq]['assignment_date'] = $r->assignment_date;
+				$tarray[$seq][$r->status] = $r->count;
+				$tarray[$seq][$r->delivery_type] = $r->count;
+				$tarray[$seq]['total_box_count'][$r->delivery_type] = $r->total_box_count;
+			}
+			
+		}
+
+		
+
+		$seq = 1;
+		$aseq = 0;
+
+        $tinc = 0;
+		$tdl = 0;
+		$tns = 0;
+		$trs = 0;
+        $tbx = 0;
+        $tbxs = 0;
+        $tcod = 0;
+        $tdo = 0;
+        $tbox = 0;
+
+		foreach ($tarray as $key => $r) {
+
+			//print_r($r);
+
+			$dl = (isset($r['delivered']))?$r['delivered']:0;
+			$ns = (isset($r['noshow']))?$r['noshow']:0;
+			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
+            $bx = (isset($r['total_box_count']['COD']))?$r['total_box_count']['COD']:0;
+            $box = (isset($r['total_box_count']['Delivery Only']))?$r['total_box_count']['Delivery Only']:0;
+            $cod = (isset($r['COD']))?$r['COD']:0;
+            $do = (isset($r['Delivery Only']))?$r['Delivery Only']:0;
+            
+			$tdl += $dl;
+			$tns += $ns;
+			$trs += $rs;
+            $tbx += $bx;
+            $tbox += $box;
+            $tcod += $cod;
+            $tdo += $do;
+
+            $inc = $this->db->like('ordertime', $r['assignment_date'],'after')->count_all_results($this->config->item('delivered_delivery_table'));
+
+            $tinc += $inc;
+
+			$this->table->add_row(
+				$seq,
+				date('d M Y',strtotime($r['assignment_date'])),
+                $inc,
+				$cod + $do,
+				$cod,
+				$do,
+				$ns,
+				$rs,
+				$cod + $do + $ns + $rs,
+                $bx + $box
+
+			);
+
+			$seq++;
+			$aseq++;
+		}
+
+		$gt = $tdl + $tns + $trs;
+
+		$del = $tcod + $tdo;
+
+		$tdel = $tcod + $tdo + $tns + $trs;
+
+		$tboxs = $tbx + $tbox;
+
+		$this->table->add_row(
+			'',
+			array('data'=>'Total','style'=>'border-top:thin solid grey'),
+            array('data'=>$tinc,'style'=>'border-top:thin solid grey'),
+			array('data'=>$del,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tcod,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tdo,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tns,'style'=>'border-top:thin solid grey'),
+			array('data'=>$trs,'style'=>'border-top:thin solid grey'),
+			array('data'=>$tdel,'style'=>'border-top:thin solid grey'),
+            array('data'=>$tboxs,'style'=>'border-top:thin solid grey')
+		);
+
+		$recontab = $this->table->generate();
+		$data['recontab'] = $recontab;
+
+		/* end copy */
+
+		$this->breadcrumb->add_crumb('Device Reconciliations','admin/reports/devicerecon');
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
+		$page['page_title'] = 'Device Reconciliations';
+
+		$data['controller'] = 'admin/reports/devicerecon/';
+
+        $data['last_query'] = $last_query;
+
+		if($pdf == 'pdf'){
+			$html = $this->load->view('print/devicerecon',$data,true);
+			$pdf_name = $type.'_'.$to.'_'.$from.'_'.$id;
+			pdf_create($html, $pdf_name.'.pdf','A4','landscape', true);
+		}else if($pdf == 'print'){
+			$this->load->view('print/devicerecon',$data); // Load the view
+		}else{
+			$this->ag_auth->view('devicerecon',$data); // Load the view
+		}
+	}
+	//old
+	public function __devicerecon($type = null,$status = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
+
+		$type = (is_null($type))?'Global':$type;
+		$id = (is_null($type))?'noid':$type;
+        $status = (is_null($status))?'all':$status;
+
+		if(is_null($scope)){
+			$id = 'noid';
+			$scope = 'month';
+			$year = date('Y',time());
+			$par1 = date('m',time());
+		}
+
+		$pdf = null;
+
+		if($scope == 'month'){
+			$days = cal_days_in_month(CAL_GREGORIAN, $par1, $year);
+			$from =	date('Y-m-d', strtotime($year.'/'.$par1.'/1'));
+			$to =	date('Y-m-d', strtotime($year.'/'.$par1.'/'.$days));
+			$pdf = $par2;
+
+			$data['month'] = $par1;
+			$data['week'] = 1;
+		}else if($scope == 'week'){
+			$from =	date('Y-m-d', strtotime('1 Jan '.$year.' +'.($par1 - 1).' weeks'));
+			$to = date('Y-m-d', strtotime('1 Jan '.$year.' +'.$par1.' weeks - 1 day'));
+			$pdf = $par2;
+
+			$data['month'] = 1;
+			$data['week'] = $par1;
+		}else if($scope == 'date'){
+			$from = $par1;
+			$to = $par2;
+			$pdf = $par3;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}else{
+			$from = date('Y-m-d',time());
+			$to = date('Y-m-d',time());
+			$pdf = null;
+
+			$data['month'] = 1;
+			$data['week'] = 1;
+		}
+
+		$data['year'] = $year;
+		$data['from'] = $from;
+		$data['to'] = $to;
+
+		$clist = get_courier(null,false);
+
+		$clist = $this->db->where('is_on',1)->get('devices')->result_array();
+
+		$cs = array('noid'=>'All');
+		foreach ($clist as $ckey) {
+			$cs[$ckey['id']] = $ckey['identifier'];
+		}
+
+		$data['devices'] = $cs;
+		$data['id'] = $id;
+
+        $data['statuslist'] = array_merge(array('all'=>'All'), $this->config->item('status_list') );
+        $data['stid'] = $status;
+
+		//$data['couriers'] = get_courier();
+
+		/* copied from print controller */
+
+		$this->load->library('number_words');
+
+		if($id == 'noid'){
+			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
+		}else{
+			$user = $this->db->where('id',$id)->get($this->config->item('jayon_devices_table'))->row();
+			//print $this->db->last_query();
+			$data['type_name'] = $user->identifier;
+			$data['bank_account'] = 'n/a';
+		}
+
+		if($id == 'noid'){
+			$data['type'] = 'Global';
+		}else{
+			$dev = $this->db->where('id',$id)->get('devices')->row();
+			$data['type'] = $dev->identifier;
+		}
+		$data['period'] = $from.' s/d '.$to;
+
+		$sfrom = date('Y-m-d',strtotime($from));
+		$sto = date('Y-m-d',strtotime($to));
+
+		$this->db->distinct();
+		$this->db->select('assignment_date, status, count(*) as count, sum(box_count) as total_box_count');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -8126,29 +8462,6 @@ class Reports extends Application
 
         $last_query = $this->db->last_query();
 
-        //get incoming counts
-        /*
-        $sql = 'SELECT DISTINCT DATE_FORMAT( ordertime,  \'%Y-%m-%d\' ) AS incoming, COUNT( * ) as count FROM  `delivery_order_active` WHERE ordertime BETWEEN ? AND ? GROUP BY incoming';
-
-        $ql = $this->db->query($sql, array($from.' 00:00:00', $to.' 11:59:59'));
-
-        $incomings = $ql->result_array();
-
-
-
-        $incoming_array = array();
-
-        foreach($incomings as $i){
-            $incoming_array[$i['incoming']] = $i['count'];
-        }
-
-        print_r($incoming_array);
-        */
-
-        //print $this->db->last_query();
-
-
-
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
 				'colspan'=>'4'
@@ -8184,9 +8497,9 @@ class Reports extends Application
             $tarray[$seq]['total_box_count'] = $r->total_box_count;
 			$tarray[$seq][$r->status] = $r->count;
 
-
-
 		}
+
+		
 
 		$seq = 1;
 		$aseq = 0;
