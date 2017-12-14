@@ -256,4 +256,35 @@
         </tr>
     </table>
 </div>
+<!-- update sahlan -->
+<div id="movefoto_dialog" title="Move Delivery Picture">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="mvfoto_id"></span><br /><br />
+                <div id="lsfoto_id"></div>
+            </td>
+            <td>
+                <label for="req_deliveryid">Move foto to Delivery ID</label>
+                <input type="textarea" name="parent_id" id="req_deliveryid" style="width:100%;height:100%"></input>
+            </td>
+        </tr>
+    </table>
+</div>
 
+<div id="deletefoto_dialog" title="Delete Delivery Picture">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="delfoto_id"></span><br /><br />
+                <div id="listfoto_id"></div>
+            </td>
+            <td>
+                <label for="del_deliveryId">Delete foto</label>
+                <textarea name="del_deliveryId" id="del_deliveryId" style="width:100%;height:100%"></textarea>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- end -->

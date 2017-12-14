@@ -95,7 +95,7 @@
                 $('#confirm_list').html('');
             }
         });
-//updatesahlan
+<!-- //updatesahlan -->
         $('#crchangestatus_dialog').dialog({
             autoOpen: false,
             height: 250,
@@ -115,6 +115,81 @@
                             //redraw table
                             oTable.fnDraw();
                             $('#crchangestatus_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
+
+        $('#movefoto_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#lsfoto_id').html();
+                    var ids = [];
+                    var count = 0;
+                    $('.img-select:checked').each(function(){
+                        ids.push(this.value);
+                        count++;
+                    });
+                    if(count > 0){
+                        $.post('<?php print site_url('admin/delivery/ajaxmovefoto');?>',{
+                            'delivery_id':delivery_id,
+                            'parent_id': $('#req_deliveryid').val(),
+                            '_id':ids,
+                        }, function(data) {
+                            if(data.result == 'ok'){
+                                //redraw table
+                                oTable.fnDraw();
+                                $('#movefoto_dialog').dialog( "close" );
+                            }
+                        },'json');
+
+                        console.log(ids);  
+                        console.log($('#req_deliveryid').val());
+                    }else{
+                        alert('Please select one or more Foto');
+                    }
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
+
+        $('#deletefoto_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#delfoto_id').html();
+
+                    $.post('<?php print site_url('admin/delivery/ajaxcrchangestatus');?>',{
+                        'delivery_id':delivery_id,
+                        'new_status': $('#crnew_status').val(),
+                        'actor': $('#actor').val(),
+                        'req_note' : $('#crchg_note').val()
+                    }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#deletefoto_dialog').dialog( "close" );
                         }
                     },'json');
                 },

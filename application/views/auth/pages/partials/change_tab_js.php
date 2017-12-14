@@ -22,6 +22,34 @@
                 $('#crchangestatus_dialog').dialog('open');
             }
 
+            <!-- update sahlan -->
+
+            if ($(e.target).is('.movefoto')){
+                var delivery_id = e.target.id;
+                $('#mvfoto_id').html(delivery_id);
+                
+                $.post('<?php print site_url('ajax/getlistimage/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#lsfoto_id').html(data.data);
+                    },'json');
+
+                $('#movefoto_dialog').dialog('open');
+            }
+
+            if ($(e.target).is('.deletefoto')){
+                var delivery_id = e.target.id;
+                $('#delfoto_id').html(delivery_id);
+
+                $.post('<?php print site_url('ajax/getlistimage/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#listfoto_id').html(data.data);
+                    },'json');
+
+                $('#deletefoto_dialog').dialog('open');
+            }
+            <!-- end -->
             if ($(e.target).is('.set_zone')) {
                 var delivery_id = e.target.id;
                 console.log(delivery_id);

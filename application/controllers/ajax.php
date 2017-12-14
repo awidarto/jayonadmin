@@ -422,6 +422,16 @@ class Ajax extends Application
 		print json_encode(array('result'=>'ok','data'=>$select));
 	}
 
+	public function getlistimage(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		isset($delivery_id)?$delivery_id:'';
+
+		$thumbnail = get_listthumbnail($delivery_id, 'thumb_multi');
+
+		print json_encode(array('result'=>'ok', 'data'=>$thumbnail));
+	}
+
 	public function getweightdata(){
 		$app_key = $this->input->post('app_key');
 

@@ -954,6 +954,64 @@ function get_logo($merchant_id){
     return array('exist'=>$exist,'logo'=>$thumbnail) ;
 }
 
+function get_listthumbnail($delivery_id, $class = 'thumb'){
+    $CI =& get_instance();
+    $sign_count = 0;
+    $pic_count = 0;
+
+    $ths = '';
+
+    $pics_db = $CI->mongo_db->where('parent_id',$delivery_id)
+                ->get('uploaded');
+
+    //print_r($pics_db);
+
+
+    if(count($pics_db) > 0){
+
+        $class = '';
+
+        $app = 'app v 2.0';
+        $egal = '';
+
+        foreach($pics_db as $pic){
+
+            if( intval($pic['is_signature']) == 1){
+                $sign_count++;
+            }else{
+                $pic_count++;
+            }
+
+             $ths .= sprintf('<li><img style="width:45px;35px;" alt="'.$pic['name'].'" src="%s?'.time().'" /><input type="checkbox" class="img-select" id=" '.$pic['_id'].'"  value=" '.$pic['_id'].'"/></li>',$pic['thumbnail_url']);
+
+             // $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$pic['name'].'" src="%s?'.time().'" />',$pic['thumbnail_url']);
+
+            $egal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$pic['full_url'].'" >';
+
+        }
+
+        $thumper = '<img class="'.$class.'" style="width:100%;height:100%;" alt="'.$delivery_id.'" src="'.base_url().'assets/images/10.png" >';
+
+        $ths .= '<div style="width:10%;height:10%;display:block;position:absolute;top:0px;left:0px;">'.$thumper.'</div>';
+
+        $thumbnail = '<div ><ul>'.$ths.'</ul></div>';
+
+        if($sign_count > 0){
+            $gal = '<br />'.$pic_count.' pics & '.$sign_count.' signature - '.$app;
+        }else{
+            $gal = '<br />'.$pic_count.' pics, no signature - '.$app;
+        }
+
+        $gal .= $egal;
+
+    }
+
+
+    $thumbnail = $thumbnail.$gal;
+
+    return $thumbnail;
+}
+
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();
 
@@ -1207,6 +1265,13 @@ function generate_thumbnail($delivery_id){
         return false;
     }
 
+}
+
+function col_uploaded($data, $upsert = true){
+
+    $CI =& get_instance();
+    $CI->mongo_db->update($CI('uploaded',$data));
+    return true;
 }
 
 function delivery_log($data,$upsert = false){
