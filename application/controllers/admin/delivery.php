@@ -5674,10 +5674,14 @@ class Delivery extends Application
         //$delivery_id = $this->input->post('delivery_id');
         $dataset['parent_id'] = $this->input->post('parent_id');
 
+        $options = array('upsert' => false, 'multiple' => true);
+
         print_r($_id);
+        // $this->db->{$collection}->update($this->wheres, $this->updates, $options);
 
         foreach ($_id as $did) {
-            $this->mongo_db->where('_id',$did)->update('uploaded',$dataset);
+            // $this->mongo_db->where('_id',$did)->update('uploaded',$dataset);
+            $this->mongo_db->where('_id',$did)->update('uploaded',$dataset, $options);
         }
         
         // if(is_array($_id)){
