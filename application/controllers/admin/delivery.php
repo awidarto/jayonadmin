@@ -5674,10 +5674,14 @@ class Delivery extends Application
         $delivery_id = $this->input->post('delivery_id');
         $new_parent_id = $this->input->post('parent_id');
 
-        foreach ($_id as $did) {
+        if (trim($new_parent_id) == ''){
+
+        }else{
+            foreach ($_id as $did) {
             $_id = new MongoId($did);
 
             $this->mongo_db->where('_id',$_id)->set('parent_id', $new_parent_id )->update('uploaded');    
+            }
         }
     
         print json_encode(array('result'=>'ok'));
