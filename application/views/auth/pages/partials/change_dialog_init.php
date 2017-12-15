@@ -135,7 +135,7 @@
             modal: true,
             buttons: {
                 "Confirm Changes": function() {
-                    var delivery_id = $('#lsfoto_id').html();
+                    var delivery_id = $('#lsfoto_id').val();
                     var ids = [];
                     var count = 0;
                     $('.img-select:checked').each(function(){
@@ -154,21 +154,11 @@
                                 $('#movefoto_dialog').dialog( "close" );
                             }
                         },'json');
-
-                        console.log(ids);  
-                        console.log($('#req_deliveryid').val());
                     }else{
                         alert('Please select one or more Foto');
                     }
                 },
-                Cancel: function() {
-                    $( this ).dialog( "close" );
-                }
             },
-            close: function() {
-                //allFields.val( "" ).removeClass( "ui-state-error" );
-                $('#confirm_list').html('');
-            }
         });
 
         $('#deletefoto_dialog').dialog({
@@ -179,28 +169,29 @@
             buttons: {
                 "Confirm Changes": function() {
                     var delivery_id = $('#delfoto_id').html();
-
-                    $.post('<?php print site_url('admin/delivery/ajaxcrchangestatus');?>',{
-                        'delivery_id':delivery_id,
-                        'new_status': $('#crnew_status').val(),
-                        'actor': $('#actor').val(),
-                        'req_note' : $('#crchg_note').val()
-                    }, function(data) {
-                        if(data.result == 'ok'){
-                            //redraw table
-                            oTable.fnDraw();
-                            $('#deletefoto_dialog').dialog( "close" );
-                        }
-                    },'json');
+                    var ids = [];
+                    var count = 0;
+                    $('.img-select:checked').each(function(){
+                        ids.push(this.value);
+                        count++;
+                    });
+                    if(count > 0){
+                        $.post('<?php print site_url('admin/delivery/ajaxdelfoto');?>',{
+                            'delivery_id':delivery_id,
+                            'parent_id': $('#req_deliveryid').val(),
+                            '_id':ids,
+                        }, function(data) {
+                            if(data.result == 'ok'){
+                                //redraw table
+                                oTable.fnDraw();
+                                $('#deletefoto_dialog').dialog( "close" );
+                            }
+                        },'json');
+                    }else{
+                        alert('Please select one or more Foto');
+                    }
                 },
-                Cancel: function() {
-                    $( this ).dialog( "close" );
-                }
             },
-            close: function() {
-                //allFields.val( "" ).removeClass( "ui-state-error" );
-                $('#confirm_list').html('');
-            }
         });
 
         $('#setzone_dialog').dialog({

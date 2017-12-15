@@ -262,7 +262,7 @@
         <tr>
             <td style="width:250px;vertical-align:top">
                 <strong>Delivery ID : </strong><span id="mvfoto_id"></span><br /><br />
-                <div id="lsfoto_id"></div>
+                <div id="lsfoto_id" style="padding-left:10px;"></div>
             </td>
             <td>
                 <label for="req_deliveryid">Move foto to Delivery ID</label>
@@ -277,11 +277,11 @@
         <tr>
             <td style="width:250px;vertical-align:top">
                 <strong>Delivery ID : </strong><span id="delfoto_id"></span><br /><br />
-                <div id="listfoto_id"></div>
+                <div id="listfoto_id" style="padding-left:10px;"></div>
             </td>
             <td>
-                <label for="del_deliveryId">Delete foto</label>
-                <textarea name="del_deliveryId" id="del_deliveryId" style="width:100%;height:100%"></textarea>
+                <label for="del_deliveryId">Select to Delete foto</label>
+                <!-- <textarea name="del_deliveryId" id="del_deliveryId" style="width:100%;height:100%"></textarea> -->
             </td>
         </tr>
     </table>

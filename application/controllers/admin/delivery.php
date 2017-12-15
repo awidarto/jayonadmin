@@ -5671,152 +5671,35 @@ class Delivery extends Application
 //update Sahlan
     public function ajaxmovefoto(){
         $_id = $this->input->post('_id');
-        //$delivery_id = $this->input->post('delivery_id');
-        $dataset['parent_id'] = $this->input->post('parent_id');
-
-        $options = array('upsert' => false, 'multiple' => true);
-
-        print_r($_id);
-        // $this->db->{$collection}->update($this->wheres, $this->updates, $options);
+        $delivery_id = $this->input->post('delivery_id');
+        $new_parent_id = $this->input->post('parent_id');
 
         foreach ($_id as $did) {
-            // $this->mongo_db->where('_id',$did)->update('uploaded',$dataset);
-            $this->mongo_db->where('_id',$did)->update('uploaded',$dataset, $options);
+            $_id = new MongoId($did);
+
+            $this->mongo_db->where('_id',$_id)->set('parent_id', $new_parent_id )->update('uploaded');    
         }
-        
-        // if(is_array($_id)){
-            
-        //     foreach($_id as $did){
-
-        //         if($this->mongo_db->where('_id',$did)->update('uploaded',$dataset) === TRUE)
-        //         {
-
-        //             $order_exist = 'ok';
-        //         }
-        //         else
-        //         {
-        //             $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-        //         }
-
-        //         $data = array(
-                    
-        //             'parent_id'=>$this->input->post('parent_id')
-                    
-        //         );
-        //         print_r($data);
-
-        //         //col_uploaded($data);
-        //         $this->mongo_db->update('uploaded',$data);
-
-        //     }
-
-        // }else{
-
-
-        //     if($this->mongo_db->where('_id',$_id)->update('uploaded',$dataset) === TRUE)
-        //     {
-
-        //         $order_exist = 'ok';
-        //     }
-        //     else
-        //     {
-        //         $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-        //     }
-
-        //     $data = array(
-        //         'parent_id'=>$this->input->post('parent_id')
-        //     );
-
-        //     $this->mongo_db->update('uploaded',$data);
-
-        // }
-
-
+    
         print json_encode(array('result'=>'ok'));
 
 
-        }
-
-    public function ajaxdelfoto(){
-        $delivery_id = $this->input->post('delivery_id');
-        $device_id = $this->input->post('device_id');
-        $dataset['courier_status'] = $this->input->post('new_status');
-        $dataset['crchange_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
-        $req_by = $this->input->post('req_by');
-        $req_name = $this->input->post('req_name');
-        $req_note = $this->input->post('req_note');
-
-        $dataset['courier_note'] = $req_note;
-
-        if(is_array($delivery_id)){
-            foreach($delivery_id as $did){
-
-                if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
-                {
-
-                    $order_exist = 'ok';
-                }
-                else
-                {
-                    $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-                }
-
-                $data = array(
-                    'timestamp'=>date('Y-m-d H:i:s',time()),
-                    'report_timestamp'=>date('Y-m-d H:i:s',time()),
-                    'delivery_id'=>$did,
-                    'device_id'=>$device_id,
-                    'courier_id'=>0,
-                    'actor_type'=>$this->input->post('actor'),
-                    'actor_id'=>$this->session->userdata('userid'),
-                    'latitude'=>0.000000,
-                    'longitude'=>0.000000,
-                    'status'=>$this->input->post('new_status'),
-                    'api_event'=>'admin_change_wh_status',
-                    'notes'=>$order_exist
-                );
-
-                delivery_log($data);
-
-            }
-
-        }else{
-
-
-            if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
-            {
-
-                $order_exist = 'ok';
-            }
-            else
-            {
-                $order_exist = 'ORDER_FAILED_ASSIGNMENT';
-            }
-
-            $data = array(
-                'timestamp'=>date('Y-m-d H:i:s',time()),
-                'report_timestamp'=>date('Y-m-d H:i:s',time()),
-                'delivery_id'=>$delivery_id,
-                'device_id'=>$device_id,
-                'courier_id'=>0,
-                'actor_type'=>$this->input->post('actor'),
-                'actor_id'=>$this->session->userdata('userid'),
-                'latitude'=>0.000000,
-                'longitude'=>0.000000,
-                'status'=>$this->input->post('new_status'),
-                'api_event'=>'admin_change_wh_status',
-                'notes'=>$order_exist
-            );
-
-            delivery_log($data);
-
-
-        }
-
-
-        print json_encode(array('result'=>$order_exist));
     }
 
+    public function ajaxdelfoto(){
+        $_id = $this->input->post('_id');
+        $delivery_id = $this->input->post('delivery_id');
+        $new_parent_id = $this->input->post('parent_id');
+
+        foreach ($_id as $did) {
+            $_id = new MongoId($did);
+            
+            $this->mongo_db->where('_id',$_id)->set('parent_id', 'deleted_'.$delivery_id )->update('uploaded');
+        }
+    
+        print json_encode(array('result'=>'ok'));
+
+
+    }
 
 	public function getzone(){
 		$q = $this->input->get('term');

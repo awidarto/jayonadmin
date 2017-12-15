@@ -982,7 +982,7 @@ function get_listthumbnail($delivery_id, $class = 'thumb'){
                 $pic_count++;
             }
 
-             $ths .= sprintf('<li><img style="width:45px;35px;" alt="'.$pic['name'].'" src="%s?'.time().'" /><input type="checkbox" class="img-select" id=" '.$pic['_id'].'"  value=" '.$pic['_id'].'"/></li>',$pic['thumbnail_url']);
+             $ths .= sprintf('<li><img style="width:45px;35px;" alt="'.$pic['name'].'" src="%s?'.time().'" /><input type="checkbox" class="img-select" id="'.$pic['_id'].'"  value="'.$pic['_id'].'"/></li>',$pic['thumbnail_url']);
 
              // $ths .= sprintf('<img style="width:45px;35px;float:left;" alt="'.$pic['name'].'" src="%s?'.time().'" />',$pic['thumbnail_url']);
 
@@ -1267,7 +1267,7 @@ function generate_thumbnail($delivery_id){
 
 }
 
-function col_uploaded($data, $upsert = true){
+function col_uploaded($data, $upsert = false){
 
     $CI =& get_instance();
     $CI->mongo_db->update($CI('uploaded',$data));

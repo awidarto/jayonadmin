@@ -427,7 +427,7 @@ class Ajax extends Application
 
 		isset($delivery_id)?$delivery_id:'';
 
-		$thumbnail = get_listthumbnail($delivery_id, 'thumb_multi');
+		$thumbnail = get_listthumbnail($delivery_id,'thumb_multi');
 
 		print json_encode(array('result'=>'ok', 'data'=>$thumbnail));
 	}
