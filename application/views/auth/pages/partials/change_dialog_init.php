@@ -194,6 +194,45 @@
             },
         });
 
+
+        $('#editorder_dialog').dialog({
+            autoOpen: false,
+            height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#editorder_id').html();
+                    var delivery_note = $('#receiver').html();
+                    var delivery_note = $('#note').html();
+                    var latitude = $('#latitude_loc').html();
+                    var longitude = $('#longitude_loc').html();
+                    var deliverytime = $('#deliverytime_loc').html();
+
+                    $.post('<?php print site_url('admin/delivery/ajaxeditorder');?>',{
+                        'delivery_id':delivery_id,
+                        'delivery_note':$('#receiverId').val(),
+                        'latitude':$('#latitudeId').val(),
+                        'longitude':$('#longitudeId').val(),
+                        'deliverytime':$('#deliverytimeId').val()
+                    }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#editorder_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
+<!-- end -->
         $('#setzone_dialog').dialog({
             autoOpen: false,
             height: 250,

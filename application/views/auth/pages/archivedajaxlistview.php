@@ -113,6 +113,15 @@
 				$('#view_dialog').dialog('open');
 			}
 
+			if ($(e.target).is('.printslip')) {
+				var delivery_id = e.target.id;
+				$('#print_id').val(delivery_id);
+				var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + delivery_id;
+
+				$('#print_frame').attr('src',src);
+				$('#print_dialog').dialog('open');
+			}
+
             if ($(e.target).is('.locpick')) {
                 var buyer_id = e.target.id;
                 $('#setloc_dialog').dialog('open');
@@ -122,6 +131,51 @@
                 $('#map_frame').attr('src',src);
                 $('#setloc_dialog').dialog('open');
             }
+
+            // Update Sahlan
+            if ($(e.target).is('.movefoto')){
+                var delivery_id = e.target.id;
+                $('#mvfoto_id').html(delivery_id);
+                
+                $.post('<?php print site_url('ajax/getlistimage/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#lsfoto_id').html(data.data);
+                    },'json');
+
+                $('#movefoto_dialog').dialog('open');
+            }
+
+            if ($(e.target).is('.deletefoto')){
+                var delivery_id = e.target.id;
+                $('#delfoto_id').html(delivery_id);
+
+                $.post('<?php print site_url('ajax/getlistimage/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#listfoto_id').html(data.data);
+                    },'json');
+
+                $('#deletefoto_dialog').dialog('open');
+            }
+
+            if ($(e.target).is('.editorder')){
+                var delivery_id = e.target.id;
+                var delivery_note = $(e.target).data('delivery_note');
+                var latitude = $(e.target).data('latitude');
+                var longitude = $(e.target).data('longitude');
+                var deliverytime = $(e.target).data('deliverytime');
+                console.log(delivery_note);
+                $('#editorder_id').html(delivery_id);
+                $('#receiver').html(delivery_note);
+                $('#note').html(delivery_note);
+                $('#latitude_loc').html(latitude);
+                $('#longitude_loc').html(longitude);
+                $('#deliverytime_loc').html(deliverytime);
+                $('#editorder_dialog').dialog('open');
+            }
+
+            // end
 
 		});
 
@@ -175,6 +229,32 @@
 			}
 		});
 
+		$('#print_dialog').dialog({
+			autoOpen: false,
+			height: 400,
+			width: 1050,
+			modal: true,
+			buttons: {
+				Print: function(){
+					var pframe = document.getElementById('print_frame');
+					var pframeWindow = pframe.contentWindow;
+					pframeWindow.print();
+				}, 
+				"Download PDF": function(){
+					var print_id = $('#print_id').val();
+					var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + print_id + '/pdf';
+					window.location = src;
+					//alert(src);
+				},
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
+
 		$('#view_dialog').dialog({
 			autoOpen: false,
 			height: 600,
@@ -218,6 +298,111 @@
             }
         });
 
+        // Update sahlan
+        $('#movefoto_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#lsfoto_id').val();
+                    var ids = [];
+                    var count = 0;
+                    $('.img-select:checked').each(function(){
+                        ids.push(this.value);
+                        count++;
+                    });
+                    if(count > 0){
+                        $.post('<?php print site_url('admin/delivery/ajaxmovefoto');?>',{
+                            'delivery_id':delivery_id,
+                            'parent_id': $('#req_deliveryid').val(),
+                            '_id':ids,
+                        }, function(data) {
+                            if(data.result == 'ok'){
+                                //redraw table
+                                oTable.fnDraw();
+                                $('#movefoto_dialog').dialog( "close" );
+                            }
+                        },'json');
+                    }else{
+                        alert('Please select one or more Foto');
+                    }
+                },
+            },
+        });
+
+        $('#deletefoto_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#delfoto_id').html();
+                    var ids = [];
+                    var count = 0;
+                    $('.img-select:checked').each(function(){
+                        ids.push(this.value);
+                        count++;
+                    });
+                    if(count > 0){
+                        $.post('<?php print site_url('admin/delivery/ajaxdelfoto');?>',{
+                            'delivery_id':delivery_id,
+                            'parent_id': $('#req_deliveryid').val(),
+                            '_id':ids,
+                        }, function(data) {
+                            if(data.result == 'ok'){
+                                //redraw table
+                                oTable.fnDraw();
+                                $('#deletefoto_dialog').dialog( "close" );
+                            }
+                        },'json');
+                    }else{
+                        alert('Please select one or more Foto');
+                    }
+                },
+            },
+        });
+
+        $('#editorder_dialog').dialog({
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Confirm Changes": function() {
+                    var delivery_id = $('#editorder_id').html();
+                    var delivery_note = $('#receiver').html();
+                    var delivery_note = $('#note').html();
+                    var latitude = $('#latitude_loc').html();
+                    var longitude = $('#longitude_loc').html();
+                    var deliverytime = $('#deliverytime_loc').html();
+
+                    $.post('<?php print site_url('admin/delivery/ajaxeditorder');?>',{
+                        'delivery_id':delivery_id,
+                        'delivery_note':$('#receiverId').val(),
+                        'latitude':$('#latitudeId').val(),
+                        'longitude':$('#longitudeId').val(),
+                        'deliverytime':$('#deliverytimeId').val()
+                    }, function(data) {
+                        if(data.result == 'ok'){
+                            //redraw table
+                            oTable.fnDraw();
+                            $('#editorder_dialog').dialog( "close" );
+                        }
+                    },'json');
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                //allFields.val( "" ).removeClass( "ui-state-error" );
+                $('#confirm_list').html('');
+            }
+        });
+        // end update
 	});
 </script>
 <?php if(isset($add_button)):?>
@@ -254,4 +439,66 @@
     <iframe id="map_frame" name="map_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
+</div>
+
+<div id="movefoto_dialog" title="Move Delivery Picture">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="mvfoto_id"></span><br /><br />
+                <div id="lsfoto_id" style="padding-left:10px;"></div>
+            </td>
+            <td>
+                <label for="req_deliveryid">Move foto to Delivery ID</label>
+                <input type="textarea" name="parent_id" id="req_deliveryid" style="width:100%;height:100%"></input>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="deletefoto_dialog" title="Delete Delivery Picture">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="delfoto_id"></span><br /><br />
+                <div id="listfoto_id" style="padding-left:10px;"></div>
+            </td>
+            <td>
+                <label for="del_deliveryId">Select to Delete foto</label>
+                <!-- <textarea name="del_deliveryId" id="del_deliveryId" style="width:100%;height:100%"></textarea> -->
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="editorder_dialog" title="Change Archive Order">
+    <table style="width:100%;border:0;margin:0;">
+        <tr>
+            <td style="width:250px;vertical-align:top">
+                <strong>Delivery ID : </strong><span id="editorder_id"></span><br /><br />
+                <strong>Receiver / Note : </strong><br/><span id="receiver"></span><br/><br>
+                <strong>Latitude : </strong><span id="latitude_loc"></span><br/>
+                <strong>Longitude : </strong><span id="longitude_loc"></span><br>
+                <strong>Delivery Time : </strong><span id="deliverytime_loc"></span><br>
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                <!-- <label for="crchg_note">Edit Receiver</label>
+                <input type="textarea" name="delivery_note" id="receiver" style="width:100%;height:100%"></input>
+                <br><p></p> -->
+                <label for="crchg_note">Change Receiver / Note</label>
+                <input type="textarea" name="delivery_note" id="receiverId" style="width:100%;height:100%"></input>
+                <p></p>
+                <label for="crchg_note">Change Delivery Latitude</label>
+                <input type="textarea" name="latitude" id="latitudeId" style="width:100%;height:100%"></input>
+                <label for="crchg_note">Change Delivery Longitude</label>
+                <input type="textarea" name="longitude" id="longitudeId" style="width:100%;height:100%"></input>
+                <p></p>
+                <label for="crchg_note">Change Delivery Time</label>
+                <input type="datetime-local" value="<?php echo date("Y-m-d\TH:i:s",time()); ?>"  name="deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input>
+            </td>
+        </tr>
+    </table>
 </div>

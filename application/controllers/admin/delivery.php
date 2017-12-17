@@ -4128,6 +4128,8 @@ class Delivery extends Application
 
             $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
 
+            $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-deliverytime="'.$key['deliverytime'].'" data-longitude="'.$key['longitude'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+
             //if($key['status'] == 'pending'){
                 $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
             //}else{
@@ -4188,7 +4190,7 @@ class Delivery extends Application
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto
+				$printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
 			);
 		}
 
@@ -4783,6 +4785,12 @@ class Delivery extends Application
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
+            $mvfoto = '<span class="movefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >MoveFoto</span>';
+
+            $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
+
+            $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-longitude="'.$key['longitude'].'" data-deliverytime="'.$key['deliverytime'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
 
@@ -4814,7 +4822,7 @@ class Delivery extends Application
 				colorizestatus($key['laststatus']),
 				$key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip.' '.$viewlog
+				$printslip.'<br/><br/>'.$viewlog.'<br/><br/>'.$mvfoto.'<br/><br/>'.$delfoto.'<br/><br/>'.$editorder
 			);
 		}
 
@@ -5669,6 +5677,29 @@ class Delivery extends Application
     }
 
 //update Sahlan
+    public function ajaxeditorder(){
+        $delivery_id = $this->input->post('delivery_id');
+        $delivery_note = $this->input->post('delivery_note');
+        $dataset['delivery_note'] = $this->input->post('delivery_note');
+        $dataset['latitude']= $this->input->post('latitude');
+        $dataset['longitude']= $this->input->post('longitude');
+        $dataset['deliverytime']= $this->input->post('deliverytime');
+
+        if(is_array($delivery_id)){
+
+            foreach ($delivery_id as $did) {
+                //$_id = new MongoId($did);
+                
+                $this->db->where('delivery_id',$did)->update($this->config->item('delivered_delivery_table'),$dataset);
+            }
+        }else{
+
+            $this->db->where('delivery_id',$delivery_id)->update($this->config->item('delivered_delivery_table'),$dataset);
+        }
+    
+        print json_encode(array('result'=>'ok'));
+    }
+
     public function ajaxmovefoto(){
         $_id = $this->input->post('_id');
         $delivery_id = $this->input->post('delivery_id');
@@ -5702,8 +5733,8 @@ class Delivery extends Application
     
         print json_encode(array('result'=>'ok'));
 
-
     }
+
 
 	public function getzone(){
 		$q = $this->input->get('term');

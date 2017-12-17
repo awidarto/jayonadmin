@@ -49,6 +49,23 @@
 
                 $('#deletefoto_dialog').dialog('open');
             }
+
+            if ($(e.target).is('.editorder')){
+                var delivery_id = e.target.id;
+                var delivery_note = $(e.target).data('delivery_note');
+                var latitude = $(e.target).data('latitude');
+                var longitude = $(e.target).data('longitude');
+                var deliverytime = $(e.target).data('deliverytime');
+                console.log(deliverytime);
+                $('#editorder_id').html(delivery_id);
+                $('#receiver').html(delivery_note);
+                $('#note').html(delivery_note);
+                $('#latitude_loc').html(latitude);
+                $('#longitude_loc').html(longitude);
+                $('#deliverytime_loc').html(deliverytime);
+                $('#editorder_dialog').dialog('open');
+            }
+
             <!-- end -->
             if ($(e.target).is('.set_zone')) {
                 var delivery_id = e.target.id;
