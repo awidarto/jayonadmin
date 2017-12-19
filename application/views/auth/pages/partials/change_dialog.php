@@ -308,7 +308,7 @@
                 <label for="req_deliveryid">Move Log to Delivery ID</label>
                 <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:90%;height:100%"></input>
                 <br><br>
-                <label for="req_deliveryid">Change Delivery status</label>
+                <label for="req_deliveryid">Change Delivery </label>
                 <?php
                     $status_list = $this->config->item('status_changes');
                     $status_list = array_keys($status_list);
@@ -318,7 +318,7 @@
                         $sl[$s]=$s;
                     }
 
-                    print ' New Status<br />';
+                    print ' Status<br />';
                     print form_dropdown('new_status_note',$sl,'','id="new_status_note"');
 
                 ?>
