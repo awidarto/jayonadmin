@@ -56,13 +56,25 @@
                 var latitude = $(e.target).data('latitude');
                 var longitude = $(e.target).data('longitude');
                 var deliverytime = $(e.target).data('deliverytime');
-                console.log(deliverytime);
+
                 $('#editorder_id').html(delivery_id);
-                $('#receiver').html(delivery_note);
-                $('#note').html(delivery_note);
-                $('#latitude_loc').html(latitude);
-                $('#longitude_loc').html(longitude);
-                $('#deliverytime_loc').html(deliverytime);
+                $('input[name=chg_delivery_note]').val(delivery_note);
+                $('input[name=chg_latitude]').val(latitude);
+                $('input[name=chg_longitude]').val(longitude);
+                $('input[name=chg_deliverytime]').val(deliverytime);
+
+                $.post('<?php print site_url('ajax/gethistory/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#chg_history').html(data.data);
+                    },'json');
+
+                $.post('<?php print site_url('ajax/getlog/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#chg_log').html(data.data);
+                    },'json');
+            
                 $('#editorder_dialog').dialog('open');
             }
 

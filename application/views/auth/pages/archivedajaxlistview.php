@@ -165,13 +165,25 @@
                 var latitude = $(e.target).data('latitude');
                 var longitude = $(e.target).data('longitude');
                 var deliverytime = $(e.target).data('deliverytime');
-                console.log(delivery_note);
+
                 $('#editorder_id').html(delivery_id);
-                $('#receiver').html(delivery_note);
-                $('#note').html(delivery_note);
-                $('#latitude_loc').html(latitude);
-                $('#longitude_loc').html(longitude);
-                $('#deliverytime_loc').html(deliverytime);
+                $('input[name=chg_delivery_note]').val(delivery_note);
+                $('input[name=chg_latitude]').val(latitude);
+                $('input[name=chg_longitude]').val(longitude);
+                $('input[name=chg_deliverytime]').val(deliverytime);
+
+                $.post('<?php print site_url('ajax/gethistory/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#chg_history').html(data.data);
+                    },'json');
+
+                $.post('<?php print site_url('ajax/getlog/id');?>',
+                    {delivery_id:delivery_id},
+                    function(data) {
+                        $('#chg_log').html(data.data);
+                    },'json');
+            
                 $('#editorder_dialog').dialog('open');
             }
 
@@ -367,7 +379,7 @@
 
         $('#editorder_dialog').dialog({
             autoOpen: false,
-            height: 250,
+            height: 430,
             width: 600,
             modal: true,
             buttons: {
@@ -378,18 +390,27 @@
                     var latitude = $('#latitude_loc').html();
                     var longitude = $('#longitude_loc').html();
                     var deliverytime = $('#deliverytime_loc').html();
+                    var ids = [];
+                    var count = 0;
+                    $('.log-select:checked').each(function(){
+                        ids.push(this.value);
+                        
+                    });
 
                     $.post('<?php print site_url('admin/delivery/ajaxeditorder');?>',{
                         'delivery_id':delivery_id,
-                        'delivery_note':$('#receiverId').val(),
-                        'latitude':$('#latitudeId').val(),
-                        'longitude':$('#longitudeId').val(),
-                        'deliverytime':$('#deliverytimeId').val()
+                        'delivery_note':$('input[name=chg_delivery_note]').val(),
+                        'latitude':$('input[name=chg_latitude]').val(),
+                        'longitude':$('input[name=chg_longitude]').val(),
+                        'deliverytime':$('input[name=chg_deliverytime]').val(),
+                        'deliveryId': $('#chg_deliveryId').val(),
+                        '_id':ids,
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
                             oTable.fnDraw();
                             $('#editorder_dialog').dialog( "close" );
+                            console.log(ids);
                         }
                     },'json');
                 },
@@ -471,33 +492,29 @@
     </table>
 </div>
 
-<div id="editorder_dialog" title="Change Archive Order">
+<div id="editorder_dialog" title="Change Delivery Order">
     <table style="width:100%;border:0;margin:0;">
         <tr>
             <td style="width:250px;vertical-align:top">
                 <strong>Delivery ID : </strong><span id="editorder_id"></span><br /><br />
-                <strong>Receiver / Note : </strong><br/><span id="receiver"></span><br/><br>
-                <strong>Latitude : </strong><span id="latitude_loc"></span><br/>
-                <strong>Longitude : </strong><span id="longitude_loc"></span><br>
-                <strong>Delivery Time : </strong><span id="deliverytime_loc"></span><br>
+                <strong>Receiver / Note : </strong><input type="textarea" name="chg_delivery_note" id="receiverId" style="width:100%;height:100%"></input><br><br/>
+                <strong>Latitude : </strong><input type="textarea" name="chg_latitude" id="latitudeId" style="width:100%;height:100%"></input><br>
+                <strong>Longitude : </strong><input type="textarea" name="chg_longitude" id="longitudeId" style="width:100%;height:100%"></input><br><br/>
+                <strong>Delivery Time : </strong><input type="textarea" name="chg_deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input><br>
             </td>
-            <td>
+            <td style="width:70px;">
                 
             </td>
+
             <td>
-                <!-- <label for="crchg_note">Edit Receiver</label>
-                <input type="textarea" name="delivery_note" id="receiver" style="width:100%;height:100%"></input>
-                <br><p></p> -->
-                <label for="crchg_note">Change Receiver / Note</label>
-                <input type="textarea" name="delivery_note" id="receiverId" style="width:100%;height:100%"></input>
-                <p></p>
-                <label for="crchg_note">Change Delivery Latitude</label>
-                <input type="textarea" name="latitude" id="latitudeId" style="width:100%;height:100%"></input>
-                <label for="crchg_note">Change Delivery Longitude</label>
-                <input type="textarea" name="longitude" id="longitudeId" style="width:100%;height:100%"></input>
-                <p></p>
-                <label for="crchg_note">Change Delivery Time</label>
-                <input type="datetime-local" value="<?php echo date("Y-m-d\TH:i:s",time()); ?>"  name="deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input>
+                <strong>History Delivery Note: </strong>
+                <div id="chg_history" style="padding-left:20px;"></div>
+                <br>
+                <strong>History Delivery Log: </strong>
+                <div id="chg_log" style="padding-left:20px;"></div>
+                <br>
+                <label for="req_deliveryid">Move Log to Delivery ID</label>
+                <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:100%;height:100%"></input>
             </td>
         </tr>
     </table>

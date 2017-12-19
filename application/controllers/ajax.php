@@ -432,6 +432,28 @@ class Ajax extends Application
 		print json_encode(array('result'=>'ok', 'data'=>$thumbnail));
 	}
 
+	public function gethistory(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		isset($delivery_id)?$delivery_id:'';
+
+		$note_del = get_listhistory($delivery_id);
+
+		//$note_del = $delivery_id;
+		print json_encode(array('result'=>'ok', 'data'=>$note_del));
+	}
+
+	public function getlog(){
+		$delivery_id = $this->input->post('delivery_id');
+
+		isset($delivery_id)?$delivery_id:'';
+
+		$note_del = get_listlog($delivery_id);
+
+		//$note_del = $delivery_id;
+		print json_encode(array('result'=>'ok', 'data'=>$note_del));
+	}
+
 	public function getweightdata(){
 		$app_key = $this->input->post('app_key');
 

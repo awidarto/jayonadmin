@@ -292,28 +292,24 @@
         <tr>
             <td style="width:250px;vertical-align:top">
                 <strong>Delivery ID : </strong><span id="editorder_id"></span><br /><br />
-                <strong>Receiver / Note : </strong><br/><span id="receiver"></span><br/><br>
-                <strong>Latitude : </strong><span id="latitude_loc"></span><br/>
-                <strong>Longitude : </strong><span id="longitude_loc"></span><br><br/>
-                <strong>Delivery Time : </strong><span id="deliverytime_loc"></span><br>
+                <strong>Receiver / Note : </strong><input type="textarea" name="chg_delivery_note" id="receiverId" style="width:100%;height:100%"></input><br><br/>
+                <strong>Latitude : </strong><input type="textarea" name="chg_latitude" id="latitudeId" style="width:100%;height:100%"></input><br>
+                <strong>Longitude : </strong><input type="textarea" name="chg_longitude" id="longitudeId" style="width:100%;height:100%"></input><br><br/>
+                <strong>Delivery Time : </strong><input type="textarea" name="chg_deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input><br>
             </td>
-            <td>
+            <td style="width:70px;">
                 
             </td>
+
             <td>
-                <!-- <label for="crchg_note">Edit Receiver</label>
-                <input type="textarea" name="delivery_note" id="receiver" style="width:100%;height:100%"></input>
-                <br><p></p> -->
-                <label for="crchg_note">Change Receiver / Note</label>
-                <input type="textarea" name="delivery_note" id="receiverId" style="width:100%;height:100%"></input>
-                <p></p>
-                <label for="crchg_note">Change Delivery Latitude</label>
-                <input type="textarea" name="latitude" id="latitudeId" style="width:100%;height:100%"></input>
-                <label for="crchg_note">Change Delivery Longitude</label>
-                <input type="textarea" name="longitude" id="longitudeId" style="width:100%;height:100%"></input>
-                <p></p>
-                <label for="crchg_note">Change Delivery Time</label>
-                <input type="datetime-local" value="<?php echo date("Y-m-d\TH:i:s",time()); ?>"  name="deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input>
+                <strong>History Delivery Note: </strong>
+                <div id="chg_history" style="padding-left:20px;"></div>
+                <br>
+                <strong>History Delivery Log: </strong>
+                <div id="chg_log" style="padding-left:20px;"></div>
+                <br>
+                <label for="req_deliveryid">Move Log to Delivery ID</label>
+                <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:100%;height:100%"></input>
             </td>
         </tr>
     </table>

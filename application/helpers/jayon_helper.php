@@ -954,6 +954,57 @@ function get_logo($merchant_id){
     return array('exist'=>$exist,'logo'=>$thumbnail) ;
 }
 
+function get_listhistory($delivery_id){
+    $CI =& get_instance();
+
+    $ths = '';
+
+    $note_db = $CI->mongo_db->where('deliveryId',$delivery_id)
+                ->get('deliverynote');
+
+    //print_r($note_db);
+
+
+    if(count($note_db) > 0){
+
+        $class = '';
+
+        foreach($note_db as $note){
+
+            $ths .= sprintf('<li><span>'.$note['status'].'</span><br><span>'.$note['note'].'</span><input type="checkbox" id="'.$note['_id'].'" class="log-select" value="'.$note['_id'].'"/></li>');
+        }
+
+        $note_del = '<ul>'.$ths.'</ul>';
+
+    }
+
+    return $note_del;
+}
+
+function get_listlog($delivery_id){
+    $CI =& get_instance();
+
+    $ths = '';
+
+    $log_db = $CI->mongo_db->where('deliveryId',$delivery_id)
+                ->get('geolog');
+
+    if(count($log_db) > 0){
+
+        $class = '';
+
+        foreach($log_db as $log){
+
+            $ths .= sprintf('<li><span>'.$log['latitude'].'</span><br><span>'.$log['longitude'].'</span><input type="checkbox" id="'.$log['_id'].'" value="'.$log['_id'].'" class="log-select"/></li>');
+        }
+
+        $note_del = '<ul>'.$ths.'</ul>';
+
+    }
+
+    return $note_del;
+}
+
 function get_listthumbnail($delivery_id, $class = 'thumb'){
     $CI =& get_instance();
     $sign_count = 0;

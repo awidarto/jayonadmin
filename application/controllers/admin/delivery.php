@@ -5684,6 +5684,8 @@ class Delivery extends Application
         $dataset['latitude']= $this->input->post('latitude');
         $dataset['longitude']= $this->input->post('longitude');
         $dataset['deliverytime']= $this->input->post('deliverytime');
+        $_id = $this->input->post('_id');
+        $new_delivery_id = $this->input->post('deliveryId');
 
         if(is_array($delivery_id)){
 
@@ -5694,7 +5696,31 @@ class Delivery extends Application
             }
         }else{
 
-            $this->db->where('delivery_id',$delivery_id)->update($this->config->item('delivered_delivery_table'),$dataset);
+            if (trim($dataset['latitude'] || $dataset['longitude']) == ''){
+                $dataset['latitude']= 0.0;
+                $dataset['longitude']= 0.0;
+
+                $this->db->where('delivery_id',$delivery_id)->update($this->config->item('delivered_delivery_table'),$dataset);
+            }else{
+
+                $this->db->where('delivery_id',$delivery_id)->update($this->config->item('delivered_delivery_table'),$dataset);
+            }
+        }
+
+
+
+        if (trim($new_delivery_id) == ''){
+
+        }else{
+            if (is_array($_id)){
+                foreach ($_id as $did){
+                    $_id = new MongoId($did);
+
+                    $this->mongo_db->where('_id',$_id)->set('deliveryId', $new_delivery_id )->update('deliverynote');
+
+                    $this->mongo_db->where('_id',$_id)->set('deliveryId', $new_delivery_id )->update('geolog'); 
+                }
+            }
         }
     
         print json_encode(array('result'=>'ok'));

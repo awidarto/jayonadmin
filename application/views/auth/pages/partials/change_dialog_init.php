@@ -208,18 +208,27 @@
                     var latitude = $('#latitude_loc').html();
                     var longitude = $('#longitude_loc').html();
                     var deliverytime = $('#deliverytime_loc').html();
+                    var ids = [];
+                    var count = 0;
+                    $('.log-select:checked').each(function(){
+                        ids.push(this.value);
+                        
+                    });
 
                     $.post('<?php print site_url('admin/delivery/ajaxeditorder');?>',{
                         'delivery_id':delivery_id,
-                        'delivery_note':$('#receiverId').val(),
-                        'latitude':$('#latitudeId').val(),
-                        'longitude':$('#longitudeId').val(),
-                        'deliverytime':$('#deliverytimeId').val()
+                        'delivery_note':$('input[name=chg_delivery_note]').val(),
+                        'latitude':$('input[name=chg_latitude]').val(),
+                        'longitude':$('input[name=chg_longitude]').val(),
+                        'deliverytime':$('input[name=chg_deliverytime]').val(),
+                        'deliveryId': $('#chg_deliveryId').val(),
+                        '_id':ids,
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
                             oTable.fnDraw();
                             $('#editorder_dialog').dialog( "close" );
+                            console.log(ids);
                         }
                     },'json');
                 },
