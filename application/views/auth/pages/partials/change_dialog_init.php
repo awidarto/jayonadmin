@@ -197,7 +197,7 @@
 
         $('#editorder_dialog').dialog({
             autoOpen: false,
-            height: 350,
+            height: 550,
             width: 600,
             modal: true,
             buttons: {
@@ -223,6 +223,7 @@
                         'deliverytime':$('input[name=chg_deliverytime]').val(),
                         'deliveryId': $('#chg_deliveryId').val(),
                         '_id':ids,
+                        'status': $('#new_status_note').val(),
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table

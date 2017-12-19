@@ -5686,6 +5686,7 @@ class Delivery extends Application
         $dataset['deliverytime']= $this->input->post('deliverytime');
         $_id = $this->input->post('_id');
         $new_delivery_id = $this->input->post('deliveryId');
+        $new_status = $this->input->post('status');
 
         if(is_array($delivery_id)){
 
@@ -5708,7 +5709,6 @@ class Delivery extends Application
         }
 
 
-
         if (trim($new_delivery_id) == ''){
 
         }else{
@@ -5722,6 +5722,17 @@ class Delivery extends Application
                 }
             }
         }
+
+        if (is_array($_id)){
+            foreach ($_id as $did){
+                $_id = new MongoId($did);
+
+                $this->mongo_db->where('_id',$_id)->set('status', $new_status )->update('deliverynote');
+
+            }
+        }
+
+
     
         print json_encode(array('result'=>'ok'));
     }

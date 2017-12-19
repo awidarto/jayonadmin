@@ -405,6 +405,7 @@
                         'deliverytime':$('input[name=chg_deliverytime]').val(),
                         'deliveryId': $('#chg_deliveryId').val(),
                         '_id':ids,
+                        'status': $('#new_status_note').val(),
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table
@@ -515,6 +516,21 @@
                 <br>
                 <label for="req_deliveryid">Move Log to Delivery ID</label>
                 <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:100%;height:100%"></input>
+                <br><br>
+                <label for="req_deliveryid">Change Delivery status</label>
+                <?php
+                    $status_list = $this->config->item('status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    print ' New Status<br />';
+                    print form_dropdown('new_status_note',$sl,'','id="new_status_note"');
+
+                ?>
             </td>
         </tr>
     </table>

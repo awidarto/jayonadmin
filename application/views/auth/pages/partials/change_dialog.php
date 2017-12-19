@@ -297,11 +297,8 @@
                 <strong>Longitude : </strong><input type="textarea" name="chg_longitude" id="longitudeId" style="width:100%;height:100%"></input><br><br/>
                 <strong>Delivery Time : </strong><input type="textarea" name="chg_deliverytime" id="deliverytimeId" style="width:100%;height:100%"></input><br>
             </td>
-            <td style="width:70px;">
-                
-            </td>
-
-            <td>
+            <td style="width:50px;"></td>
+            <td style="width:250px;">
                 <strong>History Delivery Note: </strong>
                 <div id="chg_history" style="padding-left:20px;"></div>
                 <br>
@@ -309,8 +306,24 @@
                 <div id="chg_log" style="padding-left:20px;"></div>
                 <br>
                 <label for="req_deliveryid">Move Log to Delivery ID</label>
-                <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:100%;height:100%"></input>
+                <input type="textarea" name="deliveryId" id="chg_deliveryId" style="width:90%;height:100%"></input>
+                <br><br>
+                <label for="req_deliveryid">Change Delivery status</label>
+                <?php
+                    $status_list = $this->config->item('status_changes');
+                    $status_list = array_keys($status_list);
+
+                    $sl = array();
+                    foreach($status_list as $s){
+                        $sl[$s]=$s;
+                    }
+
+                    print ' New Status<br />';
+                    print form_dropdown('new_status_note',$sl,'','id="new_status_note"');
+
+                ?>
             </td>
+
         </tr>
     </table>
 </div>
