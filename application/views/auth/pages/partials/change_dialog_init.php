@@ -224,6 +224,7 @@
                         'deliveryId': $('#chg_deliveryId').val(),
                         '_id':ids,
                         'status': $('#new_status_note').val(),
+                        'note': $('#new_delivery_note').val(),
                     }, function(data) {
                         if(data.result == 'ok'){
                             //redraw table

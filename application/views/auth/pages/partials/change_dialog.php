@@ -310,7 +310,7 @@
                 <br><br>
                 <label for="req_deliveryid">Change Delivery </label>
                 <?php
-                    $status_list = $this->config->item('status_changes');
+                    $status_list = $this->config->item('delivery_status_list');
                     $status_list = array_keys($status_list);
 
                     $sl = array();
@@ -322,6 +322,9 @@
                     print form_dropdown('new_status_note',$sl,'','id="new_status_note"');
 
                 ?>
+                <br>
+                <strong>Change Delivery Note : </strong>
+                <input type="textarea" name="note" id="new_delivery_note" style="width:100%;height:100%"></input><br><br/>
             </td>
 
         </tr>

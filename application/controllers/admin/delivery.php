@@ -5687,6 +5687,7 @@ class Delivery extends Application
         $_id = $this->input->post('_id');
         $new_delivery_id = $this->input->post('deliveryId');
         $new_status = $this->input->post('status');
+        $new_delivery_note = $this->input->post('note');
 
         if(is_array($delivery_id)){
 
@@ -5723,12 +5724,43 @@ class Delivery extends Application
             }
         }
 
-        if (is_array($_id)){
-            foreach ($_id as $did){
-                $_id = new MongoId($did);
+        // if (trim($new_status) == '' && trim($new_delivery_note) == ''){
 
-                $this->mongo_db->where('_id',$_id)->set('status', $new_status )->update('deliverynote');
+        // }else{
+        //     if (is_array($_id)){
+        //         foreach ($_id as $did){
 
+        //             $_id = new MongoId($did);
+
+        //             $this->mongo_db->where('_id',$_id)->set(array('status' => $new_status, 'note' => $new_delivery_note  ))->update('deliverynote');
+
+        //         }
+        //     }
+        // }
+
+        if (trim($new_status) == ''){
+
+        }else{
+            if (is_array($_id)){
+                foreach ($_id as $did){
+
+                    $_id = new MongoId($did);
+
+                    $this->mongo_db->where('_id',$_id)->set('status', $new_status )->update('deliverynote');
+
+                }
+            }
+        }
+
+        if (trim($new_delivery_note) == ''){
+
+        }else{
+            if (is_array($_id)){
+                foreach ($_id as $did){
+                    $_id = new MongoId($did);
+
+                    $this->mongo_db->where('_id',$_id)->set('note', $new_delivery_note )->update('deliverynote');
+                }
             }
         }
 

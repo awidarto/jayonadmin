@@ -122,6 +122,16 @@ $config['status_list'] = array(
     'returned'=>'Returned'
 );
 
+$config['delivery_status_list'] = array(
+    ''=>'',
+    'date_assigned'=>'Date Assigned',
+    'cr_assigned'=>'Courier Assigned',
+    'pending'=>'Pending',
+    'delivered'=>'Delivered',
+    'canceled'=>'Canceled',
+    'returned'=>'Returned'
+);
+
 //$config['courier_status'] = array(
     $config['trans_cr_atmerchant'] = 'di merchant';
     $config['trans_cr_inwh'] = 'di gudang';
