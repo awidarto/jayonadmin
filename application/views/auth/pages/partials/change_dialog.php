@@ -322,7 +322,7 @@
                     print form_dropdown('new_status_note',$sl,'','id="new_status_note"');
 
                 ?>
-                <br>
+                <br><br/>
                 <strong>Change Delivery Note : </strong>
                 <input type="textarea" name="note" id="new_delivery_note" style="width:100%;height:100%"></input><br><br/>
             </td>
