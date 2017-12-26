@@ -4123,13 +4123,19 @@ class Delivery extends Application
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
+            if(user_group('admin')){
+                $mvfoto = '<span ></span>';
 
-            $mvfoto = '<span class="movefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >MoveFoto</span>';
+                $delfoto = '<span ></span>';
 
-            $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
+                $editorder = '<span ></span>';
+            }else{
+                $mvfoto = '<span class="movefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >MoveFoto</span>';
 
-            $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-deliverytime="'.$key['deliverytime'].'" data-longitude="'.$key['longitude'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+                $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
 
+                $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-deliverytime="'.$key['deliverytime'].'" data-longitude="'.$key['longitude'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+            }
             //if($key['status'] == 'pending'){
                 $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
             //}else{
@@ -4190,7 +4196,10 @@ class Delivery extends Application
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
 				$key['revoke_ref'],
-				$printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
+                
+                    $printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
+                
+				
 			);
 		}
 
@@ -4784,13 +4793,20 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
 			$viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+            if(user_group('admin')){
+                $mvfoto = '<span ></span>';
 
-            $mvfoto = '<span class="movefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >MoveFoto</span>';
+                $delfoto = '<span ></span>';
 
-            $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
+                $editorder = '<span ></span>';
+            }else{
+                $mvfoto = '<span class="movefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >MoveFoto</span>';
 
-            $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-longitude="'.$key['longitude'].'" data-deliverytime="'.$key['deliverytime'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+                $delfoto = '<span class="deletefoto" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >DelFoto</span>';
 
+                $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-longitude="'.$key['longitude'].'" data-deliverytime="'.$key['deliverytime'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
+            }
+            
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
 
