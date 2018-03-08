@@ -3711,7 +3711,7 @@ class Delivery extends Application
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
             $crchangestatus = '<span class="crchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >CRChgStat</span>';
-
+            $klickchat = '<a href="https://api.whatsapp.com/send?phone='.$key['phone'].'" target="blank"><span class="" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChatWhatsapp</span></a>';
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
 			$devicefield = ($bardev == $key['device'])?'&nbsp;':$key['device'];
@@ -3780,7 +3780,7 @@ class Delivery extends Application
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
                 $notes,
-				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$crchangestatus.'<br /><br />'.$viewlog,
+				$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$crchangestatus.'<br /><br />'.$viewlog.'<br/><br/>'.$klickchat,
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
                 $key['delivery_cost'],
@@ -4123,6 +4123,9 @@ class Delivery extends Application
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
+
+            $klickchat = '<a href="https://api.whatsapp.com/send?phone='.$key['phone'].'" target="blank"><span class="" id="" style="cursor:pointer;text-decoration:underline;" >ChatWhatsapp </span></a>';
+
             if(user_group('admin')){
                 $mvfoto = '<span ></span>';
 
@@ -4197,7 +4200,7 @@ class Delivery extends Application
                 $key['reschedule_ref'],
 				$key['revoke_ref'],
                 
-                    $printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
+                    $printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$klickchat.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
                 
 				
 			);
