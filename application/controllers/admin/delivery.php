@@ -3147,7 +3147,10 @@ class Delivery extends Application
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
+
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+
+            $klickchat = '<a href="https://api.whatsapp.com/send?phone='.$key['phone'].'" target="blank"><span class="" id="" style="cursor:pointer;text-decoration:underline;" >ChatWhatsapp</span></a>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -3211,7 +3214,7 @@ class Delivery extends Application
 				colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$cr_stat.'<br />'.$wh_stat,
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
-				$reassign.'<br />'.$changestatus.'<br />'.$viewlog //$printslip.' '.$edit.' '.$delete
+				$reassign.'<br /><br/>'.$changestatus.'<br/><br/>'.$viewlog.'<br/><br/>'.$klickchat //$printslip.' '.$edit.' '.$delete
 			);
 
 
@@ -3711,7 +3714,7 @@ class Delivery extends Application
 
             $whchangestatus = '<span class="whchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >WHChgStat</span>';
             $crchangestatus = '<span class="crchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >CRChgStat</span>';
-            $klickchat = '<a href="https://api.whatsapp.com/send?phone='.$key['phone'].'" target="blank"><span class="" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChatWhatsapp</span></a>';
+            $klickchat = '<a href="https://api.whatsapp.com/send?phone='.$key['phone'].'" target="blank"><span class="" id="" style="cursor:pointer;text-decoration:underline;" >ChatWhatsapp</span></a>';
 
 			$datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
 			$devicefield = ($bardev == $key['device'])?'&nbsp;':$key['device'];
