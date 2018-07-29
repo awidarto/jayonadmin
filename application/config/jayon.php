@@ -56,6 +56,7 @@ $config['jayon_prepaid_table'] = 'prepaid_delivery';
 
 $config['jayon_buyers_table'] = 'buyers';
 $config['jayon_members_table'] = 'members';
+$config['jayon_merchantgroup_table'] = 'merchant_group';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_holidays_table'] = 'holidays';
 $config['jayon_devices_table'] = 'devices';

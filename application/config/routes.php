@@ -61,6 +61,9 @@ $route['admin/members/merchantdelete/(:num)'] = "admin/apps/delete/$1";
 $route['admin/members/merchant/add'] = "admin/members/add";
 $route['admin/members/merchant/edit/(:num)'] = "admin/members/edit/$1";
 
+$route['admin/members/merchantgroup/addgroup'] = "admin/members/addgroup";
+$route['admin/members/merchantgroup/edit/(:num)'] = "admin/members/edit/$1";
+
 $route['admin/members/buyer/add'] = "admin/members/add";
 $route['admin/members/buyer/edit/(:num)'] = "admin/members/edit/$1";
 

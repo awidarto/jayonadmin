@@ -508,6 +508,359 @@ class Members extends Application
 		print json_encode($result);
 	}
 
+	public function merchantgroups()
+	{
+
+		$this->breadcrumb->add_crumb('Manage Merchant groups','admin/members/merchantgroups');
+
+		$this->load->library('table');
+
+		$this->table->set_heading(
+			'Group Name',
+			'Description',
+			// 'Merchant Name',
+			// 'Group',
+			// 'Created',
+			'Actions'); // Setting headings for the table
+
+		$this->table->set_footing(
+			'<input type="text" name="search_groupname" id="search_username" value="Search Group Name" class="search_init" />',
+			'<input type="text" name="search_email" id="search_email" value="Search description" class="search_init" />',
+			
+            // '<input type="text" name="search_merchant_name" value="Search merchant name" class="search_init" />',
+            
+			// '<input type="text" name="search_created" id="search_timestamp" value="Search created" class="search_init" />',
+			form_button('do_setgroup','Set Group','id="doSetGroup"')
+			);
+
+		$page['sortdisable'] = '';
+		$page['ajaxurl'] = 'admin/members/ajaxmerchantgroup';
+		$page['add_button'] = array('link'=>'admin/members/merchantgroups/addgroup','label'=>'Add New Group');
+        $page['group_button'] = false;
+		$page['page_title'] = 'Manage Merchants Group';
+		$this->ag_auth->view('listview',$page); // Load the view
+	}
+
+	public function ajaxmerchantgroup(){
+
+		$limit_count = $this->input->post('iDisplayLength');
+		$limit_offset = $this->input->post('iDisplayStart');
+
+		$sort_col = $this->input->post('iSortCol_0');
+		$sort_dir = $this->input->post('sSortDir_0');
+
+		$group_id = user_group_id('merchantgroup');
+        $pending_group_id = user_group_id('pendingmerchant');
+
+		$columns = array(
+			'namegroup',
+			'description',
+			// 'merchantname',
+
+   			// 'group_id',
+			// 'created',
+			
+		);
+
+		// get total count result
+		//$count_all = $this->db->count_all($this->config->item('jayon_members_table'));
+
+		//$this->db->where('group_id',$group_id)
+        //    ->or_where('group_id',$pending_group_id);
+
+		//$count_display_all = $this->db->count_all_results($this->config->item('jayon_members_table'));
+
+		//$this->db->select('*,g.description as groupname');
+		//$this->db->join('groups as g','members.group_id = g.id','left');
+
+		$search = false;
+				//search column
+		if($this->input->post('sSearch') != ''){
+			$srch = $this->input->post('sSearch');
+			//$this->db->like('buyerdeliveryzone',$srch);
+			$this->db->or_like('buyerdeliverytime',$srch);
+			$this->db->or_like('delivery_id',$srch);
+			$search = true;
+		}
+
+		if($this->input->post('sSearch_0') != ''){
+			$this->db->like('namegroup',$this->input->post('sSearch_0'));
+			$search = true;
+		}
+
+
+		if($this->input->post('sSearch_1') != ''){
+			$this->db->like('description',$this->input->post('sSearch_1'));
+			$search = true;
+		}
+
+  //       if($this->input->post('sSearch_3') != ''){
+  //           $this->db->like('merchantname',$this->input->post('sSearch_3'));
+  //           $search = true;
+  //       }
+
+		// if($this->input->post('sSearch_13') != ''){
+		// 	$this->db->like('created',$this->input->post('sSearch_13'));
+		// 	$search = true;
+		// }
+
+		if($search){
+			$this->db->and_();
+		}
+
+        //$group_ids = array(group_id('merchant'),group_id('pendingmerchant'));
+  //       $this->db->group_start();
+
+		// $this->db->where('group_id',$group_id)
+  //           ->or_where('group_id',$pending_group_id);
+
+  //       $this->db->group_end();
+
+        $dbca = clone $this->db;
+
+        $this->db->order_by('namegroup','desc')
+			->order_by($columns[$sort_col],$sort_dir);
+
+        $dbcr = clone $this->db;
+
+        $data = $this->db->limit($limit_count, $limit_offset)->get($this->config->item('jayon_merchantgroup_table'));
+
+		$last_query = $this->db->last_query();
+
+        $count_all = $dbca->count_all_results($this->config->item('jayon_merchantgroup_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('jayon_merchantgroup_table'));
+
+
+		$result = $data->result_array();
+
+		$aadata = array();
+
+
+		foreach($result as $value => $key)
+		{
+			$delete = '<span id="'.$key['id'].'" class="delete_link" style="cursor:pointer;text-decoration:underline;">Delete</span>'; // Build actions links
+			$editpass = anchor("admin/members/editpass/".$key['id']."/", "Password"); // Build actions links
+			if($key['group_id'] === group_id('merchantgroup')){
+				$addapp = anchor("admin/members/merchantgroups/apps/manage/".$key['id']."/", "Applications"); // Build actions links
+			}else{
+				$addapp = '&nbsp'; // Build actions links
+			}
+            $uplogo = anchor("admin/members/logo/".$key['id']."/", "Upload Logo"); // Build actions links
+			$edit = anchor("admin/members/merchantgroups/edit/".$key['id']."/", "Edit"); // Build actions links
+			$detail = form_checkbox('assign[]',$key['id'],FALSE,'class="assign_check"').' '.anchor("admin/members/details/".$key['id']."/", '<span id="un_'.$key['id'].'">'.$key['username'].'</span>'); // Build detail links
+
+            $groupname = ($key['group_id'] == group_id('pendingmerchant'))?sprintf('<span class="red">%s</span>',user_group_desc($key['group_id']) ):user_group_desc($key['group_id']);
+
+            $logo = get_logo($key['id']);
+            if($logo['exist'] == true){
+                $logo = '<img src="'.$logo['logo'].'" />';
+            }else{
+                $logo = '';
+            }
+
+			$aadata[] = array(
+				$detail,
+			 	$key['namegroup'],
+			 	$key['description'],
+                // $logo.'<br />'.$key['merchantname'],
+                // $groupname,
+			 	// $key['created'],
+			 	$addapp.' '.$edit.' '.$uplogo.' '.$editpass.' '.$delete
+			); // Adding row to table
+
+		}
+
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata,
+            'q'=>$last_query
+		);
+
+		print json_encode($result);
+	}
+
+	public function addgroup()
+	{
+		if(in_array('merchant',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Merchants Group','admin/members/merchantgroups');
+			$this->breadcrumb->add_crumb('Add Merchant Group','admin/members/merchantgroups/add');
+			$data['page_title'] = 'Add Merchant Group';
+
+			$back_url = 'admin/members/merchantgroups';
+			$success_url = 'admin/members/merchantgroups';
+			$error_url = 'admin/members/merchantgroups/addgroup';
+
+			$utype = 'Merchant Group';
+		}else if(in_array('buyer',$this->uri->segment_array())){
+			$this->breadcrumb->add_crumb('Manage Buyers','admin/members/buyer');
+			$this->breadcrumb->add_crumb('Add Buyer','admin/members/buyer/add');
+			$data['page_title'] = 'Add Buyer';
+
+			$back_url = 'admin/members/buyer';
+			$success_url = 'admin/members/buyer';
+			$error_url = 'admin/members/buyer/add';
+
+			$utype = 'Buyer';
+		}
+
+		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
+		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
+		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
+		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
+		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
+		//$this->form_validation->set_rules('group_id', 'Group', 'trim');
+
+
+		$this->form_validation->set_rules('same_as_personal_address', 'Same As Personal Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_street', 'Street', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_district', 'District', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_city', 'City', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_country', 'Country', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_province', 'Province', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_zip', 'ZIP', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_toscan', 'Use barcode scan', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_time', 'Pick Up Time', 'trim|xss_clean');
+        $this->form_validation->set_rules('mc_pickup_cutoff', 'Pick Up Cut Off', 'trim|xss_clean');
+
+		$this->form_validation->set_rules('mc_first_order', 'First Order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_last_order', 'Last order', 'trim|xss_clean');
+		$this->form_validation->set_rules('mc_unlimited_time', 'Mobile Number', 'trim|xss_clean');
+
+        $this->form_validation->set_rules('delivery_bearer', 'Delivery Bearer', 'trim|xss_clean');
+        $this->form_validation->set_rules('cod_surcharge_bearer', 'COD Bearer', 'trim|xss_clean');
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$data['groups'] = array(
+                group_id('pendingmerchant')=>group_desc('pendingmerchant'),
+				group_id('merchant')=>group_desc('merchant'),
+				group_id('buyer')=>group_desc('buyer')
+			);
+			$data['back_url'] = anchor($back_url,'Cancel');
+			$this->ag_auth->view('members/addgroup',$data);
+		}
+		else
+		{
+			$username = set_value('username');
+			$password = $this->ag_auth->salt(set_value('password'));
+			$fullname = set_value('fullname');
+			$merchantname = set_value('merchantname');
+			$bank = set_value('bank');
+			$account_number = set_value('account_number');
+			$account_name = set_value('account_name');
+			$street = set_value('street');
+			$district = set_value('district');
+			$province = set_value('province');
+			$city = set_value('city');
+			$country = set_value('country');
+			$zip = set_value('zip');
+			$phone= set_value('phone');
+			$mobile= set_value('mobile');
+			$email = set_value('email');
+
+			$same_as_personal_address = set_value('same_as_personal_address');
+
+			$mc_street = set_value('mc_street');
+			$mc_district = set_value('mc_district');
+			$mc_province = set_value('mc_province');
+			$mc_city = set_value('mc_city');
+			$mc_country = set_value('mc_country');
+			$mc_zip = set_value('mc_zip');
+			$mc_phone= set_value('mc_phone');
+			$mc_mobile= set_value('mc_mobile');
+            $mc_toscan= set_value('mc_toscan');
+            $mc_pickup_time= set_value('mc_pickup_time');
+            $mc_pickup_cutoff= set_value('mc_pickup_cutoff');
+
+			$mc_first_order = set_value('mc_first_order');
+			$mc_last_order = set_value('mc_last_order');
+			$mc_unlimited_time = set_value('mc_unlimited_time');
+
+            $delivery_bearer = set_value('delivery_bearer');
+            $cod_bearer = set_value('cod_surcharge_bearer');
+
+
+			$group_id = set_value('group_id');
+
+			$dataset = array(
+				'username'=>$username,
+				'password'=>$password,
+				'fullname'=>$fullname,
+				'merchantname'=>$merchantname,
+				'bank'=>$bank,
+				'account_number'=>$account_number,
+				'account_name'=>$account_name,
+				'street'=>$street,
+				'district'=>$district,
+				'province'=>$province,
+				'city'=>$city,
+				'country'=>$country,
+				'zip'=>$zip,
+				'phone'=>$phone,
+				'mobile'=>$mobile,
+				'email'=>$email,
+
+				'same_as_personal_address' =>$same_as_personal_address,
+				'mc_street' =>$mc_street,
+				'mc_district' =>$mc_district,
+				'mc_province' =>$mc_province,
+				'mc_city' =>$mc_city,
+				'mc_country' =>$mc_country,
+				'mc_zip' =>$mc_zip,
+				'mc_phone'=>$mc_phone,
+				'mc_mobile'=>$mc_mobile,
+                'mc_toscan'=>$mc_toscan,
+                'mc_pickup_time'=>$mc_pickup_time,
+                'mc_pickup_cutoff'=>$mc_pickup_cutoff,
+
+				'mc_first_order' => $mc_first_order,
+				'mc_last_order' => $mc_last_order,
+				'mc_unlimited_time' => $mc_unlimited_time,
+
+                'mc_delivery_bearer'=>$delivery_bearer,
+                'mc_cod_bearer'=>$cod_bearer,
+
+				'group_id'=>$group_id,
+				'created'=> date('Y-m-d h:i:s',time())
+
+			);
+
+			if($this->db->insert($this->config->item('jayon_merchantgroup_table'),$dataset) === TRUE)
+			{
+				$data['message'] = "The user account has now been created.";
+				$data['page_title'] = 'Add Member';
+				$data['back_url'] = anchor('admin/members/manage','Back to list');
+				$this->ag_auth->view('message', $data);
+
+			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
+			else
+			{
+				$data['message'] = "The user account has not been created.";
+				$data['page_title'] = 'Add Member Error';
+				$data['back_url'] = anchor('admin/members/manage','Back to list');
+				$this->ag_auth->view('message', $data);
+			}
+
+		} // if($this->form_validation->run() == FALSE)
+
+	} 
+
 	public function __buyer()
 	{
 
@@ -1124,6 +1477,15 @@ class Members extends Application
 		}
 	}
 
+	public function get_merchantgroup(){
+		$this->db->select('id,groupname');
+		$result = $this->db->get($this->config->item('jayon_merchantgroup_table'));
+		foreach($result->result_array() as $row){
+			$res[$row['id']] = $row['groupname'];
+		}
+		return $res;
+	}
+
 	public function get_group(){
 		$this->db->select('id,description');
 		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
@@ -1220,6 +1582,7 @@ class Members extends Application
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
+			// $data['groupmerchant'] = $this->get_merchantgroup();
 			$data['back_url'] = anchor($back_url,'Cancel');
 			$this->ag_auth->view('members/add',$data);
 		}
@@ -1265,6 +1628,7 @@ class Members extends Application
 
 
 			$group_id = set_value('group_id');
+			// $merchantgroup_id = set_value('merchantgroup_id');
 
 			$dataset = array(
 				'username'=>$username,
@@ -1305,6 +1669,7 @@ class Members extends Application
                 'mc_cod_bearer'=>$cod_bearer,
 
 				'group_id'=>$group_id,
+				// 'merchantgroup_id'=>$merchantgroup_id,
 				'created'=> date('Y-m-d h:i:s',time())
 
 			);
@@ -1370,6 +1735,7 @@ class Members extends Application
 		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
+		$this->form_validation->set_rules('merchantgroup_id', 'Merchant Group', 'trim');
 
 		$this->form_validation->set_rules('same_as_personal_address', 'Same As Personal Address', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_street', 'Street', 'trim|xss_clean');
@@ -1401,6 +1767,7 @@ class Members extends Application
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
+			$data['groupmerchant'] = $this->get_merchantgroup();
 			$data['back_url'] = anchor($back_url,'Cancel');
 			$this->ag_auth->view('members/edit',$data);
 		}
@@ -1423,6 +1790,7 @@ class Members extends Application
 			$dataset['mobile'] = set_value('mobile');
 			$dataset['email'] = set_value('email');
 			$dataset['group_id'] = set_value('group_id');
+			$dataset['merchantgroup_id'] = set_value('merchantgroup_id');
 
 			$dataset['same_as_personal_address'] = set_value('same_as_personal_address');
 			$dataset['mc_street'] = set_value('mc_street');

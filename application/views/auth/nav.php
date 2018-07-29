@@ -129,6 +129,7 @@
 					<li class="<?php print set_hilite('admin\/members\/merchant')?>" ><?php if(user_group('admin') || user_group('superadmin')) { echo anchor('admin/members/merchant', 'Merchants'); } ?></li>
 					<li class="<?php print set_hilite('admin\/members\/buyer')?>" ><?php if(user_group('admin') || user_group('superadmin')) { echo anchor('admin/members/buyer', 'Buyers'); } ?></li>
 					<li class="<?php print set_hilite('admin\/couriers')?>" ><?php if(user_group('admin') || user_group('superadmin')) { echo anchor('admin/couriers/manage', 'Couriers'); } ?></li>
+					<li class="<?php print set_hilite('admin\/merchantgroup')?>" ><?php if(user_group('admin') || user_group('superadmin')) { echo anchor('admin/merchantgroup/manage', 'Merchant Group'); } ?></li>
 				</ul>
 			</li>
 		<?php

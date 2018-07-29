@@ -54,10 +54,6 @@
 			Merchant Name:<br />
 			<input type="text" name="merchantname" size="50" class="form" value="<?php echo set_value('merchantname'); ?>" /><?php echo form_error('merchantname'); ?><br /><br />
 
-			Merchant Group:<br />
-				<?php echo form_dropdown('merchantgroup_id',$groupmerchant,set_value('merchantgroup_id',$user['merchantgroup_id']));?>
-			<br /><br>
-
 			Bank:<br />
 			<input type="text" name="bank" size="50" class="form" value="<?php echo set_value('bank'); ?>" /><?php echo form_error('bank'); ?><br /><br />
 
