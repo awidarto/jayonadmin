@@ -26,7 +26,7 @@ class Merchantgroup extends Application
 			
 		$data = $this->db->get($this->config->item('jayon_merchantgroup_table'));
 		$result = $data->result_array();
-		$this->table->set_heading('Username','Full Name','Actions'); // Setting headings for the table
+		$this->table->set_heading('Group Name','Description','Actions'); // Setting headings for the table
 		
 		foreach($result as $value => $key)
 		{
