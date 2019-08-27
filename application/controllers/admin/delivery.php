@@ -5323,6 +5323,7 @@ class Delivery extends Application
 		$device_id = $this->input->post('device_id');
 		$dataset['status'] = $this->input->post('new_status');
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
+		$dataset['is_archived'] = 0;
         $req_by = $this->input->post('req_by');
         $req_name = $this->input->post('req_name');
         $req_note = $this->input->post('req_note');
@@ -5335,6 +5336,11 @@ class Delivery extends Application
                 if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                     $incr = true;
                     //$dataset['delivery_note'] = $req_note;
+                }
+
+                if($dataset['status'] == $this->config->item('trans_status_archived')){
+                    $dataset['is_archived'] = 1;
+                    unset($dataset['status']);
                 }
 
                 if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
@@ -5397,6 +5403,11 @@ class Delivery extends Application
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
+            }
+
+            if($dataset['status'] == $this->config->item('trans_status_archived')){
+                $dataset['is_archived'] = 1;
+                unset($dataset['status']);
             }
 
             if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
