@@ -1594,6 +1594,7 @@ class Delivery extends Application
         }
 
         $this->db->group_start()
+            ->where('is_archived',0)
             ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
             ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
             ->group_end();
@@ -4087,7 +4088,8 @@ class Delivery extends Application
 		}
 
 		$this->db->group_start()
-			->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+            ->where('is_archived',0)
+            ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
