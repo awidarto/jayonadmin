@@ -2613,7 +2613,8 @@ class Delivery extends Application
 						'actor_id'=>$this->session->userdata('userid'),
 						'latitude'=>'',
 						'longitude'=>'',
-						'status'=>$this->config->item('trans_status_archived'),
+						//'status'=>$this->config->item('trans_status_archived'),
+                        'is_archived'=>1,
 						'notes'=>''
 					);
 
@@ -2633,7 +2634,8 @@ class Delivery extends Application
 						'actor_id'=>$this->session->userdata('userid'),
 						'latitude'=>'',
 						'longitude'=>'',
-						'status'=>$this->config->item('trans_status_archived'),
+						//'status'=>$this->config->item('trans_status_archived'),
+                        'is_archived'=>1,
 						'notes'=>''
 					);
 
@@ -4202,10 +4204,10 @@ class Delivery extends Application
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
 				$key['revoke_ref'],
-                
+
                     $printslip.'<br /><br />'.$viewlog.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br/><br/>'.$klickchat.'<br/><br/>'.$mvfoto.'<br/></br/>'.$delfoto.'<br/></br/>'.$editorder
-                
-				
+
+
 			);
 		}
 
@@ -4684,11 +4686,13 @@ class Delivery extends Application
 
 		// get total count result
 		$count_all = $this->db
-			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
-			->count_all($this->config->item('delivered_delivery_table'));
+			//->where('status',$this->config->item('trans_status_mobile_rescheduled'))
+            ->where('is_archived',1)
+            ->count_all($this->config->item('delivered_delivery_table'));
 
 		$count_display_all = $this->db
-			->where('status',$this->config->item('trans_status_archived'))
+			//->where('status',$this->config->item('trans_status_archived'))
+            ->where('is_archived',1)
 			->count_all_results($this->config->item('delivered_delivery_table'));
 
 		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
@@ -4777,7 +4781,8 @@ class Delivery extends Application
 		}
 
 		$this->db->group_start()
-			->where('status',$this->config->item('trans_status_archived'))
+			//->where('status',$this->config->item('trans_status_archived'))
+            ->where('is_archived',1)
 			->group_end();
 
 		$data =	$this->db->limit($limit_count, $limit_offset)
@@ -4812,7 +4817,7 @@ class Delivery extends Application
 
                 $editorder = '<span class="editorder" id="'.$key['delivery_id'].'" data-delivery_note="'.$key['delivery_note'].'" data-latitude="'.$key['latitude'].'" data-longitude="'.$key['longitude'].'" data-deliverytime="'.$key['deliverytime'].'" style="cursor:pointer;text-decoration:underline;" >EditDelOrder</span>';
             }
-            
+
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
 
@@ -5715,7 +5720,7 @@ class Delivery extends Application
 
             foreach ($delivery_id as $did) {
                 //$_id = new MongoId($did);
-                
+
                 $this->db->where('delivery_id',$did)->update($this->config->item('delivered_delivery_table'),$dataset);
             }
         }else{
@@ -5741,7 +5746,7 @@ class Delivery extends Application
 
                     $this->mongo_db->where('_id',$_id)->set('deliveryId', $new_delivery_id )->update('deliverynote');
 
-                    $this->mongo_db->where('_id',$_id)->set('deliveryId', $new_delivery_id )->update('geolog'); 
+                    $this->mongo_db->where('_id',$_id)->set('deliveryId', $new_delivery_id )->update('geolog');
                 }
             }
         }
@@ -5787,7 +5792,7 @@ class Delivery extends Application
         }
 
 
-    
+
         print json_encode(array('result'=>'ok'));
     }
 
@@ -5802,10 +5807,10 @@ class Delivery extends Application
             foreach ($_id as $did) {
             $_id = new MongoId($did);
 
-            $this->mongo_db->where('_id',$_id)->set('parent_id', $new_parent_id )->update('uploaded');    
+            $this->mongo_db->where('_id',$_id)->set('parent_id', $new_parent_id )->update('uploaded');
             }
         }
-    
+
         print json_encode(array('result'=>'ok'));
 
 
@@ -5818,10 +5823,10 @@ class Delivery extends Application
 
         foreach ($_id as $did) {
             $_id = new MongoId($did);
-            
+
             $this->mongo_db->where('_id',$_id)->set('parent_id', 'deleted_'.$delivery_id )->update('uploaded');
         }
-    
+
         print json_encode(array('result'=>'ok'));
 
     }
