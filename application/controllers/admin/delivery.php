@@ -5338,11 +5338,6 @@ class Delivery extends Application
                     //$dataset['delivery_note'] = $req_note;
                 }
 
-                if($dataset['status'] == $this->config->item('trans_status_archived')){
-                    $dataset['is_archived'] = 1;
-                    unset($dataset['status']);
-                }
-
                 if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
 
                 }else{
@@ -5355,6 +5350,11 @@ class Delivery extends Application
                     $dataset['status'] == $this->config->item('trans_status_mobile_return')
                     ){
                     $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
+                }
+
+                if($dataset['status'] == $this->config->item('trans_status_archived')){
+                    $dataset['is_archived'] = 1;
+                    unset($dataset['status']);
                 }
 
                 if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
@@ -5405,11 +5405,6 @@ class Delivery extends Application
                 $incr = true;
             }
 
-            if($dataset['status'] == $this->config->item('trans_status_archived')){
-                $dataset['is_archived'] = 1;
-                unset($dataset['status']);
-            }
-
             if( str_replace( array('-','.','*'), '', trim($req_note) )== ''){
 
             }else{
@@ -5422,6 +5417,11 @@ class Delivery extends Application
                 $dataset['status'] == $this->config->item('trans_status_mobile_return')
                 ){
                 $dataset['deliverytime'] = date('Y-m-d H:i:s', time());
+            }
+
+            if($dataset['status'] == $this->config->item('trans_status_archived')){
+                $dataset['is_archived'] = 1;
+                unset($dataset['status']);
             }
 
             if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
