@@ -495,7 +495,7 @@ class Delivery extends Application
 		);
 
         print json_encode($result);
-        
+
         $this->move_to_archive();
 	}
 
@@ -4700,10 +4700,10 @@ class Delivery extends Application
 
 		$this->db->select($this->config->item( 'archived_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
-		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
-		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
-		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
-		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+		$this->db->join('members as m',$this->config->item('archived_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('archived_delivery_table').'.application_id=a.id','left');
+		$this->db->join('devices as d',$this->config->item('archived_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('archived_delivery_table').'.courier_id=c.id','left');
 
 		$search = false;
 
