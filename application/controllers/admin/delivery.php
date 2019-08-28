@@ -16,7 +16,6 @@ class Delivery extends Application
 
         ini_set('memory_limit','1456M');
 
-
 	}
 
     public function incoming()
@@ -4690,14 +4689,14 @@ class Delivery extends Application
 		$count_all = $this->db
 			//->where('status',$this->config->item('trans_status_mobile_rescheduled'))
             ->where('is_archived',1)
-            ->count_all($this->config->item('delivered_delivery_table'));
+            ->count_all($this->config->item( 'archived_delivery_table'));
 
 		$count_display_all = $this->db
 			//->where('status',$this->config->item('trans_status_archived'))
             ->where('is_archived',1)
-			->count_all_results($this->config->item('delivered_delivery_table'));
+			->count_all_results($this->config->item( 'archived_delivery_table'));
 
-		$this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->select($this->config->item( 'archived_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
 		//$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
@@ -4722,13 +4721,13 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_0') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.deliverytime',$this->input->post('sSearch_0'));
+			$this->db->like($this->config->item('archived_delivery_table').'.deliverytime',$this->input->post('sSearch_0'));
 			$search = true;
 		}
 
 
 		if($this->input->post('sSearch_1') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_1'));
+			$this->db->like($this->config->item('archived_delivery_table').'.delivery_id',$this->input->post('sSearch_1'));
 			$search = true;
 		}
 
@@ -4740,7 +4739,7 @@ class Delivery extends Application
 			}else{
 				$term = $this->input->post('sSearch_2');
 			}
-			$this->db->like($this->config->item('assigned_delivery_table').'.delivery_type',$term);
+			$this->db->like($this->config->item('archived_delivery_table').'.delivery_type',$term);
 			$search = true;
 		}
 
@@ -4755,7 +4754,7 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_5') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
+			$this->db->like($this->config->item('archived_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -4770,12 +4769,12 @@ class Delivery extends Application
 		}
 
 		if($this->input->post('sSearch_8') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.shipping_address',$this->input->post('sSearch_8'));
+			$this->db->like($this->config->item('archived_delivery_table').'.shipping_address',$this->input->post('sSearch_8'));
 			$search = true;
 		}
 
 		if($this->input->post('sSearch_9') != ''){
-			$this->db->like($this->config->item('assigned_delivery_table').'.phone',$this->input->post('sSearch_9'));
+			$this->db->like($this->config->item('archived_delivery_table').'.phone',$this->input->post('sSearch_9'));
 			$search = true;
 		}
 		if($search){
@@ -4789,7 +4788,7 @@ class Delivery extends Application
 
 		$data =	$this->db->limit($limit_count, $limit_offset)
 			->order_by('deliverytime','desc')
-			->get($this->config->item('delivered_delivery_table'));
+			->get($this->config->item( 'archived_delivery_table'));
 
 		//print $this->db->last_query();
 
@@ -5334,6 +5333,7 @@ class Delivery extends Application
             foreach($delivery_id as $did){
 
                 $incr = false;
+                $arc = false;
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                     $incr = true;
@@ -5376,6 +5376,8 @@ class Delivery extends Application
                     $order_exist = 'ORDER_FAILED_ASSIGNMENT';
                 }
 
+
+
                 $data = array(
                     'timestamp'=>date('Y-m-d H:i:s',time()),
                     'report_timestamp'=>date('Y-m-d H:i:s',time()),
@@ -5402,6 +5404,7 @@ class Delivery extends Application
         }else{
 
             $incr = false;
+            $arc = false;
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
@@ -5422,6 +5425,7 @@ class Delivery extends Application
             }
 
             if($dataset['status'] == $this->config->item('trans_status_archived')){
+                $arc = true;
                 $dataset['is_archived'] = 1;
                 unset($dataset['status']);
             }
@@ -6215,6 +6219,13 @@ class Delivery extends Application
         return $dupes;
     }
 
+    public function move_to_archive()
+    {
+        $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
+        $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
+
+        return $this->db->query($query);
+    }
 
 }
 
