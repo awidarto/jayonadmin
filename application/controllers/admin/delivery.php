@@ -494,7 +494,9 @@ class Delivery extends Application
 			'lastquery'=>$last_query
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+        
+        $this->move_to_archive();
 	}
 
     public function pickup()
