@@ -838,6 +838,9 @@ class Delivery extends Application
         );
 
         print json_encode($result);
+
+        $this->move_to_archive();
+
     }
 
     public function running()
@@ -1314,6 +1317,9 @@ class Delivery extends Application
         );
 
         print json_encode($result);
+
+        $this->move_to_archive();
+
     }
 
 	/* cancelled */
@@ -1778,6 +1784,9 @@ class Delivery extends Application
         );
 
         print json_encode($result);
+
+        $this->move_to_archive();
+
     }
 
 
@@ -2029,7 +2038,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function zoning()
@@ -3233,7 +3245,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function courierassign()
@@ -3461,7 +3476,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function assigned()
@@ -3816,7 +3834,10 @@ class Delivery extends Application
             'q'=>$lastquery
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function dispatched()
@@ -4221,7 +4242,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function delivered()
@@ -4440,7 +4464,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function revoked()
@@ -4626,7 +4653,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function rescheduled()
@@ -4863,7 +4893,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function archived()
@@ -5058,7 +5091,10 @@ class Delivery extends Application
 			'aaData'=>$aadata
 		);
 
-		print json_encode($result);
+        print json_encode($result);
+
+        $this->move_to_archive();
+
 	}
 
 	public function log()
