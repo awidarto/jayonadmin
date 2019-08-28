@@ -16,7 +16,6 @@ class Delivery extends Application
 
         ini_set('memory_limit','1456M');
 
-
 	}
 
     public function incoming()
@@ -5334,6 +5333,7 @@ class Delivery extends Application
             foreach($delivery_id as $did){
 
                 $incr = false;
+                $arc = false;
 
                 if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                     $incr = true;
@@ -5369,12 +5369,18 @@ class Delivery extends Application
 
                     }
 
+                    if ($arc == true)) {
+                        $this->move_to_archive($did);
+                    }
+
                     $order_exist = 'ok';
                 }
                 else
                 {
                     $order_exist = 'ORDER_FAILED_ASSIGNMENT';
                 }
+
+
 
                 $data = array(
                     'timestamp'=>date('Y-m-d H:i:s',time()),
@@ -5402,6 +5408,7 @@ class Delivery extends Application
         }else{
 
             $incr = false;
+            $arc = false;
 
             if($dataset['status'] == $this->config->item('trans_status_mobile_pending')){
                 $incr = true;
@@ -5422,6 +5429,7 @@ class Delivery extends Application
             }
 
             if($dataset['status'] == $this->config->item('trans_status_archived')){
+                $arc = true;
                 $dataset['is_archived'] = 1;
                 unset($dataset['status']);
             }
@@ -5434,6 +5442,10 @@ class Delivery extends Application
                         ->set('pending_count', 'pending_count+1', FALSE)
                         ->update($this->config->item('incoming_delivery_table'));
 
+                }
+
+                if ( $arc == true) {
+                    $this->move_to_archive( $delivery_id);
                 }
 
                 $order_exist = 'ok';
@@ -6213,6 +6225,13 @@ class Delivery extends Application
             ->result_array();
 
         return $dupes;
+    }
+
+    public function move_to_archive($id){
+        $query = "INSERT INTO " . $this->config->item( 'archived_delivery_table') . " SELECT * FROM ".$this->config->item('incoming_delivery_table')." WHERE `delivery_id` = ?";
+        $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE delivery_id = ?";
+
+        return $this->db->query( $query, array($id, $id));
     }
 
 
