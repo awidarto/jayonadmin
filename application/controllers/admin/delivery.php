@@ -496,7 +496,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 	}
 
     public function pickup()
@@ -839,7 +839,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
     }
 
@@ -1318,7 +1318,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
     }
 
@@ -1785,7 +1785,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
     }
 
@@ -2040,7 +2040,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -3247,7 +3247,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -3478,7 +3478,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -3836,7 +3836,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -4244,7 +4244,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -4466,7 +4466,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -4655,7 +4655,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -4895,7 +4895,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -5093,7 +5093,7 @@ class Delivery extends Application
 
         print json_encode($result);
 
-        $this->move_to_archive();
+
 
 	}
 
@@ -5505,14 +5505,15 @@ class Delivery extends Application
 
             delivery_log($data);
 
-            $this->move_to_archive();
+
 
         }
 
+        $this->move_to_archive();
+
+        print json_encode(array('result'=>$order_exist));
 
 
-
-		print json_encode(array('result'=>$order_exist));
 	}
 
     public function ajaxpuchangestatus(){
