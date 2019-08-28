@@ -6228,8 +6228,8 @@ class Delivery extends Application
     }
 
     public function move_to_archive($id){
-        $query = "INSERT INTO " . $this->config->item( 'archived_delivery_table') . " SELECT * FROM ".$this->config->item('incoming_delivery_table')." WHERE `delivery_id` = ?";
-        $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE delivery_id = ?";
+        $query = "INSERT INTO " . $this->config->item( 'archived_delivery_table') . " SELECT * FROM ".$this->config->item('incoming_delivery_table')." WHERE `delivery_id` = ?;";
+        $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE delivery_id = ?;";
 
         return $this->db->query( $query, array($id, $id));
     }
