@@ -5369,6 +5369,10 @@ class Delivery extends Application
 
                     }
 
+                    if ($arc == true)) {
+                        $this->move_to_archive($did);
+                    }
+
                     $order_exist = 'ok';
                 }
                 else
@@ -5438,6 +5442,10 @@ class Delivery extends Application
                         ->set('pending_count', 'pending_count+1', FALSE)
                         ->update($this->config->item('incoming_delivery_table'));
 
+                }
+
+                if ( $arc == true) {
+                    $this->move_to_archive( $delivery_id);
                 }
 
                 $order_exist = 'ok';
@@ -6219,6 +6227,7 @@ class Delivery extends Application
         return $dupes;
     }
 
+<<<<<<< HEAD
     public function move_to_archive()
     {
         $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
@@ -6226,6 +6235,15 @@ class Delivery extends Application
 
         return $this->db->query($query);
     }
+=======
+    public function move_to_archive($id){
+        // $query = "INSERT INTO " . $this->config->item( 'archived_delivery_table') . " SELECT * FROM ".$this->config->item('incoming_delivery_table')." WHERE `delivery_id` = ?;";
+        // $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE delivery_id = ?;";
+
+        // return $this->db->query( $query, array($id, $id));
+    }
+
+>>>>>>> 37689730cd1b886d6e7ef40ffed388d64f6e8d96
 
 }
 
