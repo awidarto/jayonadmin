@@ -6281,9 +6281,12 @@ class Delivery extends Application
 
         $query = $this->db->get_where($this->config->item('incoming_delivery_table'), array('is_archived' => 1));
 
-        $res =  $query->result_array();
+        $ardata =  $query->result_array();
 
-        print_r($res);
+        if( count($ardata) > 0){
+            $this->db->insert_batch($this->config->item('archived_delivery_table'), $ardata); 
+            print_r($ardata);
+        }
 
     }
 
