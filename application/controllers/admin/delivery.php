@@ -6284,8 +6284,11 @@ class Delivery extends Application
         $ardata =  $query->result_array();
 
         if( count($ardata) > 0){
-            $this->db->insert_batch($this->config->item('archived_delivery_table'), $ardata); 
+            $this->db->insert_batch($this->config->item('archived_delivery_table'), $ardata);
             print_r($ardata);
+
+            $del = $this->db->delete($this->config->item('incoming_delivery_table'), array('is_archived' => 1));
+            echo $del;
         }
 
     }
