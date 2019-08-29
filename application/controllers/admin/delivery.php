@@ -5521,7 +5521,7 @@ class Delivery extends Application
         //$this->move_to_archive();
 
         print json_encode(array('result'=>$order_exist));
-        
+
 
 	}
 
@@ -6274,7 +6274,12 @@ class Delivery extends Application
         $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
         $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
 
-        return $this->db->query($query);
+        try {
+            return $this->db->simple_query($query);
+        } catch (Exception $e) {
+            return false;
+        }
+
     }
 
     public function move_to_archive_by_id($id)
