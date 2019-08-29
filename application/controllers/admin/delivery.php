@@ -6282,8 +6282,8 @@ class Delivery extends Application
         $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `delivery_id` = ".$id.";";
         $querydel = "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE `delivery_id` = ".$id.";";
 
-        if($res = $this->db->query($query)){
-            $this->db->query($querydel);
+        if($this->db->simple_query($query)){
+            $res = $this->db->simple_query($querydel);
         }
         return $res;
     }
