@@ -5395,6 +5395,7 @@ class Delivery extends Application
                 if($dataset['status'] == $this->config->item('trans_status_archived')){
                     $dataset['is_archived'] = 1;
                     unset($dataset['status']);
+                    $arc = true;
                 }
 
                 if($this->db->where('delivery_id',$did)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
@@ -5415,6 +5416,9 @@ class Delivery extends Application
                 }
 
 
+                if($arc == true){
+                    $this->move_to_archive_by_id($did);
+                }
 
                 $data = array(
                     'timestamp'=>date('Y-m-d H:i:s',time()),
@@ -5485,6 +5489,11 @@ class Delivery extends Application
                 $order_exist = 'ORDER_FAILED_ASSIGNMENT';
             }
 
+            if($arc == true){
+                $this->move_to_archive_by_id($delivery_id);
+            }
+
+
             $data = array(
                 'timestamp'=>date('Y-m-d H:i:s',time()),
                 'report_timestamp'=>date('Y-m-d H:i:s',time()),
@@ -5509,7 +5518,7 @@ class Delivery extends Application
 
         }
 
-        $this->move_to_archive();
+        //$this->move_to_archive();
 
         print json_encode(array('result'=>$order_exist));
 
@@ -6266,6 +6275,17 @@ class Delivery extends Application
         $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
 
         return $this->db->query($query);
+    }
+
+    public function move_to_archive_by_id($id)
+    {
+        $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `delivery_id` = ".$id.";";
+        $querydel = "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE `delivery_id` = ".$id.";";
+
+        if($res = $this->db->query($query)){
+            $this->db->query($querydel);
+        }
+        return $res;
     }
 
 }
