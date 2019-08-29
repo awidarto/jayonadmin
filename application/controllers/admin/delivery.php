@@ -6269,16 +6269,21 @@ class Delivery extends Application
         return $dupes;
     }
 
+    public function mover()
+    {
+        $this->move_to_archive();
+    }
+
     public function move_to_archive()
     {
         $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
         $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
 
-        try {
-            return $this->db->simple_query($query);
-        } catch (Exception $e) {
-            return false;
-        }
+        $query = $this->db->get_where($this->config->item('incoming_delivery_table'), array('is_archived' => 1));
+
+        $res =  $query->result_array();
+
+        print_r($res);
 
     }
 
