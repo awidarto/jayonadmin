@@ -5417,7 +5417,7 @@ class Delivery extends Application
 
 
                 if($arc == true){
-                    $this->move_to_archive_by_id($did);
+                    //$this->move_to_archive_by_id($did);
                 }
 
                 $data = array(
@@ -5490,7 +5490,7 @@ class Delivery extends Application
             }
 
             if($arc == true){
-                $this->move_to_archive_by_id($delivery_id);
+                //$this->move_to_archive_by_id($delivery_id);
             }
 
 
@@ -5518,7 +5518,7 @@ class Delivery extends Application
 
         }
 
-        //$this->move_to_archive();
+        $this->move_to_archive(false);
 
         print json_encode(array('result'=>$order_exist));
 
@@ -6274,10 +6274,10 @@ class Delivery extends Application
         $this->move_to_archive();
     }
 
-    public function move_to_archive()
+    public function move_to_archive($verbose = true)
     {
-        $query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
-        $query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
+        //$query = "INSERT INTO " . $this->config->item('archived_delivery_table') . " SELECT * FROM " . $this->config->item('incoming_delivery_table') . " WHERE `is_archived` = 1;";
+        //$query .= "DELETE FROM " . $this->config->item('incoming_delivery_table') . " WHERE is_archived = 1;";
 
         $query = $this->db->get_where($this->config->item('incoming_delivery_table'), array('is_archived' => 1));
 
@@ -6285,10 +6285,13 @@ class Delivery extends Application
 
         if( count($ardata) > 0){
             $this->db->insert_batch($this->config->item('archived_delivery_table'), $ardata);
-            print_r($ardata);
+            
+            ($verbose)?print_r($ardata):'';
 
             $del = $this->db->delete($this->config->item('incoming_delivery_table'), array('is_archived' => 1));
-            echo $del;
+            if($verbose){
+                echo ( $del == 1 )?"records moved to archive":"failed to move archive";
+            }
         }
 
     }
