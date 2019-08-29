@@ -5521,7 +5521,7 @@ class Delivery extends Application
         //$this->move_to_archive();
 
         print json_encode(array('result'=>$order_exist));
-
+        
 
 	}
 
