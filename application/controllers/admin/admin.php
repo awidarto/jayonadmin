@@ -219,6 +219,9 @@ class Admin extends Application
                 }
             }
 
+            $merchantids = empty($merchantids)?array('noid'):$merchantids;
+            $pickupdates = empty($pickupdates)?array('noid'):$pickupdates;
+
             //print_r($pickupdates);
             //print_r($merchantids);
 
